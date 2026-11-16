@@ -26,7 +26,7 @@ import datetime as dt
 import hashlib
 import random
 
-from common import PERIOD_END, SEED
+from common import PERIOD_END, SEED, is_business_day
 
 END = dt.datetime.fromisoformat(PERIOD_END)
 REJECT = {"base": 0.80, "negative": 0.86}  # NatWest: about 55% upheld overall (H1 2026 anchor); summary resolutions are upheld  # share of replied complaints partly or fully rejected, before the two-day rule
@@ -85,7 +85,7 @@ def deadline(received: dt.datetime, product: str) -> dt.datetime:
         d, n = received, 0
         while n < 15:
             d += dt.timedelta(days=1)
-            if d.weekday() < 5:
+            if is_business_day(d):
                 n += 1
         return d
     return received + dt.timedelta(days=56)

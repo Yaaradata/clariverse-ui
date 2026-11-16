@@ -208,7 +208,7 @@ def to_close(vol, customers, is_open, labels) -> list[dict]:
     rows.sort(key=lambda x: -x[0])
     return [{"id": case_ref(r), "theme": labels.get(r["theme"], r["theme"]), "kind": kind(r),
              "channel": CHANNEL_LABEL[r["_ch"]], "age": age_label(age), "overdue": over > dt.timedelta(0),
-             "limit": LIMIT_LABEL[basis], "suggested_owner": "Upgrades lead" if r["theme"] in ("card_variant_migration", "card_eligibility_upgrade")
+             "limit": LIMIT_LABEL[basis], "suggested_owner": "Upgrades lead" if r["theme"] == "card_eligibility_upgrade"
              else "Premium cards lead" if basis in ("priority_a", "uhni") else "Escalations lead" if r["high_impact"] else "Credit cards · CX lead"}
             for over, r, basis, age in rows[:15]]
 

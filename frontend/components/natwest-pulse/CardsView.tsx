@@ -199,7 +199,7 @@ function IssuePulse({ p }: { p: Period }) {
             <Kpi
               label="Escalated"
               value={tileFigure(i.escalations)}
-              sub="to a grievance desk or beyond"
+              sub="to the complaints team or beyond"
               tone="amber"
             />
             <Kpi
@@ -545,13 +545,13 @@ function Categories({ p }: { p: Period }) {
         customer = volume. Waiting on customer: the bank has sent a resolution
         or proposed one; not counted as open or as not responded to. Not
         responded to in 48h+: waited more than 48 hours for a first reply.
-        Escalations: internal contacts escalated to a grievance desk or beyond;
-        external posts with escalation language. Trend: internal plus public
-        volume over the last {p.cards.categories[0]?.trend.length ?? 0} periods
-        of the same length. About a service standard: the category carries a
-        delivery standard; compliance is not shown here. Owners are roles in the
-        cards team. The at-risk pill counts complaints on the Ombudsman watch
-        (internal, illustrative).
+        Escalations: internal contacts escalated to the complaints team or
+        beyond; external posts with escalation language. Trend: internal plus
+        public volume over the last {p.cards.categories[0]?.trend.length ?? 0}{" "}
+        periods of the same length. About a service standard: the category
+        carries a delivery standard; compliance is not shown here. Owners are
+        roles in the cards team. The at-risk pill counts complaints on the
+        Ombudsman watch (internal, illustrative).
       </MutedNote>
     </Tile>
   );

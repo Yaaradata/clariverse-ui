@@ -12,7 +12,7 @@
     "branch",
     "cross"
    ],
-   "answer": "Last 7 days: 411,768 contacts; 27,327 open more than 48 hours. The highest share open too long is Email (13%). Public data not yet loaded.",
+   "answer": "Last 7 days: 411,769 contacts; 27,327 open more than 48 hours. The highest share open too long is Email (13%). Public data not yet loaded.",
    "evidence": [],
    "bound": [
     "L3:cx_pulse.internal.by_channel",
@@ -36,7 +36,7 @@
     "back",
     "resolved"
    ],
-   "answer": "Last 7 days: Cora took 123,184 contacts and resolved 91,192; 21,445 are still open. Calls: 182,715. The 7-day return to a call or complaint needs Cora logs joined to call records inside the bank.",
+   "answer": "Last 7 days: Cora took 123,186 contacts and resolved 91,192; 21,446 are still open. Calls: 182,715. The 7-day return to a call or complaint needs Cora logs joined to call records inside the bank.",
    "evidence": [],
    "bound": [
     "L3:cx_pulse.internal.by_channel.whatsapp",
@@ -114,7 +114,7 @@
     "value",
     "evidence"
    ],
-   "answer": "Last 7 days: 103,330 contacts from customers flagged financially vulnerable; 13,791 open, 1,208 with no reply after 48 hours. Consumer Duty outcomes: Products and services · price and value · consumer understanding · consumer support.",
+   "answer": "Last 7 days: 103,329 contacts from customers flagged financially vulnerable; 13,790 open, 1,208 with no reply after 48 hours. Consumer Duty outcomes: Products and services · price and value · consumer understanding · consumer support.",
    "evidence": [],
    "bound": [
     "L3:customer_pulse.lists.priority_a",

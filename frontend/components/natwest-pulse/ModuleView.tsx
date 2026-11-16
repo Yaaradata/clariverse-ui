@@ -297,11 +297,7 @@ export function DigitalModule({ b }: { b: Bundle }) {
 /* ================================================================= M2 cards */
 
 const CARD_ISSUES: { label: string; themes: string[]; note?: string }[] = [
-  {
-    label: "Variant migration and forced upgrade",
-    themes: ["card_variant_migration"],
-  },
-  { label: "Upgrades and downgrades", themes: ["card_eligibility_upgrade"] },
+  { label: "Eligibility and upgrades", themes: ["card_eligibility_upgrade"] },
   {
     label: "Application rejection and verification",
     themes: ["card_application"],
@@ -364,7 +360,7 @@ export function CardsModule({ b }: { b: Bundle }) {
     };
   });
   const top = [...rows].sort((a, z) => z.pn - a.pn)[0];
-  const ev = ["card_variant_migration", "card_fees_charges", "rewards_value"]
+  const ev = ["card_eligibility_upgrade", "card_fees_charges", "rewards_value"]
     .flatMap((t) => (tm[t]?.exemplars ?? []).slice(0, 1))
     .map((id) => b.evidence[id])
     .filter(Boolean);
@@ -387,7 +383,7 @@ export function CardsModule({ b }: { b: Bundle }) {
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
           <Status value="needs_you" />
           <OwnerChip owner="cards" />
-          <RungChip rung="Grievance" />
+          <RungChip rung="Complaint" />
           <ActionChip action="Set a new date" />
         </div>
 
@@ -521,9 +517,10 @@ export function CardsModule({ b }: { b: Bundle }) {
 
         <Section n={6} title="Owner and action">
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
-            Owner: <strong>Credit cards</strong>. Set a new date on variant
-            migration and upgrade requests; notify customers proactively before
-            a variant change; hold closure to the 7-working-day rule.
+            Owner: <strong>Credit cards</strong>. Set a date on eligibility and
+            upgrade requests and tell customers before anything on their card
+            changes; close cards within the bank's standard (confirm with the
+            bank).
           </div>
         </Section>
 

@@ -182,13 +182,13 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
           outside and open too long come from the illustrative sample, measured
           against a placeholder that is not a bank figure. Met = closed within
           the standard (for the first-response row: answered within it). Outside
-          = settled late, or open and already past the standard. Working days
-          skip Sundays; bank holidays are not modelled yet. Public posts
-          describing a delay are matched to a service standard by request type;
-          &ldquo;—&rdquo; where public voice has no matching type. Action: set a
-          new date when a quarter or more of the open items are past the
-          standard; route with evidence when under 80% is met; update and close
-          when a few items are past the standard; otherwise monitor.
+          = settled late, or open and already past the standard. Business days
+          skip weekends and bank holidays. Public posts describing a delay are
+          matched to a service standard by request type; &ldquo;—&rdquo; where
+          public voice has no matching type. Action: set a new date when a
+          quarter or more of the open items are past the standard; route with
+          evidence when under 80% is met; update and close when a few items are
+          past the standard; otherwise monitor.
         </MutedNote>
       </Tile>
       <Tile

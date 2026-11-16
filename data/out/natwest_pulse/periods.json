@@ -35,12 +35,12 @@
       "members": 1780000,
       "in_contact": 11165,
       "volume": 11272,
-      "prev_volume": 16864,
+      "prev_volume": 16863,
       "change_pct": -33.2,
       "open": 5692,
       "waiting_on_customer": 3504,
       "not_responded_48h": null,
-      "open_delta": -4031,
+      "open_delta": -4030,
       "not_responded_delta": null,
       "rm": {
        "alerted": 340,
@@ -107,7 +107,7 @@
        },
        {
         "end": "2026-11-11T08:30:00+00:00",
-        "count": 16864
+        "count": 16863
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
@@ -1187,7 +1187,7 @@
       "source_mix": {}
      },
      "top_issue": {
-      "id": "kyc_updates",
+      "id": "identity_checks",
       "label": "Identity checks and profile updates",
       "count": 538,
       "source": "internal"
@@ -1532,7 +1532,7 @@
        },
        {
         "end": "2026-11-10T08:30:00+00:00",
-        "internal": 547,
+        "internal": 548,
         "external": 0
        },
        {
@@ -1621,7 +1621,7 @@
          },
          {
           "end": "2026-11-10T08:30:00+00:00",
-          "internal": 547,
+          "internal": 548,
           "external": 0
          },
          {
@@ -1651,7 +1651,7 @@
        "open_too_long": null,
        "not_responded_48h": null,
        "escalations": 0,
-       "change_pct": -51.6
+       "change_pct": -52.3
       },
       "external": {
        "volume": 0,
@@ -1719,7 +1719,7 @@
        },
        {
         "end": "2026-11-11T08:30:00+00:00",
-        "internal": 3445,
+        "internal": 3496,
         "external": 0
        },
        {
@@ -1740,7 +1740,7 @@
          "open_too_long": null,
          "not_responded_48h": null,
          "escalations": 0,
-         "change_pct": -51.6
+         "change_pct": -52.3
         },
         "external": {
          "volume": 0,
@@ -1808,7 +1808,7 @@
          },
          {
           "end": "2026-11-11T08:30:00+00:00",
-          "internal": 3445,
+          "internal": 3496,
           "external": 0
          },
          {
@@ -2354,7 +2354,7 @@
        },
        {
         "end": "2026-11-11T08:30:00+00:00",
-        "internal": 2231,
+        "internal": 2232,
         "external": 0
        },
        {
@@ -2375,7 +2375,7 @@
          "open_too_long": null,
          "not_responded_48h": null,
          "escalations": 0,
-         "change_pct": 161.9
+         "change_pct": 161.1
         },
         "external": {
          "volume": 0,
@@ -2443,7 +2443,7 @@
          },
          {
           "end": "2026-11-11T08:30:00+00:00",
-          "internal": 328,
+          "internal": 329,
           "external": 0
          },
          {
@@ -5627,18 +5627,18 @@
       "id": "priority_a",
       "label": "Financially vulnerable (Consumer Duty)",
       "members": 1780000,
-      "in_contact": 98525,
-      "volume": 103330,
+      "in_contact": 98524,
+      "volume": 103329,
       "prev_volume": 95981,
       "change_pct": 7.7,
-      "open": 13791,
+      "open": 13790,
       "waiting_on_customer": 8012,
       "not_responded_48h": 1208,
-      "open_delta": -2626,
+      "open_delta": -2627,
       "not_responded_delta": 1208,
       "rm": {
        "alerted": 1338,
-       "of": 6800
+       "of": 6799
       },
       "not_responded_series": [
        {
@@ -5705,7 +5705,7 @@
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "count": 103330
+        "count": 103329
        }
       ],
       "by_channel": {
@@ -5728,8 +5728,8 @@
         "not_responded_48h": 0
        },
        "emails": {
-        "volume": 6095,
-        "open": 1114,
+        "volume": 6094,
+        "open": 1113,
         "waiting_on_customer": 753,
         "not_responded_48h": 0
        },
@@ -5801,7 +5801,7 @@
       "volume_series": [
        {
         "end": "2026-09-24T08:30:00+00:00",
-        "count": 5350
+        "count": 5351
        },
        {
         "end": "2026-10-01T08:30:00+00:00",
@@ -5813,7 +5813,7 @@
        },
        {
         "end": "2026-10-15T08:30:00+00:00",
-        "count": 4502
+        "count": 4503
        },
        {
         "end": "2026-10-22T08:30:00+00:00",
@@ -5941,7 +5941,7 @@
        },
        {
         "end": "2026-10-22T08:30:00+00:00",
-        "count": 38229
+        "count": 38228
        },
        {
         "end": "2026-10-29T08:30:00+00:00",
@@ -6049,7 +6049,7 @@
       "volume_series": [
        {
         "end": "2026-09-24T08:30:00+00:00",
-        "count": 40315
+        "count": 40316
        },
        {
         "end": "2026-10-01T08:30:00+00:00",
@@ -6061,11 +6061,11 @@
        },
        {
         "end": "2026-10-15T08:30:00+00:00",
-        "count": 33247
+        "count": 33248
        },
        {
         "end": "2026-10-22T08:30:00+00:00",
-        "count": 37713
+        "count": 37712
        },
        {
         "end": "2026-10-29T08:30:00+00:00",
@@ -6216,7 +6216,7 @@
     },
     "rm": {
      "alerted": 1453,
-     "of": 8107,
+     "of": 8106,
      "as_of": "2026-11-12T08:30:00+00:00"
     }
    },
@@ -6372,25 +6372,25 @@
    },
    "cx_pulse": {
     "overall": {
-     "total": 411768,
-     "internal": 411768,
+     "total": 411769,
+     "internal": 411769,
      "external": 0,
      "internal_pct": 100.0,
      "external_pct": 0.0
     },
     "internal": {
-     "volume": 411768,
+     "volume": 411769,
      "prev_volume": 412519,
      "change_pct": -0.2,
      "resolved": 308062,
      "open": 64130,
-     "waiting_on_customer": 39576,
+     "waiting_on_customer": 39577,
      "open_delta": -26118,
      "not_responded_delta": 1209,
      "open_too_long": 27327,
      "not_responded_48h": 4522,
-     "negative": 53734,
-     "escalations": 3834,
+     "negative": 53735,
+     "escalations": 3833,
      "by_channel": {
       "calls": {
        "volume": 182715,
@@ -6401,9 +6401,9 @@
        "resolved": 143136
       },
       "whatsapp": {
-       "volume": 123184,
-       "open": 21445,
-       "waiting_on_customer": 10547,
+       "volume": 123186,
+       "open": 21446,
+       "waiting_on_customer": 10548,
        "not_responded_48h": 3961,
        "open_too_long": 10737,
        "resolved": 91192
@@ -6417,8 +6417,8 @@
        "resolved": 32569
       },
       "emails": {
-       "volume": 19354,
-       "open": 4419,
+       "volume": 19353,
+       "open": 4418,
        "waiting_on_customer": 2308,
        "not_responded_48h": 6,
        "open_too_long": 2449,
@@ -6643,20 +6643,20 @@
     {
      "id": "cards",
      "label": "Credit cards",
-     "overall_volume": 81043,
+     "overall_volume": 81044,
      "internal": {
-      "volume": 81043,
+      "volume": 81044,
       "prev_volume": 73710,
       "change_pct": 9.9,
       "resolved": 46381,
       "open": 22448,
-      "waiting_on_customer": 12214,
+      "waiting_on_customer": 12215,
       "open_delta": -484,
       "not_responded_delta": 126,
       "open_too_long": 10641,
       "not_responded_48h": 1681,
-      "negative": 14760,
-      "escalations": 1756
+      "negative": 14761,
+      "escalations": 1755
      },
      "external": {
       "volume": 0,
@@ -6709,7 +6709,7 @@
      "top_issue": {
       "id": "card_limit",
       "label": "Credit limit",
-      "count": 3078,
+      "count": 3129,
       "source": "internal"
      },
      "anecdote": null
@@ -6983,7 +6983,7 @@
     "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs previous period (at least 8 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline limit, or more complaints are already eligible than at the previous period end."
    },
    "md_mail": {
-    "total": 903,
+    "total": 902,
     "rows": [
      {
       "theme": "complaint_handling",
@@ -6994,7 +6994,7 @@
      {
       "theme": "card_limit",
       "label": "Credit limit",
-      "mails": 327,
+      "mails": 326,
       "resolved": 0
      },
      {
@@ -7013,18 +7013,18 @@
    },
    "cards": {
     "internal": {
-     "volume": 81043,
+     "volume": 81044,
      "prev_volume": 73710,
      "change_pct": 9.9,
      "resolved": 46381,
      "open": 22448,
-     "waiting_on_customer": 12214,
+     "waiting_on_customer": 12215,
      "open_delta": -484,
      "not_responded_delta": 126,
      "open_too_long": 10641,
      "not_responded_48h": 1681,
-     "negative": 14760,
-     "escalations": 1756
+     "negative": 14761,
+     "escalations": 1755
     },
     "external": {
      "volume": 0,
@@ -7141,7 +7141,7 @@
        },
        {
         "end": "2026-10-15T08:30:00+00:00",
-        "internal": 22009,
+        "internal": 22010,
         "external": 0
        },
        {
@@ -7230,7 +7230,7 @@
          },
          {
           "end": "2026-10-15T08:30:00+00:00",
-          "internal": 7659,
+          "internal": 7660,
           "external": 0
          },
          {
@@ -7534,14 +7534,14 @@
       "owner": "Credit cards · Credit policy lead",
       "tat_related": true,
       "internal": {
-       "volume": 11893,
+       "volume": 11944,
        "resolved": 6562,
-       "open": 3280,
+       "open": 3331,
        "waiting_on_customer": 2051,
        "open_too_long": 648,
        "not_responded_48h": 0,
-       "escalations": 975,
-       "change_pct": 14.0
+       "escalations": 974,
+       "change_pct": 14.4
       },
       "external": {
        "volume": 0,
@@ -7614,7 +7614,7 @@
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "internal": 11893,
+        "internal": 11944,
         "external": 0
        }
       ],
@@ -7623,14 +7623,14 @@
         "id": "card_limit",
         "label": "Credit limit",
         "internal": {
-         "volume": 11893,
+         "volume": 11944,
          "resolved": 6562,
-         "open": 3280,
+         "open": 3331,
          "waiting_on_customer": 2051,
          "open_too_long": 648,
          "not_responded_48h": 0,
-         "escalations": 975,
-         "change_pct": 14.0
+         "escalations": 974,
+         "change_pct": 14.4
         },
         "external": {
          "volume": 0,
@@ -7703,7 +7703,7 @@
          },
          {
           "end": "2026-11-12T08:30:00+00:00",
-          "internal": 11893,
+          "internal": 11944,
           "external": 0
          }
         ]
@@ -7716,9 +7716,9 @@
       "owner": "Credit cards · Rewards lead",
       "tat_related": false,
       "internal": {
-       "volume": 11140,
+       "volume": 11141,
        "resolved": 9002,
-       "open": 1272,
+       "open": 1273,
        "waiting_on_customer": 866,
        "open_too_long": 809,
        "not_responded_48h": 0,
@@ -7796,7 +7796,7 @@
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "internal": 11140,
+        "internal": 11141,
         "external": 0
        }
       ],
@@ -7805,9 +7805,9 @@
         "id": "reward_redemption",
         "label": "Reward redemption",
         "internal": {
-         "volume": 7412,
+         "volume": 7413,
          "resolved": 5411,
-         "open": 1139,
+         "open": 1140,
          "waiting_on_customer": 862,
          "open_too_long": 809,
          "not_responded_48h": 0,
@@ -7885,7 +7885,7 @@
          },
          {
           "end": "2026-11-12T08:30:00+00:00",
-          "internal": 7412,
+          "internal": 7413,
           "external": 0
          }
         ]
@@ -8057,7 +8057,7 @@
        },
        {
         "end": "2026-10-29T08:30:00+00:00",
-        "internal": 11010,
+        "internal": 11011,
         "external": 0
        },
        {
@@ -8146,7 +8146,7 @@
          },
          {
           "end": "2026-10-29T08:30:00+00:00",
-          "internal": 11010,
+          "internal": 11011,
           "external": 0
          },
          {
@@ -8169,10 +8169,10 @@
       "owner": "Credit cards · Acquisition lead",
       "tat_related": true,
       "internal": {
-       "volume": 7549,
+       "volume": 7550,
        "resolved": 4028,
        "open": 2982,
-       "waiting_on_customer": 539,
+       "waiting_on_customer": 540,
        "open_too_long": 536,
        "not_responded_48h": 0,
        "escalations": 2,
@@ -8214,7 +8214,7 @@
       "trend": [
        {
         "end": "2026-09-24T08:30:00+00:00",
-        "internal": 8155,
+        "internal": 8156,
         "external": 0
        },
        {
@@ -8249,7 +8249,7 @@
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "internal": 7549,
+        "internal": 7550,
         "external": 0
        }
       ],
@@ -8258,10 +8258,10 @@
         "id": "card_application",
         "label": "Card applications and identity checks",
         "internal": {
-         "volume": 7549,
+         "volume": 7550,
          "resolved": 4028,
          "open": 2982,
-         "waiting_on_customer": 539,
+         "waiting_on_customer": 540,
          "open_too_long": 536,
          "not_responded_48h": 0,
          "escalations": 2,
@@ -8303,7 +8303,7 @@
         "trend": [
          {
           "end": "2026-09-24T08:30:00+00:00",
-          "internal": 8155,
+          "internal": 8156,
           "external": 0
          },
          {
@@ -8338,7 +8338,7 @@
          },
          {
           "end": "2026-11-12T08:30:00+00:00",
-          "internal": 7549,
+          "internal": 7550,
           "external": 0
          }
         ]
@@ -8800,188 +8800,6 @@
         ]
        }
       ]
-     },
-     {
-      "id": "upgrades",
-      "label": "Eligibility and card changes",
-      "owner": "Credit cards · Product lead",
-      "tat_related": true,
-      "internal": {
-       "volume": 52,
-       "resolved": 0,
-       "open": 52,
-       "waiting_on_customer": 0,
-       "open_too_long": 0,
-       "not_responded_48h": 0,
-       "escalations": 0,
-       "change_pct": null
-      },
-      "external": {
-       "volume": 0,
-       "positive": 0,
-       "negative": 0,
-       "negative_share": null,
-       "escalation": 0,
-       "responded": {
-        "reviews": 0,
-        "responded": 0,
-        "positive_reviews": 0,
-        "positive_responded": 0,
-        "negative_reviews": 0,
-        "negative_responded": 0
-       },
-       "high_impact": {
-        "volume": 0,
-        "positive": 0,
-        "negative": 0,
-        "escalation": 0,
-        "positive_share": null,
-        "negative_share": null,
-        "share_method": "source_weighted",
-        "responded": {
-         "reviews": 0,
-         "responded": 0,
-         "positive_reviews": 0,
-         "positive_responded": 0,
-         "negative_reviews": 0,
-         "negative_responded": 0
-        }
-       },
-       "change_pct": null
-      },
-      "trend": [
-       {
-        "end": "2026-09-24T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-10-01T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-10-08T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-10-15T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-10-22T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-10-29T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-11-05T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-11-12T08:30:00+00:00",
-        "internal": 52,
-        "external": 0
-       }
-      ],
-      "subcategories": [
-       {
-        "id": "card_variant_migration",
-        "label": "Card product changes and forced switches",
-        "internal": {
-         "volume": 52,
-         "resolved": 0,
-         "open": 52,
-         "waiting_on_customer": 0,
-         "open_too_long": 0,
-         "not_responded_48h": 0,
-         "escalations": 0,
-         "change_pct": null
-        },
-        "external": {
-         "volume": 0,
-         "positive": 0,
-         "negative": 0,
-         "negative_share": null,
-         "escalation": 0,
-         "responded": {
-          "reviews": 0,
-          "responded": 0,
-          "positive_reviews": 0,
-          "positive_responded": 0,
-          "negative_reviews": 0,
-          "negative_responded": 0
-         },
-         "high_impact": {
-          "volume": 0,
-          "positive": 0,
-          "negative": 0,
-          "escalation": 0,
-          "positive_share": null,
-          "negative_share": null,
-          "share_method": "source_weighted",
-          "responded": {
-           "reviews": 0,
-           "responded": 0,
-           "positive_reviews": 0,
-           "positive_responded": 0,
-           "negative_reviews": 0,
-           "negative_responded": 0
-          }
-         },
-         "change_pct": null
-        },
-        "trend": [
-         {
-          "end": "2026-09-24T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-10-01T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-10-08T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-10-15T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-10-22T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-10-29T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-11-05T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-11-12T08:30:00+00:00",
-          "internal": 52,
-          "external": 0
-         }
-        ]
-       }
-      ]
      }
     ],
     "mood": {
@@ -8993,7 +8811,7 @@
     "market": [],
     "service": {
      "resolved": 46381,
-     "volume": 81043,
+     "volume": 81044,
      "open_too_long": 10641,
      "median_first_response_hours_written": 4.6,
      "public_service_negative": 0
@@ -9018,8 +8836,8 @@
      {
       "id": "limits",
       "label": "Limits",
-      "repeat_contact_internal": 8.1,
-      "escalation_internal": 975,
+      "repeat_contact_internal": 8.0,
+      "escalation_internal": 974,
       "escalation_external": 0,
       "negative_share": null
      },
@@ -9070,14 +8888,6 @@
       "escalation_internal": 51,
       "escalation_external": 0,
       "negative_share": null
-     },
-     {
-      "id": "upgrades",
-      "label": "Eligibility and card changes",
-      "repeat_contact_internal": 0.0,
-      "escalation_internal": 0,
-      "escalation_external": 0,
-      "negative_share": null
      }
     ],
     "pillars": [
@@ -9113,7 +8923,7 @@
     "journey": [
      {
       "stage": "Open",
-      "volume": 7549,
+      "volume": 7550,
       "negative_share": 31.6,
       "repeat_share": 11.6
      },
@@ -9125,15 +8935,15 @@
      },
      {
       "stage": "Everyday banking",
-      "volume": 38214,
-      "negative_share": 18.2,
+      "volume": 38266,
+      "negative_share": 18.3,
       "repeat_share": 5.1
      },
      {
       "stage": "Service requests",
-      "volume": 855,
-      "negative_share": 84.3,
-      "repeat_share": 11.3
+      "volume": 803,
+      "negative_share": 83.3,
+      "repeat_share": 12.1
      },
      {
       "stage": "Disputes and fraud",
@@ -9175,9 +8985,9 @@
     "channels": {
      "internal": {
       "calls": 33427,
-      "whatsapp": 22312,
+      "whatsapp": 22314,
       "chat": 11007,
-      "emails": 5189,
+      "emails": 5188,
       "social": 69,
       "branch": 9039
      },
@@ -9187,9 +8997,9 @@
      {
       "id": "priority_a",
       "label": "Financially vulnerable (Consumer Duty)",
-      "volume": 21051,
-      "open": 4689,
-      "negative": 3759
+      "volume": 21050,
+      "open": 4688,
+      "negative": 3758
      },
      {
       "id": "priority_b",
@@ -9215,9 +9025,9 @@
      {
       "id": "none",
       "label": "Not on a list",
-      "volume": 58523,
-      "open": 17441,
-      "negative": 10707
+      "volume": 58525,
+      "open": 17442,
+      "negative": 10709
      }
     ],
     "happy": {
@@ -9269,23 +9079,23 @@
       {
        "id": "limits",
        "label": "Limits",
-       "internal_repeat": 958,
+       "internal_repeat": 957,
        "public_repeat": 0,
-       "contacts": 11893
+       "contacts": 11944
       },
       {
        "id": "rewards",
        "label": "Rewards and redemption",
        "internal_repeat": 893,
        "public_repeat": 0,
-       "contacts": 11140
+       "contacts": 11141
       },
       {
        "id": "applications",
        "label": "Applications and verification",
        "internal_repeat": 877,
        "public_repeat": 0,
-       "contacts": 7549
+       "contacts": 7550
       },
       {
        "id": "delivery",
@@ -9328,24 +9138,17 @@
        "internal_repeat": 8,
        "public_repeat": 0,
        "contacts": 3139
-      },
-      {
-       "id": "upgrades",
-       "label": "Eligibility and card changes",
-       "internal_repeat": 0,
-       "public_repeat": 0,
-       "contacts": 52
       }
      ],
      "tiers": [
       {
        "id": "priority_a",
        "label": "Financially vulnerable (Consumer Duty)",
-       "volume": 21051,
+       "volume": 21050,
        "positive": 3672,
        "neutral": 13620,
-       "negative": 3759,
-       "open": 4689
+       "negative": 3758,
+       "open": 4688
       },
       {
        "id": "priority_b",
@@ -9377,11 +9180,11 @@
       {
        "id": "none",
        "label": "Not on a list",
-       "volume": 58523,
+       "volume": 58525,
        "positive": 6527,
        "neutral": 41289,
-       "negative": 10707,
-       "open": 17441
+       "negative": 10709,
+       "open": 17442
       }
      ]
     },
@@ -9419,19 +9222,19 @@
      "ladder": [
       {
        "rung": "Contacts",
-       "count": 81043
+       "count": 81044
       },
       {
        "rung": "Repeat",
-       "count": 3736
+       "count": 3735
       },
       {
        "rung": "Complaint",
-       "count": 1756
+       "count": 1755
       },
       {
        "rung": "Complaints team",
-       "count": 377
+       "count": 376
       },
       {
        "rung": "Final response",
@@ -9485,7 +9288,7 @@
      "tat_related": {
       "contacts": 54722,
       "share": 67.5,
-      "open": 20456
+      "open": 20455
      },
      "failures": []
     },
@@ -10085,9 +9888,9 @@
    "v4": {
     "cards": {
      "hierarchy": {
-      "total": 81043,
+      "total": 81044,
       "inside": {
-       "volume": 81043,
+       "volume": 81044,
        "kinds": {
         "complaint": {
          "label": "Complaints",
@@ -10107,17 +9910,17 @@
         },
         "request": {
          "label": "Requests",
-         "volume": 43054,
+         "volume": 43055,
          "resolved": 25175,
          "open": 10513,
-         "waiting_on_customer": 7366,
-         "open_too_long": 5483
+         "waiting_on_customer": 7367,
+         "open_too_long": 5482
         }
        },
        "resolved": 46381,
        "open": 22448,
-       "waiting_on_customer": 12214,
-       "open_too_long": 13714
+       "waiting_on_customer": 12215,
+       "open_too_long": 13713
       },
       "public": {
        "volume": 0,
@@ -10144,14 +9947,14 @@
       }
      },
      "open_too_long": {
-      "count": 13714,
+      "count": 13713,
       "open": 22448,
       "share_of_open": 61.1,
       "by_limit": [
        {
         "id": "priority_a",
         "label": "Financially vulnerable: 5 hours",
-        "count": 4689
+        "count": 4688
        },
        {
         "id": "uhni",
@@ -10576,9 +10379,9 @@
       {
        "id": "ultra_sensitive",
        "label": "Financially vulnerable",
-       "volume": 21051,
-       "open": 4689,
-       "open_too_long": 4689,
+       "volume": 21050,
+       "open": 4688,
+       "open_too_long": 4688,
        "negative_mentions": 64,
        "channels": [
         "Branch",
@@ -11157,7 +10960,7 @@
       }
      ],
      "service": {
-      "volume": 81043,
+      "volume": 81044,
       "resolved": 46381,
       "sdr": 5352,
       "sdr_pct": 6.6,
@@ -11170,9 +10973,9 @@
     },
     "bank": {
      "hierarchy": {
-      "total": 411768,
+      "total": 411769,
       "inside": {
-       "volume": 411768,
+       "volume": 411769,
        "kinds": {
         "complaint": {
          "label": "Complaints",
@@ -11192,17 +10995,17 @@
         },
         "request": {
          "label": "Requests",
-         "volume": 157448,
+         "volume": 157449,
          "resolved": 89498,
          "open": 38547,
-         "waiting_on_customer": 29403,
-         "open_too_long": 22219
+         "waiting_on_customer": 29404,
+         "open_too_long": 22218
         }
        },
        "resolved": 308062,
        "open": 64130,
-       "waiting_on_customer": 39576,
-       "open_too_long": 35411
+       "waiting_on_customer": 39577,
+       "open_too_long": 35410
       },
       "public": {
        "volume": 0,
@@ -11229,14 +11032,14 @@
       }
      },
      "open_too_long": {
-      "count": 35411,
+      "count": 35410,
       "open": 64130,
       "share_of_open": 55.2,
       "by_limit": [
        {
         "id": "priority_a",
         "label": "Financially vulnerable: 5 hours",
-        "count": 13400
+        "count": 13399
        },
        {
         "id": "uhni",
@@ -12000,7 +11803,7 @@
        {
         "id": "cards",
         "label": "Credit cards",
-        "count": 13714,
+        "count": 13713,
         "open": 22448,
         "share_of_open": 61.1,
         "list": [
@@ -12156,7 +11959,7 @@
          }
         ],
         "service": {
-         "volume": 81043,
+         "volume": 81044,
          "resolved": 46381,
          "sdr": 5352,
          "sdr_pct": 6.6,
@@ -12695,7 +12498,7 @@
       "note": "Responded: the bank's handle or the store developer replied, where the source carries replies. Public data not yet loaded until the pull lands."
      },
      "service": {
-      "volume": 411768,
+      "volume": 411769,
       "resolved": 308062,
       "sdr": 88242,
       "sdr_pct": 21.4,
@@ -12815,18 +12618,18 @@
       "id": "priority_a",
       "label": "Financially vulnerable (Consumer Duty)",
       "members": 1780000,
-      "in_contact": 315170,
-      "volume": 415080,
+      "in_contact": 315169,
+      "volume": 415079,
       "prev_volume": 401252,
       "change_pct": 3.4,
-      "open": 17559,
+      "open": 17558,
       "waiting_on_customer": 12650,
       "not_responded_48h": 2389,
-      "open_delta": -4922,
+      "open_delta": -4923,
       "not_responded_delta": -554,
       "rm": {
        "alerted": 1733,
-       "of": 7410
+       "of": 7409
       },
       "not_responded_series": [
        {
@@ -12853,7 +12656,7 @@
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "count": 415080
+        "count": 415079
        }
       ],
       "by_channel": {
@@ -12876,8 +12679,8 @@
         "not_responded_48h": 0
        },
        "emails": {
-        "volume": 25804,
-        "open": 1189,
+        "volume": 25803,
+        "open": 1188,
         "waiting_on_customer": 753,
         "not_responded_48h": 4
        },
@@ -12901,7 +12704,7 @@
       "members": 43000,
       "in_contact": 14726,
       "volume": 20268,
-      "prev_volume": 21439,
+      "prev_volume": 21441,
       "change_pct": -5.5,
       "open": 370,
       "waiting_on_customer": 852,
@@ -12933,7 +12736,7 @@
        },
        {
         "end": "2026-10-13T08:30:00+00:00",
-        "count": 21439
+        "count": 21441
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
@@ -12983,8 +12786,8 @@
       "id": "uhni",
       "label": "Premier",
       "members": 750000,
-      "in_contact": 104339,
-      "volume": 156602,
+      "in_contact": 104338,
+      "volume": 156601,
       "prev_volume": 134424,
       "change_pct": 16.5,
       "open": 8043,
@@ -13013,7 +12816,7 @@
       "volume_series": [
        {
         "end": "2026-09-13T08:30:00+00:00",
-        "count": 130048
+        "count": 130051
        },
        {
         "end": "2026-10-13T08:30:00+00:00",
@@ -13021,7 +12824,7 @@
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "count": 156602
+        "count": 156601
        }
       ],
       "by_channel": {
@@ -13044,7 +12847,7 @@
         "not_responded_48h": 0
        },
        "emails": {
-        "volume": 10981,
+        "volume": 10980,
         "open": 386,
         "waiting_on_customer": 675,
         "not_responded_48h": 36
@@ -13067,9 +12870,9 @@
       "id": "multi",
       "label": "Multi-product customers",
       "members": 758300,
-      "in_contact": 122562,
-      "volume": 169208,
-      "prev_volume": 174670,
+      "in_contact": 122561,
+      "volume": 169207,
+      "prev_volume": 174672,
       "change_pct": -3.1,
       "open": 10613,
       "waiting_on_customer": 4704,
@@ -13097,15 +12900,15 @@
       "volume_series": [
        {
         "end": "2026-09-13T08:30:00+00:00",
-        "count": 145914
+        "count": 145913
        },
        {
         "end": "2026-10-13T08:30:00+00:00",
-        "count": 174670
+        "count": 174672
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "count": 169208
+        "count": 169207
        }
       ],
       "by_channel": {
@@ -13128,7 +12931,7 @@
         "not_responded_48h": 0
        },
        "emails": {
-        "volume": 11271,
+        "volume": 11270,
         "open": 206,
         "waiting_on_customer": 113,
         "not_responded_48h": 20
@@ -13204,7 +13007,7 @@
     },
     "rm": {
      "alerted": 1944,
-     "of": 9058,
+     "of": 9057,
      "as_of": "2026-11-12T08:30:00+00:00"
     }
    },
@@ -13280,25 +13083,25 @@
    },
    "cx_pulse": {
     "overall": {
-     "total": 1762785,
-     "internal": 1762785,
+     "total": 1762786,
+     "internal": 1762786,
      "external": 0,
      "internal_pct": 100.0,
      "external_pct": 0.0
     },
     "internal": {
-     "volume": 1762785,
-     "prev_volume": 1736878,
+     "volume": 1762786,
+     "prev_volume": 1736881,
      "change_pct": 1.5,
-     "resolved": 1610959,
-     "open": 97687,
-     "waiting_on_customer": 54139,
-     "open_delta": -38832,
+     "resolved": 1610958,
+     "open": 97688,
+     "waiting_on_customer": 54140,
+     "open_delta": -38831,
      "not_responded_delta": -1633,
-     "open_too_long": 60884,
+     "open_too_long": 60885,
      "not_responded_48h": 16455,
-     "negative": 222757,
-     "escalations": 16194,
+     "negative": 222759,
+     "escalations": 16192,
      "by_channel": {
       "calls": {
        "volume": 762431,
@@ -13309,12 +13112,12 @@
        "resolved": 703773
       },
       "whatsapp": {
-       "volume": 527413,
-       "open": 33443,
-       "waiting_on_customer": 17059,
+       "volume": 527417,
+       "open": 33445,
+       "waiting_on_customer": 17060,
        "not_responded_48h": 12719,
-       "open_too_long": 22735,
-       "resolved": 476911
+       "open_too_long": 22736,
+       "resolved": 476912
       },
       "chat": {
        "volume": 166648,
@@ -13325,12 +13128,12 @@
        "resolved": 151982
       },
       "emails": {
-       "volume": 105906,
-       "open": 6141,
+       "volume": 105903,
+       "open": 6140,
        "waiting_on_customer": 3435,
        "not_responded_48h": 3166,
        "open_too_long": 4171,
-       "resolved": 96330
+       "resolved": 96328
       },
       "social": {
        "volume": 17003,
@@ -13403,20 +13206,20 @@
     {
      "id": "current_accounts",
      "label": "Current accounts and app",
-     "overall_volume": 691654,
+     "overall_volume": 691653,
      "internal": {
-      "volume": 691654,
-      "prev_volume": 665394,
+      "volume": 691653,
+      "prev_volume": 665395,
       "change_pct": 3.9,
-      "resolved": 657908,
+      "resolved": 657907,
       "open": 22508,
       "waiting_on_customer": 11238,
       "open_delta": -11487,
       "not_responded_delta": -1334,
       "open_too_long": 11882,
       "not_responded_48h": 4540,
-      "negative": 74921,
-      "escalations": 5471
+      "negative": 74920,
+      "escalations": 5470
      },
      "external": {
       "volume": 0,
@@ -13551,20 +13354,20 @@
     {
      "id": "cards",
      "label": "Credit cards",
-     "overall_volume": 341997,
+     "overall_volume": 342000,
      "internal": {
-      "volume": 341997,
-      "prev_volume": 377728,
+      "volume": 342000,
+      "prev_volume": 377729,
       "change_pct": -9.5,
-      "resolved": 280745,
-      "open": 38819,
-      "waiting_on_customer": 22433,
-      "open_delta": -9161,
+      "resolved": 280746,
+      "open": 38820,
+      "waiting_on_customer": 22434,
+      "open_delta": -9160,
       "not_responded_delta": 1873,
-      "open_too_long": 27012,
+      "open_too_long": 27013,
       "not_responded_48h": 6746,
-      "negative": 56708,
-      "escalations": 4385
+      "negative": 56711,
+      "escalations": 4384
      },
      "external": {
       "volume": 0,
@@ -13617,7 +13420,7 @@
      "top_issue": {
       "id": "dispute_chargeback",
       "label": "Disputes and chargebacks",
-      "count": 9254,
+      "count": 9255,
       "source": "internal"
      },
      "anecdote": null
@@ -13625,12 +13428,12 @@
     {
      "id": "savings",
      "label": "Savings",
-     "overall_volume": 122534,
+     "overall_volume": 122533,
      "internal": {
-      "volume": 122534,
+      "volume": 122533,
       "prev_volume": 113806,
       "change_pct": 7.7,
-      "resolved": 115118,
+      "resolved": 115117,
       "open": 5483,
       "waiting_on_customer": 1933,
       "open_delta": -3787,
@@ -13776,7 +13579,7 @@
      "overall_volume": 106290,
      "internal": {
       "volume": 106290,
-      "prev_volume": 117176,
+      "prev_volume": 117177,
       "change_pct": -9.3,
       "resolved": 91630,
       "open": 9248,
@@ -13858,7 +13661,7 @@
       "business": "cards",
       "business_label": "Credit cards",
       "issue": "Disputes and chargebacks",
-      "text": "0 posts with escalation language; 27,012 internal cases open over 48 hours."
+      "text": "0 posts with escalation language; 27,013 internal cases open over 48 hours."
      },
      {
       "business": "current_accounts",
@@ -13891,7 +13694,7 @@
     "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs previous period (at least 20 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline limit, or more complaints are already eligible than at the previous period end."
    },
    "md_mail": {
-    "total": 6601,
+    "total": 6599,
     "rows": [
      {
       "theme": "complaint_handling",
@@ -13902,14 +13705,14 @@
      {
       "theme": "card_limit",
       "label": "Credit limit",
-      "mails": 327,
+      "mails": 326,
       "resolved": 0
      },
      {
-      "theme": "login_mpin",
+      "theme": "app_login_biometrics",
       "label": "App login and biometrics",
-      "mails": 291,
-      "resolved": 291
+      "mails": 290,
+      "resolved": 290
      },
      {
       "theme": "care_unreachable",
@@ -13927,18 +13730,18 @@
    },
    "cards": {
     "internal": {
-     "volume": 341997,
-     "prev_volume": 377728,
+     "volume": 342000,
+     "prev_volume": 377729,
      "change_pct": -9.5,
-     "resolved": 280745,
-     "open": 38819,
-     "waiting_on_customer": 22433,
-     "open_delta": -9161,
+     "resolved": 280746,
+     "open": 38820,
+     "waiting_on_customer": 22434,
+     "open_delta": -9160,
      "not_responded_delta": 1873,
-     "open_too_long": 27012,
+     "open_too_long": 27013,
      "not_responded_48h": 6746,
-     "negative": 56708,
-     "escalations": 4385
+     "negative": 56711,
+     "escalations": 4384
     },
     "external": {
      "volume": 0,
@@ -13995,11 +13798,11 @@
       "owner": "Credit cards · Disputes lead",
       "tat_related": true,
       "internal": {
-       "volume": 86351,
+       "volume": 86352,
        "resolved": 51441,
-       "open": 24723,
+       "open": 24724,
        "waiting_on_customer": 10187,
-       "open_too_long": 20305,
+       "open_too_long": 20306,
        "not_responded_48h": 27,
        "escalations": 460,
        "change_pct": -7.5
@@ -14040,7 +13843,7 @@
       "trend": [
        {
         "end": "2026-09-13T08:30:00+00:00",
-        "internal": 91746,
+        "internal": 91747,
         "external": 0
        },
        {
@@ -14050,7 +13853,7 @@
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "internal": 86351,
+        "internal": 86352,
         "external": 0
        }
       ],
@@ -14059,11 +13862,11 @@
         "id": "dispute_chargeback",
         "label": "Disputes and chargebacks",
         "internal": {
-         "volume": 48759,
+         "volume": 48760,
          "resolved": 18318,
-         "open": 21425,
+         "open": 21426,
          "waiting_on_customer": 9016,
-         "open_too_long": 18826,
+         "open_too_long": 18827,
          "not_responded_48h": 27,
          "escalations": 8,
          "change_pct": -13.1
@@ -14104,7 +13907,7 @@
         "trend": [
          {
           "end": "2026-09-13T08:30:00+00:00",
-          "internal": 61153,
+          "internal": 61154,
           "external": 0
          },
          {
@@ -14114,7 +13917,7 @@
          },
          {
           "end": "2026-11-12T08:30:00+00:00",
-          "internal": 48759,
+          "internal": 48760,
           "external": 0
          }
         ]
@@ -14191,9 +13994,9 @@
       "owner": "Credit cards · Rewards lead",
       "tat_related": false,
       "internal": {
-       "volume": 50178,
+       "volume": 50179,
        "resolved": 48040,
-       "open": 1272,
+       "open": 1273,
        "waiting_on_customer": 866,
        "open_too_long": 809,
        "not_responded_48h": 1975,
@@ -14236,7 +14039,7 @@
       "trend": [
        {
         "end": "2026-09-13T08:30:00+00:00",
-        "internal": 51078,
+        "internal": 51079,
         "external": 0
        },
        {
@@ -14246,7 +14049,7 @@
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "internal": 50178,
+        "internal": 50179,
         "external": 0
        }
       ],
@@ -14300,7 +14103,7 @@
         "trend": [
          {
           "end": "2026-09-13T08:30:00+00:00",
-          "internal": 34243,
+          "internal": 34244,
           "external": 0
          },
          {
@@ -14319,9 +14122,9 @@
         "id": "reward_redemption",
         "label": "Reward redemption",
         "internal": {
-         "volume": 22266,
+         "volume": 22267,
          "resolved": 20265,
-         "open": 1139,
+         "open": 1140,
          "waiting_on_customer": 862,
          "open_too_long": 809,
          "not_responded_48h": 1975,
@@ -14374,7 +14177,7 @@
          },
          {
           "end": "2026-11-12T08:30:00+00:00",
-          "internal": 22266,
+          "internal": 22267,
           "external": 0
          }
         ]
@@ -14519,14 +14322,14 @@
       "owner": "Credit cards · Credit policy lead",
       "tat_related": true,
       "internal": {
-       "volume": 43283,
+       "volume": 43334,
        "resolved": 36240,
-       "open": 3280,
+       "open": 3331,
        "waiting_on_customer": 3763,
        "open_too_long": 648,
        "not_responded_48h": 1183,
-       "escalations": 1021,
-       "change_pct": 38.5
+       "escalations": 1020,
+       "change_pct": 38.7
       },
       "external": {
        "volume": 0,
@@ -14574,7 +14377,7 @@
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "internal": 43283,
+        "internal": 43334,
         "external": 0
        }
       ],
@@ -14583,14 +14386,14 @@
         "id": "card_limit",
         "label": "Credit limit",
         "internal": {
-         "volume": 43283,
+         "volume": 43334,
          "resolved": 36240,
-         "open": 3280,
+         "open": 3331,
          "waiting_on_customer": 3763,
          "open_too_long": 648,
          "not_responded_48h": 1183,
-         "escalations": 1021,
-         "change_pct": 38.5
+         "escalations": 1020,
+         "change_pct": 38.7
         },
         "external": {
          "volume": 0,
@@ -14638,7 +14441,7 @@
          },
          {
           "end": "2026-11-12T08:30:00+00:00",
-          "internal": 43283,
+          "internal": 43334,
           "external": 0
          }
         ]
@@ -14651,8 +14454,8 @@
       "owner": "Credit cards · Card delivery lead",
       "tat_related": true,
       "internal": {
-       "volume": 37029,
-       "resolved": 27483,
+       "volume": 37030,
+       "resolved": 27484,
        "open": 5008,
        "waiting_on_customer": 4538,
        "open_too_long": 3445,
@@ -14706,7 +14509,7 @@
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "internal": 37029,
+        "internal": 37030,
         "external": 0
        }
       ],
@@ -14715,8 +14518,8 @@
         "id": "card_dispatch",
         "label": "Card dispatch and delivery",
         "internal": {
-         "volume": 37029,
-         "resolved": 27483,
+         "volume": 37030,
+         "resolved": 27484,
          "open": 5008,
          "waiting_on_customer": 4538,
          "open_too_long": 3445,
@@ -14770,7 +14573,7 @@
          },
          {
           "end": "2026-11-12T08:30:00+00:00",
-          "internal": 37029,
+          "internal": 37030,
           "external": 0
          }
         ]
@@ -14783,10 +14586,10 @@
       "owner": "Credit cards · Acquisition lead",
       "tat_related": true,
       "internal": {
-       "volume": 36713,
+       "volume": 36714,
        "resolved": 33185,
        "open": 2989,
-       "waiting_on_customer": 539,
+       "waiting_on_customer": 540,
        "open_too_long": 543,
        "not_responded_48h": 645,
        "escalations": 810,
@@ -14828,17 +14631,17 @@
       "trend": [
        {
         "end": "2026-09-13T08:30:00+00:00",
-        "internal": 39863,
+        "internal": 39862,
         "external": 0
        },
        {
         "end": "2026-10-13T08:30:00+00:00",
-        "internal": 42741,
+        "internal": 42742,
         "external": 0
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "internal": 36713,
+        "internal": 36714,
         "external": 0
        }
       ],
@@ -14847,10 +14650,10 @@
         "id": "card_application",
         "label": "Card applications and identity checks",
         "internal": {
-         "volume": 36713,
+         "volume": 36714,
          "resolved": 33185,
          "open": 2989,
-         "waiting_on_customer": 539,
+         "waiting_on_customer": 540,
          "open_too_long": 543,
          "not_responded_48h": 645,
          "escalations": 810,
@@ -14892,17 +14695,17 @@
         "trend": [
          {
           "end": "2026-09-13T08:30:00+00:00",
-          "internal": 39863,
+          "internal": 39862,
           "external": 0
          },
          {
           "end": "2026-10-13T08:30:00+00:00",
-          "internal": 42741,
+          "internal": 42742,
           "external": 0
          },
          {
           "end": "2026-11-12T08:30:00+00:00",
-          "internal": 36713,
+          "internal": 36714,
           "external": 0
          }
         ]
@@ -15239,138 +15042,6 @@
         ]
        }
       ]
-     },
-     {
-      "id": "upgrades",
-      "label": "Eligibility and card changes",
-      "owner": "Credit cards · Product lead",
-      "tat_related": true,
-      "internal": {
-       "volume": 52,
-       "resolved": 0,
-       "open": 52,
-       "waiting_on_customer": 0,
-       "open_too_long": 0,
-       "not_responded_48h": 0,
-       "escalations": 0,
-       "change_pct": null
-      },
-      "external": {
-       "volume": 0,
-       "positive": 0,
-       "negative": 0,
-       "negative_share": null,
-       "escalation": 0,
-       "responded": {
-        "reviews": 0,
-        "responded": 0,
-        "positive_reviews": 0,
-        "positive_responded": 0,
-        "negative_reviews": 0,
-        "negative_responded": 0
-       },
-       "high_impact": {
-        "volume": 0,
-        "positive": 0,
-        "negative": 0,
-        "escalation": 0,
-        "positive_share": null,
-        "negative_share": null,
-        "share_method": "source_weighted",
-        "responded": {
-         "reviews": 0,
-         "responded": 0,
-         "positive_reviews": 0,
-         "positive_responded": 0,
-         "negative_reviews": 0,
-         "negative_responded": 0
-        }
-       },
-       "change_pct": null
-      },
-      "trend": [
-       {
-        "end": "2026-09-13T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-10-13T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-11-12T08:30:00+00:00",
-        "internal": 52,
-        "external": 0
-       }
-      ],
-      "subcategories": [
-       {
-        "id": "card_variant_migration",
-        "label": "Card product changes and forced switches",
-        "internal": {
-         "volume": 52,
-         "resolved": 0,
-         "open": 52,
-         "waiting_on_customer": 0,
-         "open_too_long": 0,
-         "not_responded_48h": 0,
-         "escalations": 0,
-         "change_pct": null
-        },
-        "external": {
-         "volume": 0,
-         "positive": 0,
-         "negative": 0,
-         "negative_share": null,
-         "escalation": 0,
-         "responded": {
-          "reviews": 0,
-          "responded": 0,
-          "positive_reviews": 0,
-          "positive_responded": 0,
-          "negative_reviews": 0,
-          "negative_responded": 0
-         },
-         "high_impact": {
-          "volume": 0,
-          "positive": 0,
-          "negative": 0,
-          "escalation": 0,
-          "positive_share": null,
-          "negative_share": null,
-          "share_method": "source_weighted",
-          "responded": {
-           "reviews": 0,
-           "responded": 0,
-           "positive_reviews": 0,
-           "positive_responded": 0,
-           "negative_reviews": 0,
-           "negative_responded": 0
-          }
-         },
-         "change_pct": null
-        },
-        "trend": [
-         {
-          "end": "2026-09-13T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-10-13T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-11-12T08:30:00+00:00",
-          "internal": 52,
-          "external": 0
-         }
-        ]
-       }
-      ]
      }
     ],
     "mood": {
@@ -15381,9 +15052,9 @@
     },
     "market": [],
     "service": {
-     "resolved": 280745,
-     "volume": 341997,
-     "open_too_long": 27012,
+     "resolved": 280746,
+     "volume": 342000,
+     "open_too_long": 27013,
      "median_first_response_hours_written": 4.5,
      "public_service_negative": 0
     },
@@ -15415,8 +15086,8 @@
      {
       "id": "limits",
       "label": "Limits",
-      "repeat_contact_internal": 6.5,
-      "escalation_internal": 1021,
+      "repeat_contact_internal": 6.4,
+      "escalation_internal": 1020,
       "escalation_external": 0,
       "negative_share": null
      },
@@ -15459,14 +15130,6 @@
       "escalation_internal": 925,
       "escalation_external": 0,
       "negative_share": null
-     },
-     {
-      "id": "upgrades",
-      "label": "Eligibility and card changes",
-      "repeat_contact_internal": 0.0,
-      "escalation_internal": 0,
-      "escalation_external": 0,
-      "negative_share": null
      }
     ],
     "pillars": [
@@ -15502,31 +15165,31 @@
     "journey": [
      {
       "stage": "Open",
-      "volume": 36713,
+      "volume": 36714,
       "negative_share": 20.5,
       "repeat_share": 7.3
      },
      {
       "stage": "Activate",
-      "volume": 37029,
+      "volume": 37030,
       "negative_share": 10.8,
       "repeat_share": 6.3
      },
      {
       "stage": "Everyday banking",
-      "volume": 155257,
+      "volume": 155309,
       "negative_share": 15.7,
       "repeat_share": 4.2
      },
      {
       "stage": "Service requests",
-      "volume": 2951,
-      "negative_share": 86.4,
+      "volume": 2899,
+      "negative_share": 86.2,
       "repeat_share": 4.3
      },
      {
       "stage": "Disputes and fraud",
-      "volume": 86351,
+      "volume": 86352,
       "negative_share": 17.8,
       "repeat_share": 13.0
      },
@@ -15564,9 +15227,9 @@
     "channels": {
      "internal": {
       "calls": 149965,
-      "whatsapp": 92827,
+      "whatsapp": 92831,
       "chat": 38600,
-      "emails": 23201,
+      "emails": 23200,
       "social": 1614,
       "branch": 35790
      },
@@ -15576,9 +15239,9 @@
      {
       "id": "priority_a",
       "label": "Financially vulnerable (Consumer Duty)",
-      "volume": 81574,
-      "open": 6243,
-      "negative": 12573
+      "volume": 81573,
+      "open": 6242,
+      "negative": 12572
      },
      {
       "id": "priority_b",
@@ -15604,9 +15267,9 @@
      {
       "id": "none",
       "label": "Not on a list",
-      "volume": 252591,
-      "open": 32033,
-      "negative": 42871
+      "volume": 252595,
+      "open": 32035,
+      "negative": 42875
      }
     ],
     "happy": {
@@ -15635,35 +15298,35 @@
        "label": "Disputes, refunds and reversals",
        "internal_repeat": 11257,
        "public_repeat": 0,
-       "contacts": 86351
+       "contacts": 86352
       },
       {
        "id": "limits",
        "label": "Limits",
-       "internal_repeat": 2795,
+       "internal_repeat": 2794,
        "public_repeat": 0,
-       "contacts": 43283
+       "contacts": 43334
       },
       {
        "id": "applications",
        "label": "Applications and verification",
        "internal_repeat": 2669,
        "public_repeat": 0,
-       "contacts": 36713
+       "contacts": 36714
       },
       {
        "id": "delivery",
        "label": "Card delivery",
        "internal_repeat": 2320,
        "public_repeat": 0,
-       "contacts": 37029
+       "contacts": 37030
       },
       {
        "id": "rewards",
        "label": "Rewards and redemption",
        "internal_repeat": 1902,
        "public_repeat": 0,
-       "contacts": 50178
+       "contacts": 50179
       },
       {
        "id": "fees",
@@ -15692,24 +15355,17 @@
        "internal_repeat": 23,
        "public_repeat": 0,
        "contacts": 14058
-      },
-      {
-       "id": "upgrades",
-       "label": "Eligibility and card changes",
-       "internal_repeat": 0,
-       "public_repeat": 0,
-       "contacts": 52
       }
      ],
      "tiers": [
       {
        "id": "priority_a",
        "label": "Financially vulnerable (Consumer Duty)",
-       "volume": 81574,
+       "volume": 81573,
        "positive": 10907,
        "neutral": 58094,
-       "negative": 12573,
-       "open": 6243
+       "negative": 12572,
+       "open": 6242
       },
       {
        "id": "priority_b",
@@ -15741,11 +15397,11 @@
       {
        "id": "none",
        "label": "Not on a list",
-       "volume": 252591,
+       "volume": 252595,
        "positive": 39292,
        "neutral": 170428,
-       "negative": 42871,
-       "open": 32033
+       "negative": 42875,
+       "open": 32035
       }
      ]
     },
@@ -15783,19 +15439,19 @@
      "ladder": [
       {
        "rung": "Contacts",
-       "count": 341997
+       "count": 342000
       },
       {
        "rung": "Repeat",
-       "count": 24591
+       "count": 24590
       },
       {
        "rung": "Complaint",
-       "count": 4385
+       "count": 4384
       },
       {
        "rung": "Complaints team",
-       "count": 1255
+       "count": 1254
       },
       {
        "rung": "Final response",
@@ -15827,11 +15483,11 @@
      "disputes": [
       {
        "stage": "Disputes raised",
-       "count": 48759
+       "count": 48760
       },
       {
        "stage": "First response given",
-       "count": 48368
+       "count": 48369
       },
       {
        "stage": "Closed",
@@ -15847,7 +15503,7 @@
       "rows": []
      },
      "tat_related": {
-      "contacts": 230023,
+      "contacts": 230025,
       "share": 67.3,
       "open": 36488
      },
@@ -16449,17 +16105,17 @@
    "v4": {
     "cards": {
      "hierarchy": {
-      "total": 341997,
+      "total": 342000,
       "inside": {
-       "volume": 341997,
+       "volume": 342000,
        "kinds": {
         "complaint": {
          "label": "Complaints",
-         "volume": 89250,
+         "volume": 89251,
          "resolved": 53604,
-         "open": 25155,
+         "open": 25156,
          "waiting_on_customer": 10491,
-         "open_too_long": 21218
+         "open_too_long": 21219
         },
         "query": {
          "label": "Queries",
@@ -16471,16 +16127,16 @@
         },
         "request": {
          "label": "Requests",
-         "volume": 177097,
-         "resolved": 151636,
+         "volume": 177099,
+         "resolved": 151637,
          "open": 13523,
-         "waiting_on_customer": 11938,
-         "open_too_long": 8493
+         "waiting_on_customer": 11939,
+         "open_too_long": 8492
         }
        },
-       "resolved": 280745,
-       "open": 38819,
-       "waiting_on_customer": 22433,
+       "resolved": 280746,
+       "open": 38820,
+       "waiting_on_customer": 22434,
        "open_too_long": 29844
       },
       "public": {
@@ -16509,13 +16165,13 @@
      },
      "open_too_long": {
       "count": 29844,
-      "open": 38819,
+      "open": 38820,
       "share_of_open": 76.9,
       "by_limit": [
        {
         "id": "priority_a",
         "label": "Financially vulnerable: 5 hours",
-        "count": 6243
+        "count": 6242
        },
        {
         "id": "uhni",
@@ -16530,7 +16186,7 @@
        {
         "id": "default",
         "label": "Default: over 48 hours (bank SLA, illustrative)",
-        "count": 23254
+        "count": 23255
        }
       ],
       "list": [
@@ -16940,9 +16596,9 @@
       {
        "id": "ultra_sensitive",
        "label": "Financially vulnerable",
-       "volume": 81574,
-       "open": 6243,
-       "open_too_long": 6243,
+       "volume": 81573,
+       "open": 6242,
+       "open_too_long": 6242,
        "negative_mentions": 165,
        "channels": [
         "Branch",
@@ -17683,11 +17339,11 @@
       }
      ],
      "service": {
-      "volume": 341997,
-      "resolved": 280745,
+      "volume": 342000,
+      "resolved": 280746,
       "sdr": 35192,
       "sdr_pct": 10.3,
-      "ftr": 259026,
+      "ftr": 259027,
       "ftr_pct": 92.3,
       "ftnr": 21719,
       "ftnr_pct": 7.7,
@@ -17696,38 +17352,38 @@
     },
     "bank": {
      "hierarchy": {
-      "total": 1762785,
+      "total": 1762786,
       "inside": {
-       "volume": 1762785,
+       "volume": 1762786,
        "kinds": {
         "complaint": {
          "label": "Complaints",
-         "volume": 231482,
+         "volume": 231483,
          "resolved": 191356,
-         "open": 28105,
+         "open": 28106,
          "waiting_on_customer": 12021,
-         "open_too_long": 21928
+         "open_too_long": 21929
         },
         "query": {
          "label": "Queries",
-         "volume": 887878,
-         "resolved": 871255,
+         "volume": 887876,
+         "resolved": 871253,
          "open": 12243,
          "waiting_on_customer": 4380,
          "open_too_long": 4873
         },
         "request": {
          "label": "Requests",
-         "volume": 643425,
-         "resolved": 548348,
+         "volume": 643427,
+         "resolved": 548349,
          "open": 57339,
-         "waiting_on_customer": 37738,
-         "open_too_long": 41011
+         "waiting_on_customer": 37739,
+         "open_too_long": 41010
         }
        },
-       "resolved": 1610959,
-       "open": 97687,
-       "waiting_on_customer": 54139,
+       "resolved": 1610958,
+       "open": 97688,
+       "waiting_on_customer": 54140,
        "open_too_long": 67812
       },
       "public": {
@@ -17756,13 +17412,13 @@
      },
      "open_too_long": {
       "count": 67812,
-      "open": 97687,
+      "open": 97688,
       "share_of_open": 69.4,
       "by_limit": [
        {
         "id": "priority_a",
         "label": "Financially vulnerable: 5 hours",
-        "count": 17168
+        "count": 17167
        },
        {
         "id": "uhni",
@@ -17777,7 +17433,7 @@
        {
         "id": "default",
         "label": "Default: over 48 hours (bank SLA, illustrative)",
-        "count": 49195
+        "count": 49196
        }
       ],
       "list": [
@@ -18342,11 +17998,11 @@
          }
         ],
         "service": {
-         "volume": 691654,
-         "resolved": 657908,
+         "volume": 691653,
+         "resolved": 657907,
          "sdr": 195585,
          "sdr_pct": 28.3,
-         "ftr": 630487,
+         "ftr": 630486,
          "ftr_pct": 95.8,
          "ftnr": 27421,
          "ftnr_pct": 4.2,
@@ -18527,7 +18183,7 @@
         "id": "cards",
         "label": "Credit cards",
         "count": 29844,
-        "open": 38819,
+        "open": 38820,
         "share_of_open": 76.9,
         "list": [
          {
@@ -18682,11 +18338,11 @@
          }
         ],
         "service": {
-         "volume": 341997,
-         "resolved": 280745,
+         "volume": 342000,
+         "resolved": 280746,
          "sdr": 35192,
          "sdr_pct": 10.3,
-         "ftr": 259026,
+         "ftr": 259027,
          "ftr_pct": 92.3,
          "ftnr": 21719,
          "ftnr_pct": 7.7,
@@ -18852,11 +18508,11 @@
          }
         ],
         "service": {
-         "volume": 122534,
-         "resolved": 115118,
+         "volume": 122533,
+         "resolved": 115117,
          "sdr": 28415,
          "sdr_pct": 23.2,
-         "ftr": 108137,
+         "ftr": 108136,
          "ftr_pct": 93.9,
          "ftnr": 6981,
          "ftnr_pct": 6.1,
@@ -19251,11 +18907,11 @@
       "note": "Responded: the bank's handle or the store developer replied, where the source carries replies. Public data not yet loaded until the pull lands."
      },
      "service": {
-      "volume": 1762785,
-      "resolved": 1610959,
+      "volume": 1762786,
+      "resolved": 1610958,
       "sdr": 406360,
       "sdr_pct": 23.1,
-      "ftr": 1524353,
+      "ftr": 1524352,
       "ftr_pct": 94.6,
       "ftnr": 86606,
       "ftnr_pct": 5.4,
@@ -19371,18 +19027,18 @@
       "id": "priority_a",
       "label": "Financially vulnerable (Consumer Duty)",
       "members": 1780000,
-      "in_contact": 512789,
-      "volume": 1334978,
+      "in_contact": 512788,
+      "volume": 1334977,
       "prev_volume": 632377,
       "change_pct": 11.1,
-      "open": 17956,
+      "open": 17955,
       "waiting_on_customer": 12814,
       "not_responded_48h": 6574,
-      "open_delta": -10017,
+      "open_delta": -10018,
       "not_responded_delta": 3938,
       "rm": {
        "alerted": 1733,
-       "of": 7410
+       "of": 7409
       },
       "not_responded_series": [
        {
@@ -19453,7 +19109,7 @@
        },
        {
         "end": "2026-08-27T08:30:00+00:00",
-        "count": 84346
+        "count": 84345
        },
        {
         "end": "2026-09-03T08:30:00+00:00",
@@ -19465,7 +19121,7 @@
        },
        {
         "end": "2026-09-17T08:30:00+00:00",
-        "count": 96561
+        "count": 96562
        },
        {
         "end": "2026-09-24T08:30:00+00:00",
@@ -19497,7 +19153,7 @@
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "count": 103330
+        "count": 103329
        }
       ],
       "by_channel": {
@@ -19514,14 +19170,14 @@
         "not_responded_48h": 5834
        },
        "chat": {
-        "volume": 115748,
+        "volume": 115749,
         "open": 1164,
         "waiting_on_customer": 933,
         "not_responded_48h": 0
        },
        "emails": {
-        "volume": 78363,
-        "open": 1189,
+        "volume": 78361,
+        "open": 1188,
         "waiting_on_customer": 753,
         "not_responded_48h": 362
        },
@@ -19544,13 +19200,13 @@
       "label": "Recent complainants (90 days)",
       "members": 43000,
       "in_contact": 23787,
-      "volume": 64511,
-      "prev_volume": 27965,
+      "volume": 64513,
+      "prev_volume": 27966,
       "change_pct": 30.7,
       "open": 375,
       "waiting_on_customer": 852,
       "not_responded_48h": 323,
-      "open_delta": -1640,
+      "open_delta": -1641,
       "not_responded_delta": -23,
       "rm": {
        "alerted": 52,
@@ -19641,7 +19297,7 @@
        },
        {
         "end": "2026-09-24T08:30:00+00:00",
-        "count": 5350
+        "count": 5351
        },
        {
         "end": "2026-10-01T08:30:00+00:00",
@@ -19653,7 +19309,7 @@
        },
        {
         "end": "2026-10-15T08:30:00+00:00",
-        "count": 4502
+        "count": 4503
        },
        {
         "end": "2026-10-22T08:30:00+00:00",
@@ -19686,7 +19342,7 @@
         "not_responded_48h": 240
        },
        "chat": {
-        "volume": 5769,
+        "volume": 5771,
         "open": 22,
         "waiting_on_customer": 13,
         "not_responded_48h": 0
@@ -19717,7 +19373,7 @@
       "members": 750000,
       "in_contact": 158454,
       "volume": 473631,
-      "prev_volume": 221127,
+      "prev_volume": 221128,
       "change_pct": 14.2,
       "open": 8080,
       "waiting_on_customer": 6633,
@@ -19801,7 +19457,7 @@
        },
        {
         "end": "2026-09-03T08:30:00+00:00",
-        "count": 29528
+        "count": 29531
        },
        {
         "end": "2026-09-10T08:30:00+00:00",
@@ -19829,7 +19485,7 @@
        },
        {
         "end": "2026-10-22T08:30:00+00:00",
-        "count": 38229
+        "count": 38228
        },
        {
         "end": "2026-10-29T08:30:00+00:00",
@@ -19846,7 +19502,7 @@
       ],
       "by_channel": {
        "calls": {
-        "volume": 224606,
+        "volume": 224604,
         "open": 4650,
         "waiting_on_customer": 2297,
         "not_responded_48h": 0
@@ -19864,7 +19520,7 @@
         "not_responded_48h": 0
        },
        "emails": {
-        "volume": 29302,
+        "volume": 29304,
         "open": 386,
         "waiting_on_customer": 677,
         "not_responded_48h": 433
@@ -19887,14 +19543,14 @@
       "id": "multi",
       "label": "Multi-product customers",
       "members": 758300,
-      "in_contact": 208408,
-      "volume": 549778,
-      "prev_volume": 255259,
+      "in_contact": 208406,
+      "volume": 549777,
+      "prev_volume": 255258,
       "change_pct": 15.4,
       "open": 10629,
       "waiting_on_customer": 4880,
       "not_responded_48h": 2424,
-      "open_delta": -2335,
+      "open_delta": -2336,
       "not_responded_delta": 1563,
       "rm": {
        "alerted": 649,
@@ -19969,7 +19625,7 @@
        },
        {
         "end": "2026-08-27T08:30:00+00:00",
-        "count": 34211
+        "count": 34210
        },
        {
         "end": "2026-09-03T08:30:00+00:00",
@@ -19985,7 +19641,7 @@
        },
        {
         "end": "2026-09-24T08:30:00+00:00",
-        "count": 40315
+        "count": 40316
        },
        {
         "end": "2026-10-01T08:30:00+00:00",
@@ -19997,11 +19653,11 @@
        },
        {
         "end": "2026-10-15T08:30:00+00:00",
-        "count": 33247
+        "count": 33248
        },
        {
         "end": "2026-10-22T08:30:00+00:00",
-        "count": 37713
+        "count": 37712
        },
        {
         "end": "2026-10-29T08:30:00+00:00",
@@ -20018,7 +19674,7 @@
       ],
       "by_channel": {
        "calls": {
-        "volume": 248158,
+        "volume": 248157,
         "open": 5064,
         "waiting_on_customer": 1762,
         "not_responded_48h": 0
@@ -20030,13 +19686,13 @@
         "not_responded_48h": 2220
        },
        "chat": {
-        "volume": 46375,
+        "volume": 46377,
         "open": 718,
         "waiting_on_customer": 255,
         "not_responded_48h": 0
        },
        "emails": {
-        "volume": 36875,
+        "volume": 36873,
         "open": 206,
         "waiting_on_customer": 113,
         "not_responded_48h": 54
@@ -20200,7 +19856,7 @@
     },
     "rm": {
      "alerted": 1956,
-     "of": 9095,
+     "of": 9094,
      "as_of": "2026-11-12T08:30:00+00:00"
     }
    },
@@ -20452,55 +20108,55 @@
    },
    "cx_pulse": {
     "overall": {
-     "total": 5801492,
-     "internal": 5801492,
+     "total": 5801498,
+     "internal": 5801498,
      "external": 0,
      "internal_pct": 100.0,
      "external_pct": 0.0
     },
     "internal": {
-     "volume": 5801492,
-     "prev_volume": 2750639,
+     "volume": 5801498,
+     "prev_volume": 2750642,
      "change_pct": 10.9,
-     "resolved": 5641136,
-     "open": 103475,
-     "waiting_on_customer": 56881,
-     "open_delta": -40208,
-     "not_responded_delta": -4716,
-     "open_too_long": 66672,
-     "not_responded_48h": 64903,
-     "negative": 704760,
-     "escalations": 53595,
+     "resolved": 5641140,
+     "open": 103476,
+     "waiting_on_customer": 56882,
+     "open_delta": -40209,
+     "not_responded_delta": -4715,
+     "open_too_long": 66673,
+     "not_responded_48h": 64902,
+     "negative": 704767,
+     "escalations": 53712,
      "by_channel": {
       "calls": {
-       "volume": 2552571,
+       "volume": 2552570,
        "open": 38329,
        "waiting_on_customer": 24331,
        "not_responded_48h": 0,
        "open_too_long": 24901,
-       "resolved": 2489911
+       "resolved": 2489910
       },
       "whatsapp": {
-       "volume": 1740267,
-       "open": 34708,
-       "waiting_on_customer": 17222,
+       "volume": 1740272,
+       "open": 34710,
+       "waiting_on_customer": 17223,
        "not_responded_48h": 53509,
-       "open_too_long": 24000,
-       "resolved": 1688337
+       "open_too_long": 24001,
+       "resolved": 1688339
       },
       "chat": {
-       "volume": 522309,
+       "volume": 522312,
        "open": 10640,
        "waiting_on_customer": 4340,
        "not_responded_48h": 0,
        "open_too_long": 4964,
-       "resolved": 507329
+       "resolved": 507332
       },
       "emails": {
-       "volume": 348165,
-       "open": 7074,
+       "volume": 348164,
+       "open": 7073,
        "waiting_on_customer": 3437,
-       "not_responded_48h": 8097,
+       "not_responded_48h": 8096,
        "open_too_long": 5104,
        "resolved": 337654
       },
@@ -20575,20 +20231,20 @@
     {
      "id": "current_accounts",
      "label": "Current accounts and app",
-     "overall_volume": 2320792,
+     "overall_volume": 2320791,
      "internal": {
-      "volume": 2320792,
-      "prev_volume": 1135930,
+      "volume": 2320791,
+      "prev_volume": 1135929,
       "change_pct": 4.3,
-      "resolved": 2286561,
+      "resolved": 2286560,
       "open": 22545,
       "waiting_on_customer": 11686,
       "open_delta": -9249,
       "not_responded_delta": 6166,
       "open_too_long": 11919,
       "not_responded_48h": 14010,
-      "negative": 232470,
-      "escalations": 16371
+      "negative": 232469,
+      "escalations": 16052
      },
      "external": {
       "volume": 0,
@@ -20662,7 +20318,7 @@
       "open_too_long": 4173,
       "not_responded_48h": 12995,
       "negative": 102193,
-      "escalations": 10121
+      "escalations": 10279
      },
      "external": {
       "volume": 0,
@@ -20713,7 +20369,7 @@
       "source_mix": {}
      },
      "top_issue": {
-      "id": "upi_failures",
+      "id": "faster_payments_failures",
       "label": "Faster Payments or Open Banking failure",
       "count": 20428,
       "source": "internal"
@@ -20723,20 +20379,20 @@
     {
      "id": "cards",
      "label": "Credit cards",
-     "overall_volume": 1160153,
+     "overall_volume": 1160157,
      "internal": {
-      "volume": 1160153,
-      "prev_volume": 533369,
+      "volume": 1160157,
+      "prev_volume": 533370,
       "change_pct": 17.5,
-      "resolved": 1093229,
-      "open": 42752,
-      "waiting_on_customer": 24172,
-      "open_delta": -5440,
+      "resolved": 1093231,
+      "open": 42753,
+      "waiting_on_customer": 24173,
+      "open_delta": -5441,
       "not_responded_delta": -1706,
-      "open_too_long": 30945,
+      "open_too_long": 30946,
       "not_responded_48h": 21798,
-      "negative": 174009,
-      "escalations": 10619
+      "negative": 174013,
+      "escalations": 10621
      },
      "external": {
       "volume": 0,
@@ -20797,12 +20453,12 @@
     {
      "id": "savings",
      "label": "Savings",
-     "overall_volume": 406135,
+     "overall_volume": 406134,
      "internal": {
-      "volume": 406135,
+      "volume": 406134,
       "prev_volume": 195868,
       "change_pct": 7.4,
-      "resolved": 398557,
+      "resolved": 398556,
       "open": 5486,
       "waiting_on_customer": 2092,
       "open_delta": -2293,
@@ -20810,7 +20466,7 @@
       "open_too_long": 2637,
       "not_responded_48h": 4215,
       "negative": 44709,
-      "escalations": 4777
+      "escalations": 4775
      },
      "external": {
       "volume": 0,
@@ -20871,20 +20527,20 @@
     {
      "id": "mortgages",
      "label": "Mortgages",
-     "overall_volume": 638106,
+     "overall_volume": 638108,
      "internal": {
-      "volume": 638106,
-      "prev_volume": 310974,
+      "volume": 638108,
+      "prev_volume": 310976,
       "change_pct": 5.2,
-      "resolved": 620054,
+      "resolved": 620056,
       "open": 11727,
       "waiting_on_customer": 6325,
       "open_delta": -6719,
       "not_responded_delta": -2818,
       "open_too_long": 9039,
       "not_responded_48h": 8206,
-      "negative": 95701,
-      "escalations": 5145
+      "negative": 95703,
+      "escalations": 5424
      },
      "external": {
       "volume": 0,
@@ -20945,20 +20601,20 @@
     {
      "id": "personal_loans",
      "label": "Personal loans",
-     "overall_volume": 348047,
+     "overall_volume": 348049,
      "internal": {
-      "volume": 348047,
-      "prev_volume": 151638,
+      "volume": 348049,
+      "prev_volume": 151639,
       "change_pct": 29.5,
-      "resolved": 331452,
+      "resolved": 331454,
       "open": 11036,
       "waiting_on_customer": 5559,
       "open_delta": -4925,
-      "not_responded_delta": -3633,
+      "not_responded_delta": -3632,
       "open_too_long": 7959,
-      "not_responded_48h": 3679,
-      "negative": 55678,
-      "escalations": 6562
+      "not_responded_48h": 3678,
+      "negative": 55680,
+      "escalations": 6561
      },
      "external": {
       "volume": 0,
@@ -21024,13 +20680,13 @@
       "business_label": "All products",
       "issue": "Financial Ombudsman watch",
       "kind": "ombudsman",
-      "text": "3 complaints have 3 days or fewer to the final-response deadline; 296 are past it and may go to the Financial Ombudsman Service (up 213 on the previous period end)."
+      "text": "3 complaints have 3 days or fewer to the final-response deadline; 296 are past it and may go to the Financial Ombudsman Service (up 214 on the previous period end)."
      },
      {
       "business": "cards",
       "business_label": "Credit cards",
       "issue": "Card interest and charges",
-      "text": "0 posts with escalation language; 30,945 internal cases open over 48 hours."
+      "text": "0 posts with escalation language; 30,946 internal cases open over 48 hours."
      },
      {
       "business": "current_accounts",
@@ -21063,7 +20719,7 @@
     "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs previous period (at least 30 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline limit, or more complaints are already eligible than at the previous period end."
    },
    "md_mail": {
-    "total": 28407,
+    "total": 28406,
     "rows": [
      {
       "theme": "complaint_handling",
@@ -21074,43 +20730,43 @@
      {
       "theme": "card_application",
       "label": "Card applications and identity checks",
-      "mails": 1141,
-      "resolved": 1141
+      "mails": 1140,
+      "resolved": 1140
      },
      {
       "theme": "cora_no_person",
       "label": "Could not reach a person",
-      "mails": 717,
-      "resolved": 717
+      "mails": 716,
+      "resolved": 716
      },
      {
       "theme": "loan_processing",
       "label": "Loan and mortgage applications",
-      "mails": 486,
-      "resolved": 481
+      "mails": 489,
+      "resolved": 484
      },
      {
       "theme": "card_limit",
       "label": "Credit limit",
-      "mails": 330,
+      "mails": 329,
       "resolved": 3
      }
     ]
    },
    "cards": {
     "internal": {
-     "volume": 1160153,
-     "prev_volume": 533369,
+     "volume": 1160157,
+     "prev_volume": 533370,
      "change_pct": 17.5,
-     "resolved": 1093229,
-     "open": 42752,
-     "waiting_on_customer": 24172,
-     "open_delta": -5440,
+     "resolved": 1093231,
+     "open": 42753,
+     "waiting_on_customer": 24173,
+     "open_delta": -5441,
      "not_responded_delta": -1706,
-     "open_too_long": 30945,
+     "open_too_long": 30946,
      "not_responded_48h": 21798,
-     "negative": 174009,
-     "escalations": 10619
+     "negative": 174013,
+     "escalations": 10621
     },
     "external": {
      "volume": 0,
@@ -21167,11 +20823,11 @@
       "owner": "Credit cards · Disputes lead",
       "tat_related": true,
       "internal": {
-       "volume": 297062,
+       "volume": 297063,
        "resolved": 256730,
-       "open": 28642,
+       "open": 28643,
        "waiting_on_customer": 11690,
-       "open_too_long": 24224,
+       "open_too_long": 24225,
        "not_responded_48h": 6174,
        "escalations": 598,
        "change_pct": 12.5
@@ -21232,7 +20888,7 @@
        },
        {
         "end": "2026-09-10T08:30:00+00:00",
-        "internal": 19451,
+        "internal": 19452,
         "external": 0
        },
        {
@@ -21257,7 +20913,7 @@
        },
        {
         "end": "2026-10-15T08:30:00+00:00",
-        "internal": 22009,
+        "internal": 22010,
         "external": 0
        },
        {
@@ -21286,11 +20942,11 @@
         "id": "dispute_chargeback",
         "label": "Disputes and chargebacks",
         "internal": {
-         "volume": 184432,
-         "resolved": 148569,
-         "open": 25344,
+         "volume": 184434,
+         "resolved": 148570,
+         "open": 25345,
          "waiting_on_customer": 10519,
-         "open_too_long": 22745,
+         "open_too_long": 22746,
          "not_responded_48h": 6171,
          "escalations": 134,
          "change_pct": -8.1
@@ -21351,7 +21007,7 @@
          },
          {
           "end": "2026-09-10T08:30:00+00:00",
-          "internal": 10151,
+          "internal": 10152,
           "external": 0
          },
          {
@@ -21376,7 +21032,7 @@
          },
          {
           "end": "2026-10-15T08:30:00+00:00",
-          "internal": 7659,
+          "internal": 7660,
           "external": 0
          },
          {
@@ -21405,8 +21061,8 @@
         "id": "unauthorised_txn",
         "label": "Unauthorised transactions",
         "internal": {
-         "volume": 112630,
-         "resolved": 108161,
+         "volume": 112629,
+         "resolved": 108160,
          "open": 3298,
          "waiting_on_customer": 1171,
          "open_too_long": 1479,
@@ -21770,9 +21426,9 @@
       "owner": "Credit cards · Rewards lead",
       "tat_related": false,
       "internal": {
-       "volume": 172805,
-       "resolved": 170667,
-       "open": 1272,
+       "volume": 172807,
+       "resolved": 170668,
+       "open": 1273,
        "waiting_on_customer": 866,
        "open_too_long": 809,
        "not_responded_48h": 1976,
@@ -21840,7 +21496,7 @@
        },
        {
         "end": "2026-09-17T08:30:00+00:00",
-        "internal": 12016,
+        "internal": 12017,
         "external": 0
        },
        {
@@ -21880,7 +21536,7 @@
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "internal": 11140,
+        "internal": 11141,
         "external": 0
        }
       ],
@@ -21889,8 +21545,8 @@
         "id": "rewards_value",
         "label": "Rewards value and caps",
         "internal": {
-         "volume": 102251,
-         "resolved": 102114,
+         "volume": 102252,
+         "resolved": 102115,
          "open": 133,
          "waiting_on_customer": 4,
          "open_too_long": 0,
@@ -21959,7 +21615,7 @@
          },
          {
           "end": "2026-09-17T08:30:00+00:00",
-          "internal": 9973,
+          "internal": 9974,
           "external": 0
          },
          {
@@ -22008,9 +21664,9 @@
         "id": "reward_redemption",
         "label": "Reward redemption",
         "internal": {
-         "volume": 70554,
+         "volume": 70555,
          "resolved": 68553,
-         "open": 1139,
+         "open": 1140,
          "waiting_on_customer": 862,
          "open_too_long": 809,
          "not_responded_48h": 1976,
@@ -22118,7 +21774,7 @@
          },
          {
           "end": "2026-11-12T08:30:00+00:00",
-          "internal": 7412,
+          "internal": 7413,
           "external": 0
          }
         ]
@@ -22131,13 +21787,13 @@
       "owner": "Credit cards · Acquisition lead",
       "tat_related": true,
       "internal": {
-       "volume": 131616,
+       "volume": 131617,
        "resolved": 128088,
        "open": 2989,
-       "waiting_on_customer": 539,
+       "waiting_on_customer": 540,
        "open_too_long": 543,
        "not_responded_48h": 1044,
-       "escalations": 2035,
+       "escalations": 2038,
        "change_pct": 9.1
       },
       "external": {
@@ -22191,7 +21847,7 @@
        },
        {
         "end": "2026-09-03T08:30:00+00:00",
-        "internal": 8223,
+        "internal": 8222,
         "external": 0
        },
        {
@@ -22206,7 +21862,7 @@
        },
        {
         "end": "2026-09-24T08:30:00+00:00",
-        "internal": 8155,
+        "internal": 8156,
         "external": 0
        },
        {
@@ -22241,7 +21897,7 @@
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "internal": 7549,
+        "internal": 7550,
         "external": 0
        }
       ],
@@ -22250,13 +21906,13 @@
         "id": "card_application",
         "label": "Card applications and identity checks",
         "internal": {
-         "volume": 131616,
+         "volume": 131617,
          "resolved": 128088,
          "open": 2989,
-         "waiting_on_customer": 539,
+         "waiting_on_customer": 540,
          "open_too_long": 543,
          "not_responded_48h": 1044,
-         "escalations": 2035,
+         "escalations": 2038,
          "change_pct": 9.1
         },
         "external": {
@@ -22310,7 +21966,7 @@
          },
          {
           "end": "2026-09-03T08:30:00+00:00",
-          "internal": 8223,
+          "internal": 8222,
           "external": 0
          },
          {
@@ -22325,7 +21981,7 @@
          },
          {
           "end": "2026-09-24T08:30:00+00:00",
-          "internal": 8155,
+          "internal": 8156,
           "external": 0
          },
          {
@@ -22360,7 +22016,7 @@
          },
          {
           "end": "2026-11-12T08:30:00+00:00",
-          "internal": 7549,
+          "internal": 7550,
           "external": 0
          }
         ]
@@ -22373,14 +22029,14 @@
       "owner": "Credit cards · Credit policy lead",
       "tat_related": true,
       "internal": {
-       "volume": 122689,
+       "volume": 122740,
        "resolved": 115646,
-       "open": 3280,
+       "open": 3331,
        "waiting_on_customer": 3763,
        "open_too_long": 648,
        "not_responded_48h": 2742,
-       "escalations": 1235,
-       "change_pct": 3.9
+       "escalations": 1234,
+       "change_pct": 4.0
       },
       "external": {
        "volume": 0,
@@ -22483,7 +22139,7 @@
        },
        {
         "end": "2026-11-12T08:30:00+00:00",
-        "internal": 11893,
+        "internal": 11944,
         "external": 0
        }
       ],
@@ -22492,14 +22148,14 @@
         "id": "card_limit",
         "label": "Credit limit",
         "internal": {
-         "volume": 122689,
+         "volume": 122740,
          "resolved": 115646,
-         "open": 3280,
+         "open": 3331,
          "waiting_on_customer": 3763,
          "open_too_long": 648,
          "not_responded_48h": 2742,
-         "escalations": 1235,
-         "change_pct": 3.9
+         "escalations": 1234,
+         "change_pct": 4.0
         },
         "external": {
          "volume": 0,
@@ -22602,7 +22258,7 @@
          },
          {
           "end": "2026-11-12T08:30:00+00:00",
-          "internal": 11893,
+          "internal": 11944,
           "external": 0
          }
         ]
@@ -22615,8 +22271,8 @@
       "owner": "Credit cards · Card delivery lead",
       "tat_related": true,
       "internal": {
-       "volume": 109661,
-       "resolved": 100115,
+       "volume": 109662,
+       "resolved": 100116,
        "open": 5008,
        "waiting_on_customer": 4538,
        "open_too_long": 3445,
@@ -22715,7 +22371,7 @@
        },
        {
         "end": "2026-10-29T08:30:00+00:00",
-        "internal": 11010,
+        "internal": 11011,
         "external": 0
        },
        {
@@ -22734,8 +22390,8 @@
         "id": "card_dispatch",
         "label": "Card dispatch and delivery",
         "internal": {
-         "volume": 109661,
-         "resolved": 100115,
+         "volume": 109662,
+         "resolved": 100116,
          "open": 5008,
          "waiting_on_customer": 4538,
          "open_too_long": 3445,
@@ -22834,7 +22490,7 @@
          },
          {
           "end": "2026-10-29T08:30:00+00:00",
-          "internal": 11010,
+          "internal": 11011,
           "external": 0
          },
          {
@@ -23456,248 +23112,6 @@
         ]
        }
       ]
-     },
-     {
-      "id": "upgrades",
-      "label": "Eligibility and card changes",
-      "owner": "Credit cards · Product lead",
-      "tat_related": true,
-      "internal": {
-       "volume": 52,
-       "resolved": 0,
-       "open": 52,
-       "waiting_on_customer": 0,
-       "open_too_long": 0,
-       "not_responded_48h": 0,
-       "escalations": 0,
-       "change_pct": null
-      },
-      "external": {
-       "volume": 0,
-       "positive": 0,
-       "negative": 0,
-       "negative_share": null,
-       "escalation": 0,
-       "responded": {
-        "reviews": 0,
-        "responded": 0,
-        "positive_reviews": 0,
-        "positive_responded": 0,
-        "negative_reviews": 0,
-        "negative_responded": 0
-       },
-       "high_impact": {
-        "volume": 0,
-        "positive": 0,
-        "negative": 0,
-        "escalation": 0,
-        "positive_share": null,
-        "negative_share": null,
-        "share_method": "source_weighted",
-        "responded": {
-         "reviews": 0,
-         "responded": 0,
-         "positive_reviews": 0,
-         "positive_responded": 0,
-         "negative_reviews": 0,
-         "negative_responded": 0
-        }
-       },
-       "change_pct": null
-      },
-      "trend": [
-       {
-        "end": "2026-08-13T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-08-20T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-08-27T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-09-03T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-09-10T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-09-17T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-09-24T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-10-01T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-10-08T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-10-15T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-10-22T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-10-29T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-11-05T08:30:00+00:00",
-        "internal": 0,
-        "external": 0
-       },
-       {
-        "end": "2026-11-12T08:30:00+00:00",
-        "internal": 52,
-        "external": 0
-       }
-      ],
-      "subcategories": [
-       {
-        "id": "card_variant_migration",
-        "label": "Card product changes and forced switches",
-        "internal": {
-         "volume": 52,
-         "resolved": 0,
-         "open": 52,
-         "waiting_on_customer": 0,
-         "open_too_long": 0,
-         "not_responded_48h": 0,
-         "escalations": 0,
-         "change_pct": null
-        },
-        "external": {
-         "volume": 0,
-         "positive": 0,
-         "negative": 0,
-         "negative_share": null,
-         "escalation": 0,
-         "responded": {
-          "reviews": 0,
-          "responded": 0,
-          "positive_reviews": 0,
-          "positive_responded": 0,
-          "negative_reviews": 0,
-          "negative_responded": 0
-         },
-         "high_impact": {
-          "volume": 0,
-          "positive": 0,
-          "negative": 0,
-          "escalation": 0,
-          "positive_share": null,
-          "negative_share": null,
-          "share_method": "source_weighted",
-          "responded": {
-           "reviews": 0,
-           "responded": 0,
-           "positive_reviews": 0,
-           "positive_responded": 0,
-           "negative_reviews": 0,
-           "negative_responded": 0
-          }
-         },
-         "change_pct": null
-        },
-        "trend": [
-         {
-          "end": "2026-08-13T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-08-20T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-08-27T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-09-03T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-09-10T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-09-17T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-09-24T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-10-01T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-10-08T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-10-15T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-10-22T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-10-29T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-11-05T08:30:00+00:00",
-          "internal": 0,
-          "external": 0
-         },
-         {
-          "end": "2026-11-12T08:30:00+00:00",
-          "internal": 52,
-          "external": 0
-         }
-        ]
-       }
-      ]
      }
     ],
     "mood": {
@@ -23708,9 +23122,9 @@
     },
     "market": [],
     "service": {
-     "resolved": 1093229,
-     "volume": 1160153,
-     "open_too_long": 30945,
+     "resolved": 1093231,
+     "volume": 1160157,
+     "open_too_long": 30946,
      "median_first_response_hours_written": 4.6,
      "public_service_negative": 0
     },
@@ -23743,7 +23157,7 @@
       "id": "applications",
       "label": "Applications and verification",
       "repeat_contact_internal": 4.0,
-      "escalation_internal": 2035,
+      "escalation_internal": 2038,
       "escalation_external": 0,
       "negative_share": null
      },
@@ -23751,7 +23165,7 @@
       "id": "limits",
       "label": "Limits",
       "repeat_contact_internal": 3.2,
-      "escalation_internal": 1235,
+      "escalation_internal": 1234,
       "escalation_external": 0,
       "negative_share": null
      },
@@ -23784,14 +23198,6 @@
       "label": "Service and complaint handling",
       "repeat_contact_internal": 4.0,
       "escalation_internal": 3450,
-      "escalation_external": 0,
-      "negative_share": null
-     },
-     {
-      "id": "upgrades",
-      "label": "Eligibility and card changes",
-      "repeat_contact_internal": 0.0,
-      "escalation_internal": 0,
       "escalation_external": 0,
       "negative_share": null
      }
@@ -23829,31 +23235,31 @@
     "journey": [
      {
       "stage": "Open",
-      "volume": 131616,
+      "volume": 131617,
       "negative_share": 14.1,
       "repeat_share": 4.0
      },
      {
       "stage": "Activate",
-      "volume": 109661,
+      "volume": 109662,
       "negative_share": 11.1,
       "repeat_share": 5.1
      },
      {
       "stage": "Everyday banking",
-      "volume": 538311,
+      "volume": 538364,
       "negative_share": 15.5,
       "repeat_share": 3.9
      },
      {
       "stage": "Service requests",
-      "volume": 8591,
-      "negative_share": 83.5,
+      "volume": 8539,
+      "negative_share": 83.4,
       "repeat_share": 4.0
      },
      {
       "stage": "Disputes and fraud",
-      "volume": 297062,
+      "volume": 297063,
       "negative_share": 14.4,
       "repeat_share": 6.9
      },
@@ -23890,10 +23296,10 @@
     ],
     "channels": {
      "internal": {
-      "calls": 512563,
-      "whatsapp": 349355,
-      "chat": 100255,
-      "emails": 79239,
+      "calls": 512562,
+      "whatsapp": 349359,
+      "chat": 100257,
+      "emails": 79238,
       "social": 10253,
       "branch": 108488
      },
@@ -23904,20 +23310,20 @@
       "id": "priority_a",
       "label": "Financially vulnerable (Consumer Duty)",
       "volume": 276017,
-      "open": 6634,
+      "open": 6633,
       "negative": 38309
      },
      {
       "id": "priority_b",
       "label": "Recent complainants (90 days)",
-      "volume": 14892,
+      "volume": 14893,
       "open": 225,
-      "negative": 2832
+      "negative": 2833
      },
      {
       "id": "uhni",
       "label": "Premier",
-      "volume": 107145,
+      "volume": 107144,
       "open": 2566,
       "negative": 14404
      },
@@ -23926,14 +23332,14 @@
       "label": "Multi-product customers",
       "volume": 170526,
       "open": 4143,
-      "negative": 22506
+      "negative": 22507
      },
      {
       "id": "none",
       "label": "Not on a list",
-      "volume": 857859,
-      "open": 35563,
-      "negative": 131117
+      "volume": 857863,
+      "open": 35565,
+      "negative": 131120
      }
     ],
     "happy": {
@@ -24017,7 +23423,7 @@
        "label": "Disputes, refunds and reversals",
        "internal_repeat": 20467,
        "public_repeat": 0,
-       "contacts": 297062
+       "contacts": 297063
       },
       {
        "id": "fees",
@@ -24031,28 +23437,28 @@
        "label": "Card delivery",
        "internal_repeat": 5597,
        "public_repeat": 0,
-       "contacts": 109661
+       "contacts": 109662
       },
       {
        "id": "applications",
        "label": "Applications and verification",
        "internal_repeat": 5214,
        "public_repeat": 0,
-       "contacts": 131616
+       "contacts": 131617
       },
       {
        "id": "rewards",
        "label": "Rewards and redemption",
        "internal_repeat": 4459,
        "public_repeat": 0,
-       "contacts": 172805
+       "contacts": 172807
       },
       {
        "id": "limits",
        "label": "Limits",
-       "internal_repeat": 3871,
+       "internal_repeat": 3870,
        "public_repeat": 0,
-       "contacts": 122689
+       "contacts": 122740
       },
       {
        "id": "closure",
@@ -24074,13 +23480,6 @@
        "internal_repeat": 341,
        "public_repeat": 0,
        "contacts": 8539
-      },
-      {
-       "id": "upgrades",
-       "label": "Eligibility and card changes",
-       "internal_repeat": 0,
-       "public_repeat": 0,
-       "contacts": 52
       }
      ],
      "tiers": [
@@ -24091,23 +23490,23 @@
        "positive": 41183,
        "neutral": 196525,
        "negative": 38309,
-       "open": 6634
+       "open": 6633
       },
       {
        "id": "priority_b",
        "label": "Recent complainants (90 days)",
-       "volume": 14892,
+       "volume": 14893,
        "positive": 2439,
        "neutral": 9621,
-       "negative": 2832,
+       "negative": 2833,
        "open": 225
       },
       {
        "id": "uhni",
        "label": "Premier",
-       "volume": 107145,
+       "volume": 107144,
        "positive": 15620,
-       "neutral": 77121,
+       "neutral": 77120,
        "negative": 14404,
        "open": 2566
       },
@@ -24116,18 +23515,18 @@
        "label": "Multi-product customers",
        "volume": 170526,
        "positive": 26850,
-       "neutral": 121170,
-       "negative": 22506,
+       "neutral": 121169,
+       "negative": 22507,
        "open": 4143
       },
       {
        "id": "none",
        "label": "Not on a list",
-       "volume": 857859,
+       "volume": 857863,
        "positive": 142245,
-       "neutral": 584497,
-       "negative": 131117,
-       "open": 35563
+       "neutral": 584498,
+       "negative": 131120,
+       "open": 35565
       }
      ]
     },
@@ -24165,19 +23564,19 @@
      "ladder": [
       {
        "rung": "Contacts",
-       "count": 1160153
+       "count": 1160157
       },
       {
        "rung": "Repeat",
-       "count": 55315
+       "count": 55314
       },
       {
        "rung": "Complaint",
-       "count": 10619
+       "count": 10621
       },
       {
        "rung": "Complaints team",
-       "count": 4922
+       "count": 4920
       },
       {
        "rung": "Final response",
@@ -24209,19 +23608,19 @@
      "disputes": [
       {
        "stage": "Disputes raised",
-       "count": 184432
+       "count": 184434
       },
       {
        "stage": "First response given",
-       "count": 184041
+       "count": 184043
       },
       {
        "stage": "Closed",
-       "count": 148569
+       "count": 148570
       },
       {
        "stage": "Customer credited",
-       "count": 77974
+       "count": 77967
       }
      ],
      "missed_timelines": {
@@ -24229,7 +23628,7 @@
       "rows": []
      },
      "tat_related": {
-      "contacts": 744531,
+      "contacts": 744533,
       "share": 64.2,
       "open": 40421
      },
@@ -24718,8 +24117,8 @@
      "received": 50135
     },
     "prev": {
-     "brink": 170,
-     "eligible": 83,
+     "brink": 171,
+     "eligible": 82,
      "unhappy": 1213,
      "awaiting_io": 22,
      "at_risk": 1466,
@@ -24727,13 +24126,13 @@
      "buckets": {
       "8-10": 108,
       "4-7": 13,
-      "0-3": 49
+      "0-3": 50
      },
      "received": 24369
     },
     "delta": {
-     "brink": -155,
-     "eligible": 213,
+     "brink": -156,
+     "eligible": 214,
      "unhappy": 659,
      "awaiting_io": 2194,
      "at_risk": 717,
@@ -24744,7 +24143,7 @@
      "decided": 25044,
      "reviewed": 24438
     },
-    "became_eligible": 6163,
+    "became_eligible": 6162,
     "on_lists": {
      "at_risk": 817,
      "by_list": {
@@ -24831,38 +24230,38 @@
    "v4": {
     "cards": {
      "hierarchy": {
-      "total": 1160153,
+      "total": 1160157,
       "inside": {
-       "volume": 1160153,
+       "volume": 1160157,
        "kinds": {
         "complaint": {
          "label": "Complaints",
-         "volume": 305601,
+         "volume": 305602,
          "resolved": 264283,
-         "open": 29088,
+         "open": 29089,
          "waiting_on_customer": 12230,
-         "open_too_long": 25151
+         "open_too_long": 25152
         },
         "query": {
          "label": "Queries",
-         "volume": 289770,
-         "resolved": 289625,
+         "volume": 289771,
+         "resolved": 289626,
          "open": 141,
          "waiting_on_customer": 4,
          "open_too_long": 133
         },
         "request": {
          "label": "Requests",
-         "volume": 564782,
-         "resolved": 539321,
+         "volume": 564784,
+         "resolved": 539322,
          "open": 13523,
-         "waiting_on_customer": 11938,
-         "open_too_long": 8493
+         "waiting_on_customer": 11939,
+         "open_too_long": 8492
         }
        },
-       "resolved": 1093229,
-       "open": 42752,
-       "waiting_on_customer": 24172,
+       "resolved": 1093231,
+       "open": 42753,
+       "waiting_on_customer": 24173,
        "open_too_long": 33777
       },
       "public": {
@@ -24891,13 +24290,13 @@
      },
      "open_too_long": {
       "count": 33777,
-      "open": 42752,
+      "open": 42753,
       "share_of_open": 79.0,
       "by_limit": [
        {
         "id": "priority_a",
         "label": "Financially vulnerable: 5 hours",
-        "count": 6634
+        "count": 6633
        },
        {
         "id": "uhni",
@@ -24912,7 +24311,7 @@
        {
         "id": "default",
         "label": "Default: over 48 hours (bank SLA, illustrative)",
-        "count": 26784
+        "count": 26785
        }
       ],
       "list": [
@@ -25323,8 +24722,8 @@
        "id": "ultra_sensitive",
        "label": "Financially vulnerable",
        "volume": 276017,
-       "open": 6634,
-       "open_too_long": 6634,
+       "open": 6633,
+       "open_too_long": 6633,
        "negative_mentions": 287,
        "channels": [
         "Branch",
@@ -25338,7 +24737,7 @@
       {
        "id": "uhni",
        "label": "Premier",
-       "volume": 107145,
+       "volume": 107144,
        "open": 2566,
        "open_too_long": 2494,
        "negative_mentions": 25,
@@ -26127,11 +25526,11 @@
       }
      ],
      "service": {
-      "volume": 1160153,
-      "resolved": 1093229,
+      "volume": 1160157,
+      "resolved": 1093231,
       "sdr": 157878,
       "sdr_pct": 13.6,
-      "ftr": 1040806,
+      "ftr": 1040808,
       "ftr_pct": 95.2,
       "ftnr": 52423,
       "ftnr_pct": 4.8,
@@ -26140,38 +25539,38 @@
     },
     "bank": {
      "hierarchy": {
-      "total": 5801492,
+      "total": 5801498,
       "inside": {
-       "volume": 5801492,
+       "volume": 5801498,
        "kinds": {
         "complaint": {
          "label": "Complaints",
-         "volume": 759638,
+         "volume": 759639,
          "resolved": 712966,
-         "open": 32105,
+         "open": 32106,
          "waiting_on_customer": 14567,
-         "open_too_long": 25901
+         "open_too_long": 25902
         },
         "query": {
          "label": "Queries",
-         "volume": 2917789,
-         "resolved": 2901166,
+         "volume": 2917788,
+         "resolved": 2901165,
          "open": 12243,
          "waiting_on_customer": 4380,
          "open_too_long": 4873
         },
         "request": {
          "label": "Requests",
-         "volume": 2124065,
-         "resolved": 2027004,
+         "volume": 2124071,
+         "resolved": 2027009,
          "open": 59127,
-         "waiting_on_customer": 37934,
-         "open_too_long": 42799
+         "waiting_on_customer": 37935,
+         "open_too_long": 42798
         }
        },
-       "resolved": 5641136,
-       "open": 103475,
-       "waiting_on_customer": 56881,
+       "resolved": 5641140,
+       "open": 103476,
+       "waiting_on_customer": 56882,
        "open_too_long": 73573
       },
       "public": {
@@ -26200,13 +25599,13 @@
      },
      "open_too_long": {
       "count": 73573,
-      "open": 103475,
+      "open": 103476,
       "share_of_open": 71.1,
       "by_limit": [
        {
         "id": "priority_a",
         "label": "Financially vulnerable: 5 hours",
-        "count": 17565
+        "count": 17564
        },
        {
         "id": "uhni",
@@ -26221,7 +25620,7 @@
        {
         "id": "default",
         "label": "Default: over 48 hours (bank SLA, illustrative)",
-        "count": 54507
+        "count": 54508
        }
       ],
       "list": [
@@ -26786,11 +26185,11 @@
          }
         ],
         "service": {
-         "volume": 2320792,
-         "resolved": 2286561,
+         "volume": 2320791,
+         "resolved": 2286560,
          "sdr": 652294,
          "sdr_pct": 28.1,
-         "ftr": 2212067,
+         "ftr": 2212066,
          "ftr_pct": 96.7,
          "ftnr": 74494,
          "ftnr_pct": 3.3,
@@ -26971,7 +26370,7 @@
         "id": "cards",
         "label": "Credit cards",
         "count": 33777,
-        "open": 42752,
+        "open": 42753,
         "share_of_open": 79.0,
         "list": [
          {
@@ -27126,11 +26525,11 @@
          }
         ],
         "service": {
-         "volume": 1160153,
-         "resolved": 1093229,
+         "volume": 1160157,
+         "resolved": 1093231,
          "sdr": 157878,
          "sdr_pct": 13.6,
-         "ftr": 1040806,
+         "ftr": 1040808,
          "ftr_pct": 95.2,
          "ftnr": 52423,
          "ftnr_pct": 4.8,
@@ -27296,11 +26695,11 @@
          }
         ],
         "service": {
-         "volume": 406135,
-         "resolved": 398557,
+         "volume": 406134,
+         "resolved": 398556,
          "sdr": 95889,
          "sdr_pct": 23.6,
-         "ftr": 378550,
+         "ftr": 378549,
          "ftr_pct": 95.0,
          "ftnr": 20007,
          "ftnr_pct": 5.0,
@@ -27466,13 +26865,13 @@
          }
         ],
         "service": {
-         "volume": 638106,
-         "resolved": 620054,
+         "volume": 638108,
+         "resolved": 620056,
          "sdr": 161861,
          "sdr_pct": 25.4,
-         "ftr": 578298,
+         "ftr": 578301,
          "ftr_pct": 93.3,
-         "ftnr": 41756,
+         "ftnr": 41755,
          "ftnr_pct": 6.7,
          "tag": "Illustrative: definitions confirmed in discovery"
         }
@@ -27636,11 +27035,11 @@
          }
         ],
         "service": {
-         "volume": 348047,
-         "resolved": 331452,
-         "sdr": 55444,
+         "volume": 348049,
+         "resolved": 331454,
+         "sdr": 55445,
          "sdr_pct": 15.9,
-         "ftr": 311992,
+         "ftr": 311994,
          "ftr_pct": 94.1,
          "ftnr": 19460,
          "ftnr_pct": 5.9,
@@ -27695,13 +27094,13 @@
       "note": "Responded: the bank's handle or the store developer replied, where the source carries replies. Public data not yet loaded until the pull lands."
      },
      "service": {
-      "volume": 5801492,
-      "resolved": 5641136,
-      "sdr": 1340094,
+      "volume": 5801498,
+      "resolved": 5641140,
+      "sdr": 1340095,
       "sdr_pct": 23.1,
-      "ftr": 5403241,
+      "ftr": 5403246,
       "ftr_pct": 95.8,
-      "ftnr": 237895,
+      "ftnr": 237894,
       "ftnr_pct": 4.2,
       "tag": "Illustrative: definitions confirmed in discovery"
      }
@@ -27709,18 +27108,18 @@
    },
    "cora": {
     "internal": {
-     "volume": 309137,
-     "prev_volume": 145100,
+     "volume": 309136,
+     "prev_volume": 145099,
      "change_pct": 13.1,
-     "resolved": 298235,
+     "resolved": 298234,
      "open": 6897,
      "waiting_on_customer": 4005,
      "open_delta": -5319,
-     "not_responded_delta": -173,
+     "not_responded_delta": -172,
      "open_too_long": 5472,
-     "not_responded_48h": 6227,
-     "negative": 42174,
-     "escalations": 4264
+     "not_responded_48h": 6226,
+     "negative": 42173,
+     "escalations": 4380
     },
     "rows": [
      {
@@ -27738,7 +27137,7 @@
        "open_too_long": 2772,
        "not_responded_48h": 2339,
        "negative": 16670,
-       "escalations": 2716
+       "escalations": 2991
       }
      },
      {
@@ -27781,18 +27180,18 @@
       "id": "cora_no_person",
       "label": "Could not reach a person",
       "internal": {
-       "volume": 62693,
-       "prev_volume": 28922,
+       "volume": 62692,
+       "prev_volume": 28921,
        "change_pct": 16.8,
-       "resolved": 62027,
+       "resolved": 62026,
        "open": 656,
        "waiting_on_customer": 10,
        "open_delta": -1968,
-       "not_responded_delta": 119,
+       "not_responded_delta": 120,
        "open_too_long": 656,
-       "not_responded_48h": 1553,
-       "negative": 6937,
-       "escalations": 884
+       "not_responded_48h": 1552,
+       "negative": 6936,
+       "escalations": 725
       }
      }
     ]
@@ -27894,7 +27293,7 @@
    },
    "priority_open_24h": {
     "q": "Open priority-customer issues older than 24 hours",
-    "count": 13252,
+    "count": 13251,
     "list": [
      {
       "id": "CASE-11041",

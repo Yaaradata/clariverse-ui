@@ -65,18 +65,6 @@ THEMES = [
         "action": "Route with evidence"
     },
     {
-        "id": "card_variant_migration",
-        "label": "Card product changes and forced switches",
-        "group": "Credit cards",
-        "pillar": "experience",
-        "owner": "cards",
-        "owner_label": "Credit cards product owner",
-        "business": "cards",
-        "definition": "Card products withdrawn or switched by the bank; changed benefits.",
-        "rung": "Voice",
-        "action": "Route with evidence"
-    },
-    {
         "id": "complaint_handling",
         "label": "Complaints closed without resolution",
         "group": "Service",
@@ -89,7 +77,7 @@ THEMES = [
         "action": "Update and close"
     },
     {
-        "id": "login_mpin",
+        "id": "app_login_biometrics",
         "label": "App login and biometrics",
         "group": "App and digital",
         "pillar": "availability",
@@ -221,7 +209,7 @@ THEMES = [
         "action": "Monitor"
     },
     {
-        "id": "upi_failures",
+        "id": "faster_payments_failures",
         "label": "Faster Payments or Open Banking failure",
         "group": "Payments",
         "pillar": "availability",
@@ -305,7 +293,7 @@ THEMES = [
         "action": "Route with evidence"
     },
     {
-        "id": "kyc_updates",
+        "id": "identity_checks",
         "label": "Identity checks and profile updates",
         "group": "Service",
         "pillar": "data_intimacy",
@@ -389,7 +377,7 @@ THEMES = [
         "action": "Route with evidence"
     },
     {
-        "id": "rm_service",
+        "id": "premier_service",
         "label": "Relationship manager service (Premier)",
         "group": "Service",
         "pillar": "experience",
@@ -397,7 +385,7 @@ THEMES = [
         "owner_label": "Relationship managers (Premier)",
         "business": "retail_banking",
         "definition": "Relationship manager unreachable, changed, advice and conduct.",
-        "rung": "Grievance",
+        "rung": "Complaint",
         "action": "Route with evidence"
     },
     {
@@ -557,7 +545,7 @@ THEMES = [
         "action": "Set a new date"
     },
     {
-        "id": "nri_forex",
+        "id": "international_payments",
         "label": "International payments",
         "group": "Service",
         "pillar": "experience",
@@ -720,7 +708,7 @@ THEMES = [
         "owner": "compliance",
         "business": "retail_banking",
         "definition": "Poor value, unfair treatment, customers in vulnerable circumstances.",
-        "rung": "Grievance",
+        "rung": "Complaint",
         "action": "Route with evidence",
         "owner_label": "Compliance"
     }
@@ -738,10 +726,10 @@ _OUTCOME_OF = {
                      "deposits_rates", "consumer_duty_value", "mortgage_rate_switch"], "price_value"),
     **dict.fromkeys(["product_advice", "statements_documents", "unsolicited_calls", "mis_selling",
                      "card_variant_migration", "market_news"], "understanding"),
-    **dict.fromkeys(["app_speed_crash", "app_usability", "login_mpin", "new_app_release", "online_banking",
+    **dict.fromkeys(["app_speed_crash", "app_usability", "app_login_biometrics", "new_app_release", "online_banking",
                      "card_application", "card_eligibility_upgrade", "card_limit", "loan_processing", "account_opening",
-                     "upi_failures", "merchant_pos", "atm_debit_card", "investments_wealth", "insurance_group",
-                     "trading_securities", "nri_forex", "app_praise", "card_dispatch", "branch_closure"],
+                     "faster_payments_failures", "merchant_pos", "atm_debit_card", "investments_wealth", "insurance_group",
+                     "trading_securities", "international_payments", "app_praise", "card_dispatch", "branch_closure"],
                     "products_services"),
 }
 for _t in THEMES:

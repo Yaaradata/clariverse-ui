@@ -15,6 +15,12 @@ SEED = 20260928
 # The brief is written for the 29 September morning review: every age is measured from this moment.
 NOW = "2026-11-12T07:45:00+00:00"
 WINDOW = ("2026-08-01", "2026-11-11")
+# England and Wales bank holidays that fall in or just after the window: business days skip them and weekends.
+BANK_HOLIDAYS = {"2026-08-31", "2026-12-25", "2026-12-28"}
+
+
+def is_business_day(d) -> bool:
+    return d.weekday() < 5 and d.date().isoformat() not in BANK_HOLIDAYS
 
 # Rows of the "pulse by product" table (B7 §1 E1.6). Group-company apps stay excluded.
 PRODUCTS = [
@@ -107,7 +113,7 @@ DELIVERABLES = {
 # Public theme → deliverable it is measured against. Themes not listed use query_response.
 THEME_DELIVERABLE = {
     "failed_txn_reversal": "failed_reversal",
-    "upi_failures": "failed_reversal",
+    "faster_payments_failures": "failed_reversal",
     "closure_requests": "card_closure",
     "unauthorised_txn": "unauthorised_reversal",
     "credit_report": "credit_report",
@@ -117,13 +123,12 @@ THEME_DELIVERABLE = {
     "dispute_chargeback": "dispute",
     "app_reimbursement": "app_reimbursement",
     "refund_delay": "refund",
-    "kyc_updates": "service_request",
+    "identity_checks": "service_request",
     # Cora failures (Pass 2 section 12): the customer still needs the request done, so a service request, not a query.
     "cora_unresolved": "service_request",
     "cora_wrong_answer": "service_request",
     "cora_handoff_lost": "service_request",
     "cora_no_person": "service_request",
-    "card_variant_migration": "service_request",
     "card_eligibility_upgrade": "service_request",
     "card_limit": "service_request",
     "card_application": "service_request",
@@ -136,12 +141,12 @@ THEME_DELIVERABLE = {
 
 # Customer journey stage of each theme (satisfaction page, "Where in the journey"). Themes not listed are "Everyday banking".
 JOURNEY_STAGE = {
-    **dict.fromkeys(["account_opening", "card_application", "kyc_updates", "loan_processing"], "Open"),
-    **dict.fromkeys(["card_dispatch", "login_mpin", "device_security_block"], "Activate"),
+    **dict.fromkeys(["account_opening", "card_application", "identity_checks", "loan_processing"], "Open"),
+    **dict.fromkeys(["card_dispatch", "app_login_biometrics", "device_security_block"], "Activate"),
     **dict.fromkeys(
         [
-            "card_variant_migration", "card_eligibility_upgrade", "statements_documents", "branch_service",
-            "care_unreachable", "rm_service", "account_freeze", "loan_servicing", "credit_report", "unsolicited_calls",
+            "card_eligibility_upgrade", "statements_documents", "branch_service",
+            "care_unreachable", "premier_service", "account_freeze", "loan_servicing", "credit_report", "unsolicited_calls",
             "mis_selling", "recovery_conduct", "complaint_handling",
         ],
         "Service requests",
@@ -157,13 +162,13 @@ JOURNEY_ORDER = ["Open", "Activate", "Everyday banking", "Service requests", "Di
 
 # Request types used by the public "missed timeline" signal, so the internal ageing joins the public rows.
 THEME_REQUEST_TYPE = {
-    **dict.fromkeys(["failed_txn_reversal", "upi_failures", "unauthorised_txn"], "reversal"),
+    **dict.fromkeys(["failed_txn_reversal", "faster_payments_failures", "unauthorised_txn"], "reversal"),
     "closure_requests": "closure",
     "credit_report": "credit_report",
     "card_dispatch": "card_delivery",
     "dispute_chargeback": "dispute",
     "refund_delay": "refund",
-    "kyc_updates": "kyc",
+    "identity_checks": "kyc",
     "loan_processing": "loan_disbursal",
 }
 
@@ -174,7 +179,6 @@ ROUTING = [
     {"theme": "complaint_handling", "owner": "cx", "system": "CRM case queue", "acknowledged_at": "23:45"},
     {"theme": "card_application", "owner": "cards", "system": "Credit cards service queue", "acknowledged_at": "22:10"},
     {"theme": "refund_delay", "owner": "operations", "system": "Operations work queue", "acknowledged_at": "06:55"},
-    {"theme": "card_variant_migration", "owner": "cards", "system": "Credit cards service queue", "acknowledged_at": "22:10"},
     {"theme": "care_unreachable", "owner": "cx", "system": "CRM case queue", "acknowledged_at": "06:55"},
     {"theme": "failed_txn_reversal", "owner": "payments", "system": "Payments work queue", "acknowledged_at": None},
 ]
@@ -253,9 +257,9 @@ CARDS_CATEGORIES = [
     {"id": "rewards", "label": "Rewards and redemption", "owner": "Credit cards · Rewards lead", "tat": False,
      "themes": ["rewards_value", "reward_redemption", "offers_deals"]},
     {"id": "upgrades", "label": "Eligibility and card changes", "owner": "Credit cards · Product lead", "tat": True,
-     "themes": ["card_variant_migration", "card_eligibility_upgrade"]},
+     "themes": ["card_eligibility_upgrade"]},
     {"id": "applications", "label": "Applications and verification", "owner": "Credit cards · Acquisition lead", "tat": True,
-     "themes": ["card_application", "kyc_updates"]},
+     "themes": ["card_application", "identity_checks"]},
     {"id": "fees", "label": "Fees and charges", "owner": "Credit cards · Pricing lead", "tat": False,
      "themes": ["card_fees_charges", "fees_charges_bank"]},
     {"id": "limits", "label": "Limits", "owner": "Credit cards · Credit policy lead", "tat": True, "themes": ["card_limit"]},
@@ -264,11 +268,11 @@ CARDS_CATEGORIES = [
     {"id": "delivery", "label": "Card delivery", "owner": "Credit cards · Card delivery lead", "tat": True, "themes": ["card_dispatch"]},
     {"id": "closure", "label": "Closure", "owner": "Credit cards · Retention lead", "tat": True, "themes": ["closure_requests"]},
     {"id": "service", "label": "Service and complaint handling", "owner": "Credit cards · Service lead", "tat": True,
-     "themes": ["complaint_handling", "care_unreachable", "branch_service", "rm_service", "unsolicited_calls"]},
+     "themes": ["complaint_handling", "care_unreachable", "branch_service", "premier_service", "unsolicited_calls"]},
     {"id": "fraud", "label": "Fraud and security", "owner": "Credit cards · Fraud lead", "tat": False,
      "themes": ["fraud_scam", "phishing", "device_security_block", "recovery_conduct"]},
     {"id": "digital", "label": "App and online card servicing", "owner": "Credit cards · Digital lead", "tat": False,
-     "themes": ["app_speed_crash", "app_usability", "login_mpin", "new_app_release", "online_banking", "statements_documents"]},
+     "themes": ["app_speed_crash", "app_usability", "app_login_biometrics", "new_app_release", "online_banking", "statements_documents"]},
 ]
 CARDS_OTHER = {"id": "other", "label": "Other", "owner": "Credit cards · CX lead", "tat": False, "themes": []}
 

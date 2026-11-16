@@ -16,7 +16,7 @@ import json
 import sys
 from pathlib import Path
 
-from common import BANK_TAT_LABEL, NOW, OUT_APP, SEED_V3, load
+from common import BANK_TAT_LABEL, NOW, OUT_APP, SEED_V3, is_business_day, load
 
 NOW_DT = dt.datetime.fromisoformat(NOW)
 # Person-level flags are never allowed on a customer: impact belongs to a complaint (B7 §E2).
@@ -466,7 +466,7 @@ def _omb_state(c, T):
         due, n = rec, 0
         while n < 15:
             due += dt.timedelta(days=1)
-            n += due.weekday() < 5
+            n += is_business_day(due)
     else:
         due = rec + dt.timedelta(days=56)
     if reply is None or reply > T:

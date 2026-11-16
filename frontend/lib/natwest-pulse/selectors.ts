@@ -225,7 +225,7 @@ export function priorityAction(b: Bundle): SignalItem | null {
     action: "Alert the owner",
     status: "needs_you",
     count: over24,
-    why: `${fmt(over24)} issues for customers on the bank's priority lists have been open more than 24 hours${a ? ` (${fmt(a.open_over_24h)} on list A)` : ""}; Owners have been told about ${fmt(told)} of the ${fmt(due)} customers with an alert due.`,
+    why: `${fmt(over24)} issues for customers on the bank's priority lists have been open more than 24 hours${a ? ` (${fmt(a.open_over_24h)} on the vulnerable-customer list)` : ""}; owners have been told about ${fmt(told)} of the ${fmt(due)} customers with an alert due.`,
     pillar: "support",
     href: "/natwest-pulse/v1/priority",
   };

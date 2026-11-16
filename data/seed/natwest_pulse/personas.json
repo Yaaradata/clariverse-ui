@@ -12,7 +12,7 @@
    "current_accounts",
    "mortgages"
   ],
-  "rm_id": "RELM-017",
+  "rm_id": "Premier banking manager",
   "proxy_contacts": 1,
   "rm_notified": false,
   "story": true,
@@ -97,7 +97,7 @@
    "cards",
    "current_accounts"
   ],
-  "rm_id": "RELM-042",
+  "rm_id": "Premier banking manager",
   "proxy_contacts": 1,
   "rm_notified": true,
   "trail": [
@@ -139,7 +139,7 @@
    "current_accounts",
    "payments_fraud"
   ],
-  "rm_id": "RELM-066",
+  "rm_id": "Premier banking manager",
   "proxy_contacts": 0,
   "rm_notified": false,
   "cohort_added_at": "2026-11-08T15:10+00:00",
@@ -159,8 +159,8 @@
     "at": "2026-11-10T12:02+00:00",
     "channel": "inbound_voice",
     "product": "cards",
-    "theme": "card_variant_migration",
-    "summary": "Asked why the card was moved to a new variant without consent; says fees now apply.",
+    "theme": "card_limit",
+    "summary": "Asked why the credit limit was cut without notice; the card is now close to its limit.",
     "sentiment": "negative",
     "status": "open",
     "first_response_at": "2026-11-10T12:02+00:00"
@@ -181,7 +181,7 @@
    "mortgages",
    "savings"
   ],
-  "rm_id": "RELM-008",
+  "rm_id": "Premier banking manager",
   "proxy_contacts": 1,
   "rm_notified": true,
   "trail": [
@@ -191,7 +191,7 @@
     "sender": "proxy",
     "product": "mortgages",
     "theme": "loan_closure_documents",
-    "summary": "Email from the customer's office: title deeds and the mortgage discharge confirmation not returned three weeks after the mortgage was repaid.",
+    "summary": "Email from the customer's solicitor: the mortgage redemption statement has not arrived and the sale completes next week.",
     "sentiment": "negative",
     "status": "open",
     "first_response_at": "2026-11-05T15:30+00:00"
@@ -210,7 +210,7 @@
    "cards",
    "current_accounts"
   ],
-  "rm_id": "RELM-091",
+  "rm_id": "Premier banking manager",
   "proxy_contacts": 0,
   "rm_notified": false,
   "trail": [
@@ -238,7 +238,7 @@
    "cards",
    "current_accounts"
   ],
-  "rm_id": "RELM-073",
+  "rm_id": "Premier banking manager",
   "proxy_contacts": 0,
   "rm_notified": false,
   "trail": [
@@ -257,7 +257,7 @@
     "channel": "branch",
     "product": "current_accounts",
     "theme": "loan_servicing",
-    "summary": "Visited the branch about the car finance repayment date; mentioned the open card dispute.",
+    "summary": "Visited the branch about a missed direct debit; mentioned the open card dispute.",
     "sentiment": "neutral",
     "status": "closed",
     "closed_at": "2026-11-11T10:05+00:00",
@@ -277,7 +277,7 @@
    "cards",
    "current_accounts"
   ],
-  "rm_id": "RELM-025",
+  "rm_id": "Premier banking manager",
   "proxy_contacts": 1,
   "rm_notified": true,
   "trail": [
@@ -309,7 +309,7 @@
    "personal_loans",
    "savings"
   ],
-  "rm_id": "RELM-054",
+  "rm_id": "Premier banking manager",
   "proxy_contacts": 0,
   "rm_notified": false,
   "trail": [
@@ -338,7 +338,7 @@
    "current_accounts",
    "savings"
   ],
-  "rm_id": "RELM-017",
+  "rm_id": "Premier banking manager",
   "proxy_contacts": 1,
   "rm_notified": false,
   "trail": [
@@ -348,7 +348,7 @@
     "sender": "proxy",
     "product": "savings",
     "theme": "mis_selling",
-    "summary": "Email from the customer's assistant: an insurance policy was added to the account without a clear explanation.",
+    "summary": "Email from the customer's attorney: the account was moved to a packaged account with a fee, without a clear explanation.",
     "sentiment": "negative",
     "status": "open",
     "first_response_at": "2026-11-09T10:00+00:00",
@@ -371,7 +371,7 @@
    "current_accounts",
    "payments_fraud"
   ],
-  "rm_id": "RELM-101",
+  "rm_id": "Premier banking manager",
   "proxy_contacts": 0,
   "rm_notified": false,
   "trail": [
@@ -380,7 +380,7 @@
     "channel": "chat",
     "product": "cards",
     "theme": "rewards_value",
-    "summary": "Reward points on travel spends lower than expected after the cap change.",
+    "summary": "Reward points on travel spending lower than expected after the cap change.",
     "sentiment": "negative",
     "status": "closed",
     "closed_at": "2026-11-10T11:30+00:00",
@@ -400,7 +400,7 @@
    "cards",
    "current_accounts"
   ],
-  "rm_id": "RELM-033",
+  "rm_id": "Premier banking manager",
   "proxy_contacts": 1,
   "rm_notified": false,
   "trail": [
@@ -430,7 +430,7 @@
    "mortgages",
    "savings"
   ],
-  "rm_id": "RELM-060",
+  "rm_id": "Premier banking manager",
   "proxy_contacts": 0,
   "rm_notified": true,
   "trail": [
@@ -438,7 +438,7 @@
     "at": "2026-11-04T10:25+00:00",
     "channel": "email",
     "product": "current_accounts",
-    "theme": "kyc_updates",
+    "theme": "identity_checks",
     "summary": "Identity check documents submitted twice; account still shows as restricted.",
     "sentiment": "negative",
     "status": "closed",

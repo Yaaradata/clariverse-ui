@@ -61,7 +61,7 @@ OWNER_LABEL = {
 RUNG_OF_TARGET = {
     "rbi": "Financial Ombudsman Service", "rbi_ombudsman": "Financial Ombudsman Service",
     "consumer_court": "Financial Ombudsman Service", "legal": "Financial Ombudsman Service",
-    "ministers": "Public", "grievance": "Grievance", "repeat": "Repeat",
+    "ministers": "Public", "grievance": "Complaint", "repeat": "Repeat",
 }
 REDIRECT_RE = re.compile(
     r"(e-?mail|write to|call|reach|connect|contact|dm|share|visit|chat|raise|mention the ref|reference id|ref id|register a complaint|nearest branch)",
@@ -401,7 +401,7 @@ def main():
             "exemplars": tg_ex,
         },
         "escalation_by_target": [
-            {"target": k, "rung": RUNG_OF_TARGET.get(k, "Grievance"), "count": v}
+            {"target": k, "rung": RUNG_OF_TARGET.get(k, "Complaint"), "count": v}
             for k, v in collections.Counter(r["escalation_target"] for r in esc).most_common()
         ],
         "ladder_public": {

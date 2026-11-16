@@ -40,9 +40,9 @@
    "high_impact": 51,
    "deliverables": {
     "measured": 14758,
-    "met": 14128,
-    "outside": 630,
-    "met_pct": 95.7,
+    "met": 14136,
+    "outside": 622,
+    "met_pct": 95.8,
     "open_within": 164
    },
    "negative_weekly": [
@@ -136,8 +136,8 @@
    "high_impact": 33,
    "deliverables": {
     "measured": 5501,
-    "met": 4874,
-    "outside": 627,
+    "met": 4875,
+    "outside": 626,
     "met_pct": 88.6,
     "open_within": 63
    },
@@ -201,7 +201,7 @@
    ],
    "negative_change_pct": -10.4,
    "top_issue": {
-    "id": "upi_failures",
+    "id": "faster_payments_failures",
     "label": "Faster Payments or Open Banking failure",
     "negative": 351
    },
@@ -232,9 +232,9 @@
    "high_impact": 25,
    "deliverables": {
     "measured": 4883,
-    "met": 4437,
-    "outside": 446,
-    "met_pct": 90.9,
+    "met": 4442,
+    "outside": 441,
+    "met_pct": 91.0,
     "open_within": 152
    },
    "negative_weekly": [
@@ -328,9 +328,9 @@
    "high_impact": 11,
    "deliverables": {
     "measured": 2286,
-    "met": 2147,
-    "outside": 139,
-    "met_pct": 93.9,
+    "met": 2150,
+    "outside": 136,
+    "met_pct": 94.1,
     "open_within": 36
    },
    "negative_weekly": [
@@ -424,9 +424,9 @@
    "high_impact": 7,
    "deliverables": {
     "measured": 2503,
-    "met": 2417,
-    "outside": 86,
-    "met_pct": 96.6,
+    "met": 2420,
+    "outside": 83,
+    "met_pct": 96.7,
     "open_within": 48
    },
    "negative_weekly": [
@@ -520,9 +520,9 @@
    "high_impact": 7,
    "deliverables": {
     "measured": 1318,
-    "met": 1256,
-    "outside": 62,
-    "met_pct": 95.3,
+    "met": 1257,
+    "outside": 61,
+    "met_pct": 95.4,
     "open_within": 32
    },
    "negative_weekly": [
@@ -1016,7 +1016,7 @@
    "open_too_long": 1,
    "themes": [
     "failed_txn_reversal",
-    "upi_failures"
+    "faster_payments_failures"
    ],
    "products": [
     {
@@ -1041,9 +1041,9 @@
    "redress": "—",
    "total": 1114,
    "measured": 1077,
-   "met": 983,
-   "outside": 94,
-   "met_pct": 91.3,
+   "met": 987,
+   "outside": 90,
+   "met_pct": 91.6,
    "open_within": 25,
    "open_too_long": 3,
    "themes": [
@@ -1055,9 +1055,9 @@
      "label": "Current accounts and app",
      "total": 555,
      "measured": 531,
-     "met": 487,
-     "outside": 44,
-     "met_pct": 91.7,
+     "met": 489,
+     "outside": 42,
+     "met_pct": 92.1,
      "open_within": 18,
      "open_too_long": 2
     },
@@ -1066,9 +1066,9 @@
      "label": "Credit cards",
      "total": 293,
      "measured": 290,
-     "met": 268,
-     "outside": 22,
-     "met_pct": 92.4,
+     "met": 269,
+     "outside": 21,
+     "met_pct": 92.8,
      "open_within": 1,
      "open_too_long": 0
     },
@@ -1077,9 +1077,9 @@
      "label": "Savings",
      "total": 266,
      "measured": 256,
-     "met": 228,
-     "outside": 28,
-     "met_pct": 89.1,
+     "met": 229,
+     "outside": 27,
+     "met_pct": 89.5,
      "open_within": 6,
      "open_too_long": 1
     }
@@ -1167,9 +1167,9 @@
    "redress": "—",
    "total": 378,
    "measured": 333,
-   "met": 316,
-   "outside": 17,
-   "met_pct": 94.9,
+   "met": 317,
+   "outside": 16,
+   "met_pct": 95.2,
    "open_within": 29,
    "open_too_long": 2,
    "themes": [
@@ -1192,9 +1192,9 @@
      "label": "Personal loans",
      "total": 131,
      "measured": 117,
-     "met": 111,
-     "outside": 6,
-     "met_pct": 94.9,
+     "met": 112,
+     "outside": 5,
+     "met_pct": 95.7,
      "open_within": 10,
      "open_too_long": 1
     }
@@ -1326,9 +1326,9 @@
    "redress": "—",
    "total": 389,
    "measured": 368,
-   "met": 296,
-   "outside": 72,
-   "met_pct": 80.4,
+   "met": 298,
+   "outside": 70,
+   "met_pct": 81.0,
    "open_within": 13,
    "open_too_long": 3,
    "themes": [
@@ -1340,9 +1340,9 @@
      "label": "Credit cards",
      "total": 389,
      "measured": 368,
-     "met": 296,
-     "outside": 72,
-     "met_pct": 80.4,
+     "met": 298,
+     "outside": 70,
+     "met_pct": 81.0,
      "open_within": 13,
      "open_too_long": 3
     }
@@ -1388,18 +1388,17 @@
    "redress": "—",
    "total": 6129,
    "measured": 6005,
-   "met": 5090,
-   "outside": 915,
-   "met_pct": 84.8,
+   "met": 5100,
+   "outside": 905,
+   "met_pct": 84.9,
    "open_within": 69,
    "open_too_long": 36,
    "themes": [
-    "kyc_updates",
+    "identity_checks",
     "cora_unresolved",
     "cora_wrong_answer",
     "cora_handoff_lost",
     "cora_no_person",
-    "card_variant_migration",
     "card_eligibility_upgrade",
     "card_limit",
     "card_application",
@@ -1413,9 +1412,9 @@
      "label": "Current accounts and app",
      "total": 3467,
      "measured": 3402,
-     "met": 2903,
-     "outside": 499,
-     "met_pct": 85.3,
+     "met": 2909,
+     "outside": 493,
+     "met_pct": 85.5,
      "open_within": 31,
      "open_too_long": 20
     },
@@ -1435,9 +1434,9 @@
      "label": "Credit cards",
      "total": 1514,
      "measured": 1477,
-     "met": 1265,
-     "outside": 212,
-     "met_pct": 85.6,
+     "met": 1267,
+     "outside": 210,
+     "met_pct": 85.8,
      "open_within": 22,
      "open_too_long": 9
     },
@@ -1446,9 +1445,9 @@
      "label": "Savings",
      "total": 643,
      "measured": 631,
-     "met": 537,
-     "outside": 94,
-     "met_pct": 85.1,
+     "met": 539,
+     "outside": 92,
+     "met_pct": 85.4,
      "open_within": 10,
      "open_too_long": 2
     },
@@ -1485,9 +1484,9 @@
    "redress": "—",
    "total": 846,
    "measured": 824,
-   "met": 642,
-   "outside": 182,
-   "met_pct": 77.9,
+   "met": 643,
+   "outside": 181,
+   "met_pct": 78.0,
    "open_within": 10,
    "open_too_long": 6,
    "themes": [
@@ -1499,9 +1498,9 @@
      "label": "Payments and fraud",
      "total": 846,
      "measured": 824,
-     "met": 642,
-     "outside": 182,
-     "met_pct": 77.9,
+     "met": 643,
+     "outside": 181,
+     "met_pct": 78.0,
      "open_within": 10,
      "open_too_long": 6
     }
@@ -1516,9 +1515,9 @@
    "redress": "—",
    "total": 784,
    "measured": 762,
-   "met": 697,
-   "outside": 65,
-   "met_pct": 91.5,
+   "met": 700,
+   "outside": 62,
+   "met_pct": 91.9,
    "open_within": 12,
    "open_too_long": 2,
    "themes": [
@@ -1530,9 +1529,9 @@
      "label": "Mortgages",
      "total": 443,
      "measured": 430,
-     "met": 395,
-     "outside": 35,
-     "met_pct": 91.9,
+     "met": 398,
+     "outside": 32,
+     "met_pct": 92.6,
      "open_within": 7,
      "open_too_long": 1
     },
@@ -1662,12 +1661,12 @@
   {
    "theme": "card_limit",
    "label": "Credit limit",
-   "interactions": 490,
-   "negative": 167,
-   "open": 7,
+   "interactions": 491,
+   "negative": 168,
+   "open": 8,
    "open_too_long": 1,
    "deliverable": "service_request",
-   "deliv_met_pct": 87.5,
+   "deliv_met_pct": 87.7,
    "public_mentions": 0,
    "public_negative": 0
   },
@@ -1727,7 +1726,7 @@
    "open": 16,
    "open_too_long": 3,
    "deliverable": "card_dispatch",
-   "deliv_met_pct": 80.4,
+   "deliv_met_pct": 81.0,
    "public_mentions": 0,
    "public_negative": 0
   },
@@ -1739,7 +1738,7 @@
    "open": 1,
    "open_too_long": 0,
    "deliverable": "card_closure",
-   "deliv_met_pct": 92.4,
+   "deliv_met_pct": 92.8,
    "public_mentions": 0,
    "public_negative": 0
   },
@@ -1751,7 +1750,7 @@
    "open": 7,
    "open_too_long": 4,
    "deliverable": "service_request",
-   "deliv_met_pct": 87.0,
+   "deliv_met_pct": 87.4,
    "public_mentions": 0,
    "public_negative": 0
   },
@@ -1802,18 +1801,6 @@
    "deliv_met_pct": 79.6,
    "public_mentions": 0,
    "public_negative": 0
-  },
-  {
-   "theme": "card_variant_migration",
-   "label": "Card product changes and forced switches",
-   "interactions": 1,
-   "negative": 1,
-   "open": 1,
-   "open_too_long": 0,
-   "deliverable": "service_request",
-   "deliv_met_pct": null,
-   "public_mentions": 0,
-   "public_negative": 0
   }
  ],
  "personas": [
@@ -1830,7 +1817,7 @@
     "current_accounts",
     "mortgages"
    ],
-   "rm_id": "RELM-017",
+   "rm_id": "Premier banking manager",
    "proxy_contacts": 1,
    "rm_notified": false,
    "story": true,
@@ -2000,7 +1987,7 @@
     "cards",
     "current_accounts"
    ],
-   "rm_id": "RELM-042",
+   "rm_id": "Premier banking manager",
    "proxy_contacts": 1,
    "rm_notified": true,
    "latest": {
@@ -2078,7 +2065,7 @@
     "current_accounts",
     "payments_fraud"
    ],
-   "rm_id": "RELM-066",
+   "rm_id": "Premier banking manager",
    "proxy_contacts": 0,
    "rm_notified": false,
    "cohort_added_at": "2026-11-08T15:10+00:00",
@@ -2087,7 +2074,7 @@
     "at": "2026-11-10T12:02+00:00",
     "channel": "inbound_voice",
     "product": "cards",
-    "summary": "Asked why the card was moved to a new variant without consent; says fees now apply."
+    "summary": "Asked why the credit limit was cut without notice; the card is now close to its limit."
    },
    "open": 2,
    "oldest_open_hours": 106.5,
@@ -2123,9 +2110,9 @@
      "product_label": "Credit cards",
      "team": "Credit cards",
      "outcome": null,
-     "theme": "card_variant_migration",
-     "theme_label": "Card product changes and forced switches",
-     "summary": "Asked why the card was moved to a new variant without consent; says fees now apply.",
+     "theme": "card_limit",
+     "theme_label": "Credit limit",
+     "summary": "Asked why the credit limit was cut without notice; the card is now close to its limit.",
      "flag_set": false,
      "flag_follows": false,
      "event": false,
@@ -2158,14 +2145,14 @@
     "mortgages",
     "savings"
    ],
-   "rm_id": "RELM-008",
+   "rm_id": "Premier banking manager",
    "proxy_contacts": 1,
    "rm_notified": true,
    "latest": {
     "at": "2026-11-05T10:00+00:00",
     "channel": "email",
     "product": "mortgages",
-    "summary": "Email from the customer's office: title deeds and the mortgage discharge confirmation not returned three weeks after the mortgage was repaid."
+    "summary": "Email from the customer's solicitor: the mortgage redemption statement has not arrived and the sale completes next week."
    },
    "open": 1,
    "oldest_open_hours": 165.8,
@@ -2179,7 +2166,7 @@
      "outcome": null,
      "theme": "loan_closure_documents",
      "theme_label": "Loan and mortgage redemption",
-     "summary": "Email from the customer's office: title deeds and the mortgage discharge confirmation not returned three weeks after the mortgage was repaid.",
+     "summary": "Email from the customer's solicitor: the mortgage redemption statement has not arrived and the sale completes next week.",
      "flag_set": false,
      "flag_follows": false,
      "event": false,
@@ -2209,7 +2196,7 @@
     "cards",
     "current_accounts"
    ],
-   "rm_id": "RELM-091",
+   "rm_id": "Premier banking manager",
    "proxy_contacts": 0,
    "rm_notified": false,
    "latest": {
@@ -2260,14 +2247,14 @@
     "cards",
     "current_accounts"
    ],
-   "rm_id": "RELM-073",
+   "rm_id": "Premier banking manager",
    "proxy_contacts": 0,
    "rm_notified": false,
    "latest": {
     "at": "2026-11-11T09:40+00:00",
     "channel": "branch",
     "product": "current_accounts",
-    "summary": "Visited the branch about the car finance repayment date; mentioned the open card dispute."
+    "summary": "Visited the branch about a missed direct debit; mentioned the open card dispute."
    },
    "open": 1,
    "oldest_open_hours": 135.4,
@@ -2305,7 +2292,7 @@
      "outcome": null,
      "theme": "loan_servicing",
      "theme_label": "Loan repayments and servicing",
-     "summary": "Visited the branch about the car finance repayment date; mentioned the open card dispute.",
+     "summary": "Visited the branch about a missed direct debit; mentioned the open card dispute.",
      "flag_set": false,
      "flag_follows": false,
      "event": false,
@@ -2335,7 +2322,7 @@
     "cards",
     "current_accounts"
    ],
-   "rm_id": "RELM-025",
+   "rm_id": "Premier banking manager",
    "proxy_contacts": 1,
    "rm_notified": false,
    "latest": {
@@ -2389,7 +2376,7 @@
     "personal_loans",
     "savings"
    ],
-   "rm_id": "RELM-054",
+   "rm_id": "Premier banking manager",
    "proxy_contacts": 0,
    "rm_notified": false,
    "latest": {
@@ -2441,14 +2428,14 @@
     "current_accounts",
     "savings"
    ],
-   "rm_id": "RELM-017",
+   "rm_id": "Premier banking manager",
    "proxy_contacts": 1,
    "rm_notified": false,
    "latest": {
     "at": "2026-11-08T11:45+00:00",
     "channel": "email",
     "product": "savings",
-    "summary": "Email from the customer's assistant: an insurance policy was added to the account without a clear explanation."
+    "summary": "Email from the customer's attorney: the account was moved to a packaged account with a fee, without a clear explanation."
    },
    "open": 1,
    "oldest_open_hours": 92.0,
@@ -2462,7 +2449,7 @@
      "outcome": null,
      "theme": "mis_selling",
      "theme_label": "Mis-selling and add-on products",
-     "summary": "Email from the customer's assistant: an insurance policy was added to the account without a clear explanation.",
+     "summary": "Email from the customer's attorney: the account was moved to a packaged account with a fee, without a clear explanation.",
      "flag_set": false,
      "flag_follows": false,
      "event": false,
@@ -2495,14 +2482,14 @@
     "current_accounts",
     "payments_fraud"
    ],
-   "rm_id": "RELM-101",
+   "rm_id": "Premier banking manager",
    "proxy_contacts": 0,
    "rm_notified": false,
    "latest": {
     "at": "2026-11-10T08:55+00:00",
     "channel": "chat",
     "product": "cards",
-    "summary": "Reward points on travel spends lower than expected after the cap change."
+    "summary": "Reward points on travel spending lower than expected after the cap change."
    },
    "open": 0,
    "oldest_open_hours": null,
@@ -2516,7 +2503,7 @@
      "outcome": null,
      "theme": "rewards_value",
      "theme_label": "Rewards value and caps",
-     "summary": "Reward points on travel spends lower than expected after the cap change.",
+     "summary": "Reward points on travel spending lower than expected after the cap change.",
      "flag_set": false,
      "flag_follows": false,
      "event": false,
@@ -2546,7 +2533,7 @@
     "cards",
     "current_accounts"
    ],
-   "rm_id": "RELM-033",
+   "rm_id": "Premier banking manager",
    "proxy_contacts": 1,
    "rm_notified": false,
    "latest": {
@@ -2599,7 +2586,7 @@
     "mortgages",
     "savings"
    ],
-   "rm_id": "RELM-060",
+   "rm_id": "Premier banking manager",
    "proxy_contacts": 0,
    "rm_notified": false,
    "latest": {
@@ -2618,7 +2605,7 @@
      "product_label": "Current accounts and app",
      "team": "Retail",
      "outcome": null,
-     "theme": "kyc_updates",
+     "theme": "identity_checks",
      "theme_label": "Identity checks and profile updates",
      "summary": "Identity check documents submitted twice; account still shows as restricted.",
      "flag_set": false,
@@ -2760,7 +2747,7 @@
    "received_at": "2026-11-11T12:05+00:00",
    "sender": "proxy",
    "product": "current_accounts",
-   "theme": "kyc_updates",
+   "theme": "identity_checks",
    "language": "English",
    "subject": "On behalf of the account holder: account restriction after identity check",
    "body": "Writing on behalf of the account holder. Identity documents were submitted at the branch on 2 November. The account still shows as restricted. Please advise.",
@@ -2778,11 +2765,11 @@
    "product": "mortgages",
    "theme": "loan_processing",
    "language": "English",
-   "subject": "Release date for my mortgage stage payment",
-   "body": "My developer is asking for the next stage payment. The release was approved last week. When will it be paid?",
-   "backend_status": "Stage release scheduled 13 Nov after the surveyor's report.",
+   "subject": "My mortgage offer expires before completion",
+   "body": "My mortgage offer expires on 20 November and completion has slipped to December. Can the offer be extended?",
+   "backend_status": "Extension approved 11 Nov; new offer to be issued 13 Nov.",
    "bucket": "reply_status",
-   "draft_reply": "Thank you for writing to us. The next stage release on your mortgage is scheduled for 13 November, following the surveyor's report. We will send the payment confirmation to you and to the developer. We will send our final response once the payment is made. If you are unhappy with it, you can refer your complaint to the Financial Ombudsman Service, free of charge, within 6 months of that response.",
+   "draft_reply": "Thank you for writing to us. Your mortgage offer has been extended to cover the new completion date, and the revised offer will be issued on 13 November. We will send it to you and to your solicitor. We will send our final response once the new offer is issued. If you are unhappy with it, you can refer your complaint to the Financial Ombudsman Service, free of charge, within 6 months of that response.",
    "bucket_label": "Reply with case status",
    "product_label": "Mortgages",
    "theme_label": "Loan and mortgage applications"
@@ -2840,9 +2827,9 @@
    "product": "mortgages",
    "theme": "loan_closure_documents",
    "language": "English",
-   "subject": "Title deeds after mortgage repayment",
-   "body": "Writing for the borrower. The mortgage was repaid on 15 October. The original title deeds have not been returned.",
-   "backend_status": "Deeds at the central deeds store; day 28 of a 30-calendar-day service standard.",
+   "subject": "Mortgage redemption statement delayed",
+   "body": "Writing for the borrower. The sale completes next week and the solicitor still has no redemption statement.",
+   "backend_status": "Requested 30 Oct; day 9 of the bank's 10-business-day standard (confirm with the bank).",
    "bucket": "call_today",
    "bucket_label": "Call today (service standard at risk)",
    "product_label": "Mortgages",
@@ -2943,15 +2930,15 @@
    "received_at": "2026-11-11T18:30+00:00",
    "sender": "customer",
    "product": "current_accounts",
-   "theme": "loan_processing",
+   "theme": "faster_payments_failures",
    "language": "English",
-   "subject": "Car finance approval",
-   "body": "My car finance was approved but the dealer has not received the payment.",
-   "backend_status": "Payment released 11 Nov; dealer credit on 12 Nov.",
+   "subject": "Payment to my builder not received",
+   "body": "I paid my builder by Faster Payment on Monday and he says the money has not arrived.",
+   "backend_status": "Payment held for a fraud check 10 Nov; released 11 Nov, 16:20; credited the same day.",
    "bucket": "proactive_status",
    "bucket_label": "Proactive status message",
    "product_label": "Current accounts and app",
-   "theme_label": "Loan and mortgage applications"
+   "theme_label": "Faster Payments or Open Banking failure"
   },
   {
    "id": "L2-16",
@@ -2973,7 +2960,7 @@
    "received_at": "2026-11-09T12:25+00:00",
    "sender": "customer",
    "product": "current_accounts",
-   "theme": "login_mpin",
+   "theme": "app_login_biometrics",
    "language": "English",
    "subject": "Cannot log in to the app",
    "body": "I have a new phone and cannot log in to the NatWest app. Resetting my passcode keeps failing too.",
@@ -2990,9 +2977,9 @@
    "product": "current_accounts",
    "theme": "statements_documents",
    "language": "English",
-   "subject": "Interest certificate",
-   "body": "I need the interest certificate for my fixed-term savings for a visa application.",
-   "backend_status": "Certificate emailed 10 Nov.",
+   "subject": "Savings interest statement",
+   "body": "I need a statement of the interest paid on my savings for my Self Assessment tax return.",
+   "backend_status": "Interest statement emailed 10 Nov.",
    "bucket": "close_confirm",
    "bucket_label": "Close with confirmation",
    "product_label": "Current accounts and app",
@@ -3005,9 +2992,9 @@
    "product": "current_accounts",
    "theme": "mis_selling",
    "language": "English",
-   "subject": "Insurance added without my consent",
-   "body": "An insurance premium has been debited from my savings account. I never agreed to buy a policy.",
-   "backend_status": "Policy sold through the branch; insurance product owner to review.",
+   "subject": "Insurance on my packaged account I did not ask for",
+   "body": "My account was upgraded to a packaged account with insurance and a monthly fee. I never agreed to it.",
+   "backend_status": "Upgrade recorded at a branch appointment; packaged-account product owner to review the sale.",
    "bucket": "route_owner",
    "bucket_label": "Route to another product owner",
    "product_label": "Current accounts and app",
@@ -3075,15 +3062,6 @@
    "status": "Acknowledged 06:55"
   },
   {
-   "theme": "card_variant_migration",
-   "owner": "cards",
-   "system": "Credit cards service queue",
-   "acknowledged_at": "22:10",
-   "owner_label": "Credit cards product owner",
-   "label": "Card product changes and forced switches",
-   "status": "Acknowledged 22:10"
-  },
-  {
    "theme": "care_unreachable",
    "owner": "cx",
    "system": "CRM case queue",
@@ -3103,8 +3081,8 @@
   }
  ],
  "md_mail": {
-  "total": 1043,
-  "shown": 1032,
+  "total": 1044,
+  "shown": 1033,
   "rows": [
    {
     "theme": "complaint_handling",
@@ -3114,6 +3092,15 @@
     "median_age_days": 10.1,
     "resolved": 972,
     "resolved_share": 94.9
+   },
+   {
+    "theme": "loan_processing",
+    "label": "Loan and mortgage applications",
+    "owner": "loans",
+    "mails": 3,
+    "median_age_days": 11.2,
+    "resolved": 2,
+    "resolved_share": 66.7
    },
    {
     "theme": "card_limit",
@@ -3134,22 +3121,13 @@
     "resolved_share": 100.0
    },
    {
-    "theme": "kyc_updates",
+    "theme": "identity_checks",
     "label": "Identity checks and profile updates",
     "owner": "operations",
     "mails": 2,
     "median_age_days": 2.0,
     "resolved": 2,
     "resolved_share": 100.0
-   },
-   {
-    "theme": "loan_processing",
-    "label": "Loan and mortgage applications",
-    "owner": "loans",
-    "mails": 2,
-    "median_age_days": 21.6,
-    "resolved": 1,
-    "resolved_share": 50.0
    }
   ],
   "rule": "Written complaints (email) escalated to the Complaints team, from the same interaction sample."
@@ -3217,15 +3195,15 @@
     },
     {
      "stage": "Everyday banking",
-     "interactions": 12811,
+     "interactions": 12812,
      "negative_share": 30.8,
      "repeat_contact_share": 16.7,
      "closure_intent": 330
     },
     {
      "stage": "Service requests",
-     "interactions": 8180,
-     "negative_share": 31.4,
+     "interactions": 8179,
+     "negative_share": 31.3,
      "repeat_contact_share": 20.7,
      "closure_intent": 213
     },
@@ -3335,11 +3313,11 @@
    },
    {
     "rung": "Complaint",
-    "count": 1692
+    "count": 1693
    },
    {
     "rung": "Complaints team",
-    "count": 1043
+    "count": 1044
    },
    {
     "rung": "Final response",
@@ -3354,8 +3332,8 @@
   "closure": {
    "closure_requests": 1114,
    "closed": 1071,
-   "saved": 296,
-   "save_rate": 27.6
+   "saved": 295,
+   "save_rate": 27.5
   },
   "disputes": {
    "raised": 780,
@@ -3363,7 +3341,7 @@
    "drivers": [
     {
      "driver": "Merchant response pending",
-     "cases": 22
+     "cases": 20
     },
     {
      "driver": "Chargeback evidence incomplete",
@@ -3375,11 +3353,11 @@
     },
     {
      "driver": "Manual re-work after reopen",
-     "cases": 16
+     "cases": 17
     },
     {
      "driver": "Customer not updated",
-     "cases": 9
+     "cases": 10
     }
    ],
    "aged_cases": [
@@ -3411,11 +3389,11 @@
     },
     {
      "stage": "Customer credited",
-     "count": 364
+     "count": 363
     },
     {
      "stage": "Credited within the standard",
-     "count": 333
+     "count": 331
     }
    ]
   }
@@ -3431,7 +3409,7 @@
    },
    {
     "product": "current_accounts",
-    "theme": "kyc_updates",
+    "theme": "identity_checks",
     "public_share": 7.4,
     "internal_share": 7.4,
     "within_20pct": true
@@ -3466,7 +3444,7 @@
    },
    {
     "product": "current_accounts",
-    "theme": "login_mpin",
+    "theme": "app_login_biometrics",
     "public_share": 7.4,
     "internal_share": 7.4,
     "within_20pct": true
@@ -3480,7 +3458,7 @@
    },
    {
     "product": "payments_fraud",
-    "theme": "upi_failures",
+    "theme": "faster_payments_failures",
     "public_share": 20.8,
     "internal_share": 20.8,
     "within_20pct": true
@@ -3627,7 +3605,7 @@
    },
    {
     "product": "savings",
-    "theme": "kyc_updates",
+    "theme": "identity_checks",
     "public_share": 11.4,
     "internal_share": 11.4,
     "within_20pct": true

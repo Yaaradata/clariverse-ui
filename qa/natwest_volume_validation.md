@@ -14,14 +14,14 @@ Verdict: **OK** = inside the anchor's range, or within 2x of a point anchor. Any
 | Complaints per 1,000 accounts, half-year equivalent | 2.79 | 2.74 | ANCHOR (H1 2026 return) | in range | OK |
 | Complaints upheld, of those with a final response | 48% | about 55% | ANCHOR (H1 2026 return) | in range | OK |
 | Complaints closed within 3 days | 55% | 48% | ANCHOR (H1 2026 return) | 1.09x | OK (the sample's resolution-time model is the oct13 one; tune once the per-product return lands) |
-| Total contacts, full window | 5,801,492 | about 5,800,000 | ASSUMPTION (13m NatWest customers, Pass 3) | in range | OK |
+| Total contacts, full window | 5,801,498 | about 5,800,000 | ASSUMPTION (13m NatWest customers, Pass 3) | in range | OK |
 | Contacts per complaint | 116x | no anchor | DERIVED | in range | OK |
 | Negative share of internal contacts | 12.1% | about 12% | HL-19 | in range | OK |
 | Negative share of complaints | 84% | mostly negative (85%) | HL-19 | in range | OK |
-| Channel share: Calls | 44.0% (2,552,571) | assumption | ASSUMPTION | in range | OK |
-| Channel share: Cora | 30.0% (1,740,267) | assumption | ASSUMPTION | in range | OK |
-| Channel share: Secure message | 9.0% (522,309) | assumption | ASSUMPTION | in range | OK |
-| Channel share: Email | 6.0% (348,165) | assumption | ASSUMPTION | in range | OK |
+| Channel share: Calls | 44.0% (2,552,570) | assumption | ASSUMPTION | in range | OK |
+| Channel share: Cora | 30.0% (1,740,272) | assumption | ASSUMPTION | in range | OK |
+| Channel share: Secure message | 9.0% (522,312) | assumption | ASSUMPTION | in range | OK |
+| Channel share: Email | 6.0% (348,164) | assumption | ASSUMPTION | in range | OK |
 | Channel share: Branch | 10.0% (580,116) | assumption | ASSUMPTION | in range | OK |
 | Channel share: Social | 1.0% (58,064) | assumption | ASSUMPTION | in range | OK |
 | Referred to the Financial Ombudsman Service, full window | 2,216 | about 2,500 (5% of complaints) | ASSUMPTION (no anchor) | 0.93x | OK (within 2x) |

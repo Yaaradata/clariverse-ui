@@ -30,7 +30,7 @@
   "received_at": "2026-11-11T12:05+00:00",
   "sender": "proxy",
   "product": "current_accounts",
-  "theme": "kyc_updates",
+  "theme": "identity_checks",
   "language": "English",
   "subject": "On behalf of the account holder: account restriction after identity check",
   "body": "Writing on behalf of the account holder. Identity documents were submitted at the branch on 2 November. The account still shows as restricted. Please advise.",
@@ -45,11 +45,11 @@
   "product": "mortgages",
   "theme": "loan_processing",
   "language": "English",
-  "subject": "Release date for my mortgage stage payment",
-  "body": "My developer is asking for the next stage payment. The release was approved last week. When will it be paid?",
-  "backend_status": "Stage release scheduled 13 Nov after the surveyor's report.",
+  "subject": "My mortgage offer expires before completion",
+  "body": "My mortgage offer expires on 20 November and completion has slipped to December. Can the offer be extended?",
+  "backend_status": "Extension approved 11 Nov; new offer to be issued 13 Nov.",
   "bucket": "reply_status",
-  "draft_reply": "Thank you for writing to us. The next stage release on your mortgage is scheduled for 13 November, following the surveyor's report. We will send the payment confirmation to you and to the developer. We will send our final response once the payment is made. If you are unhappy with it, you can refer your complaint to the Financial Ombudsman Service, free of charge, within 6 months of that response."
+  "draft_reply": "Thank you for writing to us. Your mortgage offer has been extended to cover the new completion date, and the revised offer will be issued on 13 November. We will send it to you and to your solicitor. We will send our final response once the new offer is issued. If you are unhappy with it, you can refer your complaint to the Financial Ombudsman Service, free of charge, within 6 months of that response."
  },
  {
   "id": "L2-05",
@@ -95,9 +95,9 @@
   "product": "mortgages",
   "theme": "loan_closure_documents",
   "language": "English",
-  "subject": "Title deeds after mortgage repayment",
-  "body": "Writing for the borrower. The mortgage was repaid on 15 October. The original title deeds have not been returned.",
-  "backend_status": "Deeds at the central deeds store; day 28 of a 30-calendar-day service standard.",
+  "subject": "Mortgage redemption statement delayed",
+  "body": "Writing for the borrower. The sale completes next week and the solicitor still has no redemption statement.",
+  "backend_status": "Requested 30 Oct; day 9 of the bank's 10-business-day standard (confirm with the bank).",
   "bucket": "call_today"
  },
  {
@@ -177,11 +177,11 @@
   "received_at": "2026-11-11T18:30+00:00",
   "sender": "customer",
   "product": "current_accounts",
-  "theme": "loan_processing",
+  "theme": "faster_payments_failures",
   "language": "English",
-  "subject": "Car finance approval",
-  "body": "My car finance was approved but the dealer has not received the payment.",
-  "backend_status": "Payment released 11 Nov; dealer credit on 12 Nov.",
+  "subject": "Payment to my builder not received",
+  "body": "I paid my builder by Faster Payment on Monday and he says the money has not arrived.",
+  "backend_status": "Payment held for a fraud check 10 Nov; released 11 Nov, 16:20; credited the same day.",
   "bucket": "proactive_status"
  },
  {
@@ -201,7 +201,7 @@
   "received_at": "2026-11-09T12:25+00:00",
   "sender": "customer",
   "product": "current_accounts",
-  "theme": "login_mpin",
+  "theme": "app_login_biometrics",
   "language": "English",
   "subject": "Cannot log in to the app",
   "body": "I have a new phone and cannot log in to the NatWest app. Resetting my passcode keeps failing too.",
@@ -215,9 +215,9 @@
   "product": "current_accounts",
   "theme": "statements_documents",
   "language": "English",
-  "subject": "Interest certificate",
-  "body": "I need the interest certificate for my fixed-term savings for a visa application.",
-  "backend_status": "Certificate emailed 10 Nov.",
+  "subject": "Savings interest statement",
+  "body": "I need a statement of the interest paid on my savings for my Self Assessment tax return.",
+  "backend_status": "Interest statement emailed 10 Nov.",
   "bucket": "close_confirm"
  },
  {
@@ -227,9 +227,9 @@
   "product": "current_accounts",
   "theme": "mis_selling",
   "language": "English",
-  "subject": "Insurance added without my consent",
-  "body": "An insurance premium has been debited from my savings account. I never agreed to buy a policy.",
-  "backend_status": "Policy sold through the branch; insurance product owner to review.",
+  "subject": "Insurance on my packaged account I did not ask for",
+  "body": "My account was upgraded to a packaged account with insurance and a monthly fee. I never agreed to it.",
+  "backend_status": "Upgrade recorded at a branch appointment; packaged-account product owner to review the sale.",
   "bucket": "route_owner"
  },
  {

@@ -30,10 +30,10 @@ def rx(*parts: str) -> re.Pattern:
 THEME_RULES: list[tuple[str, re.Pattern]] = [
     ("device_security_block", rx(r"developer (option|mode)", r"usb debugging", r"\broot(ed)?\b", r"security (violation|risk|threat|alert)", r"risky app", r"device (not|is not) (compatible|supported)", r"potential(ly)? (harmful|security)", r"accessibility (permission|service)", r"screen ?(sharing|reader) app", r"app (is )?disabled")),
     ("new_app_release", rx(r"new (app|version|update|ui|interface)", r"(after|since|with) (the )?(latest |recent |new )?update", r"old app (was|is) (better|good)", r"previous (version|app)", r"bring back (the )?old", r"integrated keyboard", r"custom keyboard", r"forced (to )?(update|migrate)", r"purana app", r"naya app")),
-    ("login_mpin", rx(r"\blog ?in\b", r"\blogin\b", r"\bmpin\b", r"\bm-pin\b", r"password", r"\botp\b", r"registration", r"register", r"device binding", r"sim binding", r"verify (my )?(mobile|number)", r"sms verification", r"customer id", r"re-?register")),
+    ("app_login_biometrics", rx(r"\blog ?in\b", r"\blogin\b", r"\bmpin\b", r"\bm-pin\b", r"password", r"\botp\b", r"registration", r"register", r"device binding", r"sim binding", r"verify (my )?(mobile|number)", r"sms verification", r"customer id", r"re-?register")),
     ("app_speed_crash", rx(r"\bslow\b", r"not (opening|loading|working|responding)", r"(doesn'?t|does not|won'?t|will not) (open|load|work)", r"\bcrash", r"\bhang", r"freez", r"something went wrong", r"technical (error|issue|glitch)", r"server (error|down|issue)", r"\blag", r"keeps? loading", r"stuck on", r"\bdown\b.*(app|server|site)", r"(app|server|site).*\bdown\b", r"bahut slow", r"khul(ta)? nahi", r"chal(ta)? nahi", r"timeout", r"time ?out", r"error")),
     ("online_banking", rx(r"net ?banking", r"online_banking", r"internet banking")),
-    ("upi_failures", rx(r"\bupi\b.*(fail|pending|declin|not work|block|limit|error|stuck|deducted)", r"(fail|pending|declin|error|stuck).*\bupi\b", r"upi pin", r"upi lite", r"rupay.*upi", r"upi transaction")),
+    ("faster_payments_failures", rx(r"\bupi\b.*(fail|pending|declin|not work|block|limit|error|stuck|deducted)", r"(fail|pending|declin|error|stuck).*\bupi\b", r"upi pin", r"upi lite", r"rupay.*upi", r"upi transaction")),
     ("failed_txn_reversal", rx(r"(debited|deducted|cut|kat gay[ae])\b.*(not|nahi|never).*(receiv|credit|revers|refund|return|mila|aaya)", r"not (been )?reversed", r"reversal", r"(atm|cash).*(not dispensed|didn'?t dispense|not received|nahi nikla)", r"money (got )?stuck", r"failed transaction", r"transaction failed.*(amount|money|debited)", r"paisa (kat|nahi aaya|wapas)")),
     ("refund_delay", rx(r"refund.{0,40}(not|yet|still|pending|delay|waiting|nahi|missing|never|since|months|weeks)", r"(not|yet|still|pending|waiting|never|nahi|no).{0,30}refund", r"money back.{0,30}(not|yet|still|pending)", r"paisa wapas nahi")),
     ("dispute_chargeback", rx(r"\bdispute", r"charge ?back")),
@@ -44,7 +44,6 @@ THEME_RULES: list[tuple[str, re.Pattern]] = [
     ("recovery_conduct", rx(r"recovery (agent|call|team)", r"collection (agent|call|team)", r"harass", r"threat(en)?", r"abusive", r"legal notice.*(due|emi|outstanding)", r"(due|emi|outstanding).*legal notice", r"\bagent(s)? (came|visited|called)")),
     ("mis_selling", rx(r"mis-?sell", r"(insurance|policy|ulip).*(forced|pushed|without (my )?consent|bundled|sold)", r"(forced|pushed|without (my )?consent|bundled).*(insurance|policy|ulip)", r"misleading", r"false promise")),
     ("credit_report", rx(r"(cibil|credit (report|score)|experian|equifax|crif).{0,60}(wrong|incorrect|error|mistake|dispute|correct|dropped|drop|fell|hit|impact|damag|reported|not updated|still show|dpd|default|written off|settled|overdue)", r"(wrong|incorrect|error|dispute|correct|reported|not updated|dpd|written off|settled).{0,60}(cibil|credit report|credit score)")),
-    ("card_variant_migration", rx(r"(variant|card).*(migrat|convert|discontinu|phased out|replac|downgrad)", r"(migrat|convert|discontinu|phased out|downgrad).*(variant|card)", r"swiggy (hdfc|card)", r"tata neu", r"forced upgrade", r"auto(matic(ally)?)?[- ]upgrad")),
     ("card_eligibility_upgrade", rx(r"eligib", r"\bupgrade", r"\bltf\b", r"lifetime free", r"life ?time free", r"pre-?approved", r"\binfinia\b.*(invite|get|apply|criteria)", r"\bdcb\b.*(get|upgrade|criteria)", r"card to card", r"invite only")),
     ("card_application", rx(r"(card|application).*(reject|declin|denied|pending|stuck|in progress|under process|verification)", r"(reject|declin|denied).*(card|application)", r"video ?kyc", r"\bvkyc\b", r"apply(ing|ied)? for (a |the )?(credit )?card", r"application status")),
     ("reward_redemption", rx(r"redeem", r"redemption", r"voucher", r"milestone (benefit|voucher)", r"gift card")),
@@ -54,7 +53,7 @@ THEME_RULES: list[tuple[str, re.Pattern]] = [
     ("card_dispatch", rx(r"(card|kit).*(not (yet )?(received|delivered|dispatched)|dispatch|courier|delivery)", r"(courier|delivery|dispatch).*(card|kit)", r"welcome kit", r"blue ?dart", r"card (not )?activated")),
     ("closure_requests", rx(r"\bclos(e|ing|ure)\b.*(account|card|loan|a/c)", r"(account|card|loan|a/c).*\bclos(e|ing|ure)\b", r"closure")),
     ("account_freeze", rx(r"\bfr(o|ee)ze", r"frozen", r"debit (freeze|block)", r"account (blocked|block|suspended|on hold|restricted)", r"\blien\b", r"\bhold\b.*(account|amount|funds)", r"cyber cell", r"\bncrp\b")),
-    ("kyc_updates", rx(r"\bkyc\b", r"re-?kyc", r"(mobile|phone) number (update|change|link)", r"(address|email|nominee) (update|change)", r"(pan|aadha?ar) (link|update|seeding)")),
+    ("identity_checks", rx(r"\bkyc\b", r"re-?kyc", r"(mobile|phone) number (update|change|link)", r"(address|email|nominee) (update|change)", r"(pan|aadha?ar) (link|update|seeding)")),
     ("account_opening", rx(r"(open|opening) (a |an |my |the )?(new )?(savings |salary |current |zero balance )?account", r"account opening", r"convert(ed)? (my )?(account|to salary)", r"salary account", r"minimum balance programme")),
     ("fees_charges_bank", rx(r"minimum balance", r"\bamb\b", r"(hidden|extra|unnecessary|unfair) (charge|fee)", r"(charges?|fee|penalty) (deducted|levied|debited)", r"(deducted|levied|debited).*(charge|fee|penalty)", r"\bgst\b.*charge", r"sms charge", r"penalty")),
     ("statements_documents", rx(r"statement", r"interest certificate", r"\bnoc\b", r"\bndc\b", r"certificate", r"form 16", r"tds")),
@@ -63,10 +62,10 @@ THEME_RULES: list[tuple[str, re.Pattern]] = [
     ("loan_servicing", rx(r"\bemi\b", r"(loan|home loan).*(interest rate|rate reset|repo|tenure|part ?payment|prepay)", r"(interest rate|rate reset|repo rate|part ?payment|prepay).*(loan|emi)", r"loan (account|details|statement)")),
     ("atm_debit_card", rx(r"debit card", r"\batm\b", r"cash withdrawal")),
     ("merchant_pos", rx(r"\bpos\b", r"sound ?box", r"\bqr\b.*(merchant|settlement|shop)", r"merchant", r"settlement", r"swipe machine", r"edc")),
-    ("nri_forex", rx(r"\bnri\b", r"\bnre\b", r"\bnro\b", r"remittance", r"forex card", r"swift", r"inward")),
+    ("international_payments", rx(r"\bnri\b", r"\bnre\b", r"\bnro\b", r"remittance", r"forex card", r"swift", r"inward")),
     ("deposits_rates", rx(r"fixed deposit", r"\bfd\b", r"\brd\b", r"interest rate on (fd|deposit|savings)", r"sweep")),
     ("investments_wealth", rx(r"mutual fund", r"\bsip\b", r"portfolio", r"smart ?wealth", r"\bmf\b", r"demat")),
-    ("rm_service", rx(r"\brm\b", r"relationship manager", r"relationship officer", r"wealth manager")),
+    ("premier_service", rx(r"\brm\b", r"relationship manager", r"relationship officer", r"wealth manager")),
     ("branch_service", rx(r"\bbranch", r"branch manager", r"\bstaff\b", r"rude", r"home branch", r"executive (was|is) rude")),
     ("care_unreachable", rx(r"customer (care|service|support)", r"phone ?banking", r"call (centre|center)", r"helpline", r"\bivr\b", r"\beva\b", r"chat ?bot", r"no one (picks|answers|responds)", r"(can'?t|cannot|unable to) (reach|contact|connect)", r"on hold", r"waiting (time|on call)", r"koi (call )?nahi uthata", r"not (picking|answering)")),
     ("complaint_handling", rx(r"(ref(erence)?|complaint|ticket|\bsr\b|service request|request) (no\.?|number|id)\b", r"no one (has )?(responded|replied|called|contacted)", r"(still|yet) (no|not).{0,30}(resol|response|reply|call ?back|action)", r"(kindly|please|pls) (look into|resolve|help me|check (my|this)|take action)", r"(dm|dmed|messaged|mailed|emailed|shared).{0,40}(no (response|reply|action|update)|nothing happened)", r"complaint.*(closed|close[ds]?) without", r"(closed|close[ds]?) (my )?complaint", r"generic (reply|response)", r"(ticket|complaint|request|sr)( number| no\.?)?.*(closed|no (action|update|resolution|response))", r"(raised|filed|lodged) (a |multiple |many |several )?complaints?", r"complaint (raised|filed|lodged|registered)", r"no resolution", r"not resolved", r"unresolved", r"dm(ed)? (you|details)", r"please (check|help|resolve).*(dm|inbox)", r"grievance", r"escalat")),
@@ -188,7 +187,7 @@ def classify(rec: dict) -> dict:
                 themes = ["general_dissatisfaction"]
             else:
                 themes = ["other"]
-        elif sent == "positive" and rec["source"] in ("playstore", "appstore") and themes[0] in ("app_speed_crash", "login_mpin", "new_app_release") and not NEG.search(low):
+        elif sent == "positive" and rec["source"] in ("playstore", "appstore") and themes[0] in ("app_speed_crash", "app_login_biometrics", "new_app_release") and not NEG.search(low):
             themes = ["app_praise"]  # "fast and easy login" is praise, not a login problem
     # Business
     business = rec.get("business_hint")

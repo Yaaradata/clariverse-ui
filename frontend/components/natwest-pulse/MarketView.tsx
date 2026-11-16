@@ -48,7 +48,7 @@ const PROMISES: { promise: string; pillar: string; themes: string[] }[] = [
       "cora_unresolved",
       "care_unreachable",
       "app_speed_crash",
-      "login_mpin",
+      "app_login_biometrics",
       "online_banking",
     ],
   },
@@ -66,12 +66,12 @@ const PROMISES: { promise: string; pillar: string; themes: string[] }[] = [
   {
     promise: "Switch to us in 7 days",
     pillar: "products_services",
-    themes: ["account_opening", "closure_requests", "kyc_updates"],
+    themes: ["account_opening", "closure_requests", "identity_checks"],
   },
   {
     promise: "Same-day Faster Payments",
     pillar: "products_services",
-    themes: ["upi_failures", "failed_txn_reversal", "refund_delay"],
+    themes: ["faster_payments_failures", "failed_txn_reversal", "refund_delay"],
   },
   {
     promise: "Mortgage decision in principle online",

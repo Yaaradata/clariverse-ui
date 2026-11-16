@@ -23,6 +23,7 @@ import math
 import random
 
 from common import (
+    is_business_day,
     JOURNEY_ORDER,
     JOURNEY_STAGE,
     OWNER_LABEL,
@@ -110,19 +111,19 @@ HAND_MIX = {
     "cards": {"card_fees_charges": 18, "dispute_chargeback": 16, "card_application": 10, "card_limit": 10,
               "unauthorised_txn": 10, "rewards_value": 8, "card_dispatch": 8, "complaint_handling": 8,
               "reward_redemption": 6, "closure_requests": 6, "cora_unresolved": 2, "cora_wrong_answer": 1, "cora_handoff_lost": 1, "cora_no_person": 1},
-    "payments_fraud": {"upi_failures": 22, "account_freeze": 16, "failed_txn_reversal": 14, "app_reimbursement": 14,
+    "payments_fraud": {"faster_payments_failures": 22, "account_freeze": 16, "failed_txn_reversal": 14, "app_reimbursement": 14,
                        "fraud_scam": 12, "unauthorised_txn": 8, "complaint_handling": 8, "phishing": 6, "cora_unresolved": 2, "cora_wrong_answer": 2, "cora_handoff_lost": 1, "cora_no_person": 1},
     # Current accounts and app: overdraft and app themes folded in (NW-D33); Cora themes ride on every product.
-    "current_accounts": {"fees_charges_bank": 14, "kyc_updates": 8, "care_unreachable": 8, "account_opening": 6,
+    "current_accounts": {"fees_charges_bank": 14, "identity_checks": 8, "care_unreachable": 8, "account_opening": 6,
                          "complaint_handling": 7, "branch_service": 5, "statements_documents": 5, "branch_closure": 4,
                          "closure_requests": 4, "consumer_duty_value": 6, "atm_debit_card": 4, "recovery_conduct": 3,
-                         "login_mpin": 8, "app_speed_crash": 6, "app_usability": 4, "online_banking": 4,
+                         "app_login_biometrics": 8, "app_speed_crash": 6, "app_usability": 4, "online_banking": 4,
                          "new_app_release": 3, "device_security_block": 3, "cora_unresolved": 2, "cora_wrong_answer": 2, "cora_handoff_lost": 1, "cora_no_person": 1},
     "personal_loans": {"loan_processing": 26, "loan_servicing": 24, "recovery_conduct": 12, "credit_report": 10,
                        "loan_closure_documents": 10, "complaint_handling": 10, "mis_selling": 8, "cora_unresolved": 2, "cora_wrong_answer": 1, "cora_handoff_lost": 1, "cora_no_person": 1},
     "mortgages": {"mortgage_rate_switch": 28, "loan_processing": 18, "loan_servicing": 18, "loan_closure_documents": 10,
                   "complaint_handling": 10, "recovery_conduct": 8, "care_unreachable": 8, "cora_unresolved": 2, "cora_wrong_answer": 1, "cora_handoff_lost": 1, "cora_no_person": 1},
-    "savings": {"deposits_rates": 34, "statements_documents": 12, "closure_requests": 12, "kyc_updates": 12,
+    "savings": {"deposits_rates": 34, "statements_documents": 12, "closure_requests": 12, "identity_checks": 12,
                 "consumer_duty_value": 10, "complaint_handling": 10, "care_unreachable": 10, "cora_unresolved": 2, "cora_wrong_answer": 1, "cora_handoff_lost": 1, "cora_no_person": 1},
 }
 
@@ -147,7 +148,7 @@ def add_working_days(d: dt.datetime, days: int) -> dt.datetime:
     left = days
     while left > 0:
         out += dt.timedelta(days=1)
-        if out.weekday() < 5:  # weekends skipped (UK business days)
+        if is_business_day(out):  # weekends and bank holidays skipped (UK business days)
             left -= 1
     return out
 
@@ -195,7 +196,7 @@ def public_mix():
 
 def build_customers():
     customers = []
-    rm_pool = [f"RELM-{i:03d}" for i in range(1, 121)]
+    rm_pool = ["Premier banking manager"] * 120  # a role, never an id
     for i in range(N_CUSTOMERS):
         seg = pick(dict(SEGMENTS))
         held = [p for p in PRODUCT_IDS if rng.random() < HOLD_P[p]]
@@ -269,7 +270,7 @@ def resolution_hours(deliv: str, theme: str, cohort: bool, channel: str) -> floa
     median = 0.5
     sigma = 0.85
     # Themes where public voice says timelines break get a heavier tail.
-    if theme in ("complaint_handling", "card_dispatch", "refund_delay", "card_variant_migration", "account_freeze", "care_unreachable",
+    if theme in ("complaint_handling", "card_dispatch", "refund_delay", "account_freeze", "care_unreachable",
                  "cora_unresolved", "cora_wrong_answer", "cora_handoff_lost", "cora_no_person"):
         median, sigma = 0.72, 0.95
     if channel in ("chat", "ivr_bot"):

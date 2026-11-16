@@ -41,7 +41,7 @@ function idsFor(b: Bundle, s: Slice): { ids: string[]; full: boolean } {
       }
       return {
         ids: [
-          "card_variant_migration",
+          "card_eligibility_upgrade",
           "card_fees_charges",
           "rewards_value",
         ].flatMap((t) =>

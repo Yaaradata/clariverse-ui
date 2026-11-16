@@ -261,7 +261,6 @@ function Chip({
 const RUNG_COLOR: Record<string, string> = {
   Voice: C.cyan,
   Repeat: C.amber,
-  Grievance: C.amber,
   Complaint: C.amber,
   "Complaints team": C.amber,
   "Final response": C.amber,

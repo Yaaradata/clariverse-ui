@@ -124,9 +124,10 @@ export function PriorityView({ b }: { b: Bundle }) {
           }
         >
           {fmt(openCustomers)} customers on the bank&apos;s priority lists have
-          an issue open this morning; {fmt(over24)} issues on list A have been
-          open for more than 24 hours. Owners have been told about {fmt(rmDid)}{" "}
-          of the {fmt(rmShould)} customers with an Owner alert due.
+          an issue open this morning; {fmt(over24)} issues on the
+          vulnerable-customer list have been open for more than 24 hours. Owners
+          have been told about {fmt(rmDid)} of the {fmt(rmShould)} customers
+          with an Owner alert due.
         </AnswerLine>
       </Tile>
 
@@ -702,7 +703,7 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
             {p.products.map((x) => PRODUCT_LABEL[x] ?? x).join(", ")}
           </Field>
           <Field label="Owner">
-            <span style={{ fontFamily: MONO }}>{p.rm_id}</span> ·{" "}
+            <span>{p.rm_id}</span> ·{" "}
             <span style={{ color: rmColor(p) }}>{rmStatus(p)}</span>
           </Field>
           <Field label="Linked contacts">
@@ -772,7 +773,7 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
           <ActionBox
             icon={<BellRing size={16} />}
             title="Alert the owner"
-            body={`CRM task for ${p.rm_id}: ${openSteps.length} open ${openSteps.length === 1 ? "item" : "items"} across ${[...new Set(openSteps.map((s) => s.team))].join(" and ") || "no team"}. Call the customer today with the full history.`}
+            body={`CRM task for the ${p.rm_id?.toLowerCase()}: ${openSteps.length} open ${openSteps.length === 1 ? "item" : "items"} across ${[...new Set(openSteps.map((s) => s.team))].join(" and ") || "no team"}. Call the customer today with the full history.`}
             owner="rm"
           />
           <ActionBox

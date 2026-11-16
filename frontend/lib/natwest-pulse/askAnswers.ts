@@ -441,7 +441,7 @@ function cardsBase(p: Period): AskQA[] {
     {
       id: "cards-escalate",
       q: "Where do credit card contacts escalate?",
-      answer: `${fmt(c.internal.escalations)} internal contacts reached a grievance desk or beyond; ${fmt(sv.public_escalation)} public posts use escalation language${sv.targets[0] ? `, most naming ${sv.targets[0].label}` : ""}.`,
+      answer: `${fmt(c.internal.escalations)} internal contacts were escalated to the complaints team or beyond; ${fmt(sv.public_escalation)} public posts use escalation language${sv.targets[0] ? `, most naming ${sv.targets[0].label}` : ""}.`,
       table: {
         head: ["Rung (internal)", "Contacts"],
         rows: sv.ladder.map((x) => [x.rung, fmt(x.count)]),

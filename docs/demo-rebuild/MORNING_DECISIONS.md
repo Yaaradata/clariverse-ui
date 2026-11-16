@@ -1062,3 +1062,13 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
 - **NW-D53 · Ask LisN (Pass 2 §13).** "How are our financially vulnerable customers being served?"; "Are customers
   saying they will switch or close their card?"; the five persona questions lead the suggestion list on every view,
   then the view's own questions. "Business" and bare "Cards" were already swept (NW-D30, NW-D33).
+
+### Independent review, round 1 (16 Nov): fixes as decided by Usha
+
+- **NW-D54 · Item 2, HDFC wording.** "Grievance" rung reads "Complaint"; "escalated to the complaints team or beyond";
+  "the vulnerable-customer list" for list A; owner ids (RELM-nnn) replaced by roles (Premier banking manager, Complaints
+  lead), no id; the card-variant story is removed (theme, classifier rule, rows, action, persona item); five India-only
+  action-queue cases rewritten as UK ones (mortgage offer expiry, savings interest statement for Self Assessment, Faster
+  Payment to a builder, packaged-account insurance without consent, mortgage redemption statement); "travel spending";
+  business days skip weekends and England and Wales bank holidays (31 Aug, 25 and 28 Dec 2026); theme ids renamed to UK
+  slugs (faster_payments_failures, identity_checks, international_payments, app_login_biometrics, premier_service).
