@@ -1074,3 +1074,26 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
   slugs (faster_payments_failures, identity_checks, international_payments, app_login_biometrics, premier_service).
 - **NW-D55 · Item 4, banned words.** "the credit cards product owner reviews"; Ask LisN table column "Product" (was
   "Business"); "the credit cards card on the Head of Customer Experience view".
+- **NW-D56 · Item 5, figures a UK banker would question (18 fixed, 2 overruled by Usha).**
+  - Data freeze 07:45 GMT everywhere (period end and "as of"); the full window's Ombudsman baseline is 1 Aug, 07:45.
+  - Ombudsman watch reads the complaint register as a steady state (`complaint_rules.steady_register`): equal weights
+    within a product, eleven copies of each complaint spread over ±20 days, and two earlier copies of the window
+    standing for complaints received before 1 August (those still open at the freeze get a final response in their
+    earlier copy). Weekly change on every tile is now within ±10%. A referral stays on the "referred" tile for 8 weeks;
+    referrals run at about 140 a week (35% of those unhappy with the final response, 17% of those past the deadline),
+    against the brief's 5,935 in 9 months (about 150 a week). Risk by product now follows open complaints by product.
+    The reconcile reads the same steady register and recomputes the states with its own code.
+  - Overrules NW-D34: referred is a subset of past 8 weeks plus unhappy with the final response, not of past 8 weeks
+    alone; referred (1,131) is within tile 2 + tile 3.
+  - Redress: "Up to the Financial Ombudsman award limit in force (confirm with the bank)", no figure (Usha: the
+    2026/27 limit is not in the research pack).
+  - Unauthorised transaction refund: end of the next business day (PSRs 2017), no "temporary credit". Card closure:
+    bank standard, confirm with the bank. "Mortgage redemption statement · 10 business days (bank standard, confirm)".
+    Credit file correction: 28 days, industry practice. The standards column shows labels and sources, never codes;
+    "Failed payment returned · Same day (Faster Payments)", a scheme rule.
+  - Ledger labelled "sample of 32,000 contacts"; the escalation ladder is shown at bank scale (complaints about 1% of
+    contacts). Owners alerted in Ask = the sum of the four list tiles, with "a customer can be on more than one list";
+    "Multi-product customers (four or more products)"; Cora contacts close faster (open too long 23% of Cora open, below
+    Calls); the tier table is at bank scale in the bank's tier mix (57 / 29 / 7 / 7%); switching intent about 0.3% of
+    contacts (closure-request share cut); credit-card service requests 16% negative (credit limits and reward redemption
+    count as service requests; complaint handling as everyday banking); week count computed from the window.

@@ -110,20 +110,20 @@ HOLD_P = {
 HAND_MIX = {
     "cards": {"card_fees_charges": 18, "dispute_chargeback": 16, "card_application": 10, "card_limit": 10,
               "unauthorised_txn": 10, "rewards_value": 8, "card_dispatch": 8, "complaint_handling": 8,
-              "reward_redemption": 6, "closure_requests": 6, "cora_unresolved": 2, "cora_wrong_answer": 1, "cora_handoff_lost": 1, "cora_no_person": 1},
+              "reward_redemption": 6, "closure_requests": 0.3, "cora_unresolved": 2, "cora_wrong_answer": 1, "cora_handoff_lost": 1, "cora_no_person": 1},
     "payments_fraud": {"faster_payments_failures": 22, "account_freeze": 16, "failed_txn_reversal": 14, "app_reimbursement": 14,
                        "fraud_scam": 12, "unauthorised_txn": 8, "complaint_handling": 8, "phishing": 6, "cora_unresolved": 2, "cora_wrong_answer": 2, "cora_handoff_lost": 1, "cora_no_person": 1},
     # Current accounts and app: overdraft and app themes folded in (NW-D33); Cora themes ride on every product.
     "current_accounts": {"fees_charges_bank": 14, "identity_checks": 8, "care_unreachable": 8, "account_opening": 6,
                          "complaint_handling": 7, "branch_service": 5, "statements_documents": 5, "branch_closure": 4,
-                         "closure_requests": 4, "consumer_duty_value": 6, "atm_debit_card": 4, "recovery_conduct": 3,
+                         "closure_requests": 0.3, "consumer_duty_value": 6, "atm_debit_card": 4, "recovery_conduct": 3,
                          "app_login_biometrics": 8, "app_speed_crash": 6, "app_usability": 4, "online_banking": 4,
                          "new_app_release": 3, "device_security_block": 3, "cora_unresolved": 2, "cora_wrong_answer": 2, "cora_handoff_lost": 1, "cora_no_person": 1},
     "personal_loans": {"loan_processing": 26, "loan_servicing": 24, "recovery_conduct": 12, "credit_report": 10,
                        "loan_closure_documents": 10, "complaint_handling": 10, "mis_selling": 8, "cora_unresolved": 2, "cora_wrong_answer": 1, "cora_handoff_lost": 1, "cora_no_person": 1},
     "mortgages": {"mortgage_rate_switch": 28, "loan_processing": 18, "loan_servicing": 18, "loan_closure_documents": 10,
                   "complaint_handling": 10, "recovery_conduct": 8, "care_unreachable": 8, "cora_unresolved": 2, "cora_wrong_answer": 1, "cora_handoff_lost": 1, "cora_no_person": 1},
-    "savings": {"deposits_rates": 34, "statements_documents": 12, "closure_requests": 12, "identity_checks": 12,
+    "savings": {"deposits_rates": 34, "statements_documents": 12, "closure_requests": 0.8, "identity_checks": 12,
                 "consumer_duty_value": 10, "complaint_handling": 10, "care_unreachable": 10, "cora_unresolved": 2, "cora_wrong_answer": 1, "cora_handoff_lost": 1, "cora_no_person": 1},
 }
 
@@ -275,6 +275,8 @@ def resolution_hours(deliv: str, theme: str, cohort: bool, channel: str) -> floa
         median, sigma = 0.72, 0.95
     if channel in ("chat", "ivr_bot"):
         median *= 0.8
+    if channel == "whatsapp":  # Cora: a conversation is closed or handed on quickly (review round 1)
+        median *= 0.45
     if cohort:
         median *= 0.75  # a little faster, not reliably so: the gap Vidya described
     return tat_h * math.exp(math.log(median) + sigma * rng.gauss(0, 1))
@@ -507,7 +509,7 @@ COHORTS = [
     ("priority_a", "Financially vulnerable (Consumer Duty)", "Vulnerability flag in the bank's records"),
     ("priority_b", "Recent complainants (90 days)", "The bank's complaints register, last 90 days"),
     ("uhni", "Premier", "Premier relationship, from core banking"),
-    ("multi", "Multi-product customers", "Customers holding four or more products, from the bank's records"),
+    ("multi", "Multi-product customers (four or more products)", "Customers holding four or more products, from the bank's records"),
 ]
 LISTED = ("priority_a", "priority_b", "uhni")
 CORA_THEMES = ["cora_unresolved", "cora_wrong_answer", "cora_handoff_lost", "cora_no_person"]
@@ -1244,6 +1246,28 @@ def main():
         SEED_V3 / "rm_notifications.json",
         indent=None,
     )
+    # The escalation ladder at bank scale (review round 1): complaints are about 1% of contacts at the bank, while the
+    # sample over-represents them. The sample ladder stays for the reconcile; the screen shows this one.
+    lb = [{"rung": "Voice", "count": sum(r["w"] for r in inter)},
+          {"rung": "Repeat", "count": sum(r["w"] for r in inter if r["repeat"])}]
+    for rung_id, rung in (("grievance", "Complaint"), ("md_office", "Complaints team"), ("io", "Final response"),
+                          ("rbi_ombudsman", "Financial Ombudsman Service")):
+        lb.append({"rung": rung, "count": sum(r["w"] for r in inter if reached(r, rung_id))})
+    agg["deliverables_detail"]["ladder_bank"] = lb
+    # Account tiers at bank scale (review round 1): the sample over-represents Premier customers, so the table reads
+    # the weighted contacts, in the bank's tier mix.
+    seg_of = {c["masked_id"]: c["segment"] for c in customers}
+    cw_of = {c["masked_id"]: c.get("cw", 1) for c in customers}
+    tb = []
+    for sg in ("Select", "Reward", "Premier Select", "Premier Reward"):
+        rs = [r for r in inter if seg_of[r["masked_id"]] == sg]
+        n = sum(r["w"] for r in rs)
+        pos = sum(r["w"] for r in rs if r["sentiment"] == "positive")
+        neg_ = sum(r["w"] for r in rs if r["sentiment"] == "negative")
+        tb.append({"tier": SEGMENT_LABEL[sg], "interactions": n, "positive": pos, "neutral": n - pos - neg_, "negative": neg_,
+                   "share_positive": round(100 * pos / n, 1) if n else 0, "share_negative": round(100 * neg_ / n, 1) if n else 0,
+                   "customers_affected": round(sum(cw_of[m] for m in {r["masked_id"] for r in rs if r["sentiment"] == "negative"}))})
+    agg["satisfaction"]["tiers_bank"] = tb
     dump(agg, SEED_V3 / "aggregates.json")
     print("dials", agg["dials"])
     for p in agg["products"]:

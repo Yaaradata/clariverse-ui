@@ -13,7 +13,7 @@ import datetime as dt
 import json
 
 from common import CARDS_CATEGORIES, CARDS_OTHER, SEED_V3, inr
-from complaint_rules import deadline
+from complaint_rules import deadline, referral_open, steady_register
 
 D6M = dt.timedelta(days=183)  # 6 months from the final response (or the deadline) to refer (register REG-FOS-6M)
 DAY = dt.timedelta(days=1)
@@ -34,8 +34,8 @@ def ts(s):
 
 def load_complaints() -> list[dict]:
     out = []
-    for line in open(SEED_V3 / "complaints.jsonl", encoding="utf-8"):
-        c = json.loads(line)
+    raw = [json.loads(line) for line in open(SEED_V3 / "complaints.jsonl", encoding="utf-8")]
+    for c in steady_register(raw):  # NW-D56: the Ombudsman watch reads the register as a steady state
         for k in ("received_at", "final_reply_at", "decision_at", "io_reviewed_at", "unhappy_at", "referred_at"):
             c["_" + k] = ts(c[k])
         for x in c["contacts"]:
@@ -79,9 +79,11 @@ def status(c: dict, T: dt.datetime) -> dict | None:
             st["eligible_from"] = min(filter(None, [st["eligible_from"], due]))
     # Referred to the Financial Ombudsman Service (the oct13 "awaiting IO review" tile, relabelled): out of the
     # at-risk states, counted on its own.
+    # A referral stays on the tile for 8 weeks (complaint_rules.REFERRAL_OPEN); after that it has left the bank's watch.
     ref = c.get("_referred_at")
     if ref and ref <= T:
-        st.update(awaiting_io=True, brink=False, bucket=None, eligible=False, unhappy=False, open=not replied)
+        st.update(awaiting_io=referral_open(ref, T), brink=False, bucket=None, eligible=False, unhappy=False,
+                  open=not replied)
     st["at_risk"] = st["brink"] or st["eligible"] or st["unhappy"]
     return st
 
@@ -132,7 +134,7 @@ def counts(pairs) -> dict:
     """Bank-scale counts: each sample complaint stands for c["w"] complaints (scale_v3.py)."""
     out = {k: sum(c["w"] for c, s in pairs if s[k]) for k in COUNT_KEYS}
     out["buckets"] = {b: sum(c["w"] for c, s in pairs if s["bucket"] == b) for b, *_ in BUCKETS}
-    out["received"] = sum(c["w"] for c, _ in pairs)
+    out["received"] = sum(c["w"] for c, _ in pairs if not c["prior"])
     return out
 
 
@@ -144,6 +146,8 @@ def block(cs: list[dict], w: dict, products: list[tuple[str, str]]) -> dict:
     """The Ombudsman watch for one scope and period: dials now and at the previous period end, countdown, flow,
     list overlap and the split by business."""
     T, P, start = w["end"], w["prev"][1], w["start"]
+    if w["period_id"] == "all":  # the full window's baseline is its first morning: "since 1 Aug, 07:45"
+        P = start.replace(hour=7, minute=45)
     now, prev = snap(cs, T), snap(cs, P)
     cn, cp = counts(now), counts(prev)
     risky = [(c, s) for c, s in now if s["at_risk"]]
@@ -199,7 +203,7 @@ def cards_extra(cs: list[dict], w: dict, labels: dict) -> dict:
         })
     ranked = []
     for c, s in now:
-        if not s["at_risk"]:
+        if not s["at_risk"] or not c["original"]:  # the save list names real sample complaints only
             continue
         pts, why = score(c, s, T)
         k = category_of(c["theme"])

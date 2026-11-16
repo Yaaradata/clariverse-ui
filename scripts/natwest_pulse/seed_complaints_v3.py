@@ -116,6 +116,7 @@ def main():
             "decision_at": iso(decision),
             "io_reviewed_at": iso(io_done),
             "referred_at": iso(complaint_rules.referred_at(r, d)),
+            "referral_due_at": iso(complaint_rules.referral_due(r, d)),
             # Unhappy with the reply: the customer reopened the complaint or contacted the bank again on the issue.
             "unhappy_at": iso(unhappy_at),
             "unhappy_how": unhappy_how,

@@ -98,14 +98,86 @@ def filed_with_ombudsman(r: dict, d: dict) -> bool:
 
 
 def referred_at(r: dict, d: dict):
-    """When the customer referred the complaint to the Financial Ombudsman Service, or None. ASSUMPTION (Pass 2 section 4, about 4.5% of complaints): 40% of those
-    unhappy with the final response, 20% of those past the deadline with no final response; referral 3-30 days later."""
+    """When the customer referred the complaint to the Financial Ombudsman Service, or None. ASSUMPTION (Pass 2 section 4, about 150 referrals a week; NW-D56): 35% of those
+    unhappy with the final response, 17% of those past the deadline with no final response; referral 3-30 days later."""
+    t = referral_due(r, d)
+    return t if t and t <= END else None
+
+
+def referral_due(r: dict, d: dict):
+    """The same referral without the freeze cap: when it falls after the freeze it has not happened yet. The steady
+    register's earlier copies use it (NW-D56), since for them that moment is in the past."""
     h = int(hashlib.sha1(f"fos:{r['id']}".encode()).hexdigest(), 16) % 10_000 / 10_000
     lag = dt.timedelta(days=3 + 27 * (int(hashlib.sha1(f"lag:{r['id']}".encode()).hexdigest(), 16) % 1000 / 1000))
-    if d["unhappy_at"] and h < 0.40:
+    if d["unhappy_at"] and h < 0.35:
         t = d["unhappy_at"] + lag
-    elif d["reply"] is None and h < 0.20:
+    elif d["reply"] is None and h < 0.17:
         t = deadline(ts(r["created_at"]), r["product"]) + lag
     else:
         return None
-    return t if t <= END else None
+    return t
+
+
+# ---------------------------------------------------------------- steady-state register (review round 1, NW-D56)
+# The sample holds about 2,200 complaints with bank-scale weights from 1 to about 400, and none before 1 August, so the
+# Financial Ombudsman stocks (on the brink, past 8 weeks, unhappy, referred) were lumpy and still filling up in the
+# window. For the Ombudsman watch only, the register is read as a steady state:
+#   - each complaint stands for an equal share of its product's complaints (same product totals);
+#   - each is spread over CLONE_OFFSETS days (eleven copies a few days apart, same course and outcome);
+#   - two earlier copies of the whole window (PRIOR_SHIFT and twice that before) stand for the complaints received
+#     before 1 August, so stocks that last up to 6 months are full from the start. They count in stocks, never as
+#     received in the window.
+# A referral stays on the "referred" tile for REFERRAL_OPEN (8 weeks) after the referral.
+CLONE_OFFSETS = (-20, -16, -12, -8, -4, 0, 4, 8, 12, 16, 20)
+PRIOR_SHIFT = 105
+REFERRAL_OPEN = dt.timedelta(weeks=8)
+_TIME_KEYS = ("received_at", "final_reply_at", "decision_at", "io_reviewed_at", "unhappy_at", "referred_at")
+
+
+def _shift(c: dict, days: int) -> dict:
+    out = dict(c)
+    d = dt.timedelta(days=days)
+    for k in _TIME_KEYS:
+        if c.get(k):
+            out[k] = (dt.datetime.fromisoformat(c[k]) + d).isoformat(timespec="minutes")
+    out["contacts"] = [{**x, "at": (dt.datetime.fromisoformat(x["at"]) + d).isoformat(timespec="minutes")} for x in c["contacts"]]
+    return out
+
+
+def steady_register(raw: list[dict]) -> list[dict]:
+    """The Ombudsman watch's reading of the register (see above). Integer weights; product totals kept."""
+    by_p: dict[str, list[dict]] = {}
+    for c in sorted(raw, key=lambda c: c["id"]):
+        by_p.setdefault(c["product"], []).append(c)
+    out = []
+    for p, cs in by_p.items():
+        total = sum(c["w"] for c in cs)
+        copies = [(c, k) for c in cs for k in range(len(CLONE_OFFSETS))]
+        base, rem = divmod(total, len(copies))
+        for i, (c, k) in enumerate(copies):
+            w = base + (1 if i < rem else 0)
+            for prior in (0, 1, 2):
+                src = c
+                if prior and c.get("referral_due_at"):
+                    src = {**src, "referred_at": c["referral_due_at"]}
+                shift = CLONE_OFFSETS[k] - prior * PRIOR_SHIFT
+                if shift < 0 and not c.get("final_reply_at"):
+                    # Still open at the freeze: a copy received earlier has run on past the point the original has
+                    # reached, so it gets its final response 0-40 days after that point (deterministic per copy).
+                    extra = int(hashlib.sha1(f"reply:{c['id']}:{k}:{prior}".encode()).hexdigest(), 16) % 40
+                    src = {**src, "final_reply_at": (END + dt.timedelta(days=extra)).isoformat(timespec="minutes")}
+                x = _shift(src, shift)
+                mid = CLONE_OFFSETS.index(0)
+                x["id"] = c["id"] if (k == mid and prior == 0) else f"{c['id']}~{k}{prior}"
+                x["original"] = k == mid and prior == 0
+                x["prior"] = prior > 0 or dt.datetime.fromisoformat(x["received_at"]) < START_OF_WINDOW
+                x["w"] = w
+                out.append(x)
+    return out
+
+
+def referral_open(ref: dt.datetime | None, T: dt.datetime) -> bool:
+    return ref is not None and ref <= T < ref + REFERRAL_OPEN
+
+
+START_OF_WINDOW = dt.datetime(2026, 8, 1, tzinfo=dt.timezone.utc)

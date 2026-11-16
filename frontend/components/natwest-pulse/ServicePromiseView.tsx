@@ -225,19 +225,19 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
       >
         <div style={SPLIT3}>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            {it.ladder.map((r) => (
+            {(it.ladder_bank ?? it.ladder).map((r) => (
               <BarRow
                 key={r.rung}
                 label={
                   <span>
                     {r.rung}{" "}
                     <span style={{ color: C.textMut, fontSize: 12 }}>
-                      · internal, illustrative
+                      · internal, illustrative, bank scale
                     </span>
                   </span>
                 }
                 value={r.count}
-                max={it.ladder[0].count}
+                max={(it.ladder_bank ?? it.ladder)[0].count}
                 color={rungColor(r.rung)}
               />
             ))}

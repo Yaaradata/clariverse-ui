@@ -212,7 +212,9 @@ def run(seed_dir: Path = SEED_V3, out_dir: Path = OUT_APP, quiet: bool = False) 
     bad_tat = [
         d["id"]
         for d in agg["deliverables"]
-        if d["source"] not in ("fca", "psr", "bank_confirmed") and d["tat_label"] != BANK_TAT_LABEL
+        if d["source"] not in ("fca", "psr", "psrs", "scheme", "industry", "bank_confirmed", "bank_indicative")
+        and d["tat_label"] != BANK_TAT_LABEL
+        or d["source"] == "bank_indicative" and "confirm" not in d["tat_label"]
         or d["source"] == "bank_confirmed" and (not d.get("source_note") or d["tat_label"] == BANK_TAT_LABEL)
     ]
     ok(not bad_tat, f"bank TATs: unconfirmed read '{BANK_TAT_LABEL}'; confirmed cite a source ({bad_tat[:3]})")
@@ -478,8 +480,9 @@ def _omb_state(c, T):
         unhappy = bool(back and reply < back <= T and T < reply + dt.timedelta(days=183))
         st = {"open": unhappy, "eligible": False, "brink": False, "unhappy": unhappy, "awaiting_io": False, "left": None}
     ref = t("referred_at")
-    if ref and ref <= T:
-        st.update(awaiting_io=True, brink=False, eligible=False, unhappy=False, left=None, open=reply is None or reply > T)
+    if ref and ref <= T:  # on the referred tile for 8 weeks after the referral (NW-D56)
+        st.update(awaiting_io=T < ref + dt.timedelta(weeks=8), brink=False, eligible=False, unhappy=False, left=None,
+                  open=reply is None or reply > T)
     st["at_risk"] = st["brink"] or st["eligible"] or st["unhappy"]
     return st
 
@@ -528,6 +531,15 @@ def ombudsman_checks(seed_dir, per, inter, ok):
        "Internal Ombudsman: only rejected or partly rejected complaints carry a decision")
     ok(all((c["unhappy_at"] is None) or c["final_reply_at"] for c in cs), "Unhappy with the reply: only replied complaints")
     keys = ("brink", "eligible", "unhappy", "awaiting_io", "at_risk", "open")
+    # The watch reads the register as a steady state (NW-D56): the same complaints, equal weights within a product,
+    # spread over a few days, with two earlier windows standing for the complaints received before 1 August.
+    from complaint_rules import steady_register  # noqa: PLC0415
+    raw_cs, cs = cs, steady_register(cs)
+    for p_ in sorted({c["product"] for c in raw_cs}):
+        # Prior-0 copies are the window itself: their weights add back to the product's complaints.
+        got_w = sum(c["w"] for c in cs if c["product"] == p_ and ("~" not in c["id"] or c["id"].endswith("0")))
+        want_w = sum(c["w"] for c in raw_cs if c["product"] == p_)
+        ok(got_w == want_w, f"Ombudsman steady register keeps {p_}'s complaint total ({got_w} = {want_w})")
     for pid, p in per["periods"].items():
         o = p.get("ombudsman")
         co = (p.get("cards") or {}).get("ombudsman")
@@ -554,7 +566,8 @@ def ombudsman_checks(seed_dir, per, inter, ok):
             io = blk["io"]
             got_io = (sum(c["w"] for c in scope if c["decision_at"] and dt.datetime.fromisoformat(c["decision_at"]) <= T),
                       sum(c["w"] for c in scope if c["io_reviewed_at"] and dt.datetime.fromisoformat(c["io_reviewed_at"]) <= T))
-            referred = sum(c["w"] for c in scope if c.get("referred_at") and dt.datetime.fromisoformat(c["referred_at"]) <= T
+            referred = sum(c["w"] for c in scope if c.get("referred_at")
+                           and dt.datetime.fromisoformat(c["referred_at"]) <= T < dt.datetime.fromisoformat(c["referred_at"]) + dt.timedelta(weeks=8)
                            and dt.datetime.fromisoformat(c["received_at"]) <= T)
             ok(got_io == (io["decided"], io["reviewed"]) and referred == blk["now"]["awaiting_io"],
                f"[{pid}] Ombudsman {label}: referred to the Financial Ombudsman Service {blk['now']['awaiting_io']} = the register's referrals {referred}")
@@ -563,9 +576,10 @@ def ombudsman_checks(seed_dir, per, inter, ok):
                 a_, b_ = dt.datetime.fromisoformat(p["start"]), dt.datetime.fromisoformat(p["end"])
                 in_win = [r for r in inter if r["product"] == "cards" and r["channel"] != "ivr_bot"
                           and a_ <= dt.datetime.fromisoformat(r["created_at"]) < b_]
-                reg = sum(c["w"] for c in scope if a_ <= dt.datetime.fromisoformat(c["received_at"]) < b_ and c["decision_at"])
+                raw_scope = [c for c in raw_cs if c["product"] == "cards"]  # the ladder counts contacts, not the steady view
+                reg = sum(c["w"] for c in raw_scope if a_ <= dt.datetime.fromisoformat(c["received_at"]) < b_ and c["decision_at"])
                 rbi_only = sum(r["w"] for r in in_win if r.get("escalation") == "rbi_ombudsman" and not (
-                    r["id"] in {c["source_id"] for c in scope if c["decision_at"]}))
+                    r["id"] in {c["source_id"] for c in raw_scope if c["decision_at"]}))
                 ok(rungs["Final response"] == reg + rbi_only,
                    f"[{pid}] Internal Ombudsman: the Cards ladder's IO rung ({rungs['Final response']}) = the register's complaints sent for review ({reg}) plus RBI-rung contacts outside it ({rbi_only})")
             if label == "bank":

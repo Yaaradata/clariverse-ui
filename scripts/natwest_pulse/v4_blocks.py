@@ -37,7 +37,7 @@ LIMITS = {
 LIMIT_LABEL = {
     "priority_a": "Financially vulnerable: 5 hours",
     "uhni": "Premier: 24 hours",
-    "fca": "Published UK standard (FCA or PSR)",
+    "fca": "Published UK standard (FCA, PSRs or Faster Payments)",
     "default": "Default: over 48 hours (bank SLA, illustrative)",
 }
 
@@ -76,7 +76,7 @@ def limit_of(r, customers) -> tuple[dt.timedelta, str]:
         if lid in coh:
             return hours * H, lid
     d = DELIVERABLES.get(r["deliverable"])
-    if d and d["source"] in ("fca", "psr") and r.get("deliverable_due"):
+    if d and d["source"] in ("fca", "psr", "psrs", "scheme") and r.get("deliverable_due"):
         return dt.datetime.fromisoformat(r["deliverable_due"]) - r["_c"], "fca"
     return LIMITS["default_hours"] * H, "default"
 

@@ -176,7 +176,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
 
       <Tile
         title="Interactions and sentiment by account tier"
-        sub={`${fmt(internal.interactions_total)} interactions across all channels in the demo sample, 1 Aug to this morning`}
+        sub="Contacts across all channels at bank scale, in the bank's tier mix, 1 Aug to this morning (illustrative)"
         prov="internal"
         id="tiers"
       >
@@ -190,7 +190,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
             "Positive · neutral · negative",
           ]}
           align={["left", "right", "right", "right", "right", "left"]}
-          rows={internal.tiers.map((t) => [
+          rows={(internal.tiers_bank ?? internal.tiers).map((t) => [
             t.tier,
             fmt(t.interactions),
             <span key="p" style={{ color: C.green, fontWeight: 700 }}>

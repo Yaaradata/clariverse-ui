@@ -56,7 +56,9 @@ OWNER_LABEL = {
 # never reaches a screen (follow-up fix 3). Days are working days (Sundays skipped) unless `calendar` is set.
 # D-11 (the TAT reference B7 inherits) is not in the repo (qa/tat_check.md), so no bank row is confirmed yet.
 BANK_TAT_LABEL = "Bank standard: confirm with the bank"
-# United Kingdom timelines (brief Step 5.12). "fca" and "psr" rows are published rules from the register
+# United Kingdom standards (brief Step 5.12). "fca", "psr", "psrs" and "scheme" rows are published rules (register or
+# the Payment Services Regulations 2017); "industry" is industry practice; "bank_indicative" is a bank figure still to
+# confirm, labelled so. Rows from the register
 # (data/public/natwest_register.json); "bank" rows are unconfirmed and read BANK_TAT_LABEL; their tat_days drive the
 # illustrative generator only. Days are business days (weekends skipped) unless `calendar` is set.
 DELIVERABLES = {
@@ -64,18 +66,24 @@ DELIVERABLES = {
         "label": "Failed payment returned",
         "tat_days": 1,
         "tat_label": "Same day (Faster Payments)",
-        "source": "fca",
-        "source_note": "Faster Payments same-day (register REG-FPS-SAMEDAY)",
+        "source": "scheme",
+        "source_note": "Faster Payments scheme rule, same day (register REG-FPS-SAMEDAY)",
         "compensation": "—",
     },
     "card_closure": {"label": "Credit card closure", "tat_days": 7, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
     "unauthorised_reversal": {
-        "label": "Unauthorised transaction refund", "tat_days": 2, "tat_label": BANK_TAT_LABEL, "source": "bank",
+        "label": "Unauthorised transaction refund", "tat_days": 1, "tat_label": "End of the next business day (PSRs 2017)",
+        "source": "psrs", "source_note": "Payment Services Regulations 2017: refund by the end of the next business day",
         "compensation": "—",
     },
-    "credit_report": {"label": "Credit file correction", "tat_days": 20, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
+    "credit_report": {
+        "label": "Credit file correction", "tat_days": 28, "calendar": True, "tat_label": "28 days (industry practice)",
+        "source": "industry", "source_note": "Credit reference agency dispute period: industry practice, not a regulation",
+        "compensation": "—",
+    },
     "loan_documents": {
-        "label": "Title deeds after mortgage redemption", "tat_days": 20, "tat_label": BANK_TAT_LABEL, "source": "bank",
+        "label": "Mortgage redemption statement", "tat_days": 10, "tat_label": "10 business days (bank standard, confirm)",
+        "source": "bank_indicative",
         "compensation": "—",
     },
     "complaint_resolution": {
@@ -85,7 +93,7 @@ DELIVERABLES = {
         "tat_label": "8 weeks (FCA DISP)",
         "source": "fca",
         "source_note": "FCA DISP final response within 8 weeks (register REG-DISP-8W)",
-        "compensation": "Financial Ombudsman Service can award up to £445,000 (2025/26)",
+        "compensation": "Up to the Financial Ombudsman award limit in force (confirm with the bank)",
     },
     "app_reimbursement": {
         "label": "Push payment scam reimbursement",
@@ -147,7 +155,7 @@ JOURNEY_STAGE = {
         [
             "card_eligibility_upgrade", "statements_documents", "branch_service",
             "care_unreachable", "premier_service", "account_freeze", "loan_servicing", "credit_report", "unsolicited_calls",
-            "mis_selling", "recovery_conduct", "complaint_handling",
+            "mis_selling", "recovery_conduct", "card_limit", "reward_redemption",
         ],
         "Service requests",
     ),
@@ -211,7 +219,7 @@ def dump(obj, path: Path, indent: int | None = 1):
 # ------------------------------------------------------------------ periods (30 Sep review, changes_30sep.md A1)
 # Every period ends at the last moment in the data (29 Sep 08:30), never at the real clock. The morning brief is
 # yesterday 08:30 to today 08:30 in data time.
-PERIOD_END = "2026-11-12T08:30:00+00:00"
+PERIOD_END = "2026-11-12T07:45:00+00:00"  # the data freeze (review round 1: 07:45 everywhere)
 DATA_START = "2026-08-01T00:00:00+00:00"
 PERIODS = [
     {"id": "brief", "label": "Morning brief", "days": 1, "short": True},

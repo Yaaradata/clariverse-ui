@@ -70,7 +70,12 @@ function rowAction(r: {
 
 function TatCell({ row }: { row: LedgerRow }) {
   switch (row.source) {
-    case "rbi":
+    case "fca":
+    case "psr":
+    case "psrs":
+    case "scheme":
+    case "industry":
+    case "bank_indicative":
     case "bank_confirmed":
       return (
         <span>
@@ -78,7 +83,9 @@ function TatCell({ row }: { row: LedgerRow }) {
           <div
             style={{
               fontSize: 12,
-              color: row.source === "rbi" ? C.cyan : C.textMut,
+              color: ["fca", "psr", "psrs", "scheme"].includes(row.source)
+                ? C.cyan
+                : C.textMut,
             }}
           >
             {row.source_note}
@@ -109,7 +116,7 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
     <>
       <Tile prov={["internal", "public"]} accent tone="violet">
         <AnswerLine
-          sub={`Weakest: ${worst?.label.toLowerCase()} at ${fmtPct(worst?.met_pct)} met. service standards marked FCA are published service standards; the rest are the bank's own SLAs, shown once the bank confirms them.`}
+          sub={`Sample of ${fmt(b.v3.sample.interactions)} contacts (illustrative). Weakest: ${worst?.label.toLowerCase()} at ${fmtPct(worst?.met_pct)} met. Rows citing the FCA, the PSRs or Faster Payments are published standards; the rest are the bank's own, shown as figures once the bank confirms them.`}
         >
           {fmtPct((100 * met) / measured)} of service standards met across{" "}
           {rows.length} service standard types; {fmt(otl)} items are open past
@@ -119,7 +126,7 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
       <Tile
         id="ledger"
         title="Service standards ledger"
-        sub="Inside figures are illustrative until discovery; public posts describing a delay are live."
+        sub={`Inside figures: a sample of ${fmt(b.v3.sample.interactions)} contacts, illustrative until discovery; public posts describing a delay are live.`}
         prov={["internal", "public"]}
         tone="violet"
       >

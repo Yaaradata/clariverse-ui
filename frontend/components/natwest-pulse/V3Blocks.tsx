@@ -196,7 +196,7 @@ export function DialsRow({
     <Tile
       id="dials"
       title="The numbers first"
-      sub={`Inside the bank: ${fmt(inside.total)} interactions from ${fmt(b.v3.sample.customers)} fictional customers in the demo sample, ${fmtDate(b.v3.window.start)} to this morning (13 weeks). Outside: public posts and reviews, ${fmtDate(b.meta.window.start)} to ${fmtDate(b.meta.window.end)}.`}
+      sub={`Inside the bank: ${fmt(inside.total)} interactions from ${fmt(b.v3.sample.customers)} fictional customers in the demo sample, ${fmtDate(b.v3.window.start)} to this morning (${Math.round((Date.parse(b.v3.now) - Date.parse(b.v3.window.start)) / (7 * 86400000))} weeks). Outside: public posts and reviews, ${fmtDate(b.meta.window.start)} to ${fmtDate(b.meta.window.end)}.`}
       prov={["internal", "public"]}
       tone="violet"
     >

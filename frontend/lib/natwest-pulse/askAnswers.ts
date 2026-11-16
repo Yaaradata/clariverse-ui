@@ -232,7 +232,7 @@ function mdBase(p: Period): AskQA[] {
     {
       id: "md-lists",
       q: "How are our financially vulnerable customers being served?",
-      answer: `Across the four lists, on the bank's own channels: ${cp.lists.map((l) => `${l.label} ${fmt(l.open)} open`).join("; ")}. Owners alerted for ${fmt(cp.rm.alerted)} of ${fmt(cp.rm.of)} customers due an alert.`,
+      answer: `Across the four lists, on the bank's own channels: ${cp.lists.map((l) => `${l.label} ${fmt(l.open)} open`).join("; ")}. Owners alerted for ${fmt(cp.lists.reduce((s, l) => s + l.rm.alerted, 0))} of ${fmt(cp.lists.reduce((s, l) => s + l.rm.of, 0))} customers due an alert, across the four lists (a customer can be on more than one list).`,
       table: {
         head: [
           "List",

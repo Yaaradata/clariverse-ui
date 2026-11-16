@@ -41,19 +41,19 @@ def main():
     lists = {x["id"]: x for x in per["customer_pulse"]["lists"]}
     vul = lists["priority_a"]
     # Journey leak (Pass 3): switching-intent contacts in the last 7 days, at bank scale, placed at the journey stage of
-    # the customer's last negative contact before them (the satisfaction view's rule).
+    # the customer's last contact before them.
     a, b = dt.datetime.fromisoformat(per["start"]), dt.datetime.fromisoformat(per["end"])
     inter = [json.loads(x) for x in open(SEED_V3 / "interactions.jsonl", encoding="utf-8")]
     inter.sort(key=lambda r: r["created_at"])
-    last_neg: dict[str, str] = {}
+    last_seen: dict[str, str] = {}
     leak_by = collections.Counter()
     for r in inter:
         t = dt.datetime.fromisoformat(r["created_at"])
         if r["theme"] == "closure_requests":
             if a <= t < b:
-                leak_by[last_neg.get(r["masked_id"], "none")] += r["w"]
-        elif r["sentiment"] == "negative":
-            last_neg[r["masked_id"]] = JOURNEY_STAGE.get(r["theme"], "Everyday banking")
+                leak_by[last_seen.get(r["masked_id"], "none")] += r["w"]
+        else:
+            last_seen[r["masked_id"]] = JOURNEY_STAGE.get(r["theme"], "Everyday banking")
     leak_total = sum(leak_by.values())
     leak_rank = sorted(JOURNEY_ORDER, key=lambda st: -leak_by[st])
     no_prior = leak_by["none"]
@@ -106,9 +106,9 @@ def main():
             "keywords": ["journey", "leak", "leaking", "switch", "close", "stage", "customers", "week"],
             "answer": (
                 f"{leak_rank[0]}: {fmt(leak_by[leak_rank[0]])} of the {fmt(leak_total)} switching-intent contacts in "
-                f"the last 7 days came after a negative contact at that stage. Next: {leak_rank[1]} "
+                f"the last 7 days followed a contact at that stage. Next: {leak_rank[1]} "
                 f"({fmt(leak_by[leak_rank[1]])}) and {leak_rank[2]} ({fmt(leak_by[leak_rank[2]])}); {fmt(no_prior)} had no "
-                "earlier negative contact. Internal, illustrative."
+                "earlier contact in the window. Internal, illustrative."
             ),
             "evidence": [],
             "bound": ["L3:interactions.closure_requests", "L3:satisfaction.journey_stages"],

@@ -409,7 +409,7 @@
     "channel": "inbound_voice",
     "product": "cards",
     "theme": "unauthorised_txn",
-    "summary": "Reported two card transactions the customer did not make; card blocked, temporary credit pending.",
+    "summary": "Reported two card transactions the customer did not make; card blocked; refund due by the end of the next business day.",
     "sentiment": "negative",
     "status": "open",
     "first_response_at": "2026-11-11T19:10+00:00"

@@ -610,7 +610,15 @@ export type LedgerRow = DeliverableStats & {
   id: string;
   label: string;
   tat_label: string;
-  source: "rbi" | "bank" | "bank_confirmed";
+  source:
+    | "fca"
+    | "psr"
+    | "psrs"
+    | "scheme"
+    | "industry"
+    | "bank_indicative"
+    | "bank"
+    | "bank_confirmed";
   source_note: string | null;
   redress: string;
   total: number;
@@ -728,6 +736,7 @@ export type InternalV3 = {
   satisfaction: {
     interactions_total: number;
     tiers: TierRow[];
+    tiers_bank?: TierRow[];
     journey_stages: {
       total: number;
       rule: string;
@@ -758,6 +767,7 @@ export type InternalV3 = {
       beyond_tat_share: number;
     }[];
     ladder: { rung: string; count: number }[];
+    ladder_bank?: { rung: string; count: number }[];
     ladder_rule: string;
     closure: {
       closure_requests: number;

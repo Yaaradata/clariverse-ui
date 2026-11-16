@@ -74,7 +74,7 @@ LIST_LABEL = {  # NatWest cohorts (brief Step 5.2); the ids are the oct13 list i
     "priority_a": "Financially vulnerable (Consumer Duty)",
     "priority_b": "Recent complainants (90 days)",
     "uhni": "Premier",
-    "multi": "Multi-product customers",
+    "multi": "Multi-product customers (four or more products)",
 }
 PRODUCT_ORDER = [p["id"] for p in PUB_PRODUCTS]
 

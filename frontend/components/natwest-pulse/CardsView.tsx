@@ -1122,7 +1122,7 @@ export function Happy({ p }: { p: Period }) {
         <Tile
           id="happy-tiers"
           title={titled("Contacts by customer list", p)}
-          sub="The bank's own credit card contacts by the Customer pulse lists, with their sentiment."
+          sub="The bank's own credit card contacts by the Customer pulse lists, with their sentiment. A customer can be on more than one list, so the rows add to more than the total."
           prov="internal"
         >
           <Table
