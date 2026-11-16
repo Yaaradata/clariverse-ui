@@ -364,6 +364,27 @@ def natwest_lint_fixtures(fails: list[str]) -> int:
         print(("PASS " if ok else "FAIL ") + f"NatWest lint NW-P2 flags {text!r}")
         if not ok:
             fails.append(f"NatWest lint NW-P2 missed {text!r} ({h})")
+    # Review round 1 (NW-D59): everywhere-rules, then screen-only rules on rendered text.
+    for text in ("to a grievance desk", "issues on list A", "Owner RELM-017", "Case L2-07", "travel spends",
+                 "Working days skip Sundays", "temporary credit pending", "next stage payment", "title deeds returned",
+                 "for a visa application", "the dealer has not been paid", "variant migration", "credit card card"):
+        h = ln.text_rules(text, "fixture")
+        n += 1
+        ok = any(x.startswith("NW-P2") for x in h)
+        print(("PASS " if ok else "FAIL ") + f"NatWest lint round-1 rule flags {text!r}")
+        if not ok:
+            fails.append(f"NatWest lint round-1 rule missed {text!r} ({h})")
+    for text in ("Business: Credit cards", "the MD's view", "most positive on undefined", "Final response · fca"):
+        h = ln.screen_rules(text, "fixture")
+        n += 1
+        ok = bool(h)
+        print(("PASS " if ok else "FAIL ") + f"NatWest lint screen rule flags {text!r}")
+        if not ok:
+            fails.append(f"NatWest lint screen rule missed {text!r}")
+    for text in ("Business days skip weekends and bank holidays", "day 9 of the bank's 10-business-day standard"):
+        if ln.screen_rules(text, "fixture") or ln.text_rules(text, "fixture"):
+            fails.append(f"NatWest lint flagged clean copy {text!r}")
+        n += 1
     for text in ("NatWest Group · Customer Pulse", "Royal Bank of Scotland app", "RBS reviews", "Ulster Bank branches"):
         h = ln.p3_rules(text, "fixture")
         n += 1

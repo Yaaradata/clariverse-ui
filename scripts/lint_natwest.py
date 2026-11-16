@@ -80,8 +80,34 @@ P2_TERMS: list[tuple[str, str]] = [
     ("household", r"\b[Hh]ouseholds?\b"),
     ("Private (tier)", r"\bPrivate\b"),
     ("Cards (bare product name)", r"(?<![Cc]redit )(?<![Dd]ebit )\bCards\b"),
+    # Independent review, round 1 (NW-D59): HDFC and India leftovers and slips the first lint missed.
+    ("grievance", r"\b[Gg]rievances?\b"),
+    ("list A / list B", r"\blists? [AB]\b"),
+    ("relationship-manager id", r"\bRELM-\d+"),
+    ("escalation id", r"\bL2-\d+"),
+    ("spends", r"\bspends\b"),
+    ("skip Sundays", r"\bskips? Sundays\b"),
+    ("temporary credit", r"\b[Tt]emporary credit\b"),
+    ("stage payment", r"\b[Ss]tage (?:payment|release)s?\b"),
+    ("title deeds", r"\b[Tt]itle deeds\b"),
+    ("visa application", r"\b[Vv]isa application\b"),
+    ("car finance dealer", r"\b[Cc]ar finance\b|\bdealer\b"),
+    ("card variant", r"\b[Vv]ariants?\b"),
+    ("card card", r"\bcredit card card\b"),
 ]
 P2_RX = [(t, re.compile(p)) for t, p in P2_TERMS]
+# Screen-only words (NW-D59): checked on rendered pages and crawled text, where ids, routes and code are not visible.
+SCREEN_TERMS: list[tuple[str, str]] = [
+    ("business (not business days)", r"\b[Bb]usiness\b(?![\s-]+days?\b)"),
+    ("MD's", r"\bMD(?:'|&apos;|’)?s\b"),
+    ("undefined", r"\bundefined\b"),
+    ("raw standard code", r"(?:^|·\s*)(?:fca|psr)\s*$"),
+]
+SCREEN_RX = [(t, re.compile(p, re.M)) for t, p in SCREEN_TERMS]
+
+
+def screen_rules(s: str, where: str) -> list[str]:
+    return [f"NW-P2 {where}: banned word on screen '{t}' in: {s.strip()[:90]}" for t, rx in SCREEN_RX if rx.search(s)]
 
 # Pass 3 (NW-D50): NatWest Retail only. The dashboard's subject is "NatWest"; other brands are never on screen, except
 # the footer's excluded-brands sentence and the App pulse toggle's excluded-brands line. The register (data/public)
@@ -222,6 +248,7 @@ def run() -> tuple[list[str], int]:
             visible = re.sub(r"<script[\s\S]*?</script>|<style[\s\S]*?</style>|<[^>]+>", " ", text)
             hits += text_rules(visible, str(f.relative_to(ROOT)))
             hits += p3_rules(visible, str(f.relative_to(ROOT)))
+            hits += screen_rules(visible, str(f.relative_to(ROOT)))
             scanned += 1
     global CRAWLED_ROUTES
     crawl = ROOT / "qa" / "_crawl" / "natwest_pages.json"
@@ -233,6 +260,7 @@ def run() -> tuple[list[str], int]:
                 if line.strip():
                     hits += text_rules(line, f"route {page['route']}", allow_peer_names=page["route"].split("?")[0].endswith("/market"))
                     hits += p3_rules(line, f"route {page['route']}")
+                    hits += screen_rules(line, f"route {page['route']}")
             scanned += 1
     seen, out = set(), []
     for x in hits:

@@ -285,12 +285,13 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
                         {
                           rbi: "Regulator named or tagged (FCA)",
                           rbi_ombudsman: "Financial Ombudsman Service",
-                          grievance: "Grievance or nodal officer",
+                          grievance: "Complaints team",
                           legal: "Legal action",
-                          consumer_court: "Consumer court or helpline",
-                          ministers: "Ministers tagged",
+                          consumer_court:
+                            "Small claims court or Citizens Advice",
+                          ministers: "MP or minister tagged",
                           repeat: "Complaint number or third time",
-                          md_office: "MD or CEO",
+                          md_office: "Chief executive named",
                           internal_ombudsman: "Final response",
                         } as Record<string, string>
                       )[e.target] ?? e.target)

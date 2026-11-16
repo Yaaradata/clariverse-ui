@@ -1107,3 +1107,9 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
   with Premier banking managers); escalation ids (L2-nn) are off screen, and proxy mail reads "from someone acting for
   the customer". Accepted: `app/natwest-pulse/page.tsx` redirects to the Head of Customer Experience view rather than
   listing versions (one version exists).
+- **NW-D59 · Lint after review round 1.** NW-P2 adds grievance, list A/B, relationship-manager and escalation ids,
+  "spends", "skip Sundays", temporary credit, stage payment, title deeds, visa application, car finance and dealer,
+  variant and "credit card card" (UI strings, payloads, built pages, crawl). Screen-only rules (built pages and crawl,
+  where ids and routes are not visible): "business" except business days, "MD's", "undefined", and a bare "fca"/"psr"
+  cell. Escalation targets now read in UK terms (Complaints team, Small claims court or Citizens Advice, MP or minister
+  tagged, Chief executive named). Fixtures for every new rule.
