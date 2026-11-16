@@ -650,6 +650,12 @@ export type InternalV3 = {
   dials: Dial;
   products: InternalProductRow[];
   channels: (Dial & { channel: string; label: string; negative: number })[];
+  cora?: {
+    dials: Dial;
+    rows: (Dial & { id: string; label: string })[];
+    via_cora: number;
+    rule: string;
+  };
   cohorts: CohortRow[];
   high_impact: {
     total: number;

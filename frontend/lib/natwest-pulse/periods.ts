@@ -447,6 +447,11 @@ export type Period = {
   /** NatWest: false while no public source is loaded (the external blocks say so). */
   public_loaded?: boolean;
   public_end: string;
+  /** Cora module (NatWest): Cora themes inside the bank, at bank scale, any channel and product. */
+  cora?: {
+    internal: InternalFigures;
+    rows: { id: string; label: string; internal: InternalFigures }[];
+  };
   /** One label for every period: "vs previous period". */
   compare: string;
   /** Exactly what is compared, for the tooltip. */

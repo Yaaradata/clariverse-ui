@@ -166,15 +166,26 @@ export function AskBar({
         : "Full window";
 
   const suggestions: AskQA[] = useMemo(() => {
-    if (period && scope === "cards") return cardsQuestions(period);
-    if (period && scope === "md") return mdQuestions(period);
-    // Pages without period figures: the questions precomputed for the full window.
-    return ask.prompts.slice(0, 10).map((x) => ({
+    // The five persona questions (Pass 2 section 13) lead the list on every view, then the view's own questions.
+    const persona: AskQA[] = ask.prompts.slice(0, 5).map((x) => ({
       id: x.id,
       q: x.prompt,
       answer: x.answer,
       link: x.links[0],
     }));
+    const own =
+      period && scope === "cards"
+        ? cardsQuestions(period)
+        : period && scope === "md"
+          ? mdQuestions(period)
+          : ask.prompts.slice(5, 10).map((x) => ({
+              id: x.id,
+              q: x.prompt,
+              answer: x.answer,
+              link: x.links[0],
+            }));
+    const seen = new Set(persona.map((x) => x.q));
+    return [...persona, ...own.filter((x) => !seen.has(x.q))];
   }, [period, scope, ask]);
 
   useEffect(() => {

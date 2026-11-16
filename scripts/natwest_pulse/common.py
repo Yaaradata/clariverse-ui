@@ -118,6 +118,11 @@ THEME_DELIVERABLE = {
     "app_reimbursement": "app_reimbursement",
     "refund_delay": "refund",
     "kyc_updates": "service_request",
+    # Cora failures (Pass 2 section 12): the customer still needs the request done, so a service request, not a query.
+    "cora_unresolved": "service_request",
+    "cora_wrong_answer": "service_request",
+    "cora_handoff_lost": "service_request",
+    "cora_no_person": "service_request",
     "card_variant_migration": "service_request",
     "card_eligibility_upgrade": "service_request",
     "card_limit": "service_request",

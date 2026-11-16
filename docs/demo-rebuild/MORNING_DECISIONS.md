@@ -1049,3 +1049,16 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
   excluded-brands line. The register (data/public) is not checked by this rule. Fixtures added for NW-P2 and NW-P3.
 - **NW-D51 · Ask LisN (§8).** The brand-gap question is replaced by "Which journey is leaking most customers this week?":
   switching-intent contacts in the last 7 days, placed at the journey stage of the customer's last negative contact.
+
+### Pass 2, closing sections (16 Nov)
+
+- **NW-D52 · Cora module (Pass 2 §12).** The module reads the Cora themes inside the bank: Cora unresolved, had to call ·
+  Cora gave wrong answer · Cora hand-off lost context · Could not reach a person (three new themes beside the first).
+  Each rides on the product the query was about (split of the Cora weight in every product's mix). Columns: "Inside:
+  interactions" and "Open / open too long" at bank scale for the full window; "Public: negative reviews" reads "not yet
+  loaded". Cora failures count as service requests (the customer still needs the request done), with the heavier tail
+  used for status-breaking themes, so open and open-too-long are not near zero (ASSUMPTION). The inside dials use the
+  same themes; the outside half reads "Public data not yet loaded". Same seven sections as oct13.
+- **NW-D53 · Ask LisN (Pass 2 §13).** "How are our financially vulnerable customers being served?"; "Are customers
+  saying they will switch or close their card?"; the five persona questions lead the suggestion list on every view,
+  then the view's own questions. "Business" and bare "Cards" were already swept (NW-D30, NW-D33).

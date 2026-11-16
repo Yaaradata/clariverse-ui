@@ -275,7 +275,7 @@ export function rungColor(rung: string) {
 
 export const OWNER_LABEL: Record<string, string> = {
   cx: "CX",
-  digital: "Digital",
+  digital: "Digital and Cora",
   cards: "Credit cards",
   retail: "Retail",
   loans: "Loans",

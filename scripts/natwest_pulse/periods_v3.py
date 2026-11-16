@@ -62,6 +62,7 @@ from public_v3 import product_of  # noqa: E402
 import ombudsman_v3 as omb  # noqa: E402  (Ombudsman watch: snapshots of the complaint register)
 import v4_blocks as v4  # noqa: E402  (B11: V4 additions, from the same records)
 from taxonomy import OUTCOMES  # noqa: E402  (Consumer Duty outcomes, Pass 2)
+CORA_THEMES = ["cora_unresolved", "cora_wrong_answer", "cora_handoff_lost", "cora_no_person"]
 
 END = dt.datetime.fromisoformat(PERIOD_END)
 START = dt.datetime.fromisoformat(DATA_START)
@@ -1095,6 +1096,13 @@ def main():
         cp["cards"]["ombudsman"] = {**omb.block(cards_complaints, w, [("cards", PRODUCT_LABEL["cards"])]),
                                     **omb.cards_extra(complaints, w, labels)}
         cp["v4"] = v4_period(inter, customers, pub, cards_complaints, w, labels)
+        # Cora module (Pass 2 section 12): Cora themes inside the bank at bank scale, any channel, any product.
+        cora_rs = [r for r in inter if r["theme"] in CORA_THEMES]
+        cp["cora"] = {
+            "internal": internal_block(cora_rs, w),
+            "rows": [{"id": t, "label": labels.get(t, t), "internal": internal_block([r for r in cora_rs if r["theme"] == t], w)}
+                     for t in CORA_THEMES],
+        }
         item = omb.brief_item(cp["ombudsman"])
         if item:
             cp["brief"]["needs_you"] = [item, *cp["brief"]["needs_you"]][:3]

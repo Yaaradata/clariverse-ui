@@ -641,6 +641,42 @@ THEMES = [
         "owner_label": "Digital and Cora"
     },
     {
+        "id": "cora_wrong_answer",
+        "label": "Cora gave wrong answer",
+        "group": "App and digital",
+        "pillar": "support",
+        "owner": "digital",
+        "business": "retail_banking",
+        "definition": "Cora gave an answer that was wrong for the customer's case.",
+        "rung": "Repeat",
+        "action": "Route with evidence",
+        "owner_label": "Digital and Cora"
+    },
+    {
+        "id": "cora_handoff_lost",
+        "label": "Cora hand-off lost context",
+        "group": "App and digital",
+        "pillar": "support",
+        "owner": "digital",
+        "business": "retail_banking",
+        "definition": "Cora handed the customer to a person, who had to ask for everything again.",
+        "rung": "Repeat",
+        "action": "Route with evidence",
+        "owner_label": "Digital and Cora"
+    },
+    {
+        "id": "cora_no_person",
+        "label": "Could not reach a person",
+        "group": "App and digital",
+        "pillar": "support",
+        "owner": "digital",
+        "business": "retail_banking",
+        "definition": "The customer asked Cora for a person and could not get through to one.",
+        "rung": "Repeat",
+        "action": "Route with evidence",
+        "owner_label": "Digital and Cora"
+    },
+    {
         "id": "branch_closure",
         "label": "Branch closures and access",
         "group": "Service",

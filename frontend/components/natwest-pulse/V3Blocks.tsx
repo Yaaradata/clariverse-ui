@@ -18,6 +18,7 @@ import type {
   PublicProductRow,
   View,
 } from "@/lib/natwest-pulse/types";
+import { PublicNotLoaded } from "./Pulse";
 import {
   C,
   MONO,
@@ -163,10 +164,22 @@ const DIAL_GRID = {
 } as const;
 
 /** Four dials inside the bank (illustrative) and the same four outside (public). Optionally scoped to one product. */
-export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
-  const inside = product
-    ? b.v3.products.find((p) => p.id === product)
-    : b.v3.dials;
+export function DialsRow({
+  b,
+  product,
+  insideOverride,
+  outside = true,
+}: {
+  b: Bundle;
+  product?: ProductId;
+  /** A module's own inside figures (the Cora module: its themes only). */
+  insideOverride?: Bundle["v3"]["dials"];
+  /** False where no public figure is scoped to the block yet: the outside half reads "not yet loaded". */
+  outside?: boolean;
+}) {
+  const inside =
+    insideOverride ??
+    (product ? b.v3.products.find((p) => p.id === product) : b.v3.dials);
   const pub = product
     ? b.products.rows.find((r) => r.id === product)
     : undefined;
@@ -232,93 +245,102 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
           sub={`${fmtPct(inside.open_too_long_pct_of_open)} of open · past the service standard`}
         />
       </div>
-      <div
-        style={{
-          fontSize: 12.5,
-          fontWeight: 800,
-          color: C.cyan,
-          textTransform: "uppercase",
-          letterSpacing: "0.08em",
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          flexWrap: "wrap",
-          marginTop: 4,
-        }}
-      >
-        Outside the bank <ProvenanceTag kind="public" />
-      </div>
-      <div style={DIAL_GRID}>
-        <Ring
-          value={100}
-          color={C.cyan}
-          label="Total signals"
-          big={fmt(outsideTotal)}
-          sub={`public posts and reviews · ${fmt(outsideNeg)} negative`}
-        />
-        {rs ? (
-          <>
-            <Ring
-              value={rs.responded_pct}
-              color={C.green}
-              label="Responded"
-              big={fmt(rs.responded)}
-              sub={`${fmtPct(rs.responded_pct)} of ${fmt(rs.reviews)} Google Play reviews · median reply ${replyTime(rs.median_reply_minutes)}`}
-            />
-            <Ring
-              value={rs.open_pct}
-              color={C.amber}
-              label="Open"
-              big={fmt(rs.open)}
-              sub={`${fmtPct(rs.open_pct, 1)} of ${fmt(rs.reviews)} Google Play reviews · no bank reply yet`}
-            />
-            <Ring
-              value={rs.open_too_long_pct_of_reviews}
-              color={C.red}
-              label="Open too long"
-              big={fmt(rs.open_too_long)}
-              sub={`${fmtPct(rs.open_too_long_pct_of_reviews, 1)} of ${fmt(rs.reviews)} reviews · no reply after 48 hours${rs.open_too_long === rs.open ? " (every unanswered review is older than 48 hours)" : ""}`}
-            />
-          </>
-        ) : (
+      {outside ? (
+        <>
           <div
             style={{
-              gridColumn: "span 3",
-              fontSize: 13.5,
-              color: C.textMut,
-              alignSelf: "center",
-              lineHeight: 1.5,
+              fontSize: 12.5,
+              fontWeight: 800,
+              color: C.cyan,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              flexWrap: "wrap",
+              marginTop: 4,
             }}
           >
-            No Google Play reviews are tagged to this product, so no bank
-            replies are visible for it: its public voice is on X, Reddit and
-            forums, where bank replies were not collected.
+            Outside the bank <ProvenanceTag kind="public" />
           </div>
-        )}
-      </div>
-      {rs && rn ? (
-        <div
-          data-testid="redirect-line"
-          style={{
-            background: tint(C.amber, 0.06),
-            border: `1px solid ${tint(C.amber, 0.3)}`,
-            borderLeft: `3px solid ${C.amber}`,
-            borderRadius: 10,
-            padding: "10px 12px",
-            fontSize: 14.5,
-            color: C.textSec,
-            lineHeight: 1.5,
-          }}
-        >
-          <strong style={{ color: C.text }}>Responded is not resolved.</strong>{" "}
-          Of {fmt(rn.responded)} replies to negative reviews,{" "}
-          <strong style={{ color: C.amber }}>
-            {fmt(rn.redirect_only)} ({fmtPct(rn.redirect_only_pct_of_replied)})
-          </strong>{" "}
-          only redirect the customer to email, phone, chat or a branch rather
-          than answering.
-        </div>
-      ) : null}
+          <div style={DIAL_GRID}>
+            <Ring
+              value={100}
+              color={C.cyan}
+              label="Total signals"
+              big={fmt(outsideTotal)}
+              sub={`public posts and reviews · ${fmt(outsideNeg)} negative`}
+            />
+            {rs ? (
+              <>
+                <Ring
+                  value={rs.responded_pct}
+                  color={C.green}
+                  label="Responded"
+                  big={fmt(rs.responded)}
+                  sub={`${fmtPct(rs.responded_pct)} of ${fmt(rs.reviews)} Google Play reviews · median reply ${replyTime(rs.median_reply_minutes)}`}
+                />
+                <Ring
+                  value={rs.open_pct}
+                  color={C.amber}
+                  label="Open"
+                  big={fmt(rs.open)}
+                  sub={`${fmtPct(rs.open_pct, 1)} of ${fmt(rs.reviews)} Google Play reviews · no bank reply yet`}
+                />
+                <Ring
+                  value={rs.open_too_long_pct_of_reviews}
+                  color={C.red}
+                  label="Open too long"
+                  big={fmt(rs.open_too_long)}
+                  sub={`${fmtPct(rs.open_too_long_pct_of_reviews, 1)} of ${fmt(rs.reviews)} reviews · no reply after 48 hours${rs.open_too_long === rs.open ? " (every unanswered review is older than 48 hours)" : ""}`}
+                />
+              </>
+            ) : (
+              <div
+                style={{
+                  gridColumn: "span 3",
+                  fontSize: 13.5,
+                  color: C.textMut,
+                  alignSelf: "center",
+                  lineHeight: 1.5,
+                }}
+              >
+                No Google Play reviews are tagged to this product, so no bank
+                replies are visible for it: its public voice is on X, Reddit and
+                forums, where bank replies were not collected.
+              </div>
+            )}
+          </div>
+          {rs && rn ? (
+            <div
+              data-testid="redirect-line"
+              style={{
+                background: tint(C.amber, 0.06),
+                border: `1px solid ${tint(C.amber, 0.3)}`,
+                borderLeft: `3px solid ${C.amber}`,
+                borderRadius: 10,
+                padding: "10px 12px",
+                fontSize: 14.5,
+                color: C.textSec,
+                lineHeight: 1.5,
+              }}
+            >
+              <strong style={{ color: C.text }}>
+                Responded is not resolved.
+              </strong>{" "}
+              Of {fmt(rn.responded)} replies to negative reviews,{" "}
+              <strong style={{ color: C.amber }}>
+                {fmt(rn.redirect_only)} (
+                {fmtPct(rn.redirect_only_pct_of_replied)})
+              </strong>{" "}
+              only redirect the customer to email, phone, chat or a branch
+              rather than answering.
+            </div>
+          ) : null}
+        </>
+      ) : (
+        <PublicNotLoaded />
+      )}
       <Table
         head={["", "Total", "Closed or responded", "Open", "Open too long"]}
         align={["left", "right", "right", "right", "right"]}
@@ -330,15 +352,21 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
             `${fmt(inside.open)} (${fmtPct(inside.open_pct, 1)})`,
             `${fmt(inside.open_too_long)} (${fmtPct(inside.open_too_long_pct_of_open)} of open)`,
           ],
-          [
-            rs ? "Outside (Google Play replies)" : "Outside (public)",
-            rs ? fmt(rs.reviews) : fmt(outsideTotal),
-            rs ? `${fmt(rs.responded)} (${fmtPct(rs.responded_pct)})` : "—",
-            rs ? `${fmt(rs.open)} (${fmtPct(rs.open_pct)})` : "—",
-            rs
-              ? `${fmt(rs.open_too_long)} (${fmtPct(rs.open_too_long_pct_of_reviews, 1)})`
-              : "—",
-          ],
+          ...(outside
+            ? [
+                [
+                  rs ? "Outside (Google Play replies)" : "Outside (public)",
+                  rs ? fmt(rs.reviews) : fmt(outsideTotal),
+                  rs
+                    ? `${fmt(rs.responded)} (${fmtPct(rs.responded_pct)})`
+                    : "—",
+                  rs ? `${fmt(rs.open)} (${fmtPct(rs.open_pct)})` : "—",
+                  rs
+                    ? `${fmt(rs.open_too_long)} (${fmtPct(rs.open_too_long_pct_of_reviews, 1)})`
+                    : "—",
+                ],
+              ]
+            : []),
         ]}
       />
       <MutedNote>

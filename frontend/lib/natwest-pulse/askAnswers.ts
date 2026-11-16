@@ -231,7 +231,7 @@ function mdBase(p: Period): AskQA[] {
     },
     {
       id: "md-lists",
-      q: "How are our most sensitive customers being served?",
+      q: "How are our financially vulnerable customers being served?",
       answer: `Across the four lists, on the bank's own channels: ${cp.lists.map((l) => `${l.label} ${fmt(l.open)} open`).join("; ")}. Owners alerted for ${fmt(cp.rm.alerted)} of ${fmt(cp.rm.of)} customers due an alert.`,
       table: {
         head: [
@@ -482,7 +482,7 @@ function cardsBase(p: Period): AskQA[] {
     },
     {
       id: "cards-closure",
-      q: "Are customers saying they will close their card?",
+      q: "Are customers saying they will switch or close their card?",
       answer: `${fmt(sv.closure.public_intent)} public posts say they will close the card or leave. The bank received ${fmt(sv.closure.internal_requests)} closure requests; ${fmt(sv.closure.internal_open)} are still open.`,
       table: {
         head: ["Measure", "Count"],

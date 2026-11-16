@@ -12,7 +12,7 @@
     "branch",
     "cross"
    ],
-   "answer": "Last 7 days: 415,688 contacts; 28,760 open more than 48 hours. The highest share open too long is Secure message (12%). Public data not yet loaded.",
+   "answer": "Last 7 days: 411,768 contacts; 27,327 open more than 48 hours. The highest share open too long is Email (13%). Public data not yet loaded.",
    "evidence": [],
    "bound": [
     "L3:cx_pulse.internal.by_channel",
@@ -36,7 +36,7 @@
     "back",
     "resolved"
    ],
-   "answer": "Last 7 days: Cora took 125,706 contacts and resolved 98,696; 17,666 are still open. Calls: 181,611. The 7-day return to a call or complaint needs Cora logs joined to call records inside the bank.",
+   "answer": "Last 7 days: Cora took 123,184 contacts and resolved 91,192; 21,445 are still open. Calls: 182,715. The 7-day return to a call or complaint needs Cora logs joined to call records inside the bank.",
    "evidence": [],
    "bound": [
     "L3:cx_pulse.internal.by_channel.whatsapp",
@@ -61,7 +61,7 @@
     "risk",
     "refer"
    ],
-   "answer": "As at 2026-11-12: 217 complaints are within 10 days of the final-response deadline, 531 are past it with no final response, 2,770 are unhappy with the final response, and 2,210 have been referred. Rules: 8 weeks; payment services 15 business days (35 in exceptional cases). Eligibility and risk only; LisN does not predict who will refer.",
+   "answer": "As at 2026-11-12: 15 complaints are within 10 days of the final-response deadline, 296 are past it with no final response, 1,872 are unhappy with the final response, and 2,216 have been referred. Rules: 8 weeks; payment services 15 business days (35 in exceptional cases). Eligibility and risk only; LisN does not predict who will refer.",
    "evidence": [],
    "bound": [
     "L3:ombudsman.now",
@@ -89,7 +89,7 @@
     "customers",
     "week"
    ],
-   "answer": "Everyday banking: 5,105 of the 16,194 switching-intent contacts in the last 7 days came after a negative contact at that stage. Next: Service requests (1,745) and Disputes and fraud (802); 7,776 had no earlier negative contact. Internal, illustrative.",
+   "answer": "Everyday banking: 5,994 of the 17,489 switching-intent contacts in the last 7 days came after a negative contact at that stage. Next: Service requests (1,279) and Open (802); 8,862 had no earlier negative contact. Internal, illustrative.",
    "evidence": [],
    "bound": [
     "L3:interactions.closure_requests",
@@ -114,7 +114,7 @@
     "value",
     "evidence"
    ],
-   "answer": "Last 7 days: 102,615 contacts from customers flagged financially vulnerable; 13,779 open, 375 with no reply after 48 hours. Consumer Duty outcomes: Products and services · price and value · consumer understanding · consumer support.",
+   "answer": "Last 7 days: 103,330 contacts from customers flagged financially vulnerable; 13,791 open, 1,208 with no reply after 48 hours. Consumer Duty outcomes: Products and services · price and value · consumer understanding · consumer support.",
    "evidence": [],
    "bound": [
     "L3:customer_pulse.lists.priority_a",

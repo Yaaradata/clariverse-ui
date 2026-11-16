@@ -114,6 +114,20 @@ function slicePeriods(b: Bundle, s: Slice): PeriodsFile {
         compare: p.compare,
         cards: p.cards,
       } as Period;
+    } else if (s.view === "module" && s.id === "digital" && id === "all") {
+      // The Cora module reads the full window's Cora block only.
+      periods[id] = {
+        id: p.id,
+        label: p.label,
+        short: p.short,
+        start: p.start,
+        end: p.end,
+        public_start: p.public_start,
+        public_end: p.public_end,
+        public_loaded: p.public_loaded,
+        compare: p.compare,
+        cora: p.cora,
+      } as Period;
     }
   }
   return { ...file, periods };

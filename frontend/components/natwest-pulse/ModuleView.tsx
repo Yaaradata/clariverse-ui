@@ -12,12 +12,9 @@
 import type { ReactNode } from "react";
 
 import { fmt, fmtDate, fmtPct, fmtSigned } from "@/lib/natwest-pulse/format";
-import {
-  RELEASE_LABEL,
-  releasePulse,
-  signalHref,
-} from "@/lib/natwest-pulse/selectors";
+import { releasePulse, signalHref } from "@/lib/natwest-pulse/selectors";
 import type { Bundle, StoreSeries } from "@/lib/natwest-pulse/types";
+import { PublicNotLoaded } from "./Pulse";
 import {
   ActionChip,
   AnswerLine,
@@ -159,137 +156,138 @@ const GRID2 = {
 
 export function DigitalModule({ b }: { b: Bundle }) {
   const from = useFrom();
+  // Pass 2 section 12: the Cora module reads the Cora themes inside the bank (bank scale, full window). Public
+  // columns stay in place and read "not yet loaded" until the pull lands.
+  const full = b.periods.periods.all;
+  const cora = full?.cora;
+  const sample = b.v3.cora;
+  if (!cora || !sample) return <MutedNote>No Cora data.</MutedNote>;
+  const i = cora.internal;
+  const rows = [...cora.rows].sort(
+    (a, c) => (c.internal.open_too_long ?? 0) - (a.internal.open_too_long ?? 0),
+  );
+  const top = rows[0];
   const rp = releasePulse(b);
   const app = b.storeSeries.apps.find((a) => a.app === "NatWest app");
   const play = app?.stores.find((s) => s.store === "playstore");
   const ios = app?.stores.find((s) => s.store === "appstore");
-  const pub = b.products.rows.find((r) => r.id === "digital");
-  if (!rp || !play || !ios || !pub) return <MutedNote>No app data.</MutedNote>;
-  const p11 = play.by_major["11"];
-  const p9 = play.by_major["9"];
-  const i11 = ios.by_major["11"];
-  const i10 = ios.by_major["10"];
-  const ev = rp.exemplars.map((id) => b.evidence[id]).filter(Boolean);
-  const praise = rp.praise_exemplars
-    .map((id) => b.evidence[id])
-    .filter(Boolean)
-    .slice(0, 2);
+  const publicLoaded = full.public_loaded !== false && !!rp;
+  const ev = rp ? rp.exemplars.map((id) => b.evidence[id]).filter(Boolean) : [];
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <Tile prov="public" accent tone="red">
+      <Tile prov={["internal", "public"]} accent tone="red">
         <AnswerLine
-          sub={`Compared within each store only. Google Play: v11 averages ${p11?.avg_rating?.toFixed(1)}★ over ${fmt(p11?.n)} reviews against ${p9?.avg_rating?.toFixed(1)}★ for v9 (${fmt(p9?.n)}). App Store: v11 averages ${i11?.avg_rating?.toFixed(1)}★ (${fmt(i11?.n)}) against ${i10?.avg_rating?.toFixed(1)}★ for v10 (${fmt(i10?.n)}).`}
+          sub={`Inside the bank, illustrative, at bank scale: contacts tagged to a Cora theme on any channel, ${fmtDate(full.start)} to ${fmtDate(full.end)}. Public reviews of Cora: ${publicLoaded ? "on the market view" : "not yet loaded"}.`}
         >
-          {RELEASE_LABEL}: {fmt(rp.new_app_negative)} negative reviews of
-          version 11, the new release ({fmt(rp.count)} across all versions), led
-          by {(rp.fix_list[0]?.issue ?? "—").toLowerCase()}. The fix list below
-          is what customers have written.
+          Cora: {fmt(i.volume)} contacts where Cora did not finish the job;{" "}
+          {fmt(i.open)} still open, {fmt(i.open_too_long)} open too long.{" "}
+          {top ? `${top.label} leads the open-too-long list.` : null}
         </AnswerLine>
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
           <Status value="needs_you" />
           <OwnerChip owner="digital" />
-          <RungChip rung="Voice" />
+          <RungChip rung="Repeat" />
           <ActionChip action="Route with evidence" />
         </div>
 
         <Section n={1} title="What">
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
-            Store reviews of the new NatWest app (versions 11.x), read as a
-            release pulse: the specific, fixable issues customers name, with the
-            praise alongside. {fmt(pub.count)} public items sit in the Digital
-            row of the product table; {fmt(pub.negative)} are negative.
+            Contacts where Cora did not finish the job: unresolved so the
+            customer had to call, a wrong answer, a hand-off that lost the
+            context, or no way to reach a person. Each sits with the product the
+            query was about; {fmt(sample.via_cora)} of {fmt(sample.dials.total)}{" "}
+            in the demo sample came in through Cora itself.
           </div>
         </Section>
 
         <Section n={2} title="Is it real">
-          <div style={GRID2}>
-            <StoreChart s={ios} />
-            <StoreChart s={play} />
+          <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
+            Inside the bank: {fmt(i.volume)} contacts in the window,{" "}
+            {fmtSigned(i.change_pct, "%")} on the comparison period;{" "}
+            {fmt(i.escalations)} carried escalation language.
           </div>
-          <BaselineCaption>
-            {b.storeSeries.rule} Weeks with fewer than 5 reviews are not
-            plotted. The Google Play export starts on{" "}
-            {fmtDate(play.export_start)}, so its series starts there: there is
-            no spike, only a start date.
-          </BaselineCaption>
-          <div style={GRID2}>
-            <VersionTable s={play} majors={["11", "10", "9"]} />
-            <VersionTable s={ios} majors={["11", "10", "8"]} />
-          </div>
+          {publicLoaded && play && ios ? (
+            <>
+              <div style={GRID2}>
+                <StoreChart s={ios} />
+                <StoreChart s={play} />
+              </div>
+              <div style={GRID2}>
+                <VersionTable s={play} majors={["11", "10", "9"]} />
+                <VersionTable s={ios} majors={["11", "10", "8"]} />
+              </div>
+            </>
+          ) : (
+            <PublicNotLoaded />
+          )}
         </Section>
 
         <Section n={3} title="The fix list" id="fix-list">
           <Table
-            head={["Issue", "Negative reviews", "First seen", "Latest version"]}
-            align={["left", "right", "left", "left"]}
-            rows={rp.fix_list
-              .slice(0, 7)
-              .map((f) => [
-                f.issue,
-                fmt(f.count),
-                f.first_seen_version ? `v${f.first_seen_version}` : "—",
-                f.latest_version_seen ? `v${f.latest_version_seen}` : "—",
-              ])}
+            head={[
+              "Issue",
+              "Inside: interactions",
+              "Open / open too long",
+              "Public: negative reviews",
+            ]}
+            align={["left", "right", "right", "right"]}
+            rows={rows.map((r) => [
+              <a
+                key={r.id}
+                href={signalHref(r.id, from)}
+                style={{ color: C.text }}
+              >
+                {r.label}
+              </a>,
+              fmt(r.internal.volume),
+              `${fmt(r.internal.open)} / ${fmt(r.internal.open_too_long)}`,
+              publicLoaded ? "—" : "not yet loaded",
+            ])}
           />
           <MutedNote>
-            Feature asks are not shown: the requests in the reviews could not be
-            tied to a single issue reliably.
+            Inside figures are illustrative, at bank scale, from the demo
+            sample. Open too long: open past the service standard for the
+            request.
           </MutedNote>
         </Section>
 
         <Section n={4} title="Where">
           <div style={{ fontSize: 15, color: C.textSec }}>
-            Consumer Duty outcome: Products and services · Module: Cora and
-            digital assistant · Sources: {rp.coverage.join("; ")}.
+            Consumer Duty outcome: Consumer support · Module: Cora and digital
+            assistant · Channels: all, with the product the query was about.
           </div>
         </Section>
 
         <Section n={5} title="How high">
           <div style={{ fontSize: 15, color: C.textSec }}>
-            Rung: Voice. {fmt(pub.escalation)} Digital items use escalation
-            language. Store reviews are public and visible to every prospective
-            customer on the store page.
+            Rung: Repeat. A Cora failure brings the customer back on another
+            channel; {fmt(i.escalations)} of these contacts carried escalation
+            language.
           </div>
         </Section>
 
         <Section n={6} title="Owner and action">
           <div style={{ fontSize: 15, color: C.textSec }}>
-            Owner: <strong>Digital</strong>. Recommended action:{" "}
-            <strong>Route with evidence</strong>: the fix list, versions and
-            example reviews go to the app backlog. Track share negative by store
-            and version after each release.
+            Owner: <strong>Digital and Cora</strong>. Recommended action:{" "}
+            <strong>Route with evidence</strong>: the fix list, with the
+            conversations behind each row, goes to the Cora backlog. Track open
+            too long weekly.
           </div>
         </Section>
 
         <Section n={7} title="Evidence" id="evidence">
-          <EvidenceList items={ev} />
-          {praise.length ? (
-            <>
-              <div
-                style={{
-                  fontSize: 13,
-                  color: C.textMut,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  marginTop: 6,
-                }}
-              >
-                Praise alongside
-              </div>
-              <EvidenceList items={praise} />
-            </>
-          ) : null}
+          {ev.length ? <EvidenceList items={ev} /> : <PublicNotLoaded />}
         </Section>
       </Tile>
-      <DialsRow b={b} product="digital" />
+      <DialsRow b={b} insideOverride={sample.dials} outside={false} />
       <MutedNote>
         Theme detail:{" "}
         <a
-          href={signalHref("app_speed_crash", from)}
+          href={signalHref("cora_unresolved", from)}
           style={{ color: C.textSec }}
         >
-          App speed, loading and crashes
+          Cora unresolved, had to call
         </a>
       </MutedNote>
     </div>
