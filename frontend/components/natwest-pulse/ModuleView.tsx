@@ -318,7 +318,7 @@ const CARD_ISSUES: { label: string; themes: string[]; note?: string }[] = [
   {
     label: "Closure",
     themes: ["closure_requests"],
-    note: "Bank timeline: confirm with the bank",
+    note: "Bank service standard: confirm with the bank",
   },
 ];
 
@@ -377,9 +377,9 @@ export function CardsModule({ b }: { b: Bundle }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov={["public", "internal"]} accent tone="red">
         <AnswerLine
-          sub={`Inside the bank (illustrative): ${fmt(inn.total)} card interactions in the sample, ${fmt(inn.open)} open, ${fmt(inn.waiting_on_customer)} waiting on customer, ${fmt(inn.open_too_long)} past their deliverable.`}
+          sub={`Inside the bank (illustrative): ${fmt(inn.total)} card interactions in the sample, ${fmt(inn.open)} open, ${fmt(inn.waiting_on_customer)} waiting on customer, ${fmt(inn.open_too_long)} past their service standard.`}
         >
-          Cards: {fmt(pub.negative)} negative public items out of{" "}
+          Credit cards: {fmt(pub.negative)} negative public items out of{" "}
           {fmt(pub.count)}
           {trend !== null
             ? `, share of voice ${fmtSigned(trend)} in the second half of the window (source-weighted)`
@@ -460,8 +460,8 @@ export function CardsModule({ b }: { b: Bundle }) {
               "Public negative",
               "Inside: interactions",
               "Open / open too long",
-              "Deliverable met",
-              "timeline",
+              "Service standard met",
+              "Standard",
             ]}
             align={[
               "left",

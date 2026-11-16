@@ -74,7 +74,7 @@ function EmailCard({ e }: { e: EscalationEmail }) {
           padding: "6px 8px",
         }}
       >
-        <span style={{ color: C.textMut }}>Backend status: </span>
+        <span style={{ color: C.textMut }}>Case status: </span>
         {e.backend_status}
       </div>
       {e.draft_reply ? (
@@ -161,7 +161,7 @@ export function ActionQueue({ b }: { b: Bundle }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov="internal" accent tone="red">
-        <AnswerLine sub="Each email is read against its backend status and the deliverable clock, then sorted into one of six buckets. LisN recommends; people send. It never executes.">
+        <AnswerLine sub="Each email is read against its case status and the service standard clock, then sorted into one of six buckets. LisN recommends; people send. It never executes.">
           {fmt(t.total)} escalation emails in the second-line queue (received{" "}
           {receivedRange(emails)}):{" "}
           {t.buckets

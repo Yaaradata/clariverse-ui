@@ -263,7 +263,7 @@ const RUNG_COLOR: Record<string, string> = {
   Repeat: C.amber,
   Grievance: C.amber,
   Complaint: C.amber,
-  "Head of CX": C.amber,
+  "Complaints team": C.amber,
   "Final response": C.amber,
   "Financial Ombudsman Service": C.red,
   Public: C.red,
@@ -300,7 +300,7 @@ export function RungChip({ rung }: { rung: string }) {
       label="Rung"
       value={rung}
       color={rungColor(rung)}
-      title="Voice · Repeat · Complaint · Head of CX · Final response · Financial Ombudsman Service · Public"
+      title="Voice · Repeat · Complaint · Complaints team · Final response · Financial Ombudsman Service · Public"
     />
   );
 }

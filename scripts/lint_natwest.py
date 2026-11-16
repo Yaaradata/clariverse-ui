@@ -9,6 +9,8 @@ pages. Every hit starts with its rule id so a fixture can tell which rule fired:
 - NW-HL06   an internal label on screen: version tags, decision, carry-forward, step and screen ids.
 - NW-NAME   a person's name (our team, the bank's people named in the docs).
 - NW-BANK   another demo bank's name (HDFC, IndusInd, Sterling, Starling, Openbank).
+- NW-P2     a word the Pass 2 fit review bans (business head, deliverable, timeline, backend, Private as a tier, bare
+            "Cards" as a product name, ...).
 
 Customer quotes (evidence text) are exempt: they are the customer's words. The register's peer list may name Starling
 as an upper benchmark (NW-D10); that list, and the brand-lens route that renders it, are the only exemptions.
@@ -61,6 +63,25 @@ INDIA_TERMS: list[tuple[str, str]] = [
 ]
 INDIA_RX = [(t, re.compile(p)) for t, p in INDIA_TERMS]
 
+# Pass 2 fit review, section 15: words that read as HDFC, internal or non-NatWest on a NatWest screen.
+P2_TERMS: list[tuple[str, str]] = [
+    ("business head", r"\b[Bb]usiness [Hh]eads?\b"),
+    ("MD's office", r"\bMD(?:'|&apos;|’)?s office\b"),
+    ("relationship tier", r"\b[Rr]elationship tiers?\b"),
+    ("deliverable", r"\b[Dd]eliverables?\b"),
+    ("timeline", r"\b[Tt]imelines?\b"),
+    ("compensation", r"\b[Cc]ompensation\b"),
+    ("closure intent", r"\b[Cc]losure intent\b"),
+    ("backend", r"\b[Bb]ack-?end\b"),
+    ("revert", r"\b[Rr]evert(?:s|ed|ing)?\b"),
+    ("listed customer", r"\b[Ll]isted customers?\b"),
+    ("data intimacy", r"\b[Dd]ata intimacy\b"),
+    ("household", r"\b[Hh]ouseholds?\b"),
+    ("Private (tier)", r"\bPrivate\b"),
+    ("Cards (bare product name)", r"(?<![Cc]redit )(?<![Dd]ebit )\bCards\b"),
+]
+P2_RX = [(t, re.compile(p)) for t, p in P2_TERMS]
+
 # HL-06: internal labels. Version tags, our decision and rule ids, brief steps and screen ids.
 INTERNAL_ID = re.compile(
     r"\bV[1-4]\b|\bNW-D\d*|\bHL-\d*|\bIND-[A-Z]\d|\bDEC-\d|\bIV-\d\d|\bFB-\d\d\d|\bD\d\d\b|\bB1[01]\b|"
@@ -84,6 +105,9 @@ def text_rules(s: str, where: str, allow_peer_names: bool = False) -> list[str]:
     for t, rx in INDIA_RX:
         if rx.search(s):
             hits.append(f"NW-INDIA {where}: India term '{t}' in: {s[:90]}")
+    for t, rx in P2_RX:
+        if rx.search(s):
+            hits.append(f"NW-P2 {where}: banned word '{t}' in: {s[:90]}")
     m = INTERNAL_ID.search(s)
     if m:
         hits.append(f"NW-HL06 {where}: internal label '{m.group(0)}' in: {s[:90]}")

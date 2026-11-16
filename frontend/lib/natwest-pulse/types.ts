@@ -612,7 +612,7 @@ export type LedgerRow = DeliverableStats & {
   tat_label: string;
   source: "rbi" | "bank" | "bank_confirmed";
   source_note: string | null;
-  compensation: string;
+  redress: string;
   total: number;
   open_too_long: number;
   themes: string[];

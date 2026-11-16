@@ -32,7 +32,7 @@ export default async function BusinessPage({
       title={`${row.label}: product view`}
       subtitle={
         cards
-          ? "For the head of Cards: the issue pulse, issues by category and what customers say, for the selected period."
+          ? "For the credit cards product owner: the issue pulse, issues by category and what customers say, for the selected period."
           : "Coming soon."
       }
     >

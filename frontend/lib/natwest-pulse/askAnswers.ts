@@ -187,7 +187,7 @@ function ombudsmanCards(p: Period): AskQA[] {
         ]),
       },
     },
-    ioQA("cards-ombudsman-io", o, "Cards "),
+    ioQA("cards-ombudsman-io", o, "Credit cards "),
   ];
 }
 
@@ -426,15 +426,15 @@ function cardsBase(p: Period): AskQA[] {
       },
     },
     {
-      id: "cards-timelines",
-      q: "Are we keeping our timelines?",
-      answer: `${fmt(sv.missed_timelines.total)} public credit card posts describe a missed timeline, ${fmt(sv.transparency.count)} ask where something is, and ${fmt(sv.tat_related.contacts)} internal contacts (${fmtPct(sv.tat_related.share)}) carry a delivery timeline. Heard in public; not a compliance figure.`,
+      id: "cards-standards",
+      q: "Are we meeting our service standards?",
+      answer: `${fmt(sv.missed_timelines.total)} public credit card posts describe a missed service standard, ${fmt(sv.transparency.count)} ask where something is, and ${fmt(sv.tat_related.contacts)} internal contacts (${fmtPct(sv.tat_related.share)}) carry a delivery service standard. Heard in public; not a compliance figure.`,
       table: {
         head: ["Request type", "Posts"],
         rows: sv.missed_timelines.rows.map((r) => [r.label, fmt(r.count)]),
       },
       link: {
-        label: "Open the full timelines panel",
+        label: "Open the full service standards panel",
         href: withPeriod(`${CARDS}/service`, p),
       },
     },

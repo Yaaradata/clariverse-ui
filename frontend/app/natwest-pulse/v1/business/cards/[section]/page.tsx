@@ -27,7 +27,7 @@ export default async function CardsDrillDownPage({
   return (
     <Shell
       {...shellProps(b)}
-      title={`Cards: ${d.title}`}
+      title={`Credit cards: ${d.title}`}
       subtitle={d.sub}
       periods={sliced.periods}
       context="Credit cards · Product view"

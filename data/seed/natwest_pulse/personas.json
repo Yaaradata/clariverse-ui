@@ -5,8 +5,7 @@
   "descriptor": "Premier relationship, 14 years, London",
   "segment": "Premier Reward",
   "cohorts": [
-   "priority_a",
-   "uhni"
+   "priority_a"
   ],
   "products": [
    "cards",
@@ -92,8 +91,7 @@
   "descriptor": "Premier relationship, 9 years, Manchester",
   "segment": "Premier Reward",
   "cohorts": [
-   "priority_a",
-   "uhni"
+   "priority_a"
   ],
   "products": [
    "cards",
@@ -134,8 +132,7 @@
   "descriptor": "Premier relationship, 6 years, Edinburgh",
   "segment": "Premier Select",
   "cohorts": [
-   "priority_b",
-   "hni"
+   "priority_b"
   ],
   "products": [
    "cards",
@@ -153,7 +150,7 @@
     "channel": "chat",
     "product": "payments_fraud",
     "theme": "failed_txn_reversal",
-    "summary": "Faster Payment debited but failed; money not returned within the same-day Faster Payments timeline.",
+    "summary": "Faster Payment debited but failed; money not returned within the same-day Faster Payments standard.",
     "sentiment": "negative",
     "status": "open",
     "first_response_at": "2026-11-07T21:15+00:00"
@@ -176,8 +173,7 @@
   "descriptor": "Premier relationship, 21 years, Glasgow",
   "segment": "Premier Reward",
   "cohorts": [
-   "priority_a",
-   "uhni"
+   "priority_a"
   ],
   "products": [
    "cards",
@@ -236,8 +232,7 @@
   "descriptor": "Premier relationship, 11 years, Belfast",
   "segment": "Premier Select",
   "cohorts": [
-   "priority_b",
-   "hni"
+   "priority_b"
   ],
   "products": [
    "cards",
@@ -276,8 +271,7 @@
   "descriptor": "Premier relationship, 17 years, Leeds",
   "segment": "Premier Reward",
   "cohorts": [
-   "priority_a",
-   "uhni"
+   "priority_a"
   ],
   "products": [
    "cards",
@@ -306,12 +300,14 @@
   "descriptor": "Premier relationship, 8 years, Birmingham",
   "segment": "Premier Select",
   "cohorts": [
-   "hni"
+   "multi"
   ],
   "products": [
    "cards",
    "current_accounts",
-   "personal_loans"
+   "payments_fraud",
+   "personal_loans",
+   "savings"
   ],
   "rm_id": "RELM-054",
   "proxy_contacts": 0,
@@ -335,8 +331,7 @@
   "descriptor": "Premier relationship, 12 years, London",
   "segment": "Premier Reward",
   "cohorts": [
-   "priority_b",
-   "uhni"
+   "priority_b"
   ],
   "products": [
    "cards",
@@ -369,7 +364,7 @@
   "descriptor": "Premier relationship, 3 years, Cardiff",
   "segment": "Premier Select",
   "cohorts": [
-   "hni"
+   "uhni"
   ],
   "products": [
    "cards",
@@ -399,7 +394,6 @@
   "descriptor": "Premier relationship, 19 years, Aberdeen",
   "segment": "Premier Reward",
   "cohorts": [
-   "priority_a",
    "uhni"
   ],
   "products": [
@@ -428,13 +422,13 @@
   "descriptor": "Premier relationship, 7 years, Brighton",
   "segment": "Premier Select",
   "cohorts": [
-   "priority_b",
-   "hni"
+   "multi"
   ],
   "products": [
    "cards",
    "current_accounts",
-   "mortgages"
+   "mortgages",
+   "savings"
   ],
   "rm_id": "RELM-060",
   "proxy_contacts": 0,

@@ -203,9 +203,9 @@ function IssuePulse({ p }: { p: Period }) {
               tone="amber"
             />
             <Kpi
-              label="timeline-related"
+              label="about a service standard"
               value={tileFigure(p.cards.service_full.tat_related.contacts)}
-              sub={`${fmtPct(p.cards.service_full.tat_related.share)} carry a delivery timeline`}
+              sub={`${fmtPct(p.cards.service_full.tat_related.share)} carry a delivery service standard`}
             />
           </div>
         </div>
@@ -397,7 +397,7 @@ function CategoryRow({
             }}
           >
             {c.owner}
-            {c.tat_related ? " · timeline-related" : ""}
+            {c.tat_related ? " · service standard-related" : ""}
             <RiskPill r={risk} />
           </span>
         </span>
@@ -548,9 +548,9 @@ function Categories({ p }: { p: Period }) {
         Escalations: internal contacts escalated to a grievance desk or beyond;
         external posts with escalation language. Trend: internal plus public
         volume over the last {p.cards.categories[0]?.trend.length ?? 0} periods
-        of the same length. timeline-related: the category carries a delivery
-        timeline; compliance is not shown here. Owners are roles in the cards
-        team. The at-risk pill counts complaints on the Ombudsman watch
+        of the same length. About a service standard: the category carries a
+        delivery standard; compliance is not shown here. Owners are roles in the
+        cards team. The at-risk pill counts complaints on the Ombudsman watch
         (internal, illustrative).
       </MutedNote>
     </Tile>
@@ -916,10 +916,10 @@ function QuestionCards({ p }: { p: Period }) {
         href={href("service")}
         accent={C.amber}
         icon={<Timer size={18} />}
-        title="Are we keeping our timelines?"
-        micro="Missed timelines · Status-seeking · Escalation"
-        answer={`${fmt(sv.missed_timelines.total)} public credit card posts describe a missed timeline; ${fmt(sv.transparency.count)} ask where something is; ${fmt(sv.public_escalation)} use escalation language.`}
-        headlineLabel="Missed timelines heard"
+        title="Are we meeting our service standards?"
+        micro="Missed service standards · Status-seeking · Escalation"
+        answer={`${fmt(sv.missed_timelines.total)} public credit card posts describe a missed service standard; ${fmt(sv.transparency.count)} ask where something is; ${fmt(sv.public_escalation)} use escalation language.`}
+        headlineLabel="Missed service standards heard"
         headline={fmt(sv.missed_timelines.total)}
         caption={`Public posts in the period, by request type on the drill-down. Inside the bank: ${late === null ? "the 48-hour figure needs 48 hours" : `${fmt(late)} Cards contacts not responded to in 48h+`}.`}
         gauges={[
@@ -946,7 +946,7 @@ function QuestionCards({ p }: { p: Period }) {
             color: C.red,
           },
           {
-            label: "timeline-related contacts",
+            label: "service standard-related contacts",
             value: fmt(sv.tat_related.contacts),
             sub: `${fmtPct(sv.tat_related.share)} of credit card contacts · ${fmt(sv.tat_related.open)} open`,
             color: C.amber,
@@ -1052,7 +1052,7 @@ export function StoresPanel({ p }: { p: Period }) {
             }}
           >
             <strong>
-              {st.label}: {fmt(st.reviews)} Cards reviews
+              {st.label}: {fmt(st.reviews)} credit card reviews
               {st.avg_rating === null
                 ? ""
                 : ` · ${st.avg_rating.toFixed(1)}★ · ${fmtPct(st.share_positive)} 4–5★`}
@@ -1083,12 +1083,12 @@ export function StoresPanel({ p }: { p: Period }) {
             />
             {st.reviews < 5 ? (
               <MutedNote>
-                Too few Cards reviews on this store in this period to read much
-                into.
+                Too few credit card reviews on this store in this period to read
+                much into.
               </MutedNote>
             ) : (
               <MutedNote>
-                Reviews tagged to Cards on this store in the period.
+                Reviews tagged to credit cards on this store in the period.
               </MutedNote>
             )}
           </div>
@@ -1613,7 +1613,7 @@ export function Service({ p }: { p: Period }) {
             sub="median, email / Cora / social"
           />
           <Kpi
-            label="timeline-related contacts"
+            label="service standard-related contacts"
             value={fmt(sv.tat_related.contacts)}
             sub={`${fmtPct(sv.tat_related.share)} of contacts · ${fmt(sv.tat_related.open)} open`}
             tone="amber"
@@ -1802,9 +1802,9 @@ export function Service({ p }: { p: Period }) {
       </div>
 
       <Tile
-        id="service-timelines"
-        title={titled("Timelines customers say were missed", p)}
-        sub="Public credit card posts describing a missed timeline, by the request it concerned. Heard in public; not a compliance figure."
+        id="service-standards"
+        title={titled("Service standards customers say were missed", p)}
+        sub="Public credit card posts describing a missed service standard, by the request it concerned. Heard in public; not a compliance figure."
         prov="public"
       >
         <div style={SPLIT}>
@@ -1818,7 +1818,7 @@ export function Service({ p }: { p: Period }) {
             <Kpi
               label="Posts"
               value={fmt(sv.missed_timelines.total)}
-              sub="describe a missed timeline"
+              sub="describe a missed service standard"
               tone="red"
             />
             <Kpi
@@ -1873,11 +1873,11 @@ export function ComingSoon({ label }: { label: string }) {
   return (
     <Tile title={`${label}: product view`} prov="internal">
       <MutedNote>
-        Coming soon. The Cards business view is the first; the others follow the
-        same layout once it is agreed.
+        Coming soon. The credit cards product view is the first; the others
+        follow the same layout once it is agreed.
       </MutedNote>
       <Link href={CARDS} style={{ color: C.brandInk, fontSize: 14 }}>
-        Open the Cards business view
+        Open the credit cards product view
       </Link>
     </Tile>
   );

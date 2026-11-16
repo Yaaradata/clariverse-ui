@@ -305,7 +305,7 @@ def customer_pulse(inter, customers, notes, w) -> dict:
                                   for s, e in w["series"]],
             "response_pct": pct(responded, wn(ment), 0),
             "by_list": by_list,
-            "rule": "A post counts only when the bank's own verified handles or contact records link it to a listed customer; LisN never matches people from public data.",
+            "rule": "A post counts only when the bank's own verified handles or contact records link it to a customer on the bank's lists; LisN never matches people from public data.",
         },
         "rm": {**rm_alerts([r for r in inter if r["masked_id"] in listed], customers, told_all, w), "as_of": PERIOD_END},
     }
@@ -834,7 +834,7 @@ REQUEST_LABEL = {
     "kyc": "Identity checks and profile updates",
     "other": "Other request",
 }
-RUNG_LABEL = [("grievance", "Complaint"), ("md_office", "Head of CX"), ("io", "Final response"), ("rbi_ombudsman", "Financial Ombudsman Service")]
+RUNG_LABEL = [("grievance", "Complaint"), ("md_office", "Complaints team"), ("io", "Final response"), ("rbi_ombudsman", "Financial Ombudsman Service")]
 
 
 def quote_of(rs):

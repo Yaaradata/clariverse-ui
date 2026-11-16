@@ -3,11 +3,11 @@
 /**
  * D1 · Deliverables ledger (B7 §1): each deliverable with its timeline, compensation, met, outside, open too long, public
  * posts describing a delay, owner and action. A timeline is an FCA published timeline, a bank-confirmed SLA (both with their
- * source under the timeline), or, while unconfirmed, "Bank timeline: confirm in discovery". A second table splits "met" by product.
+ * source under the timeline), or, while unconfirmed, "Bank service standard: confirm in discovery". A second table splits "met" by product.
  */
 
 import { fmt, fmtPct } from "@/lib/natwest-pulse/format";
-import type { Bundle, ProductId } from "@/lib/natwest-pulse/types";
+import type { Bundle, LedgerRow, ProductId } from "@/lib/natwest-pulse/types";
 import {
   ActionChip,
   AnswerLine,
@@ -68,8 +68,6 @@ function rowAction(r: {
   return "Monitor";
 }
 
-type LedgerRow = Bundle["v3"]["deliverables"][number];
-
 function TatCell({ row }: { row: LedgerRow }) {
   switch (row.source) {
     case "rbi":
@@ -111,7 +109,7 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
     <>
       <Tile prov={["internal", "public"]} accent tone="violet">
         <AnswerLine
-          sub={`Weakest: ${worst?.label.toLowerCase()} at ${fmtPct(worst?.met_pct)} met. timelines marked FCA are published timelines; the rest are the bank's own SLAs, shown once the bank confirms them.`}
+          sub={`Weakest: ${worst?.label.toLowerCase()} at ${fmtPct(worst?.met_pct)} met. service standards marked FCA are published service standards; the rest are the bank's own SLAs, shown once the bank confirms them.`}
         >
           {fmtPct((100 * met) / measured)} of deliverables met across{" "}
           {rows.length} deliverable types; {fmt(otl)} items are open past their
@@ -120,16 +118,16 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
       </Tile>
       <Tile
         id="ledger"
-        title="Deliverables ledger"
+        title="Service standards ledger"
         sub="Inside figures are illustrative until discovery; public posts describing a delay are live."
         prov={["internal", "public"]}
         tone="violet"
       >
         <Table
           head={[
-            "Deliverable",
-            "timeline",
-            "Compensation",
+            "Service standard",
+            "Standard",
+            "Redress",
             "Met",
             "Outside",
             "Open too long",
@@ -153,7 +151,7 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
               {r.label}
             </span>,
             <TatCell key="t" row={r} />,
-            r.compensation,
+            r.redress,
             <span key="m" style={{ fontFamily: MONO }}>
               {fmtPct(r.met_pct)}
             </span>,
@@ -195,13 +193,13 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
       </Tile>
       <Tile
         id="by-product"
-        title="Deliverables met, by product"
-        sub="Share met for each deliverable within each product. Amber: under 75% met. Blank where a product has fewer than 5 items."
+        title="Service standards met, by product"
+        sub="Share met for each service standard within each product. Amber: under 75% met. Blank where a product has fewer than 5 items."
         prov="internal"
         tone="violet"
       >
         <Table
-          head={["Deliverable", ...PRODUCT_ORDER.map((p) => SHORT[p])]}
+          head={["Service standard", ...PRODUCT_ORDER.map((p) => SHORT[p])]}
           align={["left", ...PRODUCT_ORDER.map(() => "right" as const)]}
           rows={rows.map((r) => {
             const by = Object.fromEntries(

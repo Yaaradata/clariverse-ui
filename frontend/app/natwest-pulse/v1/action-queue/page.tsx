@@ -10,8 +10,8 @@ export default function ActionQueuePage() {
     <Shell
       {...shellProps(b)}
       sampleRows={b.periods.scale.sample_rows}
-      title="Action queue: escalation email triage"
-      subtitle="20 synthetic second-line escalation emails · Six buckets · Draft replies for a person to approve"
+      title="Action queue: complaint escalation triage"
+      subtitle="20 illustrative complaint escalations · Six buckets · Draft replies for a person to approve"
       drill
     >
       <ActionQueue b={sliceBundle(b, { view: "action-queue" })} />

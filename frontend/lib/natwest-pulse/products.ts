@@ -18,7 +18,7 @@ export const MODULES: Partial<Record<ProductId, string>> = {
 
 /**
  * Deliverables in each product's remit (review finding #18). Items tagged to a product by theme can carry another
- * product's deliverable (a loan-on-card query under Credit cards); those are grouped as "Other deliverables" on the
+ * product's deliverable (a loan-on-card query under Credit cards); those are grouped as "Other service standards" on the
  * business view, so every row the product head sees is theirs and the total still reconciles.
  */
 const ALL_PRODUCTS: ProductId[] = PRODUCT_ORDER;

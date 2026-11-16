@@ -96,7 +96,7 @@ export function promiseAnswer(b: Bundle): string {
     kyc: "Identity checks and profile updates",
   };
   const share = b.signals.transparency_gap.share ?? 0;
-  return `${pb.length} request types missed their timeline in public voice this window; ${RT[top?.request_type] ?? "service requests"} drives the most; ${share.toFixed(
+  return `${pb.length} request types missed their service standard in public voice this window; ${RT[top?.request_type] ?? "service requests"} drives the most; ${share.toFixed(
     0,
   )}% of posts are customers asking where something is.`;
 }

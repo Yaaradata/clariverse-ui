@@ -1001,3 +1001,25 @@ Brief `docs/natwest/brief.md`; plan and resume point `docs/natwest/build_plan.md
   the app in minutes · Switch to us in 7 days · Same-day Faster Payments · Mortgage decision in principle online, each
   read against its themes; owners are the theme's product owners. Peers and brand gap stay as an accepted gap (to raise
   with Ranjith).
+- **NW-D40 · Credit card view (Pass 2 §8).** "Credit cards: product view", for the credit cards product owner;
+  "Card delivery lead"; "Eligibility and card changes"; tile and Ask question "Are we meeting our service standards?";
+  ladder rung "Head of CX" reads "Complaints team" (data key `md_office` stays).
+- **NW-D41 · Priority customers (Pass 2 §9).** "Priority relationships" reads "Priority customers". The second "Premier"
+  cohort (`hni`) is folded into `uhni` (Premier), so one Premier cohort shows. The 12 personas are re-mixed: 4
+  financially vulnerable, 3 recent complainants, 3 Premier, 2 multi-product (each now holds four or more products).
+  "FCA or Financial Ombudsman named"; "How a customer gets on a list" lists the Consumer Duty vulnerability flag,
+  Premier relationship, linked contacts and recent complaint.
+- **NW-D42 · Action queue (Pass 2 §10).** "20 illustrative complaint escalations"; buckets "Reply with case status",
+  "Call today (service standard at risk)", "Escalate (no progress, standard missed)". Each of the five draft replies
+  ends with final-response wording and the customer's right to refer to the Financial Ombudsman Service within 6
+  months (as a final response where the case is settled; "we will send our final response once ..." where it is not).
+  "Backend status" reads "Case status" (field key `backend_status` stays).
+- **NW-D43 · Service standards (Pass 2 §11).** "Deliverables ledger" reads "Service standards ledger"; "Compensation"
+  reads "Redress", filled only on the final-response row ("Financial Ombudsman Service can award up to £445,000
+  (2025/26)"), "—" elsewhere, including the PSR reimbursement row as the brief asks; "Why disputes miss the standard";
+  by-product table shows the six products. The `/deliverables` route stays (ids are not on screen); the slice view id
+  and anchors that carried the word are renamed.
+- **NW-D44 · Ban list in the lint (Pass 2 §15).** `lint_natwest.py` rule NW-P2 bans business head, MD's office,
+  relationship tier, deliverable, timeline, compensation, closure intent, backend, revert, listed customer, data
+  intimacy, household, "Private" and bare "Cards" (not after "Credit"/"Debit") on screen, in the UI source strings and
+  in the data payloads; lakh, crore, RBI, Internal Ombudsman, IO and TAT were already under NW-INDIA.

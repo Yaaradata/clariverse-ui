@@ -37,8 +37,8 @@ from complaint_rules import decide
 END = dt.datetime.fromisoformat(PERIOD_END)
 LISTS = ("priority_a", "priority_b", "uhni")  # the bank's own lists (the derived "multi" cohort is not a list)
 # Escalation language on a contact: an RBI or Ombudsman named, or legal / consumer-court language.
-ESC_IMPACT = {"regulator_named": "Regulator or Ombudsman named", "legal_language": "Legal language or a solicitor named"}
-ESC_RUNG = {"rbi_ombudsman": "Regulator or Ombudsman named", "io": "Regulator or Ombudsman named"}
+ESC_IMPACT = {"regulator_named": "FCA or Financial Ombudsman named", "legal_language": "Legal language or a solicitor named"}
+ESC_RUNG = {"rbi_ombudsman": "FCA or Financial Ombudsman named", "io": "FCA or Financial Ombudsman named"}
 
 
 def ts(s):

@@ -49,7 +49,7 @@ OWNER_LABEL = {
 # are unconfirmed and read BANK_TAT_LABEL; their `tat_days` is a parameter of the illustrative sample generator only and
 # never reaches a screen (follow-up fix 3). Days are working days (Sundays skipped) unless `calendar` is set.
 # D-11 (the TAT reference B7 inherits) is not in the repo (qa/tat_check.md), so no bank row is confirmed yet.
-BANK_TAT_LABEL = "Bank timeline: confirm with the bank"
+BANK_TAT_LABEL = "Bank standard: confirm with the bank"
 # United Kingdom timelines (brief Step 5.12). "fca" and "psr" rows are published rules from the register
 # (data/public/natwest_register.json); "bank" rows are unconfirmed and read BANK_TAT_LABEL; their tat_days drive the
 # illustrative generator only. Days are business days (weekends skipped) unless `calendar` is set.
@@ -79,7 +79,7 @@ DELIVERABLES = {
         "tat_label": "8 weeks (FCA DISP)",
         "source": "fca",
         "source_note": "FCA DISP final response within 8 weeks (register REG-DISP-8W)",
-        "compensation": "Customer may refer to the Financial Ombudsman Service",
+        "compensation": "Financial Ombudsman Service can award up to £445,000 (2025/26)",
     },
     "app_reimbursement": {
         "label": "Push payment scam reimbursement",
@@ -87,7 +87,7 @@ DELIVERABLES = {
         "tat_label": "5 business days (PSR)",
         "source": "psr",
         "source_note": "PSR reimbursement for authorised push payment scams (register REG-PSR-APP)",
-        "compensation": "Reimbursement under the PSR rules",
+        "compensation": "—",
     },
     "card_dispatch": {"label": "Card dispatch and delivery", "tat_days": 5, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
     "dispute": {
@@ -247,7 +247,7 @@ BRIEF_BUSINESSES = ["current_accounts", "payments_fraud", "cards", "savings", "m
 CARDS_CATEGORIES = [
     {"id": "rewards", "label": "Rewards and redemption", "owner": "Credit cards · Rewards lead", "tat": False,
      "themes": ["rewards_value", "reward_redemption", "offers_deals"]},
-    {"id": "upgrades", "label": "Upgrades, variants and eligibility", "owner": "Credit cards · Product lead", "tat": True,
+    {"id": "upgrades", "label": "Eligibility and card changes", "owner": "Credit cards · Product lead", "tat": True,
      "themes": ["card_variant_migration", "card_eligibility_upgrade"]},
     {"id": "applications", "label": "Applications and verification", "owner": "Credit cards · Acquisition lead", "tat": True,
      "themes": ["card_application", "kyc_updates"]},
@@ -256,7 +256,7 @@ CARDS_CATEGORIES = [
     {"id": "limits", "label": "Limits", "owner": "Credit cards · Credit policy lead", "tat": True, "themes": ["card_limit"]},
     {"id": "disputes", "label": "Disputes, refunds and reversals", "owner": "Credit cards · Disputes lead", "tat": True,
      "themes": ["dispute_chargeback", "refund_delay", "failed_txn_reversal", "unauthorised_txn", "merchant_pos"]},
-    {"id": "delivery", "label": "Card delivery", "owner": "Credit cards · Fulfilment lead", "tat": True, "themes": ["card_dispatch"]},
+    {"id": "delivery", "label": "Card delivery", "owner": "Credit cards · Card delivery lead", "tat": True, "themes": ["card_dispatch"]},
     {"id": "closure", "label": "Closure", "owner": "Credit cards · Retention lead", "tat": True, "themes": ["closure_requests"]},
     {"id": "service", "label": "Service and complaint handling", "owner": "Credit cards · Service lead", "tat": True,
      "themes": ["complaint_handling", "care_unreachable", "branch_service", "rm_service", "unsolicited_calls"]},

@@ -99,7 +99,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov={["public", "internal"]}>
-        <AnswerLine sub="Missed timelines and status-seeking are heard in public voice (live). Internal ageing, the internal ladder rungs and dispute feeds are illustrative until discovery.">
+        <AnswerLine sub="Missed service standards and status-seeking are heard in public voice (live). Internal ageing, the internal ladder rungs and dispute feeds are illustrative until discovery.">
           {promiseAnswer(b)}
         </AnswerLine>
       </Tile>
@@ -112,9 +112,9 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
         }}
       >
         <Tile
-          id="public-timelines"
-          title="Missed timelines heard in public"
-          sub="Where committed timelines snapped, detected from what customers say, with the likely owner and next action."
+          id="public-standards"
+          title="Missed service standards heard in public"
+          sub="Where committed service standards snapped, detected from what customers say, with the likely owner and next action."
           prov={["public", "internal"]}
         >
           <div
@@ -125,7 +125,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             }}
           >
             <Kpi
-              label="Missed timelines heard"
+              label="Missed service standards heard"
               value={fmt(pb.count)}
               sub={`${fmtSigned(pb.trend.change_pct)} 2nd half vs 1st`}
               href="#ledger-table"
@@ -146,9 +146,9 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
               tone="red"
             />
             <Kpi
-              label="Beyond timeline (internal)"
+              label="Beyond service standard (internal)"
               value={fmt(it.ageing.reduce((s, r) => s + r.beyond_tat, 0))}
-              sub="open past the deliverable · illustrative"
+              sub="open past the service standard · illustrative"
               tone="violet"
             />
           </div>
@@ -156,11 +156,11 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             <Table
               head={[
                 "Request type",
-                "timeline",
+                "Standard",
                 "Breaches heard",
                 "Asking status",
                 "Repeat",
-                "Open · beyond timeline",
+                "Open · beyond service standard",
                 "Owner",
                 "Action",
               ]}
@@ -219,7 +219,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
       <Tile
         id="ladder"
         title="Escalation ladder"
-        sub={`Hear it on the first rung. Voice → Repeat → Complaint → Head of CX → Final response → Financial Ombudsman Service → Public. ${it.ladder_rule}`}
+        sub={`Hear it on the first rung. Voice → Repeat → Complaint → Complaints team → Final response → Financial Ombudsman Service → Public. ${it.ladder_rule}`}
         prov={["public", "internal"]}
         tone="red"
       >
@@ -505,7 +505,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
 
       <Tile
         id="disputes"
-        title="Why disputes breach SLA"
+        title="Why disputes miss the standard"
         sub={`${fmt(disputes.beyond_sla_total)} of ${fmt(disputes.raised)} disputes in the demo sample went beyond SLA, by driver and by age. Public voice: ${fmt(publicDisputeItems)} posts about disputes this window.`}
         prov="internal"
       >

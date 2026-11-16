@@ -14,7 +14,7 @@ import type { Bundle, Evidence } from "./types";
  */
 export type Slice =
   | { view: "exec" | "business" | "priority" | "customer" | "action-queue" }
-  | { view: "deliverables" | "satisfaction" | "market" }
+  | { view: "standards" | "satisfaction" | "market" }
   | { view: "module"; id: "cards" | "digital" }
   | { view: "signal"; id: string };
 
@@ -74,7 +74,7 @@ function idsFor(b: Bundle, s: Slice): { ids: string[]; full: boolean } {
         ],
         full: false,
       };
-    case "deliverables":
+    case "standards":
       return {
         ids: [
           ...first(b.signals.cure_watch.exemplars, 2),

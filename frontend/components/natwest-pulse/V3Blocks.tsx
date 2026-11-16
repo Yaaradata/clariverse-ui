@@ -229,7 +229,7 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
           color={C.red}
           label="Open too long"
           big={fmt(inside.open_too_long)}
-          sub={`${fmtPct(inside.open_too_long_pct_of_open)} of open · past the deliverable`}
+          sub={`${fmtPct(inside.open_too_long_pct_of_open)} of open · past the service standard`}
         />
       </div>
       <div
@@ -365,11 +365,11 @@ export function CohortStrip({
   return (
     <Tile
       id="priority"
-      title="Priority relationships"
+      title="Priority customers"
       sub={
         product
           ? `Open issues for priority customers in ${b.products.rows.find((p) => p.id === product)?.label}, and across all their products. Cohorts come from the bank's own tiers and lists.`
-          : "Customers on the bank's own priority lists and relationship tiers. Issues open over 5 hours and over 24 hours, and whether the owner knows."
+          : "Customers on the bank's own priority lists and account tiers. Issues open over 5 hours and over 24 hours, and whether the owner knows."
       }
       prov="internal"
       tone="red"
@@ -566,7 +566,7 @@ export function ProductPulseTable({ b, from }: { b: Bundle; from: View }) {
           "Negative signals (public)",
           "Trend",
           "Open / open too long (inside)",
-          "Deliverables met / outside (inside)",
+          "Service standards met / outside (inside)",
           "Public posts describing a delay",
           "Top issue",
           "Escalation language (public)",
@@ -746,13 +746,13 @@ export function CustomerMemory({ b, from }: { b: Bundle; from: View }) {
         <MemoryStat
           label="Open too long"
           value={fmt(m.with_open_too_long)}
-          sub="past the deliverable in at least one product"
+          sub="past the service standard in at least one product"
           color={C.red}
         />
         <MemoryStat
           label="Priority customers among them"
           value={fmt(m.priority_among_them)}
-          sub="on a list or in the ultra-HNI or HNI tier"
+          sub="on a list or in Premier"
           color={C.violet}
         />
       </div>

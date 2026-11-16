@@ -183,7 +183,7 @@ def run(seed_dir: Path = SEED_V3, out_dir: Path = OUT_APP, quiet: bool = False) 
     at_least = lambda r, x: bool(r["escalation"]) and rung[r["escalation"]] >= rung[x]  # noqa: E731
     ladder = {x["rung"]: x["count"] for x in agg["deliverables_detail"]["ladder"]}
     md = agg["md_mail"]
-    ok(md["total"] == sum(1 for r in inter if at_least(r, "md_office")) == ladder["Head of CX"],
+    ok(md["total"] == sum(1 for r in inter if at_least(r, "md_office")) == ladder["Complaints team"],
        f"MD-marked mail = records at the MD's office rung = ladder rung ({md['total']})")
     ok(sum(r["mails"] for r in md["rows"]) == md["shown"] <= md["total"], "MD mail rows sum to the shown count")
     ok(ladder["Voice"] == len(inter) and ladder["Repeat"] == sum(1 for r in inter if r["repeat"]), "ladder Voice and Repeat recomputed")

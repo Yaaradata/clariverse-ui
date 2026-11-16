@@ -37,7 +37,7 @@ LIMITS = {
 LIMIT_LABEL = {
     "priority_a": "Financially vulnerable: 5 hours",
     "uhni": "Premier: 24 hours",
-    "fca": "Published UK timeline (FCA or PSR)",
+    "fca": "Published UK standard (FCA or PSR)",
     "default": "Default: over 48 hours (bank SLA, illustrative)",
 }
 
@@ -209,7 +209,7 @@ def to_close(vol, customers, is_open, labels) -> list[dict]:
     return [{"id": case_ref(r), "theme": labels.get(r["theme"], r["theme"]), "kind": kind(r),
              "channel": CHANNEL_LABEL[r["_ch"]], "age": age_label(age), "overdue": over > dt.timedelta(0),
              "limit": LIMIT_LABEL[basis], "suggested_owner": "Upgrades lead" if r["theme"] in ("card_variant_migration", "card_eligibility_upgrade")
-             else "Premium cards lead" if basis in ("priority_a", "uhni") else "Escalations lead" if r["high_impact"] else "Cards · CX lead"}
+             else "Premium cards lead" if basis in ("priority_a", "uhni") else "Escalations lead" if r["high_impact"] else "Credit cards · CX lead"}
             for over, r, basis, age in rows[:15]]
 
 

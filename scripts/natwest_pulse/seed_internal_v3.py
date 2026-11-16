@@ -202,10 +202,8 @@ def build_customers():
         if "current_accounts" not in held:
             held.append("current_accounts")
         cohorts = []
-        if seg == "Premier Reward":
-            cohorts.append("uhni" if rng.random() < 0.75 else "hni")
-        elif seg == "Premier Select" and rng.random() < 0.85:
-            cohorts.append("hni")
+        if seg == "Premier Reward" or (seg == "Premier Select" and rng.random() < 0.85):
+            cohorts.append("uhni")
         customers.append(
             {
                 "masked_id": masked(1000 + i * 1 + (i * 7919) % 8000 if False else 1000 + i),
@@ -507,12 +505,11 @@ COHORTS = [
     ("priority_a", "Financially vulnerable (Consumer Duty)", "Vulnerability flag in the bank's records"),
     ("priority_b", "Recent complainants (90 days)", "The bank's complaints register, last 90 days"),
     ("uhni", "Premier", "Premier relationship, from core banking"),
-    ("hni", "Premier", "Relationship tier from core banking"),
     ("multi", "Multi-product customers", "Customers holding four or more products, from the bank's records"),
 ]
-LISTED = ("priority_a", "priority_b", "uhni", "hni")
+LISTED = ("priority_a", "priority_b", "uhni")
 HI_LABEL = {
-    "regulator_named": "Regulator or ombudsman named",
+    "regulator_named": "FCA or Financial Ombudsman named",
     "legal_language": "Legal language or a solicitor named",
     "public_reach": "Public post with reach",
     "official_domain": "Sent from an official or regulator domain",
@@ -661,7 +658,7 @@ def aggregates(customers, inter, bot_calls, emails, themes, products_pub):
                 "tat_label": d["tat_label"],
                 "source": d["source"],
                 "source_note": d.get("source_note"),
-                "compensation": d["compensation"],
+                "redress": d["compensation"],
                 "total": len(rows),
                 **deliverable_stats(rows),
                 "open_too_long": sum(1 for r in rows if r["status"] == "open" and r["breached"]),
@@ -888,7 +885,7 @@ ESCALATION_RUNG = {"grievance": 2, "md_office": 3, "io": 4, "rbi_ombudsman": 5}
 DISPUTE_DRIVERS = [
     ("Merchant response pending", 0.30),
     ("Chargeback evidence incomplete", 0.24),
-    ("Network timeline", 0.18),
+    ("Network time limit", 0.18),
     ("Manual re-work after reopen", 0.16),
     ("Customer not updated", 0.12),
 ]
@@ -1022,7 +1019,7 @@ def screen_blocks(customers, inter, themes):
         "total": len(md),
         "shown": sum(r["mails"] for r in md_rows),
         "rows": md_rows,
-        "rule": "Written complaints (email) escalated to the MD's office, from the same interaction sample.",
+        "rule": "Written complaints (email) escalated to the Complaints team, from the same interaction sample.",
     }
 
     # Satisfaction: tiers, journey stages, retention watchlist.
@@ -1109,7 +1106,7 @@ def screen_blocks(customers, inter, themes):
         {"rung": "Voice", "count": len(inter)},
         {"rung": "Repeat", "count": sum(1 for r in inter if r["repeat"])},
     ]
-    for rung_id, rung in (("grievance", "Complaint"), ("md_office", "Head of CX"), ("io", "Final response"), ("rbi_ombudsman", "Financial Ombudsman Service")):
+    for rung_id, rung in (("grievance", "Complaint"), ("md_office", "Complaints team"), ("io", "Final response"), ("rbi_ombudsman", "Financial Ombudsman Service")):
         ladder.append({"rung": rung, "count": sum(1 for r in inter if reached(r, rung_id))})
     closed_closure = [r for r in closure_reqs if r["status"] == "closed"]
     saved = sum(1 for r in closure_reqs if r["retained"])
@@ -1136,7 +1133,7 @@ def screen_blocks(customers, inter, themes):
             {"stage": "First response given", "count": sum(1 for r in disputes if r["first_response_at"])},
             {"stage": "Closed", "count": sum(1 for r in disputes if r["status"] == "closed")},
             {"stage": "Customer credited", "count": sum(1 for r in disputes if r["credited"])},
-            {"stage": "Credited within the timeline", "count": sum(1 for r in disputes if r["credited"] and not r["breached"])},
+            {"stage": "Credited within the standard", "count": sum(1 for r in disputes if r["credited"] and not r["breached"])},
         ],
     }
     return {

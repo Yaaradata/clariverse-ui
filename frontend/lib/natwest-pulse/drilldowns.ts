@@ -14,7 +14,7 @@ export const DRILL_DOWNS: { id: DrillDownId; title: string; sub: string }[] = [
   },
   {
     id: "service",
-    title: "Are we keeping our timelines?",
-    sub: "How credit card contacts are handled, where they escalate, and which timelines customers say were missed. No timeline compliance figures.",
+    title: "Are we meeting our service standards?",
+    sub: "How credit card contacts are handled, where they escalate, and which service standards customers say were missed. No service standard compliance figures.",
   },
 ];

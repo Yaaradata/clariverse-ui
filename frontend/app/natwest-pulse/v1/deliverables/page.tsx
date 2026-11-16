@@ -7,13 +7,13 @@ import { sliceBundle } from "@/lib/natwest-pulse/slice";
 
 export default function DeliverablesPage() {
   const b = loadBundle();
-  const sliced = sliceBundle(b, { view: "deliverables" });
+  const sliced = sliceBundle(b, { view: "standards" });
   return (
     <Shell
       {...shellProps(b)}
       sampleRows={b.periods.scale.sample_rows}
-      title="Are we meeting our deliverables?"
-      subtitle="Deliverables ledger · By product · Escalation ladder · Transparency gap · Cure watch · Disputes"
+      title="Are we meeting our service standards?"
+      subtitle="Service standards ledger · By product · Escalation ladder · Transparency gap · Cure watch · Disputes"
       drill
     >
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>

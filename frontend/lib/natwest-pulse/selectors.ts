@@ -240,8 +240,8 @@ export function priorityAction(b: Bundle): SignalItem | null {
   const a = lists.find((c) => c.id === "priority_a");
   return {
     id: "priority-relationships",
-    label: "Priority relationships: issues open over 24 hours",
-    group: "Priority relationships",
+    label: "Priority customers: issues open over 24 hours",
+    group: "Priority customers",
     owner: "rm",
     ownerLabel: "Owner",
     rung: "Voice",

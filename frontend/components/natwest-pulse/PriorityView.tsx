@@ -35,7 +35,7 @@ const COHORT_LABEL: Record<string, string> = {
   priority_a: "Financially vulnerable",
   priority_b: "Recent complainants",
   uhni: "Premier",
-  hni: "Premier",
+  multi: "Multi-product customers",
 };
 const PRODUCT_LABEL: Record<string, string> = {
   cards: "Credit cards",
@@ -213,7 +213,7 @@ export function PriorityView({ b }: { b: Bundle }) {
                     : ""}
                 </>
               ) : (
-                "A relationship tier from core banking. LisN reads it; it never adds anyone to a tier."
+                "A Premier relationship from core banking. LisN reads it; it never adds anyone to Premier."
               )}
             </div>
           </Tile>
@@ -371,28 +371,24 @@ export function PriorityView({ b }: { b: Bundle }) {
             }}
           >
             <li>
-              <strong style={{ color: C.text }}>Relationship tier</strong> from
-              core banking: ultra-HNI and HNI come from the bank&apos;s own
-              segment, refreshed daily.
-            </li>
-            <li>
               <strong style={{ color: C.text }}>
-                The bank&apos;s priority lists
-              </strong>{" "}
-              (lists A and B here, until the bank&apos;s own name for them is
-              confirmed): maintained by the bank, for whatever reason the bank
-              chooses. LisN reads the list; it does not store why a customer is
-              on it.
+                Consumer Duty vulnerability flag
+              </strong>
+              : set in the bank&apos;s own records. LisN reads the flag; it
+              never stores why a customer has it.
             </li>
             <li>
-              <strong style={{ color: C.text }}>Linked contacts</strong>: an
-              assistant or office writing on the customer&apos;s behalf is
-              linked only through contact details the bank already holds.
+              <strong style={{ color: C.text }}>Premier relationship</strong>:
+              from core banking, refreshed daily.
             </li>
             <li>
-              <strong style={{ color: C.text }}>Suggestions</strong>: when a
-              complaint is high impact, LisN can suggest adding the customer to
-              a list. The bank confirms or declines.
+              <strong style={{ color: C.text }}>Linked contacts</strong>: a
+              carer or attorney writing on the customer&apos;s behalf is linked
+              only through contact details the bank already holds.
+            </li>
+            <li>
+              <strong style={{ color: C.text }}>Recent complaint</strong>: a
+              complaint in the bank&apos;s register in the last 90 days.
             </li>
           </ol>
           <MutedNote>
@@ -781,11 +777,11 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
           />
           <ActionBox
             icon={<PhoneCall size={16} />}
-            title="Callback within the deliverable"
+            title="Callback within the service standard"
             body={
               onList
                 ? "Working priority target (to confirm with the bank): call back within 5 hours of the first unresolved contact; close within 24 hours or tell the customer why not."
-                : "Call back within the bank timeline for this request; confirm the outcome in writing."
+                : "Call back within the bank service standard for this request; confirm the outcome in writing."
             }
             owner={callbackOwner}
           />
