@@ -160,7 +160,7 @@ def record(src: str, r: dict) -> dict:
     return base(
         id=r.get("id"), source=src, url=r.get("url"), created_at=to_gmt(r["created_at"]), text=redact(r.get("text")),
         title=redact(r.get("title")) or None, lang=r.get("lang"), brand=brand or "natwest",
-        entity="other_group" if brand == "group_other" else "natwest_group", author_hash=h(author or None),
+        entity="natwest_group" if (brand or "natwest") == "natwest" else "other_group",  # Pass 3: NatWest brand only author_hash=h(author or None),
         rating=int(r["rating"]) if r.get("rating") else None, app_name=app_name, app_id=app.get("store_id"),
         app_version=app.get("version"), business_hint=business, subreddit=sub,
         record_type=r.get("record_type") or ("review" if src in ("appstore", "playstore", "trustpilot") else "post"),

@@ -5,7 +5,7 @@
   "customers": 5000
  },
  "targets": {
-  "total_contacts": 8500000,
+  "total_contacts": 5800000,
   "channel_mix": {
    "calls": 0.44,
    "whatsapp": 0.3,
@@ -46,7 +46,7 @@
   },
   "lists": {
    "priority_a": {
-    "size": 2600000,
+    "size": 1780000,
     "in_contact": 0.3
    },
    "priority_b": {
@@ -54,17 +54,17 @@
     "in_contact": 0.6
    },
    "uhni": {
-    "size": 1100000,
+    "size": 750000,
     "in_contact": 0.25
    }
   },
   "contacts_per_contacting_customer": 2.5,
-  "contacting_customers": 3400000
+  "contacting_customers": 2320000
  },
  "list_sizes": {
-  "priority_a": 2600000,
+  "priority_a": 1780000,
   "priority_b": 43000,
-  "uhni": 1100000,
-  "multi": 1104500
+  "uhni": 750000,
+  "multi": 758300
  }
 }

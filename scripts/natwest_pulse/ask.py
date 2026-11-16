@@ -1,5 +1,5 @@
-"""Ask LisN answer bank for the NatWest Group pulse (docs/natwest/brief.md Step 4): five questions for the persona
-(cross-channel leak, Cora leakage, Ombudsman risk, brand gap, Consumer Duty evidence). Every answer is filled from
+"""Ask LisN answer bank for the NatWest pulse (docs/natwest/brief.md Step 4): five questions for the persona
+(cross-channel leak, Cora leakage, Ombudsman risk, journey leak, Consumer Duty evidence). Every answer is filled from
 data/out/natwest_pulse/periods.json (last 7 days) and the register, and lists the ids it is bound to. No model calls.
 
 Writes data/out/natwest_pulse/ask.json in the oct13 schema (prompts: id, prompt, keywords, answer, evidence, links).
@@ -10,7 +10,10 @@ from __future__ import annotations
 
 import json
 
-from common import CHANNEL_GROUP_LABEL, CHANNEL_GROUP_ORDER, OUT_APP, ROOT, dump
+import collections
+import datetime as dt
+
+from common import CHANNEL_GROUP_LABEL, CHANNEL_GROUP_ORDER, JOURNEY_ORDER, JOURNEY_STAGE, OUT_APP, ROOT, SEED_V3, dump
 
 BASE = "/natwest-pulse/v1"
 
@@ -37,6 +40,23 @@ def main():
     now = om["now"]
     lists = {x["id"]: x for x in per["customer_pulse"]["lists"]}
     vul = lists["priority_a"]
+    # Journey leak (Pass 3): switching-intent contacts in the last 7 days, at bank scale, placed at the journey stage of
+    # the customer's last negative contact before them (the satisfaction view's rule).
+    a, b = dt.datetime.fromisoformat(per["start"]), dt.datetime.fromisoformat(per["end"])
+    inter = [json.loads(x) for x in open(SEED_V3 / "interactions.jsonl", encoding="utf-8")]
+    inter.sort(key=lambda r: r["created_at"])
+    last_neg: dict[str, str] = {}
+    leak_by = collections.Counter()
+    for r in inter:
+        t = dt.datetime.fromisoformat(r["created_at"])
+        if r["theme"] == "closure_requests":
+            if a <= t < b:
+                leak_by[last_neg.get(r["masked_id"], "none")] += r["w"]
+        elif r["sentiment"] == "negative":
+            last_neg[r["masked_id"]] = JOURNEY_STAGE.get(r["theme"], "Everyday banking")
+    leak_total = sum(leak_by.values())
+    leak_rank = sorted(JOURNEY_ORDER, key=lambda st: -leak_by[st])
+    no_prior = leak_by["none"]
     prompts = [
         {
             "id": "cross_channel",
@@ -81,17 +101,18 @@ def main():
             "links": [{"label": "Open the Ombudsman watch", "href": f"{BASE}/mds-office#ombudsman"}],
         },
         {
-            "id": "brand_gap",
-            "prompt": "Where is the gap between our brands?",
-            "keywords": ["brand", "rbs", "royal", "scotland", "ulster", "natwest", "gap"],
+            "id": "journey_leak",
+            "prompt": "Which journey is leaking most customers this week?",
+            "keywords": ["journey", "leak", "leaking", "switch", "close", "stage", "customers", "week"],
             "answer": (
-                f"Royal Bank of Scotland: app {reg['REG-CMA-RBS-APP']['value'].split(' vs ')[0]} against "
-                f"{reg['REG-CMA-RBS-APP']['value'].split(' vs ')[1]} for overall service (CMA, August 2026). "
-                + ("Brand voice in public is on the market view." if public_loaded else "Brand voice in public: not yet loaded.")
+                f"{leak_rank[0]}: {fmt(leak_by[leak_rank[0]])} of the {fmt(leak_total)} switching-intent contacts in "
+                f"the last 7 days came after a negative contact at that stage. Next: {leak_rank[1]} "
+                f"({fmt(leak_by[leak_rank[1]])}) and {leak_rank[2]} ({fmt(leak_by[leak_rank[2]])}); {fmt(no_prior)} had no "
+                "earlier negative contact. Internal, illustrative."
             ),
             "evidence": [],
-            "bound": ["REG-CMA-RBS-APP"] + ([] if public_loaded else ["L2:sources"]),
-            "links": [{"label": "Open the market view", "href": f"{BASE}/market"}],
+            "bound": ["L3:interactions.closure_requests", "L3:satisfaction.journey_stages"],
+            "links": [{"label": "Open the journey stages", "href": f"{BASE}/satisfaction#journey"}],
         },
         {
             "id": "consumer_duty",

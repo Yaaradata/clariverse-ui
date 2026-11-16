@@ -58,7 +58,7 @@ function EmailCard({ e }: { e: EscalationEmail }) {
       <div style={{ fontSize: 15, fontWeight: 650, color: C.text }}>
         {e.subject}
       </div>
-      {/* The body takes the spare height, so backend status and the draft button line up across a row of cards. */}
+      {/* The body takes the spare height, so case status and the draft button line up across a row of cards. */}
       <div
         style={{ fontSize: 13.5, color: C.textSec, lineHeight: 1.5, flex: 1 }}
       >
@@ -172,7 +172,7 @@ export function ActionQueue({ b }: { b: Bundle }) {
             )
             .join(", ")}
           ; {fmt(t.buckets.find((x) => x.id === "reply_status")?.count)} can be
-          answered now from the backend status.
+          answered now from the case status.
         </AnswerLine>
       </Tile>
 

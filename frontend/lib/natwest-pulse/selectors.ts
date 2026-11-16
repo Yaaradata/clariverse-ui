@@ -163,7 +163,7 @@ export function thisWeekItems(b: Bundle): SignalItem[] {
 
 /**
  * Improving (B7 §4.3): only real improvements, each with at least 15 items in both halves of the window. Themes whose
- * share of voice fell, then the Royal Bank of Scotland app on the App Store when its positive share rose, then where customers praise us.
+ * share of voice fell, then where customers praise us.
  */
 export function improvingItems(b: Bundle): SignalItem[] {
   const out: SignalItem[] = [];
@@ -184,29 +184,6 @@ export function improvingItems(b: Bundle): SignalItem[] {
     const s = signalFromTheme(b, t, "improving");
     s.why = `Share of public voice down ${Math.abs(Math.round(t.trend.change_pct ?? 0))}% in the second half of the window, source-weighted; items fell from ${fmt(t.trend.first_half)} to ${fmt(t.trend.second_half)}.`;
     out.push(s);
-  }
-  const pz = b.storeSeries.apps
-    .find((a) => a.app === "Royal Bank of Scotland app")
-    ?.stores.find((s) => s.store === "appstore");
-  if (
-    pz?.halves.comparable &&
-    (pz.halves.second.share_positive ?? 0) >
-      (pz.halves.first.share_positive ?? 0)
-  ) {
-    out.push({
-      id: "rbs-app-appstore",
-      label: "Royal Bank of Scotland app reviews on the App Store",
-      group: "Payments",
-      owner: "payments",
-      ownerLabel: "Payments",
-      rung: "Voice",
-      action: "Monitor",
-      status: "improving",
-      count: pz.window.n,
-      why: `Positive reviews rose from ${Math.round(pz.halves.first.share_positive ?? 0)}% to ${Math.round(pz.halves.second.share_positive ?? 0)}% between the two halves of the window (${fmt(pz.halves.first.n)} and ${fmt(pz.halves.second.n)} reviews, App Store only).`,
-      pillar: "support",
-      href: "/natwest-pulse/v1/business/payzapp",
-    });
   }
   return out.slice(0, 3);
 }

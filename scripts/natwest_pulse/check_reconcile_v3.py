@@ -88,6 +88,18 @@ def run(seed_dir: Path = SEED_V3, out_dir: Path = OUT_APP, quiet: bool = False) 
         e = sum(b[f] for b in signals["by_business"])
         ok(a == e, f"public product {f} reconciles to signals.by_business ({a} = {e})")
 
+    # Pass 3 (NW-D45): one brand. Every retail (on-screen) public row is the NatWest brand; Royal Bank of Scotland,
+    # Ulster Bank and group-company rows, if loaded, stay in the data and are excluded. The brand sum is that one brand.
+    work = out_dir / "work" / "classified.jsonl"
+    rows = [json.loads(x) for x in open(work, encoding="utf-8")] if work.exists() else []
+    retail = [r for r in rows if r.get("entity") == "natwest_group"]
+    by_brand = collections.Counter(r.get("brand") for r in retail)
+    ok(set(by_brand) <= {"natwest"} and sum(by_brand.values()) == len(retail),
+       f"retail brands sum to one brand, NatWest ({dict(by_brand) or 'no public rows loaded'})")
+    if (out_dir / "meta.json").exists():  # the tampered-data fixtures copy only the files they need
+        meta = load(out_dir / "meta.json")
+        ok(meta["scope_note"].startswith("Retail figures: NatWest (England and Wales)"), "scope note names NatWest alone")
+
     # Store ratings: never pooled across the Play Store and the App Store (follow-up fix 2).
     pulse = load(out_dir / "app_pulse.json")
     release = load(out_dir / "briefing.json").get("release_pulse") or {}

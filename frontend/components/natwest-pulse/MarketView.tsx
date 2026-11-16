@@ -17,6 +17,7 @@ import {
   trendWords,
 } from "@/lib/natwest-pulse/selectors";
 import type { AppPulse, Bundle, Theme, View } from "@/lib/natwest-pulse/types";
+import { PublicNotLoaded } from "./Pulse";
 import {
   AnswerLine,
   BarRow,
@@ -78,6 +79,10 @@ const PROMISES: { promise: string; pillar: string; themes: string[] }[] = [
     themes: ["loan_processing", "mortgage_rate_switch", "loan_servicing"],
   },
 ];
+/** Excluded brands (Pass 3): named under the App pulse toggle only, never loaded or counted. */
+const EXCLUDED_BRANDS_LABEL = "Excluded brands, not loaded:";
+const EXCLUDED_BRANDS =
+  "Royal Bank of Scotland · Ulster Bank · Coutts · Mettle".split(" · ");
 const EXCLUDE = new Set([
   "other",
   "market_news",
@@ -353,8 +358,9 @@ export function MarketView({ b }: { b: Bundle }) {
     .filter((t) => t.score > 0)
     .sort((a, c) => c.score - a.score)
     .slice(0, 6);
+  // Pass 3: NatWest app only. Other brands and group companies are never shown, only named under the toggle.
   const apps = b.pulse.apps.filter(
-    (a) => a.window && a.window.n >= 20 && (showGroup || !a.group_company),
+    (a) => a.window && a.window.n >= 20 && a.app === "NatWest app",
   );
   const safety = themes
     .filter((t) => SEC.has(t.id))
@@ -377,7 +383,7 @@ export function MarketView({ b }: { b: Bundle }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov="public">
         <AnswerLine
-          sub={`Public voice only: X, Reddit, consumer forums, Google Play and App Store, ${rangeLong(b.meta.window.start, b.meta.window.end)}. NatWest Group only; group companies shown separately.`}
+          sub={`Public voice only: X, Reddit, consumer forums, Google Play and App Store, ${rangeLong(b.meta.window.start, b.meta.window.end)}. NatWest only; other brands and group companies excluded.`}
         >
           {marketAnswer(b)}
         </AnswerLine>
@@ -386,7 +392,7 @@ export function MarketView({ b }: { b: Bundle }) {
       <Tile
         id="promise-gap"
         title="What we say vs what customers hear"
-        sub="What NatWest Group says in public, against where customers say it falls short. Ordered by negative items."
+        sub="What NatWest says in public, against where customers say it falls short. Ordered by negative items."
         prov="public"
       >
         <Table
@@ -560,6 +566,7 @@ export function MarketView({ b }: { b: Bundle }) {
           </label>
         }
       >
+        {apps.length ? null : <PublicNotLoaded />}
         <div style={cols(2, 420, 12)}>
           {apps
             .filter((a) => a.fix_list.length)
@@ -574,6 +581,37 @@ export function MarketView({ b }: { b: Bundle }) {
               <AppCard key={a.app} a={a} from={from} b={b} />
             ))}
         </div>
+        {showGroup ? (
+          <div
+            data-testid="excluded-brands"
+            style={{
+              display: "flex",
+              gap: 6,
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
+            <span style={{ fontSize: 13, color: C.textMut }}>
+              {EXCLUDED_BRANDS_LABEL}
+            </span>
+            {EXCLUDED_BRANDS.map((x) => (
+              <span
+                key={x}
+                aria-disabled="true"
+                style={{
+                  fontSize: 12.5,
+                  color: C.textDim,
+                  border: `1px dashed ${C.border}`,
+                  borderRadius: 999,
+                  padding: "2px 10px",
+                  opacity: 0.7,
+                }}
+              >
+                {x}
+              </span>
+            ))}
+          </div>
+        ) : null}
         <MutedNote>{b.pulse.note}</MutedNote>
       </Tile>
 
@@ -615,7 +653,7 @@ export function MarketView({ b }: { b: Bundle }) {
         <Tile
           id="themes"
           title="All themes this window"
-          sub={`Every theme heard, NatWest Group only. ${fmt(b.themes.total_items)} items; an item can carry up to three themes.`}
+          sub={`Every theme heard, NatWest only. ${fmt(b.themes.total_items)} items; an item can carry up to three themes.`}
           prov="public"
         >
           <div style={{ maxHeight: 640, overflowY: "auto", paddingRight: 6 }}>

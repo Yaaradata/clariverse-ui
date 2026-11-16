@@ -54,7 +54,7 @@ def product_of(r) -> str | None:
     if b == "retail_banking":
         if r["themes"][0] in ("mis_selling", "insurance_group") or (INSURANCE.search(text) and r["themes"][0] in ("mis_selling", "fees_charges_bank", "other", "general_dissatisfaction", "complaint_handling")):
             return "savings"
-        if r["themes"][0] in DIGITAL_GROUP or r.get("app_name") in ("NatWest app", "Royal Bank of Scotland app", "Ulster Bank app"):
+        if r["themes"][0] in DIGITAL_GROUP or r.get("app_name") == "NatWest app":
             return "current_accounts"
         return "current_accounts"
     return None
@@ -154,7 +154,7 @@ def vkey(v: str):
 def build_store_series() -> dict:
     allrows = [json.loads(line) for line in open(OUT / "work" / "classified.jsonl", encoding="utf-8")]
     apps = []
-    for app in ("NatWest app", "Royal Bank of Scotland app", "Ulster Bank app"):
+    for app in ("NatWest app",):
         entry = {"app": app, "stores": []}
         for store, label in (("appstore", "App Store"), ("playstore", "Google Play")):
             rs = [r for r in allrows if r["source"] == store and r["app_name"] == app]

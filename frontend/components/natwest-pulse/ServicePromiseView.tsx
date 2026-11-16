@@ -49,7 +49,7 @@ const ACTION_FOR: Record<string, string> = {
   kyc: "Update and close",
   other: "Route with evidence",
 };
-/** Public request type → the internal deliverable whose timeline applies (same timelines as the ledger). */
+/** Public request type → the internal service standard whose standard applies (same standards as the ledger). */
 const REQUEST_DELIVERABLE: Record<string, string> = {
   card_delivery: "card_dispatch",
   refund: "refund",
@@ -207,11 +207,11 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             />
           </div>
           <MutedNote>
-            timelines as in the deliverables ledger above: FCA where published;
-            otherwise the bank&apos;s own timeline, not shown until it is
-            confirmed in discovery. Breaches, status-seeking and repeat are
-            public voice; open cases and beyond-timeline are illustrative, from
-            the same demo sample as the ledger.
+            standards as in the service standards ledger above: FCA where
+            published; otherwise the bank&apos;s own standard, not shown until
+            it is confirmed in discovery. Breaches, status-seeking and repeat
+            are public voice; open cases and beyond-standard are illustrative,
+            from the same demo sample as the ledger.
           </MutedNote>
         </Tile>
       </div>

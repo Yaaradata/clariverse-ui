@@ -11,7 +11,7 @@ const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ?? "playwright")
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const base = process.argv[2] ?? "http://localhost:3100";
 const ROOT = "/natwest-pulse";
-const WATERMARK = "Demonstration · public data plus illustrative internal data · not NatWest Group MIS";
+const WATERMARK = "Demonstration · public data plus illustrative internal data · not NatWest MIS";
 const OTHER = /\b(HDFC|IndusInd|Sterling|Openbank)\b/;
 
 const seeds = JSON.parse(fs.readFileSync(path.join(REPO, "scripts/routes_natwest.json"), "utf8"));

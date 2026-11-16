@@ -9,6 +9,7 @@ pages. Every hit starts with its rule id so a fixture can tell which rule fired:
 - NW-HL06   an internal label on screen: version tags, decision, carry-forward, step and screen ids.
 - NW-NAME   a person's name (our team, the bank's people named in the docs).
 - NW-BANK   another demo bank's name (HDFC, IndusInd, Sterling, Starling, Openbank).
+- NW-P3     "NatWest Group" as the subject, or another brand (Royal Bank of Scotland, RBS, Ulster) on screen.
 - NW-P2     a word the Pass 2 fit review bans (business head, deliverable, timeline, backend, Private as a tier, bare
             "Cards" as a product name, ...).
 
@@ -82,6 +83,29 @@ P2_TERMS: list[tuple[str, str]] = [
 ]
 P2_RX = [(t, re.compile(p)) for t, p in P2_TERMS]
 
+# Pass 3 (NW-D50): NatWest Retail only. The dashboard's subject is "NatWest"; other brands are never on screen, except
+# the footer's excluded-brands sentence and the App pulse toggle's excluded-brands line. The register (data/public)
+# keeps the legal names and is not checked by this rule.
+P3_TERMS: list[tuple[str, str]] = [
+    ("NatWest Group", r"\bNatWest Group\b"),
+    ("Royal Bank of Scotland", r"\bRoyal Bank of Scotland\b"),
+    ("RBS", r"\bRBS\b"),
+    ("Ulster", r"\bUlster\b"),
+]
+P3_RX = [(t, re.compile(p)) for t, p in P3_TERMS]
+P3_EXEMPT = [
+    "Royal Bank of Scotland, Ulster Bank and group companies are excluded.",
+    "Excluded brands, not loaded:",
+]
+P3_EXEMPT_LIST = re.compile(r"Royal Bank of Scotland\s*·?\s*Ulster Bank\s*·?\s*Coutts\s*·?\s*Mettle")
+
+
+def p3_rules(s: str, where: str) -> list[str]:
+    for e in P3_EXEMPT:
+        s = s.replace(e, " ")
+    s = P3_EXEMPT_LIST.sub(" ", s)
+    return [f"NW-P3 {where}: other brand or group name '{t}' in: {s.strip()[:90]}" for t, rx in P3_RX if rx.search(s)]
+
 # HL-06: internal labels. Version tags, our decision and rule ids, brief steps and screen ids.
 INTERNAL_ID = re.compile(
     r"\bV[1-4]\b|\bNW-D\d*|\bHL-\d*|\bIND-[A-Z]\d|\bDEC-\d|\bIV-\d\d|\bFB-\d\d\d|\bD\d\d\b|\bB1[01]\b|"
@@ -147,6 +171,7 @@ def _ui_hits(text: str, rel: str) -> list[str]:
             continue
         s = re.sub(r"\$\{[^}]*\}", "", s)
         hits += text_rules(IDENTIFIER.sub("", s), rel)
+        hits += p3_rules(s, rel)
     return hits
 
 
@@ -188,12 +213,15 @@ def run() -> tuple[list[str], int]:
         walk(json.loads(f.read_text(encoding="utf-8")), str(f.relative_to(ROOT)), strings)
         for path, s, peer in strings:
             hits += text_rules(IDENTIFIER.sub("", s), path, allow_peer_names=peer)
+            if PUBLIC not in f.parents:
+                hits += p3_rules(s, path)
         scanned += 1
     if BUILD.exists():
         for f in sorted(BUILD.rglob("*.html")):
             text = f.read_text(encoding="utf-8", errors="replace")
             visible = re.sub(r"<script[\s\S]*?</script>|<style[\s\S]*?</style>|<[^>]+>", " ", text)
             hits += text_rules(visible, str(f.relative_to(ROOT)))
+            hits += p3_rules(visible, str(f.relative_to(ROOT)))
             scanned += 1
     global CRAWLED_ROUTES
     crawl = ROOT / "qa" / "_crawl" / "natwest_pages.json"
@@ -204,6 +232,7 @@ def run() -> tuple[list[str], int]:
             for line in page["text"].splitlines():
                 if line.strip():
                     hits += text_rules(line, f"route {page['route']}", allow_peer_names=page["route"].split("?")[0].endswith("/market"))
+                    hits += p3_rules(line, f"route {page['route']}")
             scanned += 1
     seen, out = set(), []
     for x in hits:

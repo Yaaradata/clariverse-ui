@@ -343,8 +343,8 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
       />
       <MutedNote>
         {r.definition} {r.scope_note} Open too long inside the bank means open
-        past the deliverable (UK timeline where published, otherwise the bank
-        timeline to confirm in discovery).
+        past the service standard (UK standard where published, otherwise the
+        bank standard to confirm in discovery).
       </MutedNote>
     </Tile>
   );
@@ -647,7 +647,7 @@ export function ProductPulseTable({ b, from }: { b: Bundle; from: View }) {
         wealth, SME and corporate items sit outside the table). Loans are split
         by the loan apps and by keyword, so the split is approximate.{" "}
         {b.products.trend_rule} Deliverables are measured on closed items and on
-        open items already past their timeline ({ledger.length} deliverable
+        open items already past their standard ({ledger.length} service standard
         types). Group-company apps are excluded.
       </MutedNote>
     </Tile>

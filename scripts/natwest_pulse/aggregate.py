@@ -345,7 +345,7 @@ def main():
         "count": len(sw),
         "to_other_bank": sum(1 for r in sw if r["switching"]["direction"] == "to"),
         "from_other_bank": sum(1 for r in sw if r["switching"]["direction"] == "from"),
-        "note": "Posts naming a move between NatWest Group and another bank. Counted as mentions, never as confirmed moves.",
+        "note": "Posts naming a move between NatWest and another bank. Counted as mentions, never as confirmed moves.",
     }
     pb = [r for r in bank if r["promise_break"]]
     pb_rows = []
@@ -517,13 +517,13 @@ def main():
                 "fix_list": fix,
             }
         )
-    pulse = {"apps": apps, "note": "Ratings are counted in the window (1 July – 28 September). No baseline: the exports hold no history before July."}
+    pulse = {"apps": apps, "note": "Ratings are counted in the window (1 August to 11 November). No baseline: the exports hold no history before August."}
 
     # ------------------------------------------------------------ mood
     mood = {
         "definition": (
             "Mood index: net sentiment, (positive − negative) ÷ on-topic items × 100, over the last 7 days of public NatWest "
-            "Group voice, compared with the window average (1 July to 28 September 2026). Source-weighted: each source's "
+            "voice, compared with the window average (1 August to 11 November 2026). Source-weighted: each source's "
             "net sentiment counts in proportion to its share of the whole window, so a burst or a gap in one source's "
             "collection cannot move it. Range −100 to +100."
         ),
@@ -640,7 +640,7 @@ def main():
         "brief_time": BRIEF["time"],
         "window": {"start": W_START, "end": W_END},
         "provenance": {"public": "Public · live", "internal": "Internal · illustrative until discovery", "joined": "Joined · needs bank systems"},
-        "scope_note": "Retail figures: NatWest, Royal Bank of Scotland and Ulster Bank, on-topic items in the window. Coutts, Mettle and other group companies are kept in the data and excluded from retail figures.",
+        "scope_note": "Retail figures: NatWest (England and Wales), on-topic items in the window. Royal Bank of Scotland, Ulster Bank and group companies are excluded.",
         "data_freeze": "2026-11-12T07:45:00+00:00",
         "freeze_label": "Thursday 12 November 2026, 07:45 GMT",
         "sources": json.loads((OUT / "sources.json").read_text(encoding="utf-8"))["sources"],

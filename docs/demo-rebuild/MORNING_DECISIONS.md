@@ -1023,3 +1023,29 @@ Brief `docs/natwest/brief.md`; plan and resume point `docs/natwest/build_plan.md
   relationship tier, deliverable, timeline, compensation, closure intent, backend, revert, listed customer, data
   intimacy, household, "Private" and bare "Cards" (not after "Credit"/"Debit") on screen, in the UI source strings and
   in the data payloads; lakh, crore, RBI, Internal Ombudsman, IO and TAT were already under NW-INDIA.
+
+### Pass 3: NatWest Retail only (Ranjith, 14 Nov)
+
+Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and the ban list).
+
+- **NW-D45 · Subject is NatWest (Pass 3 §1–3).** Header "NatWest · Customer Pulse", page title "LisN · NatWest",
+  role-based card "NatWest" ("United Kingdom retail bank · NatWest Retail"); every "NatWest Group" as the dashboard's
+  subject reads "NatWest"; watermark "not NatWest MIS". The register keeps the legal entity, National Westminster Bank plc.
+- **NW-D46 · Footer scope note (§2).** "Retail figures: NatWest (England and Wales), on-topic items in the window. Royal
+  Bank of Scotland, Ulster Bank and group companies are excluded." (`meta.json` scope_note).
+- **NW-D47 · One brand in the pipeline (§4).** `brand` stays on every public row; only `brand == natwest` rows are retail
+  (`entity` natwest_group). Royal Bank of Scotland and Ulster Bank rows, if loaded, stay in the data as `other_group`,
+  like group companies, and count in no screen figure. Reconcile now checks that retail brands sum to one brand
+  (NatWest) and that the scope note names NatWest alone. With no public pull loaded, the brand check passes on zero rows.
+- **NW-D48 · App pulse (§5).** NatWest app only. The "Show group-company apps" toggle stays where oct13 has it; ticked, it
+  lists "Excluded brands, not loaded: Royal Bank of Scotland · Ulster Bank · Coutts · Mettle", greyed. The improving
+  item built on the Royal Bank of Scotland app is removed (that app is never loaded).
+- **NW-D49 · Sizing (§6).** Re-based from 19m group retail to the NatWest brand, about 13 million customers (13/19):
+  contacts in the window 5.8 million, financially vulnerable 1.78 million, Premier 750,000; recent complainants 43,000
+  and complaints 49,200 unchanged (the H1 return is National Westminster Bank plc only). Supersedes NW-D35 sizes.
+  Volume validation re-run: 22 rows, 0 to fix.
+- **NW-D50 · Lint (§7).** Rule NW-P3 bans "NatWest Group", "Royal Bank of Scotland", "RBS" and "Ulster" in NatWest UI
+  strings, payloads, built pages and crawled routes. Exempt: the footer's excluded-brands sentence and the App pulse
+  excluded-brands line. The register (data/public) is not checked by this rule. Fixtures added for NW-P2 and NW-P3.
+- **NW-D51 · Ask LisN (§8).** The brand-gap question is replaced by "Which journey is leaking most customers this week?":
+  switching-intent contacts in the last 7 days, placed at the journey stage of the customer's last negative contact.

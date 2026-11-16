@@ -287,7 +287,7 @@ function ShellInner({
                   LisN
                 </div>
                 <div style={{ fontSize: 12, color: C.textMut }}>
-                  Customer Pulse · NatWest Group
+                  NatWest · Customer Pulse
                 </div>
               </div>
             ) : null}
@@ -375,8 +375,8 @@ function ShellInner({
                   {context}
                 </strong>
               ) : null}
-              <strong style={{ color: C.text }}>NatWest Group</strong> ·
-              Customer Pulse · {meta.brief_label}, {meta.brief_time}
+              <strong style={{ color: C.text }}>NatWest</strong> · Customer
+              Pulse · {meta.brief_label}, {meta.brief_time}
             </div>
             {periods ? <HeaderPeriodFilter file={periods} /> : null}
             <ThemeToggle />
@@ -405,7 +405,7 @@ function ShellInner({
             }}
           >
             Demonstration · public data plus illustrative internal data · not
-            NatWest Group MIS
+            NatWest MIS
           </div>
           <main
             style={{
@@ -480,9 +480,9 @@ function ShellInner({
               {meta.scope_note} Window{" "}
               {rangeLabel(meta.window.start, meta.window.end)}. Every action is
               a recommendation routed to its owner; LisN does not execute,
-              authorise or decide. Public figures from NatWest Group and
-              regulator disclosures as dated in the research pack; internal
-              figures illustrative until discovery. Data frozen{" "}
+              authorise or decide. Public figures from NatWest and regulator
+              disclosures as dated in the research pack; internal figures
+              illustrative until discovery. Data frozen{" "}
               <span data-testid="freeze">
                 {meta.brief_label}, {meta.brief_time}
               </span>

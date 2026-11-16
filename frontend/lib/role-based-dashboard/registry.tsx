@@ -514,7 +514,7 @@ export const INDUSTRIES = [
     name: NATWEST_BANK_NAME,
     icon: Landmark,
     color: "#0f766e",
-    desc: "United Kingdom retail bank · NatWest, Royal Bank of Scotland, Ulster Bank",
+    desc: "United Kingdom retail bank · NatWest Retail",
     roles: [{ ...NATWEST_ROLE_COPY[0], icon: Headphones, defaultLens: "ops", primaryTile: 0 }],
   },
 ];

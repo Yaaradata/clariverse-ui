@@ -664,7 +664,7 @@
    "count": 0,
    "to_other_bank": 0,
    "from_other_bank": 0,
-   "note": "Posts naming a move between NatWest Group and another bank. Counted as mentions, never as confirmed moves."
+   "note": "Posts naming a move between NatWest and another bank. Counted as mentions, never as confirmed moves."
   }
  },
  "promise_by_request_type": [],

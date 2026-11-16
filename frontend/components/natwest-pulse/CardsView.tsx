@@ -7,8 +7,8 @@
  * repeated on this view. The drill-down pages:
  *   1. Are my customers happy?             /business/cards/happy    (was the satisfaction page)
  *   2. What is the market saying about us? /business/cards/market   (was the market page)
- *   3. Are we keeping our timelines?       /business/cards/service  (was the deliverables page, without timeline compliance)
- * No deliverables ledger, no retention watch. Every figure comes from periods.json for the selected period.
+ *   3. Are we keeping our standards?       /business/cards/service  (was the service standards page, without standard compliance)
+ * No service standards ledger, no retention watch. Every figure comes from periods.json for the selected period.
  */
 
 import {
@@ -921,7 +921,7 @@ function QuestionCards({ p }: { p: Period }) {
         answer={`${fmt(sv.missed_timelines.total)} public credit card posts describe a missed service standard; ${fmt(sv.transparency.count)} ask where something is; ${fmt(sv.public_escalation)} use escalation language.`}
         headlineLabel="Missed service standards heard"
         headline={fmt(sv.missed_timelines.total)}
-        caption={`Public posts in the period, by request type on the drill-down. Inside the bank: ${late === null ? "the 48-hour figure needs 48 hours" : `${fmt(late)} Cards contacts not responded to in 48h+`}.`}
+        caption={`Public posts in the period, by request type on the drill-down. Inside the bank: ${late === null ? "the 48-hour figure needs 48 hours" : `${fmt(late)} credit card contacts not responded to in 48h+`}.`}
         gauges={[
           {
             label: "Repeat contact",

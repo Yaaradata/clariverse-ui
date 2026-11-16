@@ -13,7 +13,7 @@
   "internal": "Internal · illustrative until discovery",
   "joined": "Joined · needs bank systems"
  },
- "scope_note": "Retail figures: NatWest, Royal Bank of Scotland and Ulster Bank, on-topic items in the window. Coutts, Mettle and other group companies are kept in the data and excluded from retail figures.",
+ "scope_note": "Retail figures: NatWest (England and Wales), on-topic items in the window. Royal Bank of Scotland, Ulster Bank and group companies are excluded.",
  "data_freeze": "2026-11-12T07:45:00+00:00",
  "freeze_label": "Thursday 12 November 2026, 07:45 GMT",
  "sources": [

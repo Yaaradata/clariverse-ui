@@ -9,12 +9,12 @@ export const NATWEST_ROLE_HREF: Record<string, string> = {
 };
 
 /** The group's name as shown: header text only, no logo, no brand colour. */
-export const NATWEST_BANK_NAME = "NatWest Group" as const;
+export const NATWEST_BANK_NAME = "NatWest" as const;
 
 export const NATWEST_ROLE_COPY = [
   {
     id: NATWEST_HEAD_CX_ROLE_ID,
     name: "Head of Customer Experience",
-    sub: "Customer pulse across channels and brands · Cora leakage · Ombudsman watch · Consumer Duty outcomes",
+    sub: "Customer pulse across channels · Cora leakage · Ombudsman watch · Consumer Duty outcomes",
   },
 ] as const;

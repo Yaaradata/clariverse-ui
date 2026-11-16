@@ -16,7 +16,7 @@ import collections
 import hashlib
 
 # ---------------------------------------------------------------- targets (full window)
-TOTAL_CONTACTS = 8_500_000  # ASSUMPTION (Pass 2 section 14): 19m retail customers, about 8.5m contacts in the window
+TOTAL_CONTACTS = 5_800_000  # ASSUMPTION (Pass 3, NW-D47): NatWest brand alone, about 13m customers; 8.5m x 13/19
 CHANNEL_MIX = {  # ASSUMPTION, on the views' channel groups ("whatsapp" carries Cora, "chat" carries app chat)
     "calls": 0.44, "whatsapp": 0.30, "chat": 0.09, "emails": 0.06, "branch": 0.10, "social": 0.01,
 }
@@ -43,12 +43,12 @@ ESCALATION = {"rbi_ombudsman": 2_200, "md_office": 3_000}
 # NatWest lists (ids kept): priority_a financially vulnerable, priority_b recent complainants (90 days), uhni Premier
 # and Private. Sizes: priority_b DERIVED from the H1 return (about 43,000 complaints a quarter); the others ASSUMPTION.
 LISTS = {
-    "priority_a": {"size": 2_600_000, "in_contact": 0.30},
+    "priority_a": {"size": 1_780_000, "in_contact": 0.30},
     "priority_b": {"size": 43_000, "in_contact": 0.60},
-    "uhni": {"size": 1_100_000, "in_contact": 0.25},
+    "uhni": {"size": 750_000, "in_contact": 0.25},
 }
 CONTACTS_PER_CONTACTING = 2.5
-CONTACTING_CUSTOMERS = 3_400_000  # ASSUMPTION: 8.5m contacts at 2.5 each
+CONTACTING_CUSTOMERS = 2_320_000  # ASSUMPTION: 5.8m contacts at 2.5 each
 PRIMARY = ("priority_a", "priority_b", "uhni")  # a customer on several lists is weighted by the first of these
 
 CHANNEL_GROUP = {"email": "emails", "inbound_voice": "calls", "outbound_voice": "calls", "chat": "chat",

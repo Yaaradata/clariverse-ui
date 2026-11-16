@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * D1 · Deliverables ledger (B7 §1): each deliverable with its timeline, compensation, met, outside, open too long, public
- * posts describing a delay, owner and action. A timeline is an FCA published timeline, a bank-confirmed SLA (both with their
- * source under the timeline), or, while unconfirmed, "Bank service standard: confirm in discovery". A second table splits "met" by product.
+ * D1 · Deliverables ledger (B7 §1): each service standard with its standard, compensation, met, outside, open too long, public
+ * posts describing a delay, owner and action. A standard is an FCA published standard, a bank-confirmed SLA (both with their
+ * source under the standard), or, while unconfirmed, "Bank service standard: confirm in discovery". A second table splits "met" by product.
  */
 
 import { fmt, fmtPct } from "@/lib/natwest-pulse/format";
@@ -111,9 +111,9 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
         <AnswerLine
           sub={`Weakest: ${worst?.label.toLowerCase()} at ${fmtPct(worst?.met_pct)} met. service standards marked FCA are published service standards; the rest are the bank's own SLAs, shown once the bank confirms them.`}
         >
-          {fmtPct((100 * met) / measured)} of deliverables met across{" "}
-          {rows.length} deliverable types; {fmt(otl)} items are open past their
-          timeline this morning.
+          {fmtPct((100 * met) / measured)} of service standards met across{" "}
+          {rows.length} service standard types; {fmt(otl)} items are open past
+          their standard this morning.
         </AnswerLine>
       </Tile>
       <Tile
@@ -175,20 +175,20 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
           ])}
         />
         <MutedNote>
-          FCA rows use published FCA timelines. Where FCA sets none, the
-          timeline is the bank&apos;s confirmed SLA, with its source document
-          under the timeline. Any row still reading &ldquo;Bank timeline:
+          FCA rows use published FCA standards. Where FCA sets none, the
+          standard is the bank&apos;s confirmed SLA, with its source document
+          under the standard. Any row still reading &ldquo;Bank standard:
           confirm in discovery&rdquo; is unconfirmed; on those rows, met,
           outside and open too long come from the illustrative sample, measured
           against a placeholder that is not a bank figure. Met = closed within
-          the timeline (for the first-response row: answered within it). Outside
-          = settled late, or open and already past the timeline. Working days
+          the standard (for the first-response row: answered within it). Outside
+          = settled late, or open and already past the standard. Working days
           skip Sundays; bank holidays are not modelled yet. Public posts
-          describing a delay are matched to a deliverable by request type;
+          describing a delay are matched to a service standard by request type;
           &ldquo;—&rdquo; where public voice has no matching type. Action: set a
           new date when a quarter or more of the open items are past the
-          timeline; route with evidence when under 80% is met; update and close
-          when a few items are past the timeline; otherwise monitor.
+          standard; route with evidence when under 80% is met; update and close
+          when a few items are past the standard; otherwise monitor.
         </MutedNote>
       </Tile>
       <Tile

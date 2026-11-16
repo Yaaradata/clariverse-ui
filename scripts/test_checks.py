@@ -348,11 +348,37 @@ def natwest_lint_fixtures(fails: list[str]) -> int:
         if not ok:
             fails.append(f"NatWest lint {rule} missed {text!r} ({h})")
     for text in ("Financial Ombudsman Service referrals", "Final response within 8 weeks", "Faster Payments failures",
-                 "Royal Bank of Scotland app", "Consumer Duty: price and value", "£4.2 million"):
+                 "Consumer Duty: price and value", "£4.2 million"):
         h = ln.text_rules(text, "fixture")
         n += 1
         if h:
             fails.append(f"NatWest lint flagged clean copy {text!r}: {h}")
+    # Pass 2 ban list (NW-P2) and Pass 3 NatWest-only scope (NW-P3): each seeded phrase must fire; clean copy passes.
+    for text in ("Ask the business head", "MD's office view", "By relationship tier", "Deliverables ledger",
+                 "Are we keeping our timelines?", "Compensation paid", "Closure intent rising", "Backend status",
+                 "We will revert", "Listed customers first", "Data intimacy pillar", "Multi-product households",
+                 "Premier and Private", "Cards: product view"):
+        h = ln.text_rules(text, "fixture")
+        n += 1
+        ok = any(x.startswith("NW-P2") for x in h)
+        print(("PASS " if ok else "FAIL ") + f"NatWest lint NW-P2 flags {text!r}")
+        if not ok:
+            fails.append(f"NatWest lint NW-P2 missed {text!r} ({h})")
+    for text in ("NatWest Group · Customer Pulse", "Royal Bank of Scotland app", "RBS reviews", "Ulster Bank branches"):
+        h = ln.p3_rules(text, "fixture")
+        n += 1
+        ok = any(x.startswith("NW-P3") for x in h)
+        print(("PASS " if ok else "FAIL ") + f"NatWest lint NW-P3 flags {text!r}")
+        if not ok:
+            fails.append(f"NatWest lint NW-P3 missed {text!r} ({h})")
+    for text in ("Credit cards: product view", "Service standards ledger", "Switching intent",
+                 "Retail figures: NatWest (England and Wales), on-topic items in the window. Royal Bank of Scotland, "
+                 "Ulster Bank and group companies are excluded.",
+                 "Excluded brands, not loaded: Royal Bank of Scotland · Ulster Bank · Coutts · Mettle"):
+        h = ln.text_rules(text, "fixture") + ln.p3_rules(text, "fixture")
+        n += 1
+        if h:
+            fails.append(f"NatWest lint flagged clean or exempt copy {text!r}: {h}")
     h = ln.text_rules("Monzo · Starling (upper benchmark)", "register.peers", allow_peer_names=True)
     n += 1
     if h:
@@ -409,7 +435,7 @@ def natwest_reconcile_fixtures(fails: list[str]) -> int:
             fails.append(f"NatWest: untouched data must pass, but {len(got)} check(s) failed: {got[:3]}")
         public_loaded = json.loads((out / "meta.json").read_text(encoding="utf-8")).get("public_loaded")
         for name, expect, tamper in FIXTURES:
-            expect = expect.replace("Bank TAT: confirm in discovery", "Bank timeline: confirm with the bank")
+            expect = expect.replace("Bank TAT: confirm in discovery", "Bank standard: confirm with the bank")
             if not public_loaded and name in PUBLIC_ONLY_FIXTURES:
                 print(f"SKIP NatWest fixture '{name}': needs public data (not loaded; the check is vacuous until it lands)")
                 NW_SKIPPED.append(name)

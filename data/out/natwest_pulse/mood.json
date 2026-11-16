@@ -1,5 +1,5 @@
 {
- "definition": "Mood index: net sentiment, (positive − negative) ÷ on-topic items × 100, over the last 7 days of public NatWest Group voice, compared with the window average (1 July to 28 September 2026). Source-weighted: each source's net sentiment counts in proportion to its share of the whole window, so a burst or a gap in one source's collection cannot move it. Range −100 to +100.",
+ "definition": "Mood index: net sentiment, (positive − negative) ÷ on-topic items × 100, over the last 7 days of public NatWest voice, compared with the window average (1 August to 11 November 2026). Source-weighted: each source's net sentiment counts in proportion to its share of the whole window, so a burst or a gap in one source's collection cannot move it. Range −100 to +100.",
  "method": "source_weighted",
  "weekly": [
   {

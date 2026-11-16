@@ -148,7 +148,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
 
       <Tile
         title="Public items this window, by source"
-        sub={`NatWest Group, on-topic, ${rangeLabel(b.meta.window.start, b.meta.window.end)}`}
+        sub={`NatWest, on-topic, ${rangeLabel(b.meta.window.start, b.meta.window.end)}`}
         prov="public"
         id="sources"
       >
@@ -212,13 +212,13 @@ export function SatisfactionView({ b }: { b: Bundle }) {
         />
         <MutedNote>
           Account tiers as named on the bank's website; Premier rows together.
-          Figures are illustrative, not NatWest Group figures.
+          Figures are illustrative, not NatWest figures.
         </MutedNote>
       </Tile>
 
       <Tile
         title="Sentiment trend (conversation-inferred)"
-        sub="Weekly net sentiment of public NatWest Group voice, full-window sources, source-weighted"
+        sub="Weekly net sentiment of public NatWest voice, full-window sources, source-weighted"
         prov="public"
         id="trend"
       >

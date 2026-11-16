@@ -8,7 +8,7 @@ const HEADPHONES_ICON =
 
 /** NatWest Group pulse (copied from app/hdfc-pulse/layout.tsx). Never indexed: page meta, X-Robots-Tag, robots.txt. */
 export const metadata: Metadata = {
-  title: "LisN · NatWest Group",
+  title: "LisN · NatWest",
   description:
     "Customer Pulse: what customers are saying, where it is heading and who needs to act.",
   icons: { icon: HEADPHONES_ICON },
