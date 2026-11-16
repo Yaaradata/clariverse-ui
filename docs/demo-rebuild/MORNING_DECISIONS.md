@@ -1097,3 +1097,6 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
     Calls); the tier table is at bank scale in the bank's tier mix (57 / 29 / 7 / 7%); switching intent about 0.3% of
     contacts (closure-request share cut); credit-card service requests 16% negative (credit limits and reward redemption
     count as service requests; complaint handling as everyday banking); week count computed from the window.
+- **NW-D57 · Item 6, 390px.** Shorter labels in the at-risk bar lists only ("Current accounts", "Applications",
+  "Disputes and refunds"); the full names stay everywhere else. With no high-impact posts, both high-impact dials read
+  "—" and the label says "No high-impact posts" (the long text no longer sits in the figure slot). No restyling.

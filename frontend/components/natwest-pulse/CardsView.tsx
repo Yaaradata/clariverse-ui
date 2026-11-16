@@ -253,18 +253,22 @@ function IssuePulse({ p }: { p: Period }) {
             <Dial
               value={hi.positive_share}
               color={C.green}
-              big={`${fmt(hi.positive)} / ${fmt(hi.negative)}`}
+              big={
+                hi.volume ? `${fmt(hi.positive)} / ${fmt(hi.negative)}` : "—"
+              }
               label="High impact + / −"
             />
             <Dial
               value={pct(hi.escalation, hi.volume)}
               color={C.red}
               big={
+                hi.volume ? `${fmt(hi.escalation)} of ${fmt(hi.volume)}` : "—"
+              }
+              label={
                 hi.volume
-                  ? `${fmt(hi.escalation)} of ${fmt(hi.volume)}`
+                  ? "High impact with escalation language"
                   : "No high-impact posts"
               }
-              label="High impact with escalation language"
             />
           </div>
         </div>

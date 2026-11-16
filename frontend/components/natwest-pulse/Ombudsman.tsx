@@ -146,6 +146,12 @@ function Split({
   );
 }
 
+const SHORT_LABEL: Record<string, string> = {
+  current_accounts: "Current accounts",
+  applications: "Applications",
+  disputes: "Disputes and refunds",
+};
+
 export function OmbudsmanWatch({
   o,
   p,
@@ -157,13 +163,19 @@ export function OmbudsmanWatch({
 }) {
   const n = o.now;
   const since = `since ${fmtDateTime(o.prev_as_of)}`;
+  // Short labels for the bar list so each fits on one line at 390px (review round 1).
+  const short = (id: string, label: string) => SHORT_LABEL[id] ?? label;
   const split =
     scope === "bank"
-      ? o.by_business.map((x) => ({ id: x.id, label: x.label, r: x }))
+      ? o.by_business.map((x) => ({
+          id: x.id,
+          label: short(x.id, x.label),
+          r: x,
+        }))
       : [...(o as CardsOmbudsman).categories]
           .filter((c) => c.at_risk)
           .sort((a, b) => b.at_risk - a.at_risk)
-          .map((c) => ({ id: c.id, label: c.label, r: c }));
+          .map((c) => ({ id: c.id, label: short(c.id, c.label), r: c }));
   return (
     <Tile
       id="ombudsman-watch"
