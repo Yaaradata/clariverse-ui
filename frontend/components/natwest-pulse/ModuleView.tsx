@@ -390,8 +390,8 @@ export function CardsModule({ b }: { b: Bundle }) {
         <Section n={1} title="What">
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
             Everything customers say about credit cards, in public and to the
-            bank, on one page: the same issue list the cards business reviews,
-            with public voice beside the bank&apos;s own queues.
+            bank, on one page: the same issue list the credit cards product
+            owner reviews, with public voice beside the bank&apos;s own queues.
           </div>
         </Section>
 

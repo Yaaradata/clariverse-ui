@@ -102,7 +102,7 @@ function ombudsmanMd(p: Period): AskQA[] {
       answer: `${biz[0].label}: ${fmt(biz[0].at_risk)} of the ${fmt(o.now.at_risk)} at-risk complaints (${fmt(biz[0].brink)} on the brink, ${fmt(biz[0].eligible)} eligible with no reply, ${fmt(biz[0].unhappy)} unhappy with the reply).`,
       table: {
         head: [
-          "Business",
+          "Product",
           "At risk",
           "Within 8 weeks, 10 days or fewer left",
           "Past 8 weeks, no final response",
@@ -221,7 +221,7 @@ function mdBase(p: Period): AskQA[] {
         ? `${first.business_label}${first.issue ? `: ${first.issue}` : ""}. ${first.text}`
         : "Nothing meets the rule in this period.",
       table: {
-        head: ["Business", "Issue", "Why"],
+        head: ["Product", "Issue", "Why"],
         rows: b.needs_you.map((x) => [
           x.business_label,
           x.issue ?? "—",
@@ -283,7 +283,7 @@ function mdBase(p: Period): AskQA[] {
       q: "Which product has the largest backlog?",
       answer: `${byOpen[0].label}: ${fmt(byOpen[0].internal.open)} open with the bank${byOpen[0].internal.open_too_long === null ? "" : `, ${fmt(byOpen[0].internal.open_too_long)} of them for more than 48 hours`}.`,
       table: {
-        head: ["Business", "Open", "Waiting on customer", "Open too long"],
+        head: ["Product", "Open", "Waiting on customer", "Open too long"],
         rows: byOpen.map((x) => [
           x.label,
           fmt(x.internal.open),
@@ -299,7 +299,7 @@ function mdBase(p: Period): AskQA[] {
         ? `${byNeg[0].label}: ${fmtPct(byNeg[0].external.negative_share)} of its public voice is negative, source-weighted (${fmt(byNeg[0].external.volume)} items).`
         : "Too few public items in this period to compare.",
       table: {
-        head: ["Business", "Public items", "Negative share", "Top issue"],
+        head: ["Product", "Public items", "Negative share", "Top issue"],
         rows: byNeg.map((x) => [
           x.label,
           fmt(x.external.volume),
@@ -315,7 +315,7 @@ function mdBase(p: Period): AskQA[] {
         ? `${b.building[0].issue ?? b.building[0].business_label} (${b.building[0].business_label}). ${b.building[0].text}`
         : "No issue is building by the rule in this period.",
       table: {
-        head: ["Business", "Issue", "Signal"],
+        head: ["Product", "Issue", "Signal"],
         rows: b.building.map((x) => [x.business_label, x.issue ?? "—", x.text]),
       },
     },
@@ -326,7 +326,7 @@ function mdBase(p: Period): AskQA[] {
         ? `${b.improving[0].business_label}. ${b.improving[0].text}`
         : "Nothing meets the rule in this period.",
       table: {
-        head: ["Business", "Status", "Detail"],
+        head: ["Product", "Status", "Detail"],
         rows: b.improving.map((x) => [
           x.business_label,
           x.status ?? "—",

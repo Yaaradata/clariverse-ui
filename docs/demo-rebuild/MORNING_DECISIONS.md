@@ -1072,3 +1072,5 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
   Payment to a builder, packaged-account insurance without consent, mortgage redemption statement); "travel spending";
   business days skip weekends and England and Wales bank holidays (31 Aug, 25 and 28 Dec 2026); theme ids renamed to UK
   slugs (faster_payments_failures, identity_checks, international_payments, app_login_biometrics, premier_service).
+- **NW-D55 · Item 4, banned words.** "the credit cards product owner reviews"; Ask LisN table column "Product" (was
+  "Business"); "the credit cards card on the Head of Customer Experience view".

@@ -139,7 +139,7 @@ function IssuePulse({ p }: { p: Period }) {
     <Tile
       id="issue-pulse"
       title={titled("Issue pulse: Credit cards", p)}
-      sub="The bank's own credit card contacts and public voice about credit cards, side by side. The same figures as the credit card card on the MD's view."
+      sub="The bank's own credit card contacts and public voice about credit cards, side by side. The same figures as the credit cards card on the Head of Customer Experience view."
       prov={["internal", "public"]}
       tone="violet"
     >
