@@ -1100,3 +1100,10 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
 - **NW-D57 · Item 6, 390px.** Shorter labels in the at-risk bar lists only ("Current accounts", "Applications",
   "Disputes and refunds"); the full names stay everywhere else. With no high-impact posts, both high-impact dials read
   "—" and the label says "No high-impact posts" (the long text no longer sits in the figure slot). No restyling.
+- **NW-D58 · Item 7, brief coverage (8 fixed, 1 accepted).** Satisfaction and market summary sentences fall back to
+  "not yet loaded" when public voice is empty (no "undefined"); the repeat-contact chart and the priority product column
+  use the six products; Ask LisN links read "Open priority customers" and the Ombudsman-risk answer links to the
+  product it names; the Reward tier's switching-intent owner is the current account product owner (Premier tiers stay
+  with Premier banking managers); escalation ids (L2-nn) are off screen, and proxy mail reads "from someone acting for
+  the customer". Accepted: `app/natwest-pulse/page.tsx` redirects to the Head of Customer Experience view rather than
+  listing versions (one version exists).

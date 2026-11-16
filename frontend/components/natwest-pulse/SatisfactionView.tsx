@@ -51,6 +51,7 @@ import {
   tint,
 } from "./primitives";
 import { useFrom } from "./Shell";
+import { PRODUCT_ORDER } from "./V3Blocks";
 
 const SOURCE_LABEL: Record<string, string> = {
   x: "X",
@@ -68,6 +69,14 @@ const BUSINESS_LABEL: Record<string, string> = {
   sme_merchant: "SME and merchant",
   corporate: "Corporate",
   group_company: "Group company",
+};
+const PRODUCT_NAME: Record<string, string> = {
+  current_accounts: "Current accounts and app",
+  payments_fraud: "Payments and fraud",
+  cards: "Credit cards",
+  savings: "Savings",
+  mortgages: "Mortgages",
+  personal_loans: "Personal loans",
 };
 const EXCLUDE = new Set(["other", "market_news", "offers_deals"]);
 
@@ -109,22 +118,16 @@ export function SatisfactionView({ b }: { b: Bundle }) {
     .filter((t) => t.repeat_count >= 3 && !EXCLUDE.has(t.id))
     .sort((a, c) => c.repeat_count - a.repeat_count)
     .slice(0, 8);
-  const bizKeys = [
-    "retail_banking",
-    "cards",
-    "loans",
-    "payments",
-    "sme_merchant",
-    "wealth",
-  ];
+  const bizKeys: string[] = PRODUCT_ORDER;
   const repeatChart = repeatThemes.map((t) => {
     const row: Record<string, string | number> = {
       theme: t.label.length > 34 ? `${t.label.slice(0, 33)}…` : t.label,
       id: t.id,
     };
-    const tot = Object.values(t.by_business).reduce((s, v) => s + v, 0) || 1;
+    const byP = t.by_product ?? {};
+    const tot = Object.values(byP).reduce((s, v) => s + v, 0) || 1;
     for (const k of bizKeys)
-      row[k] = Math.round((t.repeat_count * (t.by_business[k] ?? 0)) / tot);
+      row[k] = Math.round((t.repeat_count * (byP[k] ?? 0)) / tot);
     return row;
   });
   const netColor = (v: number | null) =>
@@ -479,7 +482,9 @@ export function SatisfactionView({ b }: { b: Bundle }) {
               r.tier,
               fmt(r.customers_with_closure_intent),
               r.top_driver,
-              "Premier banking managers",
+              r.tier.startsWith("Premier")
+                ? "Premier banking managers"
+                : "Current account product owner",
               r.action,
             ])}
           />
@@ -612,7 +617,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
                     color: C.textMut,
                     paddingBottom: 8,
                   }}
-                  formatter={(v) => BUSINESS_LABEL[String(v)] ?? v}
+                  formatter={(v) => PRODUCT_NAME[String(v)] ?? v}
                 />
                 {bizKeys.map((k, i) => (
                   <Bar

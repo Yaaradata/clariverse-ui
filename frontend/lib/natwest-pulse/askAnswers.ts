@@ -117,8 +117,8 @@ function ombudsmanMd(p: Period): AskQA[] {
         ]),
       },
       link: {
-        label: "Open the Credit cards product view",
-        href: withPeriod(CARDS, p),
+        label: `Open the ${biz[0].label} product view`,
+        href: withPeriod(`/natwest-pulse/v1/business/${biz[0].id}`, p),
       },
     },
     {

@@ -45,6 +45,7 @@ export type Theme = {
   primary_count: number;
   by_source: Record<string, number>;
   by_business: Record<string, number>;
+  by_product?: Record<string, number>;
   sentiment: { positive: number; neutral: number; negative: number };
   share_negative: number | null;
   escalation_count: number;

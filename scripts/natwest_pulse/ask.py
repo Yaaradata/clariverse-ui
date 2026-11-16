@@ -125,7 +125,7 @@ def main():
             ),
             "evidence": [],
             "bound": ["L3:customer_pulse.lists.priority_a", "REG-CD-OUTCOMES"],
-            "links": [{"label": "Open priority relationships", "href": f"{BASE}/priority"}],
+            "links": [{"label": "Open priority customers", "href": f"{BASE}/priority"}],
         },
     ]
     dump({"prompts": prompts, "fallback": "I'd need your data for that. Here is what I'd look at: the CX pulse, the "

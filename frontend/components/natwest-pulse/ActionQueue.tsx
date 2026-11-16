@@ -47,12 +47,12 @@ function EmailCard({ e }: { e: EscalationEmail }) {
           color: C.textMut,
         }}
       >
-        <span style={{ fontFamily: MONO }}>
-          {e.id} · {fmtDateTime(e.received_at)}
-        </span>
+        <span style={{ fontFamily: MONO }}>{fmtDateTime(e.received_at)}</span>
         <span>
           {e.product_label} · {e.language}
-          {e.sender === "proxy" ? " · from the customer's assistant" : ""}
+          {e.sender === "proxy"
+            ? " · from someone acting for the customer"
+            : ""}
         </span>
       </div>
       <div style={{ fontSize: 15, fontWeight: 650, color: C.text }}>

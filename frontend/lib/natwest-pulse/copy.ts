@@ -48,9 +48,13 @@ export function satisfactionAnswer(b: Bundle): string {
   const sharpest = [...tiers].sort(
     (a, c) => c.share_negative - a.share_negative,
   )[0];
-  return `Customers are most positive on ${best?.label.toLowerCase()} and least positive on ${worst?.label.toLowerCase()}${
+  const pub =
+    best && worst
+      ? `Customers are most positive on ${best.label.toLowerCase()} and least positive on ${worst.label.toLowerCase()}`
+      : "Public voice by Consumer Duty outcome: not yet loaded";
+  return `${pub}${
     sharpest
-      ? `; ${sharpest.tier} relationships show the highest negative share (illustrative).`
+      ? `; inside the bank, ${sharpest.tier} customers show the highest negative share (illustrative).`
       : "."
   }`;
 }
@@ -73,7 +77,9 @@ export function marketAnswer(b: Bundle): string {
     .filter((t) => t.score > 0)
     .sort((a, c) => c.score - a.score)[0];
   const praise = b.themes.themes.find((t) => t.id === "app_praise");
-  return `Across ${fmt(b.themes.total_items)} public posts and reviews since ${fmtDate(b.meta.window.start)}, ${top?.label.toLowerCase()} leads; ${riser?.label.toLowerCase()} is rising fastest; ${
+  if (!top)
+    return "Public posts and reviews: not yet loaded. Leading and rising themes appear here once the public pull lands.";
+  return `Across ${fmt(b.themes.total_items)} public posts and reviews since ${fmtDate(b.meta.window.start)}, ${top.label.toLowerCase()} leads; ${riser ? `${riser.label.toLowerCase()} is rising fastest` : "no theme is rising"}; ${
     praise
       ? "quick, easy app journeys are where NatWest is praised most"
       : "praise is thin"

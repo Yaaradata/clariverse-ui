@@ -37,6 +37,12 @@ SOURCE_LABEL = {"appstore": "App Store", "playstore": "Google Play", "x": "X", "
 FORUM_NAME = {"mse": "MoneySavingExpert"}
 
 
+
+def _product_of(r):
+    from public_v3 import product_of  # noqa: PLC0415  (public_v3 imports this module's outputs; import late)
+
+    return product_of(r)
+
 def place_label(r) -> str:
     src = r["source"]
     if src == "playstore":
@@ -251,6 +257,7 @@ def main():
                 "primary_count": sum(1 for r in rs if r["themes"][0] == t["id"]),
                 "by_source": dict(collections.Counter(r["source"] for r in rs)),
                 "by_business": dict(collections.Counter(r["business"] for r in rs)),
+                "by_product": dict(collections.Counter(p for r in rs if (p := _product_of(r)))),
                 "sentiment": sc,
                 "share_negative": pct(sc["negative"], len(rs)),
                 "escalation_count": esc,

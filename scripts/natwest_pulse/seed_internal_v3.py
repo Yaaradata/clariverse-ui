@@ -809,7 +809,7 @@ def persona_trail(p, rs, theme_label):
             "product": step["product"],
             "product_label": PRODUCT_LABEL[step["product"]],
             # The social inbox is worked by social care (CX), whatever the product.
-            "team": "Social care (CX)" if step.get("channel") == "social_inbox" else OWNER_LABEL_TEAM[next(x["owner"] for x in PRODUCTS if x["id"] == step["product"])],
+            "team": "Social care (CX)" if step.get("channel") == "social_inbox" else PRODUCT_LABEL[step["product"]],
             "outcome": step.get("outcome"),
             "theme": step["theme"],
             "theme_label": theme_label.get(step["theme"], step["theme"]),
