@@ -1,17 +1,18 @@
-"""B11 · HDFC demo V4 (Vidya's 13 Oct review): the figures for the additions, per period, from the same records as
-periods_v3.py. Every internal figure is a bank-scale weighted sum of the sample rows, so it reconciles with the existing
-cards and CX pulse figures; lists are sample rows (one row each), never weights.
+"""Additions per period (copied pipeline's V4 blocks), from the same records as periods_v3.py. Every internal figure
+is a bank-scale weighted sum of the sample rows, so it reconciles with the deep-dive and CX pulse figures; lists are
+sample rows (one row each), never weights. The block named "cards" in the payload is the deep dive, Payments and Swish
+(common.DEEP_DIVE_PRODUCT); the caller passes the rows.
 
-  hierarchy        total interactions → inside the bank (complaints · queries · requests → resolved · open · waiting
-                   on customer, with open too long inside open) and public (positive · neutral · negative →
-                   responded · not responded)
-  open_too_long    open items past their limit: 5 h for Ultra-sensitive customers, 24 h for Ultra-HNI customers, the
-                   published RBI timeline where the item has one, else the 48-hour default (LIMITS below; D-11 bank
-                   TATs replace the default when supplied)
-  priority_slice   Ultra-sensitive, Ultra-HNI and high-impact complaints (a property of the complaint), for Cards
-  to_close         today's 15 to close: the open Cards items furthest past their limit
+  hierarchy        total contacts → inside the bank (complaints · queries · requests → resolved · open · waiting on
+                   customer, with open too long inside open) and public (positive · neutral · negative → responded ·
+                   not responded)
+  open_too_long    open items past their limit: 5 h for customers in a vulnerable situation, 24 h for Premium and
+                   Private Banking, the published standard where the item has one (Payment Services Act or the Swish
+                   rule), else the 48-hour default (LIMITS below)
+  priority_slice   customers in a vulnerable situation, Premium and Private Banking and high-impact complaints
+  to_close         today's 15 to close: the open deep-dive items furthest past their limit
   social           response oversight on public voice: sentiment × responded, response time, unanswered negatives
-  top_complaints   the 15 Cards complaint themes with the most complaints, each with its evidence (redacted)
+  top_complaints   the 15 deep-dive complaint themes with the most complaints, each with its evidence (redacted)
 Scripted Ask lists (query_lists) are fixed windows from the data end, not per period.
 """
 
@@ -21,24 +22,25 @@ import collections
 import datetime as dt
 import hashlib
 
-from common import DELIVERABLES, PERIOD_END, PRODUCT_LABEL
+from common import DEEP_DIVE_PRODUCT, DELIVERABLES, PERIOD_END, PRODUCT_LABEL
 
 import ombudsman_v3 as omb
 
 END = dt.datetime.fromisoformat(PERIOD_END)
 H = dt.timedelta(hours=1)
 
-# Open-too-long limits (B11 item 2). Hours. Priority limits apply first, then a published RBI timeline, then default.
+# Open-too-long limits. Hours. Priority limits apply first, then a published standard, then the default. The id "fca"
+# is the copied key for "published standard" (the screens key on it).
 LIMITS = {
     "default_hours": 48,
     "priority": {"priority_a": 5, "uhni": 24},
     "regulatory_source": "fca",
 }
 LIMIT_LABEL = {
-    "priority_a": "Financially vulnerable: 5 hours",
-    "uhni": "Premier: 24 hours",
-    "fca": "Published UK standard (FCA, PSRs or Faster Payments)",
-    "default": "Default: over 48 hours (bank SLA, illustrative)",
+    "priority_a": "Customers in a vulnerable situation: 5 hours",
+    "uhni": "Premium and Private Banking: 24 hours",
+    "fca": "Published standard (Payment Services Act or the Swish rule)",
+    "default": "Default: over 48 hours (bank standard, confirm with the bank)",
 }
 
 # Bank words (B11 item 1): every interaction is a complaint, a query or a request.
@@ -48,17 +50,19 @@ KIND_OF = {
     "dispute": "complaint",
     "failed_reversal": "complaint",
     "unauthorised_reversal": "complaint",
-    "refund": "complaint",
+    "manipulated_transfer": "complaint",
+    "account_unfreeze": "complaint",
 }
 KINDS = [("complaint", "Complaints"), ("query", "Queries"), ("request", "Requests")]
 
 # Assignable owners (B11 item 4): roles, never names.
-OWNER_ROLES = ["Product owner", "Complaints lead", "Final-response team", "Fraud operations", "Branch region lead",
-               "Social care lead", "Service-delivery head"]
+OWNER_ROLES = ["Product owner", "Complaints lead", "Account-measure review team", "Fraud operations", "Kontor region lead",
+               "Social media lead", "Service-delivery head"]
 
-CHANNEL_LABEL = {"emails": "Email", "calls": "Calls", "chat": "Secure message", "whatsapp": "Cora", "social": "Social inbox",
-                 "branch": "Branch"}
-SOURCE_LABEL = {"appstore": "App Store", "playstore": "Google Play", "x": "X", "reddit": "Reddit", "trustpilot": "Trustpilot", "forum": "Forums (MoneySavingExpert)"}
+CHANNEL_LABEL = {"emails": "Email", "calls": "Calls", "chat": "App and internet-bank messages", "whatsapp": "Nina",
+                 "social": "Social inbox", "branch": "Branch (kontor)"}
+SOURCE_LABEL = {"appstore": "App Store", "playstore": "Google Play", "x": "X", "reddit": "Reddit", "trustpilot": "Trustpilot",
+                "forum": "Forums"}
 
 
 def kind(r) -> str:
@@ -76,7 +80,7 @@ def limit_of(r, customers) -> tuple[dt.timedelta, str]:
         if lid in coh:
             return hours * H, lid
     d = DELIVERABLES.get(r["deliverable"])
-    if d and d["source"] in ("fca", "psr", "psrs", "scheme") and r.get("deliverable_due"):
+    if d and d["source"] in ("law", "scheme") and r.get("deliverable_due"):
         return dt.datetime.fromisoformat(r["deliverable_due"]) - r["_c"], "fca"
     return LIMITS["default_hours"] * H, "default"
 
@@ -94,7 +98,7 @@ def age_label(td: dt.timedelta) -> str:
 
 
 def case_ref(r) -> str:
-    """A case reference for the list: the sample row's id (synthetic), never the customer's id."""
+    """A case reference for the list: the sample row's id, never the customer's id."""
     return r["id"].replace("INT-", "CASE-")
 
 
@@ -176,8 +180,8 @@ def open_too_long(vol, customers, is_open, labels) -> dict:
 
 def priority_slice(vol, customers, is_open) -> list[dict]:
     blocks = [
-        ("ultra_sensitive", "Financially vulnerable", lambda r: "priority_a" in customers.get(r["masked_id"], {}).get("cohorts", [])),
-        ("uhni", "Premier", lambda r: "uhni" in customers.get(r["masked_id"], {}).get("cohorts", [])),
+        ("ultra_sensitive", "Customers in a vulnerable situation", lambda r: "priority_a" in customers.get(r["masked_id"], {}).get("cohorts", [])),
+        ("uhni", "Premium and Private Banking", lambda r: "uhni" in customers.get(r["masked_id"], {}).get("cohorts", [])),
         # A property of the complaint (regulator or legal language, a third contact, public reach), never of the person.
         ("high_impact", "High-impact complaints", lambda r: bool(r["high_impact"])),
     ]
@@ -208,8 +212,10 @@ def to_close(vol, customers, is_open, labels) -> list[dict]:
     rows.sort(key=lambda x: -x[0])
     return [{"id": case_ref(r), "theme": labels.get(r["theme"], r["theme"]), "kind": kind(r),
              "channel": CHANNEL_LABEL[r["_ch"]], "age": age_label(age), "overdue": over > dt.timedelta(0),
-             "limit": LIMIT_LABEL[basis], "suggested_owner": "Product lead" if r["theme"] == "card_eligibility_upgrade"
-             else "Premium cards lead" if basis in ("priority_a", "uhni") else "Escalations lead" if r["high_impact"] else "Credit cards · CX lead"}
+             "limit": LIMIT_LABEL[basis], "suggested_owner": "Account-measure review team" if r["theme"] == "account_freeze"
+             else "Fraud operations" if r["theme"] in ("manipulated_transfer", "fraud_scam", "unauthorised_txn", "phishing")
+             else "Priority customer lead" if basis in ("priority_a", "uhni") else "Escalations lead" if r["high_impact"]
+             else "Payments and Swish · CX lead"}
             for over, r, basis, age in rows[:15]]
 
 
@@ -288,7 +294,10 @@ def top_complaints(cs, labels, w) -> list[dict]:
                           "contacts": len(c["contacts"]), "channels_touched": len({c["channel"], *(x["channel"] for x in c["contacts"])}),
                           "escalation": ", ".join(c["escalation"]) or "none",
                           "status": "open" if st and st["open"] else "replied",
-                          "ombudsman": ("eligible" if st and st["eligible"] else f"{st['days_left']} days to day 30" if st and st["brink"] else "—")}
+                          "ombudsman": ("reply overdue" if st and st["brink"] else "appeal open" if st and st["eligible"]
+                                        else "ARN eligible" if st and st["unhappy"] else "filed with ARN" if st and st["awaiting_io"]
+                                        else f"{st['days_left']} days to the reply deadline" if st and st["days_left"] is not None
+                                        else "—")}
                          for c, st in sample],
         })
     rows.sort(key=lambda x: -x["count"])
@@ -298,7 +307,7 @@ def top_complaints(cs, labels, w) -> list[dict]:
 # ------------------------------------------------------------------ P1 · service metrics (teaser)
 
 def service_metrics(vol, open_at, b) -> dict:
-    """SDR, FTR and FTNR from the interactions, as illustrative definitions (confirmed in discovery):
+    """SDR, FTR and FTNR from the contacts (definitions to confirm with the bank):
       SDR   same-day resolution: of the period's interactions, closed on the calendar day they came in
       FTR   first-time resolution: of the resolved, closed with no repeat contact on the issue
       FTNR  first-time not resolved: of the resolved, needed a further contact first (FTR + FTNR = resolved)"""
@@ -308,7 +317,7 @@ def service_metrics(vol, open_at, b) -> dict:
     n, nres = sum(r["w"] for r in vol), sum(r["w"] for r in res)
     return {"volume": n, "resolved": nres, "sdr": sdr, "sdr_pct": pct(sdr, n), "ftr": nres - ftnr,
             "ftr_pct": pct(nres - ftnr, nres), "ftnr": ftnr, "ftnr_pct": pct(ftnr, nres),
-            "tag": "Illustrative: definitions confirmed in discovery"}
+            "tag": "Definitions to confirm with the bank"}
 
 
 # ------------------------------------------------------------------ 8 · scripted Ask lists (fixed windows)
@@ -317,6 +326,8 @@ def query_lists(inter, cards_complaints, pub, customers, is_open, responded, pub
     week = END - dt.timedelta(days=7)
     risk = []
     for c in cards_complaints:
+        if c["product"] != DEEP_DIVE_PRODUCT:
+            continue
         st = omb.status(c, END)
         if st and st["at_risk"]:
             pts, why = omb.score(c, st, END)
@@ -324,11 +335,11 @@ def query_lists(inter, cards_complaints, pub, customers, is_open, responded, pub
     risk.sort(key=lambda x: -x[0])
     neg = [r for r in pub if r["sentiment"] == "negative" and not responded(r) and public_end - r["_c"] <= 48 * H]
     pri = [r for r in inter if is_open(r, END) and END - r["_c"] > 24 * H
-           and any(k in customers.get(r["masked_id"], {}).get("cohorts", []) for k in ("priority_a", "priority_b", "uhni"))]
+           and any(k in customers.get(r["masked_id"], {}).get("cohorts", []) for k in ("priority_a", "priority_b", "uhni", "multi"))]
     pri.sort(key=lambda r: r["_c"])
     return {
         "ombudsman_cards_week": {
-            "q": "Complaints at risk of reaching the Financial Ombudsman in credit cards this week",
+            "q": "Payments and Swish complaints at risk of going to ARN this week",
             "count": sum(c["w"] for _, c, _ in risk), "as_of": END.isoformat(), "since": week.isoformat(),
             "list": [{"id": c["id"], "theme": labels.get(c["theme"], c["theme"]), "why": "; ".join(why)} for _, c, why in risk[:25]]},
         "unanswered_negatives_48h": {

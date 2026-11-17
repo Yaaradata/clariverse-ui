@@ -138,7 +138,7 @@ export type SignalsFile = {
     repeat: number;
     escalation_language: number;
     public_posts_with_escalation: number;
-    rbi_or_ombudsman_mentions: number;
+    arn_mentions: number;
     climb_themes: { id: string; label: string; count: number }[];
   };
   voices_with_reach: {
@@ -286,11 +286,15 @@ export type Evidence = {
   id: string;
   source: string;
   source_label: string;
-  /** Where the quote came from, in words, e.g. "Reddit · r/CreditCardsIndia". Screens never link to the post. */
+  /** Where the quote came from, in words, e.g. "Reddit · r/sweden". Screens never link to the post. */
   place: string;
   created_at: string;
   summary: string;
   redacted_text: string;
+  /** SW-D11: language of the original ("sv", "en", ...); absent on older payloads. */
+  lang?: string | null;
+  /** English gloss of a non-English original; null when the original is English. */
+  gloss?: string | null;
   title: string | null;
   app_name: string | null;
   app_version: string | null;
@@ -375,7 +379,7 @@ export type Meta = {
   trend_basis_streams: string[];
   baseline_streams: string[];
   coverage_notes: string[];
-  icici_available: boolean;
+  competitor_available: boolean;
 };
 
 export type AskEntry = {
@@ -411,12 +415,12 @@ export type Bundle = {
 
 export type ProductId =
   | "cards"
-  | "payments_fraud"
-  | "current_accounts"
-  | "personal_loans"
+  | "payments_swish"
+  | "everyday_accounts_app"
+  | "consumer_loans"
   | "mortgages"
   | "overdrafts"
-  | "savings"
+  | "savings_funds"
   | "digital";
 
 export type PublicProductRow = {
@@ -432,7 +436,7 @@ export type PublicProductRow = {
   share_negative: number | null;
   trend_change_pct: number | null;
   top_issue: { id: string; label: string; negative: number } | null;
-  /** Bank replies on this product's Google Play reviews; null when it has none. */
+  /** SW-D17: store reviews handled in the internal social inbox; null when the product has none. */
   replies: ReplyStats | null;
   issues: {
     id: string;
@@ -515,7 +519,7 @@ export type Dial = {
   closed: number;
   closed_or_responded: number;
   open: number;
-  /** The bank has sent a resolution; not counted as open (illustrative). */
+  /** The bank has sent a resolution; not counted as open. */
   waiting_on_customer: number;
   open_too_long: number;
   closed_or_responded_pct: number | null;
@@ -617,6 +621,7 @@ export type LedgerRow = DeliverableStats & {
   label: string;
   tat_label: string;
   source:
+    | "law"
     | "fca"
     | "psr"
     | "psrs"

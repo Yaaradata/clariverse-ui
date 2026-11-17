@@ -12,6 +12,7 @@ import {
   BarRow,
   BaselineCaption,
   C,
+  Gloss,
   Kpi,
   MONO,
   MutedNote,
@@ -32,7 +33,7 @@ export const REQUEST_LABEL: Record<string, string> = {
   refund: "Refunds",
   reversal: "Failed-transaction reversal",
   dispute: "Dispute resolution",
-  closure: "Card, account and loan closure",
+  closure: "Account, card and loan closure",
   loan_disbursal: "Loan processing and disbursal",
   credit_report: "Credit-information correction",
   kyc: "Identity checks and profile updates",
@@ -64,7 +65,7 @@ const SERVICE_GROUPS = new Set([
   "Service",
   "Payments",
   "Loans",
-  "Credit cards",
+  "Payments and Swish",
 ]);
 
 export function ServicePromiseView({ b }: { b: Bundle }) {
@@ -99,7 +100,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov={["public", "internal"]}>
-        <AnswerLine sub="Missed service standards and status-seeking are heard in public voice (live). Internal ageing, the internal ladder rungs and dispute feeds are illustrative until discovery.">
+        <AnswerLine sub="Missed service standards and status-seeking are heard in public voice (live). Internal ageing, the internal ladder rungs and dispute feeds are from the bank sample until discovery.">
           {promiseAnswer(b)}
         </AnswerLine>
       </Tile>
@@ -148,7 +149,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             <Kpi
               label="Beyond service standard (internal)"
               value={fmt(it.ageing.reduce((s, r) => s + r.beyond_tat, 0))}
-              sub="open past the service standard · illustrative"
+              sub="open past the service standard · bank sample"
               tone="violet"
             />
           </div>
@@ -207,11 +208,12 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             />
           </div>
           <MutedNote>
-            standards as in the service standards ledger above: FCA where
-            published; otherwise the bank&apos;s own standard, not shown until
-            it is confirmed in discovery. Breaches, status-seeking and repeat
-            are public voice; open cases and beyond-standard are illustrative,
-            from the same demo sample as the ledger.
+            standards as in the service standards ledger above: the Payment
+            Services Act or the Swish rule where they apply; otherwise the
+            bank&apos;s own standard, not shown until it is confirmed in
+            discovery. Breaches, status-seeking and repeat are public voice;
+            open cases and beyond-standard come from the same bank sample as the
+            ledger.
           </MutedNote>
         </Tile>
       </div>
@@ -219,7 +221,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
       <Tile
         id="ladder"
         title="Escalation ladder"
-        sub={`Hear it on the first rung. Voice → Repeat → Complaint → Complaints team → Final response → Financial Ombudsman Service → Public. ${it.ladder_rule}`}
+        sub={`Hear it on the first rung. Voice → Repeat → Complaint → Complaints team → Bank's final decision → ARN → Public. ${it.ladder_rule}`}
         prov={["public", "internal"]}
         tone="red"
       >
@@ -232,7 +234,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
                   <span>
                     {r.rung}{" "}
                     <span style={{ color: C.textMut, fontSize: 12 }}>
-                      · internal, illustrative, bank scale
+                      · internal, bank scale
                     </span>
                   </span>
                 }
@@ -283,8 +285,8 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
                   e.target
                     ? ((
                         {
-                          rbi: "Regulator named or tagged (FCA)",
-                          rbi_ombudsman: "Financial Ombudsman Service",
+                          rbi: "Regulator named or tagged (FI or ARN)",
+                          rbi_ombudsman: "ARN",
                           complaints_team: "Complaints team",
                           legal: "Legal action",
                           consumer_court:
@@ -292,7 +294,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
                           ministers: "MP or minister tagged",
                           repeat: "Complaint number or third time",
                           md_office: "Chief executive named",
-                          internal_ombudsman: "Final response",
+                          internal_ombudsman: "Bank's final decision",
                         } as Record<string, string>
                       )[e.target] ?? e.target)
                     : "Target not named",
@@ -310,7 +312,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
                 letterSpacing: "0.04em",
               }}
             >
-              Climb risk: themes closest to the Financial Ombudsman rung
+              Climb risk: themes closest to ARN rung
             </div>
             {ladderPublic.climb_themes.slice(0, 5).map((c) => (
               <div
@@ -344,7 +346,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
         <Tile
           id="closure"
           title="Switching intent"
-          sub="Customers saying they will close, or have closed, a card or account"
+          sub="Customers saying they will switch bank (byta bank) or close an account"
           prov={["public", "internal"]}
           tone="red"
         >
@@ -364,7 +366,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             <Kpi
               label="Save rate (internal)"
               value={fmtPct(it.closure.save_rate)}
-              sub={`${fmt(it.closure.saved)} of ${fmt(it.closure.closed)} closed requests · illustrative`}
+              sub={`${fmt(it.closure.saved)} of ${fmt(it.closure.closed)} closed requests · bank sample`}
               tone="green"
             />
           </div>
@@ -411,6 +413,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
                 <span style={{ color: C.textMut }}>
                   ({e.place} · {fmtDate(e.created_at)})
                 </span>
+                <Gloss gloss={e.gloss} lang={e.lang} />
               </Link>
             ))}
         </Tile>
@@ -458,6 +461,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
                 <span style={{ color: C.textMut }}>
                   ({e.place} · {fmtDate(e.created_at)})
                 </span>
+                <Gloss gloss={e.gloss} lang={e.lang} />
               </Link>
             ))}
         </Tile>
@@ -497,7 +501,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
               <ActionChip action="Notify proactively" />
               <span style={{ fontSize: 12.5, color: C.textMut }}>
-                Push stage updates in app, Cora and SMS.
+                Push stage updates in app, Nina and SMS.
               </span>
             </div>
           </div>
@@ -507,7 +511,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
       <Tile
         id="disputes"
         title="Why disputes miss the standard"
-        sub={`${fmt(disputes.beyond_sla_total)} of ${fmt(disputes.raised)} disputes in the demo sample went beyond SLA, by driver and by age. Public voice: ${fmt(publicDisputeItems)} posts about disputes this window.`}
+        sub={`${fmt(disputes.beyond_sla_total)} of ${fmt(disputes.raised)} disputes in the bank sample went beyond the standard, by driver and by age. Public voice: ${fmt(publicDisputeItems)} posts about disputes this window.`}
         prov="internal"
       >
         <div style={SPLIT}>
@@ -559,7 +563,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
           </div>
         </div>
         <MutedNote>
-          Needs dispute-platform feeds. Illustrative until discovery.
+          Needs dispute-platform feeds. From the bank sample until discovery.
         </MutedNote>
       </Tile>
 
@@ -567,7 +571,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
         <Tile
           id="failures"
           title="Top service failures"
-          sub="Service, payments, loans and credit card themes with the most negative public items"
+          sub="Service, payments, loans and app themes with the most negative public items"
           prov="public"
           tone="red"
         >

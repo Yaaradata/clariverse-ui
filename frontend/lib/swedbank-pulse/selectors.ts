@@ -50,7 +50,7 @@ export function releasePulse(b: Bundle): ReleasePulse | null {
   return b.briefing.release_pulse ?? null;
 }
 
-/** Overnight routing (internal, illustrative): one list feeds every "Acknowledged" / "Awaiting owner" on screen. */
+/** Overnight routing (internal): one list feeds every "Acknowledged" / "Awaiting owner" on screen. */
 export function routedList(b: Bundle): RoutingRow[] {
   return b.v3.routing;
 }

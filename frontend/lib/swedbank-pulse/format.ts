@@ -76,7 +76,9 @@ export function toLocal(iso: string): string {
   if (iso.length <= 10 || !/(?:[zZ]|[+-]\d\d:?\d\d)$/.test(iso)) return iso;
   const t = new Date(iso);
   if (Number.isNaN(t.getTime())) return iso;
-  const parts = Object.fromEntries(STHLM.formatToParts(t).map((x) => [x.type, x.value]));
+  const parts = Object.fromEntries(
+    STHLM.formatToParts(t).map((x) => [x.type, x.value]),
+  );
   return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}:00`;
 }
 

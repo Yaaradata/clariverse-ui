@@ -1,14 +1,13 @@
-"""Source-stratified method for trends, weekly series and mood (review step 5, B7 §1 method fixes, §4.4).
+"""Source-stratified method for trends, weekly series and mood (copied pipeline, Swedbank window).
 
-Collection, not customers, moved the old figures:
-  - Reddit changed collector on 1 Sep (a new actor run, about four times the comments per post). It is split into two
-    streams at that date; neither covers the whole window, so neither is trend basis (the same start-marker rule as the
-    Play Store HDFC Bank app export that starts on 25 July).
-  - X was collected in weekly capped runs; the 20–27 Sep run hit its 1,000-item cap and has no items on 20–22 Sep, so X
-    is 43% of the last seven days against about 15% of the window.
-So every trend, weekly series and mood figure is source-weighted: a share (or net sentiment) is computed inside each
-stream, then streams are combined with fixed weights equal to their share of trend-basis items over the whole window.
-A burst or a gap in one source changes that source's own share, not its weight.
+Collection, not customers, can move a figure: a burst or a gap in one source changes that source's own share, not its
+weight. So every trend and weekly series is source-weighted: a share is computed inside each stream, then streams are
+combined with fixed weights equal to their share of trend-basis items over the whole window. A stream is trend basis
+only when it covers the whole window (X, Reddit and Google Play here; the App Store starts on 2 Nov and Trustpilot on
+27 Oct).
+
+Mood (SW-D11): review sources only (NW-D91), pooled across the three stores, because there are about forty reviews in
+the window. n-rules: 20 or more reviews give a figure; 3 to 19 give a figure marked indicative; fewer than 3 give none.
 """
 
 from __future__ import annotations
@@ -18,26 +17,22 @@ import datetime as dt
 
 W_START, W_END = "2026-10-22", "2026-11-17"
 H1_END = "2026-11-03"
-CAPPED_X_RUN = "WhOLVGQsnVo9H7jHb"
-REDDIT_SWITCH = "2026-10-15"
-
+MIN_SHARE_N = 20  # reviews for a share
+MIN_INDICATIVE_N = 3  # items for an indicative figure; below this "—"
 
 # Streams whose collection does not span the window by design, whatever their first and last dates say.
-PARTIAL_BY_DESIGN = {
-    "reddit:jul_aug_collector": "Reddit collector replaced on 1 Sep (a few late items trickle in)",
-    "reddit:sep_collector": "Reddit's new collector starts on 1 Sep",
-}
+PARTIAL_BY_DESIGN: dict[str, str] = {}
 
 
 def stream_of(r) -> str:
     if r["source"] in ("playstore", "appstore"):
         return f"{r['source']}:{r['app_name']}"
-    if r["source"] == "forum":
-        return f"forum:{r['subreddit']}"
-    if r["source"] == "reddit":
-        # The September collector is a different instrument; its items never share a series with the earlier ones.
-        return "reddit:sep_collector" if r.get("collector") else "reddit:jul_aug_collector"
     return r["source"]
+
+
+def n_rule(n: int) -> str:
+    """"share" (n >= 20), "indicative" (3..19) or "none" (< 3)."""
+    return "share" if n >= MIN_SHARE_N else "indicative" if n >= MIN_INDICATIVE_N else "none"
 
 
 def full_weeks() -> list[str]:
@@ -64,10 +59,11 @@ def weights(basis_rows) -> dict[str, float]:
     return {s: v / n for s, v in c.items()} if n else {}
 
 
-def _by_stream(rows):
+def _by_stream(rows, key=None):
+    key = key or stream_of
     out = collections.defaultdict(list)
     for r in rows:
-        out[stream_of(r)].append(r)
+        out[key(r)].append(r)
     return out
 
 
@@ -124,19 +120,25 @@ def _net(rs) -> float | None:
     return 100 * (sum(1 for r in rs if r["sentiment"] == "positive") - sum(1 for r in rs if r["sentiment"] == "negative")) / len(rs)
 
 
-def strat_net(rows, w, min_items: int = 10) -> float | None:
+def strat_net(rows, w, min_items: int = 10, key=None) -> float | None:
     """Source-weighted net sentiment: each stream's net, weighted by its window share (streams with ≥ min_items)."""
     num = den = 0.0
-    for s, rs in _by_stream(rows).items():
+    for s, rs in _by_stream(rows, key).items():
         if s in w and len(rs) >= min_items:
             num += w[s] * _net(rs)
             den += w[s]
     return num / den if den else None
 
 
-def mood(basis_rows, w) -> dict:
-    """Mood: source-weighted net sentiment over the last seven days vs the source-weighted window average, plus the
-    unweighted figures and a per-source breakdown, so the effect of the method is visible."""
+def mood(basis_rows, w, pooled: bool = False) -> dict:
+    """Mood: net sentiment over the last seven days vs the window average, plus the unweighted figures and a per-source
+    breakdown. pooled=True (SW-D11) treats the review sources as one stream and applies the n-rules (MIN_INDICATIVE_N)."""
+    key = (lambda r: "reviews") if pooled else None
+    if pooled:
+        w = {"reviews": 1.0}
+    mn = MIN_INDICATIVE_N if pooled else 10
+    sn = lambda rows: strat_net(rows, w, mn, key)  # noqa: E731
+    r1 = lambda x: round(x, 1) if x is not None else None  # noqa: E731
     days = sorted({r["created_at"][:10] for r in basis_rows if W_START <= r["created_at"][:10] <= W_END})
     by_day = collections.defaultdict(list)
     for r in basis_rows:
@@ -149,10 +151,10 @@ def mood(basis_rows, w) -> dict:
         n = sum(1 for r in rs if r["sentiment"] == "negative")
         daily.append({
             "date": d, "n": len(rs), "positive": p, "negative": n, "net": round(_net(rs), 1),
-            "net_7d": round(strat_net(last7, w), 1), "net_7d_unweighted": round(_net(last7), 1),
+            "net_7d": r1(sn(last7)), "net_7d_unweighted": r1(_net(last7)),
         })
     last7 = [r for dd in days[-7:] for r in by_day[dd]]
-    value, avg = strat_net(last7, w), strat_net(basis_rows, w)
+    value, avg = sn(last7), sn(basis_rows)
     raw_value, raw_avg = _net(last7), _net(basis_rows)
     sources = collections.defaultdict(list)
     for r in basis_rows:
@@ -160,7 +162,7 @@ def mood(basis_rows, w) -> dict:
     by_source = []
     for src, rs in sorted(sources.items(), key=lambda kv: -len(kv[1])):
         l7 = [r for r in rs if r["created_at"][:10] in set(days[-7:])]
-        wn, ln = _net(rs), _net(l7) if len(l7) >= 10 else None
+        wn, ln = _net(rs), _net(l7) if len(l7) >= mn else None
         by_source.append({
             "source": src,
             "weight_pct": round(100 * len(rs) / len(basis_rows), 1),
@@ -173,10 +175,9 @@ def mood(basis_rows, w) -> dict:
     weekly = []
     for wk in full_weeks():
         rs = [r for r in basis_rows if monday(r["created_at"]) == wk]
-        v = strat_net(rs, w)
+        v = sn(rs)
         weekly.append({"week": wk, "n": len(rs), "net": round(v, 1) if v is not None else None,
                        "net_unweighted": round(_net(rs), 1) if rs else None})
-    r1 = lambda x: round(x, 1) if x is not None else None  # noqa: E731  (no public data yet: every figure is None)
     d1 = lambda a, b: round(a - b, 1) if a is not None and b is not None else None  # noqa: E731
     return {
         "method": "source_weighted",
@@ -187,5 +188,9 @@ def mood(basis_rows, w) -> dict:
         "unweighted": {"value": r1(raw_value), "window_average": r1(raw_avg), "delta_pts": d1(raw_value, raw_avg)},
         "by_source": by_source,
         "n_items": len(basis_rows),
+        "n_last7": len(last7),
+        "n_rule": n_rule(len(last7)),
+        "n_rule_window": n_rule(len(basis_rows)),
+        "pooled": pooled,
         "daily": daily,
     }

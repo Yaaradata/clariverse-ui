@@ -1,4 +1,4 @@
-"""Shared constants for the V3 build (B7 brief). Paths, the product list, theme → product mapping and deliverable TATs."""
+"""Shared constants for the Swedbank pulse (docs/swedbank/DECISIONS.md), copied from the NatWest build. Paths, the product list, theme → product mapping and deliverable TATs."""
 
 from __future__ import annotations
 
@@ -23,127 +23,105 @@ BANK_HOLIDAYS = {"2026-12-24", "2026-12-25", "2026-12-26", "2026-12-31", "2027-0
 def is_business_day(d) -> bool:
     return d.weekday() < 5 and d.date().isoformat() not in BANK_HOLIDAYS
 
-# Rows of the "pulse by product" table (B7 §1 E1.6). Group-company apps stay excluded.
+# Rows of the "pulse by product" table (SW-D16, Usha): six products in this order. Everyday accounts and app leads and
+# carries the worked deep dive (module "everyday_accounts_app", the save list): the app update and account measures
+# both sit in it. Nina keeps its module (module/nina_digital), never a card.
 PRODUCTS = [
-    {"id": "cards", "label": "Credit cards", "owner": "cards", "module": "cards"},  # NW-D95: the worked deep dive leads
-    {"id": "current_accounts", "label": "Current accounts and app", "owner": "retail", "module": None},
-    {"id": "payments_fraud", "label": "Payments and fraud", "owner": "payments", "module": None},
-    {"id": "savings", "label": "Savings", "owner": "product", "module": None},
-    {"id": "mortgages", "label": "Mortgages", "owner": "loans", "module": None},
-    {"id": "personal_loans", "label": "Personal loans", "owner": "loans", "module": None},
+    {"id": "everyday_accounts_app", "label": "Everyday accounts and app", "owner": "retail", "module": "everyday_accounts_app"},
+    {"id": "payments_swish", "label": "Payments and Swish", "owner": "payments", "module": None},
+    {"id": "cards", "label": "Cards", "owner": "cards", "module": None},
+    {"id": "mortgages", "label": "Mortgages (bolån)", "owner": "loans", "module": None},
+    {"id": "savings_funds", "label": "Savings and funds", "owner": "product", "module": None},
+    {"id": "consumer_loans", "label": "Consumer loans", "owner": "loans", "module": None},
 ]
-# Six products only (NW-D33). Overdraft themes sit under Current accounts and app; Cora themes sit under the product
-# the query was about. Cora keeps its module (module/cora_digital), built from the Cora themes, never a product card.
+# The product whose deep dive is the worked example.
+DEEP_DIVE_PRODUCT = "everyday_accounts_app"
 PRODUCT_IDS = [p["id"] for p in PRODUCTS]
 PRODUCT_LABEL = {p["id"]: p["label"] for p in PRODUCTS}
 
 OWNER_LABEL = {
     "cx": "Complaints lead",
-    "digital": "Digital and Cora",
-    "cards": "Credit cards product owner",
-    "retail": "Current accounts product owner",
+    "digital": "Digital and Nina",
+    "cards": "Cards product owner",
+    "retail": "Everyday banking product owner",
     "loans": "Lending product owner",
-    "payments": "Payments operations",
+    "payments": "Payments and Swish operations",
     "compliance": "Compliance",
     "fraud_cyber": "Fraud operations",
     "operations": "Operations",
-    "rm": "Premier banking managers",
-    "product": "Savings product owner",
+    "rm": "Premium and Private Banking advisers",
+    "product": "Savings and funds product owner",
 }
 
-# Deliverables (B7 D1). TATs marked "rbi" are published RBI timelines. "bank_confirmed" rows carry a TAT the bank has
-# confirmed: `tat_label` shows it (e.g. "7 working days") and `source_note` names the document and section. "bank" rows
-# are unconfirmed and read BANK_TAT_LABEL; their `tat_days` is a parameter of the illustrative sample generator only and
-# never reaches a screen (follow-up fix 3). Days are working days (Sundays skipped) unless `calendar` is set.
-# D-11 (the TAT reference B7 inherits) is not in the repo (qa/tat_check.md), so no bank row is confirmed yet.
+# Service standards ledger (SW-D08). Sources: "law" = the Payment Services Act (betaltjänstlagen); "scheme" = the Swish
+# rule; "bank_indicative" = a bank figure the brief gives, still to confirm; "bank" = unconfirmed, reads BANK_TAT_LABEL.
+# Every row not backed by law carries "confirm with the bank". tat_days of a "bank" row drives the sample generator only
+# and never reaches a screen. Days are business days (weekends and Swedish public holidays skipped) unless `calendar`.
+# "compensation" is the Redress column: what ARN can recommend.
 BANK_TAT_LABEL = "Bank standard: confirm with the bank"
-# United Kingdom standards (brief Step 5.12). "fca", "psr", "psrs" and "scheme" rows are published rules (register or
-# the Payment Services Regulations 2017); "industry" is industry practice; "bank_indicative" is a bank figure still to
-# confirm, labelled so. Rows from the register
-# (data/public/swedbank_register.json); "bank" rows are unconfirmed and read BANK_TAT_LABEL; their tat_days drive the
-# illustrative generator only. Days are business days (weekends skipped) unless `calendar` is set.
+ARN_REDRESS = "ARN recommendation (confirm with the bank)"
 DELIVERABLES = {
     "failed_reversal": {
-        "label": "Failed payment returned",
+        "label": "Swish payment delivered",
         "tat_days": 1,
-        "tat_label": "Same day (Faster Payments)",
+        "tat_label": "Within seconds (Swish rule)",
         "source": "scheme",
-        "source_note": "Faster Payments scheme rule, same day",
+        "source_note": "Swish rule: a payment reaches the payee within seconds; a failed one is not debited",
         "compensation": "—",
     },
-    "card_closure": {"label": "Credit card closure", "tat_days": 7, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
-    "unauthorised_reversal": {
-        "label": "Unauthorised transaction refund", "tat_days": 1, "tat_label": "End of the next business day (PSRs 2017)",
-        "source": "psrs", "source_note": "Payment Services Regulations 2017: refund by the end of the next business day",
-        "compensation": "—",
-    },
-    "credit_report": {
-        "label": "Credit file correction", "tat_days": 28, "calendar": True, "tat_label": "28 days (industry practice)",
-        "source": "industry", "source_note": "Credit reference agency dispute period: industry practice, not a regulation",
-        "compensation": "—",
-    },
-    "loan_documents": {
-        "label": "Mortgage redemption statement", "tat_days": 10, "tat_label": "10 business days (bank standard, confirm)",
-        "source": "bank_indicative",
-        "compensation": "—",
+    "query_response": {
+        "label": "First reply to a complaint", "tat_days": 15,
+        "tat_label": "15 business days (bank standard, confirm with the bank)",
+        "source": "bank_indicative", "compensation": "—",
     },
     "complaint_resolution": {
-        "label": "Final response to a complaint",
-        "tat_days": 56,
-        "calendar": True,
-        "tat_label": "8 weeks (FCA DISP)",
-        "source": "fca",
-        "source_note": "FCA DISP: final response within 8 weeks",
-        "compensation": "Up to the Financial Ombudsman award limit in force (confirm with the bank)",
+        "label": "Final decision on a complaint", "tat_days": 15, "tat_label": BANK_TAT_LABEL, "source": "bank",
+        "compensation": ARN_REDRESS,
     },
-    "app_reimbursement": {
-        "label": "Push payment scam reimbursement",
-        "tat_days": 5,
-        "tat_label": "5 business days (PSR)",
-        "source": "psr",
-        "source_note": "PSR: reimbursement for authorised push payment scams",
-        "compensation": "—",
+    "unauthorised_reversal": {
+        "label": "Unauthorised transaction refund", "tat_days": 1,
+        "tat_label": "Next business day (Payment Services Act)",
+        "source": "law",
+        "source_note": "Payment Services Act (betaltjänstlagen): refund an unauthorised transaction by the next business "
+                       "day; manipulated transfers are investigated",
+        "compensation": ARN_REDRESS,
     },
-    "card_dispatch": {"label": "Card dispatch and delivery", "tat_days": 5, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
-    "dispute": {
-        "label": "Card dispute and chargeback", "tat_days": 30, "calendar": True, "tat_label": BANK_TAT_LABEL,
-        "source": "bank", "compensation": "—",
+    "manipulated_transfer": {
+        "label": "Manipulated transfer investigated", "tat_days": 15,
+        "tat_label": "Investigated within 15 business days (bank standard, confirm with the bank)",
+        "source": "bank_indicative", "compensation": ARN_REDRESS,
     },
-    "refund": {"label": "Merchant refund credited", "tat_days": 5, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
-    "service_request": {
-        "label": "Service request (identity checks, account changes, card requests)", "tat_days": 3,
-        "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—",
-    },
-    "account_unfreeze": {"label": "Account freeze review", "tat_days": 3, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
-    "loan_disbursal": {"label": "Loan decision and payout", "tat_days": 5, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
-    "query_response": {"label": "First response to a query or complaint", "tat_days": 1, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
+    "account_unfreeze": {"label": "Account-measure review", "tat_days": 5, "tat_label": BANK_TAT_LABEL, "source": "bank",
+                         "compensation": ARN_REDRESS},
+    "dispute": {"label": "Card dispute", "tat_days": 30, "calendar": True, "tat_label": BANK_TAT_LABEL, "source": "bank",
+                "compensation": ARN_REDRESS},
+    "loan_documents": {"label": "Mortgage offer", "tat_days": 5, "tat_label": BANK_TAT_LABEL, "source": "bank",
+                       "compensation": "—"},
+    "service_request": {"label": "BankID re-issue", "tat_days": 2, "tat_label": BANK_TAT_LABEL, "source": "bank",
+                        "compensation": "—"},
+    "loan_disbursal": {"label": "Loan decision", "tat_days": 3, "tat_label": BANK_TAT_LABEL, "source": "bank",
+                       "compensation": "—"},
 }
 
 # Public theme → deliverable it is measured against. Themes not listed use query_response.
 THEME_DELIVERABLE = {
     "failed_txn_reversal": "failed_reversal",
-    "faster_payments_failures": "failed_reversal",
-    "closure_requests": "card_closure",
+    "swish_payment_failures": "failed_reversal",
     "unauthorised_txn": "unauthorised_reversal",
-    "credit_report": "credit_report",
+    "manipulated_transfer": "manipulated_transfer",
+    "fraud_scam": "manipulated_transfer",
     "loan_closure_documents": "loan_documents",
+    "mortgage_rate": "loan_documents",
     "complaint_handling": "complaint_resolution",
-    "card_dispatch": "card_dispatch",
     "dispute_chargeback": "dispute",
-    "app_reimbursement": "app_reimbursement",
-    "refund_delay": "refund",
+    "refund_delay": "dispute",
     "identity_checks": "service_request",
-    # Cora failures (Pass 2 section 12): the customer still needs the request done, so a service request, not a query.
-    "cora_unresolved": "service_request",
-    "cora_wrong_answer": "service_request",
-    "cora_handoff_lost": "service_request",
-    "cora_no_person": "service_request",
-    "card_eligibility_upgrade": "service_request",
-    "card_limit": "service_request",
-    "card_application": "service_request",
-    "reward_redemption": "service_request",
-    "account_opening": "service_request",
-    "statements_documents": "service_request",
+    "app_login_biometrics": "service_request",
+    # Nina failures: the customer still needs the request done, so a service request, not a query.
+    "nina_unresolved": "service_request",
+    "nina_wrong_answer": "service_request",
+    "nina_handoff_lost": "service_request",
+    "nina_no_person": "service_request",
     "account_freeze": "account_unfreeze",
     "loan_processing": "loan_disbursal",
 }
@@ -155,14 +133,14 @@ JOURNEY_STAGE = {
     **dict.fromkeys(
         [
             "card_eligibility_upgrade", "statements_documents", "branch_service",
-            "care_unreachable", "premier_service", "account_freeze", "loan_servicing", "credit_report", "unsolicited_calls",
+            "care_unreachable", "premium_service", "account_freeze", "loan_servicing", "credit_report", "unsolicited_calls",
             "mis_selling", "recovery_conduct", "card_limit", "reward_redemption",
         ],
         "Service requests",
     ),
     **dict.fromkeys(
         ["dispute_chargeback", "failed_txn_reversal", "refund_delay", "unauthorised_txn", "fraud_scam", "phishing",
-         "app_reimbursement"],
+         "manipulated_transfer"],
         "Disputes and fraud",
     ),
     **dict.fromkeys(["closure_requests", "loan_closure_documents"], "Switch or close"),
@@ -171,7 +149,7 @@ JOURNEY_ORDER = ["Open", "Activate", "Everyday banking", "Service requests", "Di
 
 # Request types used by the public "missed timeline" signal, so the internal ageing joins the public rows.
 THEME_REQUEST_TYPE = {
-    **dict.fromkeys(["failed_txn_reversal", "faster_payments_failures", "unauthorised_txn"], "reversal"),
+    **dict.fromkeys(["failed_txn_reversal", "swish_payment_failures", "unauthorised_txn"], "reversal"),
     "closure_requests": "closure",
     "credit_report": "credit_report",
     "card_dispatch": "card_delivery",
@@ -186,10 +164,10 @@ THEME_REQUEST_TYPE = {
 # owner" in another. acknowledged_at None = routed, not yet acknowledged.
 ROUTING = [
     {"theme": "complaint_handling", "owner": "cx", "system": "CRM case queue", "acknowledged_at": "23:45"},
-    {"theme": "card_application", "owner": "cards", "system": "Credit cards service queue", "acknowledged_at": "22:10"},
-    {"theme": "refund_delay", "owner": "operations", "system": "Operations work queue", "acknowledged_at": "06:55"},
+    {"theme": "account_freeze", "owner": "operations", "system": "Account-measure review queue", "acknowledged_at": "22:10"},
+    {"theme": "manipulated_transfer", "owner": "fraud_cyber", "system": "Fraud investigation queue", "acknowledged_at": "06:55"},
     {"theme": "care_unreachable", "owner": "cx", "system": "CRM case queue", "acknowledged_at": "06:55"},
-    {"theme": "failed_txn_reversal", "owner": "payments", "system": "Payments work queue", "acknowledged_at": None},
+    {"theme": "swish_payment_failures", "owner": "payments", "system": "Payments and Swish work queue", "acknowledged_at": None},
 ]
 
 # Themes that are not customer issues (no deliverable, never "open"): used only for public mood.
@@ -243,50 +221,47 @@ CHANNEL_GROUP = {
     "social_inbox": "social",
     "branch": "branch",
 }
-# NatWest rows (brief Step 5.4): Calls · Cora · Secure message · Email · Social · Branch. The ids stay the oct13 ids (the
-# screens key on them): "whatsapp" carries Cora, the digital assistant; "chat" carries in-app chat with an agent.
+# Swedbank rows (SW-D04): Calls · Nina · App and internet-bank messages · Email · Social · Branch (kontor). The ids stay
+# the oct13 ids (the screens key on them): "whatsapp" carries Nina and the Copilot assistant; "chat" carries messages in
+# the app and internet bank.
 CHANNEL_GROUP_ORDER = ["calls", "whatsapp", "chat", "emails", "social", "branch"]
 CHANNEL_GROUP_LABEL = {
     "emails": "Email",
     "calls": "Calls",
-    "chat": "Secure message",
-    "whatsapp": "Cora",
+    "chat": "App and internet-bank messages",
+    "whatsapp": "Nina",
     "social": "Social",
-    "branch": "Branch",
+    "branch": "Branch (kontor)",
 }
 PULSE_LISTS = ["priority_a", "priority_b", "uhni", "multi"]
 
 # Businesses on the morning brief cards (3 + 3). Insurance is thin in public voice; auto loans thinner still.
-BRIEF_BUSINESSES = ["cards", "current_accounts", "payments_fraud", "savings", "mortgages", "personal_loans"]
+BRIEF_BUSINESSES = ["everyday_accounts_app", "payments_swish", "cards", "mortgages", "savings_funds", "consumer_loans"]
 
-# Cards issue categories (C3): each public item and interaction counts once, under its primary theme's category;
-# the themes are the subcategories. Owners are roles in the cards team, never names. "tat" marks categories that
-# carry a deliverable (the old Deliverables breakdown), shown without TAT compliance.
+# Deep-dive issue categories (SW-D16): the worked example is Everyday accounts and app (the names CARDS_* are kept from
+# the copied pipeline so every caller still works). Each public item and interaction counts once, under its primary
+# theme's category; the themes are the subcategories. Owners are roles, never names. "tat" marks categories with a
+# service standard.
 CARDS_CATEGORIES = [
-    {"id": "rewards", "label": "Rewards and redemption", "owner": "Credit cards · Rewards lead", "tat": False,
-     "themes": ["rewards_value", "reward_redemption", "offers_deals"]},
-    {"id": "upgrades", "label": "Eligibility and card changes", "owner": "Credit cards · Product lead", "tat": True,
-     "themes": ["card_eligibility_upgrade"]},
-    {"id": "applications", "label": "Applications and verification", "owner": "Credit cards · Acquisition lead", "tat": True,
-     "themes": ["card_application", "identity_checks"]},
-    {"id": "fees", "label": "Fees and charges", "owner": "Credit cards · Pricing lead", "tat": False,
-     "themes": ["card_fees_charges", "fees_charges_bank"]},
-    {"id": "limits", "label": "Limits", "owner": "Credit cards · Credit policy lead", "tat": True, "themes": ["card_limit"]},
-    {"id": "disputes", "label": "Disputes, refunds and reversals", "owner": "Credit cards · Disputes lead", "tat": True,
-     "themes": ["dispute_chargeback", "refund_delay", "failed_txn_reversal", "unauthorised_txn", "merchant_pos"]},
-    {"id": "delivery", "label": "Card delivery", "owner": "Credit cards · Card delivery lead", "tat": True, "themes": ["card_dispatch"]},
-    {"id": "closure", "label": "Closure", "owner": "Credit cards · Retention lead", "tat": True, "themes": ["closure_requests"]},
-    {"id": "service", "label": "Service and complaint handling", "owner": "Credit cards · Service lead", "tat": True,
-     "themes": ["complaint_handling", "care_unreachable", "branch_service", "premier_service", "unsolicited_calls"]},
-    {"id": "fraud", "label": "Fraud and security", "owner": "Credit cards · Fraud lead", "tat": False,
-     "themes": ["fraud_scam", "phishing", "device_security_block", "recovery_conduct"]},
-    {"id": "digital", "label": "App and online card servicing", "owner": "Credit cards · Digital lead", "tat": False,
-     "themes": ["app_speed_crash", "app_usability", "app_login_biometrics", "new_app_release", "online_banking", "statements_documents"]},
+    {"id": "app_update", "label": "App update and new release", "owner": "Everyday banking · App release lead", "tat": True,
+     "themes": ["new_app_release"]},
+    {"id": "app_reliability", "label": "App crashes, speed and outages", "owner": "Everyday banking · App reliability lead", "tat": True,
+     "themes": ["app_speed_crash", "online_banking"]},
+    {"id": "bankid", "label": "BankID and sign-in", "owner": "Everyday banking · Digital identity lead", "tat": True,
+     "themes": ["app_login_biometrics", "identity_checks", "device_security_block"]},
+    {"id": "measures", "label": "Account measures: frozen or restricted accounts", "owner": "Everyday banking · Account-measure lead", "tat": True,
+     "themes": ["account_freeze", "closure_requests"]},
+    {"id": "usability", "label": "App features and usability", "owner": "Everyday banking · Digital lead", "tat": False,
+     "themes": ["app_usability", "statements_documents"]},
+    {"id": "fees", "label": "Account fees and opening", "owner": "Everyday banking · Pricing lead", "tat": False,
+     "themes": ["fees_charges_bank", "account_opening"]},
+    {"id": "service", "label": "Service, branch (kontor) and complaint handling", "owner": "Everyday banking · Service lead", "tat": True,
+     "themes": ["complaint_handling", "care_unreachable", "branch_service", "branch_closure", "premium_service", "unsolicited_calls"]},
 ]
-CARDS_OTHER = {"id": "other", "label": "Other", "owner": "Credit cards · CX lead", "tat": False, "themes": []}
+CARDS_OTHER = {"id": "other", "label": "Other", "owner": "Everyday banking · CX lead", "tat": False, "themes": []}
 
 
 def inr(n: int) -> str:
-    """A count with United Kingdom digit grouping (110,047), for sentences written by the pipeline. The name is kept
+    """A count with digit grouping (110,047), for sentences written by the pipeline. The name is kept
     from the copied pipeline so every caller still works."""
     return f"{int(n):,}"

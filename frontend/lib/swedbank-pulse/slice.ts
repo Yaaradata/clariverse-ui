@@ -7,6 +7,13 @@ import {
 } from "./selectors";
 import type { Bundle, Evidence } from "./types";
 
+/** The Everyday accounts and app module quotes: one from each lead theme (ModuleView keeps the same list). */
+const DEEP_DIVE_EVIDENCE_THEMES = [
+  "new_app_release",
+  "app_speed_crash",
+  "account_freeze",
+];
+
 /**
  * Server-side slicing (review finding #1). A page passes its client component only the evidence it renders, never the
  * whole bundle: every other page gets an empty evidence map. Full quote text and title go only to the
@@ -15,7 +22,7 @@ import type { Bundle, Evidence } from "./types";
 export type Slice =
   | { view: "exec" | "business" | "priority" | "customer" | "action-queue" }
   | { view: "standards" | "satisfaction" | "market" }
-  | { view: "module"; id: "cards" | "digital" }
+  | { view: "module"; id: "everyday_accounts_app" | "digital" }
   | { view: "signal"; id: string };
 
 const first = (ids: string[] | undefined, n = 1) => (ids ?? []).slice(0, n);
@@ -40,11 +47,7 @@ function idsFor(b: Bundle, s: Slice): { ids: string[]; full: boolean } {
         };
       }
       return {
-        ids: [
-          "card_eligibility_upgrade",
-          "card_fees_charges",
-          "rewards_value",
-        ].flatMap((t) =>
+        ids: DEEP_DIVE_EVIDENCE_THEMES.flatMap((t) =>
           first(b.themes.themes.find((x) => x.id === t)?.exemplars),
         ),
         full: false,
@@ -101,7 +104,13 @@ function slicePeriods(b: Bundle, s: Slice): PeriodsFile {
   for (const id of Object.keys(file.periods) as PeriodId[]) {
     const p = file.periods[id];
     if (s.view === "exec") {
-      periods[id] = { ...p, cards: {} as Period["cards"] };
+      // Ask LisN (SW-D12) reads the full window's deep-dive categories for the 5 Nov question; nothing else of the block.
+      periods[id] = {
+        ...p,
+        cards: (id === "all"
+          ? { categories: p.cards.categories }
+          : {}) as Period["cards"],
+      };
     } else if (s.view === "business") {
       periods[id] = {
         id: p.id,
@@ -115,7 +124,7 @@ function slicePeriods(b: Bundle, s: Slice): PeriodsFile {
         cards: p.cards,
       } as Period;
     } else if (s.view === "module" && s.id === "digital" && id === "all") {
-      // The Cora module reads the full window's Cora block only.
+      // The Nina module reads the full window's Nina block (payload key `cora`) only.
       periods[id] = {
         id: p.id,
         label: p.label,

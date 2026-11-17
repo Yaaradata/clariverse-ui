@@ -1,12 +1,15 @@
-"""Stage 3 · Aggregate classified items into the files the V2 screens read (B3b stage 5, B4 §6).
+"""Stage 3 · Aggregate classified Swedbank items into the files the screens read (SW-D11).
 
-Writes to data/out/app_jul_sep/: themes.json, signals.json, app_pulse.json, mood.json, briefing.json, meta.json,
-evidence.json, responses.json. Every count is reproducible from work/classified.jsonl.
+Writes to data/out/swedbank_pulse/: themes.json, signals.json, app_pulse.json, mood.json, briefing.json, meta.json,
+evidence.json, responses.json. Every count is reproducible from work/classified.jsonl (retail Swedish Banking,
+on-topic, in the window).
 
-Window: 1 July – 28 September 2026 (as of 28 September). Trend: source-weighted share of trend-basis items, second
-half (15 Aug – 28 Sep) vs first half (1 Jul – 14 Aug); see method.py. A stream is trend basis only if it covers the
-whole window: the Play Store HDFC Bank app export starts on 25 July and Reddit changed collector on 1 September, so
-they count in totals but not in trends. No baseline: the exports hold no history before July.
+Window: 22 Oct – 17 Nov 2026, freeze 17 Nov 07:45 CET. Trend: source-weighted share of trend-basis items, second half
+(4–17 Nov) vs first half (22 Oct–3 Nov); see method.py. A stream is trend basis only if it covers the whole window: the
+App Store starts on 2 Nov and Trustpilot on 27 Oct, so they count in totals but not in trends. No earlier baseline.
+
+Quotes (evidence): on topic, first person, product-matched, never another bank as subject, from the checked-in labels
+(quote_ok), each with the Swedish original, "lang" and an English "gloss" (null when the original is English).
 """
 
 from __future__ import annotations
@@ -19,6 +22,8 @@ import statistics
 
 import method as M
 from classify import OWNER_BY_RT
+from common import OWNER_LABEL
+from normalise import RETAIL_ENTITY
 from method import stream_of
 from normalise import OUT, WORK
 from taxonomy import OUTCOMES, THEMES
@@ -29,12 +34,11 @@ H1_END = "2026-11-03"  # SW-D03: halves of the 27-day window
 AS_OF = "2026-11-17"
 BRIEF = {"date": "2026-11-17", "label": "17 Nov 2026", "time": "07:45 CET"}
 SINCE_830 = "2026-11-16T06:45:00+00:00"  # 16 Nov 07:45 CET
-IST = dt.timezone(dt.timedelta(0))
+UTC = dt.timezone.utc
 NON_ISSUE = {"app_praise", "service_praise", "product_advice", "offers_deals", "market_news", "other", "general_dissatisfaction", "trading_securities", "insurance_group"}
-SOURCE_LABEL = {"appstore": "App Store", "playstore": "Google Play", "x": "X", "reddit": "Reddit", "trustpilot": "Trustpilot", "forum": "Forums"}
+SOURCE_LABEL = {"appstore": "App Store", "playstore": "Google Play", "x": "X", "reddit": "Reddit", "trustpilot": "Trustpilot"}
 # Plain place labels for evidence. Screens never link to the original post (the URL stays in evidence.json, server-side,
 # for audit only), so each quote says where it came from in words.
-FORUM_NAME = {"mse": "MoneySavingExpert"}
 
 
 
@@ -55,19 +59,12 @@ def place_label(r) -> str:
         return "X post"
     if src == "reddit":
         return f"Reddit · r/{r['subreddit']}" if r.get("subreddit") else "Reddit"
-    if src == "forum":
-        return f"Forum · {FORUM_NAME.get(r.get('subreddit'), 'consumer forum')}"
     return SOURCE_LABEL.get(src, src)
 
 
-OWNER_LABEL = {
-    "cx": "CX", "digital": "Digital", "cards": "Credit cards", "retail": "Retail", "loans": "Loans", "payments": "Payments",
-    "compliance": "Compliance", "fraud_cyber": "Fraud operations", "operations": "Operations", "rm": "Relationship managers (Premier)", "product": "Product",
-}
 RUNG_OF_TARGET = {
-    "rbi": "Financial Ombudsman Service", "rbi_ombudsman": "Financial Ombudsman Service",
-    "consumer_court": "Financial Ombudsman Service", "legal": "Financial Ombudsman Service",
-    "ministers": "Public", "complaints_team": "Complaint", "repeat": "Repeat",
+    "arn": "ARN", "fi": "ARN", "consumer_body": "ARN", "legal": "ARN",
+    "kundombudsman": "Complaint", "complaints_team": "Complaint", "public": "Public", "repeat": "Repeat",
 }
 REDIRECT_RE = re.compile(
     r"(e-?mail|write to|call|reach|connect|contact|dm|share|visit|chat|raise|mention the ref|reference id|ref id|register a complaint|nearest branch)",
@@ -76,6 +73,8 @@ REDIRECT_RE = re.compile(
 
 
 monday = M.monday
+BANK_APP = "Swedbank privat"  # the retail app on both stores (Swedbank företag is business banking, out of scope)
+NEW_VERSION = "8.4"  # the latest Google Play release in the window (App Store reviews carry no version)
 WEEKS = M.full_weeks()  # full weeks only: a one-day last week reads as a collapse
 
 
@@ -138,7 +137,7 @@ def sent_counts(rows):
     return {"positive": c.get("positive", 0), "neutral": c.get("neutral", 0), "negative": c.get("negative", 0)}
 
 
-REPLY_NOW = dt.datetime(2026, 11, 11, 23, 59, tzinfo=dt.timezone(dt.timedelta(0)))
+REPLY_NOW = dt.datetime(2026, 11, 17, 6, 45, tzinfo=dt.timezone.utc)  # the freeze, 17 Nov 07:45 CET
 
 
 def resp_stats(rs, now=REPLY_NOW):
@@ -178,7 +177,8 @@ def clip(text: str, n: int) -> str:
     return (cut[: cut.rfind(" ")] if " " in cut else cut).rstrip() + "…"
 
 
-NOT_QUOTED_RX = re.compile(r"\bRBS\b|royal\s*bank\s*of\s*scotland|\bulster\b|\bindia\b|\bindian\b", re.I)
+# A quote naming a group company outside retail scope (Baltic Banking, Sparbankerna, Swedbank Pay) is counted, never shown.
+NOT_QUOTED_RX = re.compile(r"sparbank|swedbank\s*pay|latvi|lithuan|eston|lettland|litauen|estland|baltic|baltikum", re.I)
 
 
 # NW-D91: positive and negative shares, net sentiment and the mood dial come from review sources only (App Store, Google
@@ -193,10 +193,13 @@ def review_only(rs):  # noqa: D103
 
 
 def quotable(r) -> bool:
-    """A quote that alleges something against a named person, or complains about one, is never used as evidence.
-    (Names are already redacted to role tags in normalise.py; the person may still be identifiable by role.)"""
+    """SW-D11 quote rule: on topic, first person, product-matched, never another bank as subject (the label's quote_ok,
+    set after reading the item), and never an item that alleges something against a named person or complains about
+    one (names are already redacted to role tags in normalise.py; the person may still be identifiable by role)."""
+    if not r.get("quote_ok") or r.get("relevant") != "on_topic" or r.get("entity") != RETAIL_ENTITY:
+        return False
     if NOT_QUOTED_RX.search(f"{r.get('title') or ''} {r.get('summary') or ''} {r.get('text') or ''}"):
-        return False  # NW-D84: a quote naming another brand of the group or India is counted, never shown
+        return False  # a quote naming a group company outside retail scope is counted, never shown
     return not (r.get("alleges_named") or (r.get("names_person") and r["sentiment"] == "negative"))
 
 
@@ -233,14 +236,14 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     win = [r for r in rows if in_window(r)]
     on = [r for r in win if r["relevant"] == "on_topic"]
-    bank = [r for r in on if r["entity"] == "natwest_group"]
-    group = [r for r in on if r["entity"] != "natwest_group"]
-    sinfo = streams_info([r for r in rows if r["relevant"] == "on_topic"])
+    bank = [r for r in on if r["entity"] == RETAIL_ENTITY]
+    group = [r for r in win if r["entity"] in ("investor_corporate", "group_other")]
+    sinfo = streams_info(rows)  # collection coverage: every collected record, not only on-topic ones
     basis = {s["stream"] for s in sinfo if s["full_window"]}
     basis_bank = [r for r in bank if stream_of(r) in basis]
     W = M.weights(basis_bank)
     basis_reviews = review_only(basis_bank)
-    W_REV = M.weights(basis_reviews)  # NW-D91: the mood dial and net sentiment read review sources only
+    W_REV = {"reviews": 1.0}  # NW-D91, SW-D11: review sources only, pooled across the three stores
     evidence_ids: set[str] = set()
 
     # ------------------------------------------------------------ themes
@@ -324,10 +327,10 @@ def main():
             return round(100 * (sum(1 for r in x if r["sentiment"] == "positive") - sum(1 for r in x if r["sentiment"] == "negative")) / len(x), 1) if x else None
 
         # Level and halves on the same basis (trend-basis streams, source-weighted), so the level sits between them.
-        b = [r for r in review_only(rs) if stream_of(r) in basis]  # NW-D91: review sources only
-        lvl = M.strat_net(b, W_REV)
-        n1 = M.strat_net([r for r in b if r["created_at"][:10] <= H1_END], W_REV)
-        n2 = M.strat_net([r for r in b if r["created_at"][:10] > H1_END], W_REV)
+        b = review_only(rs)  # NW-D91: review sources only (pooled, SW-D11)
+        lvl = M.strat_net(b, W_REV, M.MIN_INDICATIVE_N, lambda r: "reviews")
+        n1 = M.strat_net([r for r in b if r["created_at"][:10] <= H1_END], W_REV, M.MIN_INDICATIVE_N, lambda r: "reviews")
+        n2 = M.strat_net([r for r in b if r["created_at"][:10] > H1_END], W_REV, M.MIN_INDICATIVE_N, lambda r: "reviews")
         n1 = round(n1, 1) if n1 is not None else None
         n2 = round(n2, 1) if n2 is not None else None
         tops = collections.Counter(r["themes"][0] for r in rs).most_common(3)
@@ -340,7 +343,7 @@ def main():
             }
         )
     themes_file = {
-        "scope": "natwest_group · on_topic · window",
+        "scope": "swedbank · on_topic · window",
         "total_items": len(bank),
         "basis_items": len(basis_bank),
         "weeks": WEEKS,
@@ -370,7 +373,7 @@ def main():
         "count": len(sw),
         "to_other_bank": sum(1 for r in sw if r["switching"]["direction"] == "to"),
         "from_other_bank": sum(1 for r in sw if r["switching"]["direction"] == "from"),
-        "note": "Posts naming a move between NatWest and another bank. Counted as mentions, never as confirmed moves.",
+        "note": "Posts naming a move between Swedbank and another bank. Counted as mentions, never as confirmed moves.",
     }
     pb = [r for r in bank if r["promise_break"]]
     pb_rows = []
@@ -393,7 +396,7 @@ def main():
     tg_ex = pick_exemplars(st, 3)
     evidence_ids.update(tg_ex)
     esc = [r for r in bank if r["escalation_intent"]]
-    public_src = ("x", "reddit", "forum")
+    public_src = ("x", "reddit", "trustpilot")
     reach = sorted(
         [r for r in bank if r["source"] == "x" and (r["author_followers"] or 0) >= 10000 and r["sentiment"] == "negative" and quotable(r)],
         key=lambda r: -(r["author_followers"] or 0),
@@ -412,7 +415,7 @@ def main():
     cl_ex, cw_ex = pick_exemplars(cl, 4), pick_exemplars(cw, 4)
     evidence_ids.update(cl_ex + cw_ex)
     signals = {
-        "scope": "natwest_group · on_topic · window",
+        "scope": "swedbank · on_topic · window",
         "total_items": len(bank),
         "flags": flags,
         "promise_by_request_type": pb_rows,
@@ -434,7 +437,7 @@ def main():
             "repeat": sum(1 for r in bank if r["repeat_contact"]),
             "escalation_language": len(esc),
             "public_posts_with_escalation": sum(1 for r in esc if r["source"] in public_src),
-            "rbi_or_ombudsman_mentions": sum(1 for r in esc if r["escalation_target"] in ("rbi", "rbi_ombudsman")),
+            "arn_mentions": sum(1 for r in esc if r["escalation_target"] == "arn"),
             "climb_themes": [
                 {"id": k, "label": T[k]["label"], "count": v}
                 for k, v in collections.Counter(r["themes"][0] for r in esc if r["themes"][0] not in NON_ISSUE).most_common(6)
@@ -478,7 +481,7 @@ def main():
             "share_negative": pct(sum(1 for r in rs if r["rating"] <= 2), n),
         }
 
-    reviews = [r for r in win if r["source"] in ("playstore", "appstore")]
+    reviews = [r for r in bank if r["source"] in ("playstore", "appstore")]
     apps = []
     app_names = sorted({r["app_name"] for r in reviews})
     for app in app_names:
@@ -517,7 +520,7 @@ def main():
             {
                 "app": app,
                 "entity": entity,
-                "group_company": entity != "natwest_group",
+                "group_company": entity != RETAIL_ENTITY,
                 "business": rs[0]["business_hint"],
                 "streams": app_streams,
                 "mode": "trend_within_window",
@@ -552,28 +555,26 @@ def main():
         "definition": (
             "Mood index, from app-store and Trustpilot reviews: net sentiment, (positive − negative) ÷ reviews × 100, over "
             "the last 7 days, compared with the window average (22 October to 17 November 2026). X and Reddit are not in it "
-            "(their sentiment is indicative only). Source-weighted: each source's "
-            "net sentiment counts in proportion to its share of the whole window, so a burst or a gap in one source's "
-            "collection cannot move it. Range −100 to +100."
+            "(their sentiment is indicative only). The three review sources are pooled (about forty reviews in the window): "
+            "20 or more reviews give a figure, 3 to 19 a figure marked indicative, fewer than 3 none. Range −100 to +100."
         ),
-        # NW-D91: all three review sources, each over its own collected days (App Store from 12 Aug, Trustpilot from
-        # 1 Sep). A level against each source's own window average crosses no start date (HL-13 governs trends).
-        **M.mood(review_only(bank), M.weights(review_only(bank))),
+        # SW-D11: App Store (from 2 Nov), Google Play (from 23 Oct) and Trustpilot (from 27 Oct), pooled.
+        **M.mood(review_only(bank), {}, pooled=True),
         "sources_label": "from app-store and Trustpilot reviews",
         "baseline_label": "vs window average (22 Oct–17 Nov); no earlier baseline",
     }
 
-    # ------------------------------------------------------------ release pulse (HDFC Bank app)
-    app_rs = [r for r in reviews if r["app_name"] == "NatWest app"]
+    # ------------------------------------------------------------ release pulse (Swedbank privat app)
+    app_rs = [r for r in reviews if r["app_name"] == BANK_APP]
     app_neg = [r for r in app_rs if r["rating"] <= 2]
-    bank_app = next((a for a in apps if a["app"] == "NatWest app"), None)
-    new_v = [r for r in app_rs if (r["app_version"] or "").startswith("11")]
+    bank_app = next((a for a in apps if a["app"] == BANK_APP), None)
+    new_v = [r for r in app_rs if (r["app_version"] or "").startswith(NEW_VERSION)]
 
     def release_store(st):
         """Release figures within one store (follow-up fix 2): version 11 against earlier versions."""
         x = [r for r in app_rs if r["source"] == st]
-        nv = [r for r in x if (r["app_version"] or "").startswith("11")]
-        ov = [r for r in x if r["app_version"] and not r["app_version"].startswith("11")]
+        nv = [r for r in x if (r["app_version"] or "").startswith(NEW_VERSION)]
+        ov = [r for r in x if r["app_version"] and not r["app_version"].startswith(NEW_VERSION)]
         avg = lambda v: round(sum(r["rating"] for r in v) / len(v), 2) if v else None  # noqa: E731
         pos = lambda v: pct(sum(1 for r in v if r["rating"] >= 4), len(v))  # noqa: E731
         return {
@@ -591,12 +592,12 @@ def main():
     release = None if bank_app is None else {
         "id": "release-pulse",
         "label": "Release pulse: the fix list customers have written",
-        "app": "NatWest app", "owner": "digital", "owner_label": "Digital", "pillar": "products_services", "rung": "Voice",
+        "app": BANK_APP, "owner": "digital", "owner_label": OWNER_LABEL["digital"], "pillar": "products_services", "rung": "Voice",
         "action": "Route with evidence", "status": "needs_you",
         "count": len(app_neg), "n_reviews": len(app_rs),
         "ranks_top": len(app_neg) >= largest_other,
         "largest_other_theme": largest_other,
-        # Version 11 (the new release) on its own, so "the new app" is never an all-version figure (review #12).
+        # The latest version (8.4) on its own, so "the new app" is never an all-version figure (review #12).
         # Counts add across stores; ratings and shares are per store only (follow-up fix 2).
         "new_app_n": len(new_v),
         "new_app_negative": sum(1 for r in new_v if r["rating"] <= 2),
@@ -642,8 +643,7 @@ def main():
     }
 
     # ------------------------------------------------------------ responses (Play Store replies)
-    now = dt.datetime(2026, 11, 11, 23, 59, tzinfo=IST)
-    ps = [r for r in reviews if r["source"] == "playstore" and r["entity"] == "natwest_group"]
+    ps = [r for r in reviews if r["source"] == "playstore" and r["entity"] == RETAIL_ENTITY]
 
     by_app = {}
     for app in sorted({r["app_name"] for r in ps}):
@@ -671,7 +671,7 @@ def main():
         "brief_label": BRIEF["label"],
         "brief_time": BRIEF["time"],
         "window": {"start": W_START, "end": W_END},
-        "provenance": {"public": "Public · live", "internal": "Internal · illustrative until discovery", "joined": "Joined · needs bank systems"},
+        "provenance": {"public": "Public · live", "internal": "Internal", "joined": "Joined · needs bank systems"},
         "scope_note": "Retail figures: Swedbank Swedish Banking, private customers, on-topic items in the window. Baltic Banking, Sparbankerna, Swedbank Pay and other group companies are excluded.",
         "data_freeze": "2026-11-17T06:45:00+00:00",
         "freeze_label": "17 Nov 2026 07:45 CET",
@@ -681,7 +681,7 @@ def main():
         "theme_labels": {t["id"]: t["label"] for t in THEMES},
         "records": {
             "total": len(rows),
-            "by_source": dict(collections.Counter(r["source"] if r["source"] != "forum" else f"forum:{r['subreddit']}" for r in rows)),
+            "by_source": dict(collections.Counter(r["source"] for r in rows)),
             "window": len(win),
             "bank_on_topic_window": len(bank),
             "group_on_topic_window": len(group),
@@ -694,7 +694,7 @@ def main():
         "coverage_notes": [
             f"{x['label']}: not loaded" for x in json.loads((OUT / "sources.json").read_text(encoding="utf-8"))["sources"] if not x["loaded"]
         ] or ["Trends and mood are source-weighted; one store per rating comparison."],
-        "icici_available": False,  # oct13 field name, kept; no competitor data
+        "competitor_available": False,  # no competitor data in the public layer
     }
 
     # ------------------------------------------------------------ evidence
@@ -713,7 +713,13 @@ def main():
             "summary": r["summary"], "redacted_text": clip(r["text"] or "", 700), "title": r.get("title"),
             "app_name": r.get("app_name"), "app_version": r.get("app_version"), "rating": r.get("rating"),
             "themes": r["themes"], "sentiment": r["sentiment"], "owner": r["owner"], "entity": r["entity"],
+            "product": r.get("product"),
+            # SW-D11 contract with the screens: the Swedish original (summary) with its language and an English gloss
+            # (null when the original is English).
+            "lang": r.get("lang") or "sv", "gloss": r.get("gloss") if (r.get("lang") or "sv") != "en" else None,
         }
+        if evidence[eid]["lang"] != "en" and not evidence[eid]["gloss"]:
+            raise SystemExit(f"aggregate: evidence {eid} has no English gloss")
 
     for name, obj in (
         ("themes.json", themes_file), ("signals.json", signals), ("app_pulse.json", pulse), ("mood.json", mood),

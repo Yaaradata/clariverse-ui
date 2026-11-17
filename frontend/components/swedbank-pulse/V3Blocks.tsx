@@ -169,7 +169,7 @@ const DIAL_GRID = {
   gap: 8,
 } as const;
 
-/** Four dials inside the bank (illustrative) and the same four outside (public). Optionally scoped to one product. */
+/** Four dials inside the bank and the same four outside (public). Optionally scoped to one product. */
 export function DialsRow({
   b,
   product,
@@ -178,7 +178,7 @@ export function DialsRow({
 }: {
   b: Bundle;
   product?: ProductId;
-  /** A module's own inside figures (the Cora module: its themes only). */
+  /** A module's own inside figures (the Nina module: its themes only). */
   insideOverride?: Bundle["v3"]["dials"];
   /** False where no public figure is scoped to the block yet: the outside half reads "not yet loaded". */
   outside?: boolean;
@@ -202,7 +202,7 @@ export function DialsRow({
     <Tile
       id="dials"
       title="The numbers first"
-      sub={`Inside the bank: ${fmt(inside.total)} interactions from ${fmt(b.v3.sample.customers)} fictional customers in the demo sample, ${fmtDate(b.v3.window.start)} to this morning (${Math.round((Date.parse(b.v3.now) - Date.parse(b.v3.window.start)) / (7 * 86400000))} weeks). Outside: public posts and reviews, ${fmtDate(b.meta.window.start)} to ${fmtDate(b.meta.window.end)}.`}
+      sub={`Inside the bank: ${fmt(inside.total)} interactions from ${fmt(b.v3.sample.customers)} customers in the bank sample, ${fmtDate(b.v3.window.start)} to this morning (${Math.round((Date.parse(b.v3.now) - Date.parse(b.v3.window.start)) / (7 * 86400000))} weeks). Outside: public posts and reviews, ${fmtDate(b.meta.window.start)} to ${fmtDate(b.meta.window.end)}.`}
       prov={["internal", "public"]}
       tone="violet"
     >
@@ -227,7 +227,7 @@ export function DialsRow({
           color={C.violet}
           label="Total signals"
           big={fmt(inside.total)}
-          sub="calls, chats, emails, Cora, branch, bot, social inbox"
+          sub="calls, chats, emails, Nina, branch, bot, social inbox"
         />
         <Ring
           value={inside.closed_or_responded_pct}
@@ -241,7 +241,7 @@ export function DialsRow({
           color={C.amber}
           label="Open"
           big={fmt(inside.open)}
-          sub={`${fmtPct(inside.open_pct, 1)} of total · ${fmt(inside.waiting_on_customer)} more waiting on customer (illustrative), not counted as open`}
+          sub={`${fmtPct(inside.open_pct, 1)} of total · ${fmt(inside.waiting_on_customer)} more waiting on customer, not counted as open`}
         />
         <Ring
           value={inside.open_too_long_pct_of_open}
@@ -284,21 +284,21 @@ export function DialsRow({
                   color={C.green}
                   label="Responded"
                   big={fmt(rs.responded)}
-                  sub={`${fmtPct(rs.responded_pct)} of ${fmt(rs.reviews)} Google Play reviews · median reply ${replyTime(rs.median_reply_minutes)}`}
+                  sub={`${fmtPct(rs.responded_pct)} of ${fmt(rs.reviews)} store reviews handled · median ${replyTime(rs.median_reply_minutes)} · Internal`}
                 />
                 <Ring
                   value={rs.open_pct}
                   color={C.amber}
                   label="Open"
                   big={fmt(rs.open)}
-                  sub={`${fmtPct(rs.open_pct, 1)} of ${fmt(rs.reviews)} Google Play reviews · no bank reply yet`}
+                  sub={`${fmtPct(rs.open_pct, 1)} of ${fmt(rs.reviews)} store reviews · not yet handled · Internal`}
                 />
                 <Ring
                   value={rs.open_too_long_pct_of_reviews}
                   color={C.red}
                   label="Open too long"
                   big={fmt(rs.open_too_long)}
-                  sub={`${fmtPct(rs.open_too_long_pct_of_reviews, 1)} of ${fmt(rs.reviews)} reviews · no reply after 48 hours${rs.open_too_long === rs.open ? " (every unanswered review is older than 48 hours)" : ""}`}
+                  sub={`${fmtPct(rs.open_too_long_pct_of_reviews, 1)} of ${fmt(rs.reviews)} store reviews · not handled after 48 hours · Internal`}
                 />
               </>
             ) : (
@@ -311,8 +311,8 @@ export function DialsRow({
                   lineHeight: 1.5,
                 }}
               >
-                No store reviews are tagged to this product yet, so no bank
-                replies are shown for it.
+                0 store reviews are tagged to this product in the window, so the
+                handled share reads —.
               </div>
             )}
           </div>
@@ -351,7 +351,7 @@ export function DialsRow({
         align={["left", "right", "right", "right", "right"]}
         rows={[
           [
-            "Inside (illustrative)",
+            "Inside",
             fmt(inside.total),
             `${fmt(inside.closed)} closed + ${fmt(inside.closed_or_responded - inside.closed)} replied`,
             `${fmt(inside.open)} (${fmtPct(inside.open_pct, 1)})`,
@@ -376,8 +376,9 @@ export function DialsRow({
       />
       <MutedNote>
         {r.definition} {r.scope_note} Open too long inside the bank means open
-        past the service standard (UK standard where published, otherwise the
-        bank standard to confirm in discovery).
+        past the service standard (the Payment Services Act or the Swish rule
+        where they apply, otherwise the bank standard, to confirm with the
+        bank).
       </MutedNote>
     </Tile>
   );
@@ -785,7 +786,7 @@ export function CustomerMemory({ b, from }: { b: Bundle; from: View }) {
         <MemoryStat
           label="Priority customers among them"
           value={fmt(m.priority_among_them)}
-          sub="on a list or in Premier"
+          sub="on a list or in Premium"
           color={C.violet}
         />
       </div>

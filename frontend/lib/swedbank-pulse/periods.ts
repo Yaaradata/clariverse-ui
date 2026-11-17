@@ -117,8 +117,8 @@ export type SocialPost = {
 };
 
 /** Social pulse (30 Sep review, K2): public voice only; what LisN adds beyond the bank's own systems. */
-/** NW-D100: social-inbox handling of a post (internal · illustrative): an action on the post (acknowledged, replied
- * in thread, moved to secure message) or no action, and how many within 24 hours. */
+/** NW-D100: social-inbox handling of a post (internal): an action on the post (acknowledged, replied
+ * in thread, moved to app and internet-bank message) or no action, and how many within 24 hours. */
 export interface Handled {
   provenance: "internal";
   total: number;
@@ -138,6 +138,8 @@ export interface Handled {
 
 export type SocialPulse = {
   mentions: number;
+  /** SW-D12: on-topic public items per calendar day in the period (Ask LisN reads it for the 5–6 Nov check). */
+  daily?: { date: string; count: number }[];
   mentions_series: { end: string; count: number }[];
   high_impact_series: { end: string; count: number }[];
   /** Share of mentions with a bank response, per earlier window of the period's length. */
@@ -149,7 +151,7 @@ export type SocialPulse = {
     source: string;
     label: string;
     mentions: number;
-    /** Null where the source carries no reply data (only Google Play does in this pull). */
+    /** SW-D17: handled in the internal social inbox, every source. */
     responded: number | null;
     pct: number | null;
     reply_data?: boolean;
@@ -164,7 +166,7 @@ export type SocialPulse = {
   /** The busiest day for high-impact posts in the period, with that day's posts (up to five, by engagement). */
   high_impact_peak: { date: string; count: number; posts: SocialPost[] } | null;
   high_impact_response_pct: number | null;
-  /** NW-D100: X and Reddit posts with reach, handled in the bank's social inbox (internal · illustrative). */
+  /** NW-D100: X and Reddit posts with reach, handled in the bank's social inbox (internal). */
   high_impact_handled: Handled;
   posts: SocialPost[];
   good_response: {
@@ -190,11 +192,11 @@ export type Business = {
     count: number;
     source: "public" | "internal";
   } | null;
-  anecdote: { summary: string; source_label: string; date: string } | null;
+  anecdote: Quote | null;
 };
 
 export type BriefItem = {
-  /** A business id, or "bank" for the bank-wide Ombudsman watch item. */
+  /** A business id, or "bank" for the bank-wide ARN watch item. */
   business: string;
   business_label: string;
   kind?: "ombudsman";
@@ -237,7 +239,14 @@ export type Category = CategoryFigures & {
   subcategories: (CategoryFigures & { id: string; label: string })[];
 };
 
-export type Quote = { summary: string; source_label: string; date: string };
+export type Quote = {
+  summary: string;
+  source_label: string;
+  date: string;
+  /** SW-D11: language of the original, and its English gloss (null when the original is English). */
+  lang?: string | null;
+  gloss?: string | null;
+};
 export type ThemeRow = {
   id: string;
   label: string;
@@ -333,16 +342,16 @@ export type CardsService = {
   }[];
 };
 
-/* ---------------------------------------------------------------- Ombudsman watch (ombudsman_watch_design.md) */
+/* ---------------------------------------------------------------- ARN watch (ombudsman_watch_design.md) */
 
 export type OmbudsmanCounts = {
-  /** No reply yet, 10 days or fewer to the final-response deadline. */
+  /** No reply yet, 10 days or fewer to the first-reply standard. */
   brink: number;
-  /** Past the final-response deadline with no final response. */
+  /** Past the first-reply standard with no final decision. */
   eligible: number;
   /** Replied, then reopened or contacted again on the issue; within 90 days of the reply. */
   unhappy: number;
-  /** A partly or fully rejecting decision referred to the Financial Ombudsman Service. */
+  /** A partly or fully rejecting decision referred to ARN. */
   awaiting_io: number;
   /** On the brink, eligible or unhappy, each complaint once. A subset of open complaints. */
   at_risk: number;
@@ -356,7 +365,7 @@ export type OmbudsmanSnapshot = OmbudsmanCounts & {
 export type OmbudsmanBlock = {
   /** Complaints received and still waiting for a reply. On the brink and already eligible are both inside it. */
   pending: number;
-  /** Final responses not upholding the complaint, from the one register. */
+  /** Final decisions not upholding the complaint, from the one register. */
   io: { decided: number; reviewed: number };
   provenance: "internal";
   as_of: string;
@@ -482,14 +491,14 @@ export type Period = {
   start: string;
   end: string;
   public_start: string;
-  /** NatWest: false while no public source is loaded (the external blocks say so). */
+  /** Swedbank: false while no public source is loaded (the external blocks say so). */
   public_loaded?: boolean;
   public_end: string;
-  /** Cora module (NatWest): Cora themes inside the bank, at bank scale, any channel and product. */
+  /** Nina module (Swedbank): Nina themes inside the bank, at bank scale, any channel and product. */
   cora?: {
     internal: InternalFigures;
     rows: { id: string; label: string; internal: InternalFigures }[];
-    /** Cora conversations resolved in the period (with 7 days of follow-up) and those back as a call or complaint. */
+    /** Nina conversations resolved in the period (with 7 days of follow-up) and those back as a call or complaint. */
     returns?: {
       resolved: number;
       back_7d: number;
@@ -560,7 +569,7 @@ export type PeriodsFile = {
   periods: Record<PeriodId, Period>;
 };
 
-/** NatWest rows (brief Step 5.4): Calls · Cora · Secure message · Email · Social · Branch; oct13 ids ("whatsapp" = Cora). */
+/** Swedbank rows (brief Step 5.4): Calls · Nina · App and internet-bank messages · Email · Social · Branch; oct13 ids ("whatsapp" = Nina). */
 export const CHANNEL_ORDER = [
   "calls",
   "whatsapp",
@@ -572,8 +581,8 @@ export const CHANNEL_ORDER = [
 export const CHANNEL_LABEL: Record<string, string> = {
   emails: "Email",
   calls: "Calls",
-  chat: "Secure message",
-  whatsapp: "Cora",
+  chat: "App and internet-bank messages",
+  whatsapp: "Nina",
   social: "Social",
-  branch: "Branch",
+  branch: "Branch (kontor)",
 };

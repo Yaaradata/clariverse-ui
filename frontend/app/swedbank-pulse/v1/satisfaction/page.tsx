@@ -11,7 +11,7 @@ export default function SatisfactionPage() {
       {...shellProps(b)}
       sampleRows={b.periods.scale.sample_rows}
       title="Are customers satisfied with their journey?"
-      subtitle="Consumer Duty outcomes · Account tiers · Journey stages"
+      subtitle="FI focus areas · Account tiers · Journey stages"
       drill
     >
       <SatisfactionView b={sliceBundle(b, { view: "satisfaction" })} />

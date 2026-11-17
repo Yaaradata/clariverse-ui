@@ -12,14 +12,14 @@ import { sliceBundle } from "@/lib/swedbank-pulse/slice";
 export const dynamicParams = false;
 
 const MODULES = {
-  cards: {
-    title: "Credit cards",
+  everyday_accounts_app: {
+    title: "Everyday accounts and app",
     subtitle:
       "What · Is it real · Issue list · Where · How high · Owner and action · Evidence",
   },
-  // Cora and the digital assistant (brief Step 5.11): the oct13 digital module, relabelled.
-  cora_digital: {
-    title: "Cora and digital assistant",
+  // Nina and the Copilot assistant (SW-D04): a channel row and a module, not a card.
+  nina_digital: {
+    title: "Nina and the Copilot assistant",
     subtitle:
       "What · Is it real · Fix list · Where · How high · Owner and action · Evidence",
   },
@@ -46,8 +46,10 @@ export default async function ModulePage({
       subtitle={m.subtitle}
       drill
     >
-      {id === "cards" ? (
-        <CardsModule b={sliceBundle(b, { view: "module", id: "cards" })} />
+      {id === "everyday_accounts_app" ? (
+        <CardsModule
+          b={sliceBundle(b, { view: "module", id: "everyday_accounts_app" })}
+        />
       ) : (
         <DigitalModule b={sliceBundle(b, { view: "module", id: "digital" })} />
       )}

@@ -24,6 +24,7 @@ import {
   BaselineCaption,
   C,
   cols,
+  Gloss,
   MONO,
   MutedNote,
   negColor,
@@ -39,13 +40,13 @@ import {
 } from "./primitives";
 import { useFrom } from "./Shell";
 
-/** NatWest service lines (Pass 2 section 7), each on its Consumer Duty outcome; owners are the product owners. */
+/** Swedbank service lines (Pass 2 section 7), each on its FI focus area; owners are the product owners. */
 const PROMISES: { promise: string; pillar: string; themes: string[] }[] = [
   {
-    promise: "Cora is available 24/7",
+    promise: "Nina is available 24/7",
     pillar: "support",
     themes: [
-      "cora_unresolved",
+      "nina_unresolved",
       "care_unreachable",
       "app_speed_crash",
       "app_login_biometrics",
@@ -59,30 +60,32 @@ const PROMISES: { promise: string; pillar: string; themes: string[] }[] = [
       "fraud_scam",
       "unauthorised_txn",
       "phishing",
-      "app_reimbursement",
+      "manipulated_transfer",
       "account_freeze",
     ],
   },
   {
-    promise: "Switch to us in 7 days",
+    promise: "Open an account with BankID",
     pillar: "products_services",
     themes: ["account_opening", "closure_requests", "identity_checks"],
   },
   {
-    promise: "Same-day Faster Payments",
+    promise: "Swish payments within seconds",
     pillar: "products_services",
-    themes: ["faster_payments_failures", "failed_txn_reversal", "refund_delay"],
+    themes: ["swish_payment_failures", "failed_txn_reversal", "refund_delay"],
   },
   {
-    promise: "Mortgage decision in principle online",
+    promise: "Mortgage offer (bolån) online",
     pillar: "products_services",
-    themes: ["loan_processing", "mortgage_rate_switch", "loan_servicing"],
+    themes: ["loan_processing", "mortgage_rate", "loan_servicing"],
   },
 ];
 /** Excluded brands (Pass 3): named under the App pulse toggle only, never loaded or counted. */
 const EXCLUDED_BRANDS_LABEL = "Excluded brands, not loaded:";
 const EXCLUDED_BRANDS =
-  "Royal Bank of Scotland · Ulster Bank · Coutts · Mettle".split(" · ");
+  "Baltic Banking · Sparbankerna · Swedbank Pay · Other group companies".split(
+    " · ",
+  );
 const EXCLUDE = new Set([
   "other",
   "market_news",
@@ -269,7 +272,7 @@ function AppCard({ a, from, b }: { a: AppPulse; from: View; b: Bundle }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {a.fix_list.slice(0, 5).map((f) => {
               const e = b.evidence[f.example_ids[0]];
-              const href = `${signalHref(a.app === "NatWest app" ? "release-pulse" : f.theme, from)}${e ? `#ev-${encodeURIComponent(e.id)}` : ""}`;
+              const href = `${signalHref(/swedbank/i.test(a.app) ? "release-pulse" : f.theme, from)}${e ? `#ev-${encodeURIComponent(e.id)}` : ""}`;
               return (
                 <Link
                   key={f.theme}
@@ -320,6 +323,7 @@ function AppCard({ a, from, b }: { a: AppPulse; from: View; b: Bundle }) {
                       }}
                     >
                       {e.summary}
+                      <Gloss gloss={e.gloss} lang={e.lang} />
                     </div>
                   ) : null}
                 </Link>
@@ -358,9 +362,9 @@ export function MarketView({ b }: { b: Bundle }) {
     .filter((t) => t.score > 0)
     .sort((a, c) => c.score - a.score)
     .slice(0, 6);
-  // Pass 3: NatWest app only. Other brands and group companies are never shown, only named under the toggle.
+  // Pass 3: Swedbank app only. Other brands and group companies are never shown, only named under the toggle.
   const apps = b.pulse.apps.filter(
-    (a) => a.window && a.window.n >= 20 && a.app === "NatWest app",
+    (a) => a.window && a.window.n >= 20 && /swedbank/i.test(a.app),
   );
   const safety = themes
     .filter((t) => SEC.has(t.id))
@@ -383,7 +387,7 @@ export function MarketView({ b }: { b: Bundle }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov="public">
         <AnswerLine
-          sub={`Public voice only: X, Reddit, consumer forums, Google Play and App Store, ${rangeLong(b.meta.window.start, b.meta.window.end)}. NatWest only; other brands and group companies excluded.`}
+          sub={`Public voice only: X, Reddit, consumer forums, Google Play and App Store, ${rangeLong(b.meta.window.start, b.meta.window.end)}. Swedbank only; other brands and group companies excluded.`}
         >
           {marketAnswer(b)}
         </AnswerLine>
@@ -392,7 +396,7 @@ export function MarketView({ b }: { b: Bundle }) {
       <Tile
         id="promise-gap"
         title="What we say vs what customers hear"
-        sub="What NatWest says in public, against where customers say it falls short. Ordered by negative items."
+        sub="What Swedbank says in public, against where customers say it falls short. Ordered by negative items."
         prov="public"
       >
         <Table
@@ -427,7 +431,7 @@ export function MarketView({ b }: { b: Bundle }) {
           ])}
         />
         <MutedNote>
-          NatWest service lines, each read against the public voice on its
+          Swedbank service lines, each read against the public voice on its
           themes. Owners are the product owners.
         </MutedNote>
       </Tile>
@@ -529,6 +533,7 @@ export function MarketView({ b }: { b: Bundle }) {
                   style={{ fontSize: 14, color: C.textSec, lineHeight: 1.45 }}
                 >
                   {e?.summary}
+                  <Gloss gloss={e?.gloss} lang={e?.lang} />
                 </div>
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                   <OwnerChip owner={v.owner} />
@@ -545,7 +550,7 @@ export function MarketView({ b }: { b: Bundle }) {
       <Tile
         id="app-pulse"
         title="App pulse"
-        sub="Per app, one store at a time (App Store first, then Google Play): rating distribution, share positive, top issues and, for the NatWest app, the fix list customers have written."
+        sub="Per app, one store at a time (App Store first, then Google Play): rating distribution, share positive, top issues and, for the Swedbank app, the fix list customers have written."
         prov="public"
         right={
           <label
@@ -653,7 +658,7 @@ export function MarketView({ b }: { b: Bundle }) {
         <Tile
           id="themes"
           title="All themes this window"
-          sub={`Every theme heard, NatWest only. ${fmt(b.themes.total_items)} items; an item can carry up to three themes.`}
+          sub={`Every theme heard, Swedbank only. ${fmt(b.themes.total_items)} items; an item can carry up to three themes.`}
           prov="public"
         >
           <div style={{ maxHeight: 640, overflowY: "auto", paddingRight: 6 }}>
@@ -723,7 +728,7 @@ export function MarketView({ b }: { b: Bundle }) {
           data-testid="icici-strip"
           style={{ fontSize: 14, color: C.textMut }}
         >
-          {b.meta.icici_available
+          {b.meta.competitor_available
             ? "Where customers compare us: see the competitor strip."
             : "Competitor view: available on request."}
         </div>

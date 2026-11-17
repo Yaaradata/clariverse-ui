@@ -1,7 +1,7 @@
 /**
  * Ask LisN suggested questions (30 Sep review, K5). Each answer is built from the page's own period figures
  * (periods.json), so it always matches the screen: a short answer plus a small table. No live model call.
- * One Cards question asks about another business and is refused, to show role-based access.
+ * One Everyday accounts and app question asks about another product and is refused, to show role-based access.
  */
 
 import { fmt, fmtDate, fmtDateTime, fmtPct, fmtSigned } from "./format";
@@ -24,17 +24,24 @@ export type AskQA = {
 
 export type AskScope = "md" | "cards";
 
-const CARDS = "/swedbank-pulse/v1/business/cards";
+const CARDS = "/swedbank-pulse/v1/business/everyday_accounts_app";
 const dash = (n: number | null | undefined) =>
   n === null || n === undefined ? "—" : fmt(n);
 const withPeriod = (href: string, p: Period) => `${href}?period=${p.id}`;
 
-/* ---------------------------------------------------------------- Ombudsman watch (ombudsman_watch_design.md) */
+/* ---------------------------------------------------------------- ARN watch (SW-D06) */
 
 const signed = (n: number) =>
   n > 0 ? `up ${fmt(n)}` : n < 0 ? `down ${fmt(-n)}` : "no change";
 const IO_NOTE =
-  "Final response: 8 weeks (FCA DISP); 15 business days for payment services.";
+  "First reply within 15 business days (bank standard), then the bank's final decision and a Kundombudsman appeal; ARN pace: assumption.";
+/** The four ARN watch tiles, in screen order (SW-D06). */
+const TILE = {
+  brink: "First reply overdue",
+  eligible: "Final decision issued, Kundombudsman appeal open",
+  unhappy: "Unhappy with the final decision (ARN eligible)",
+  awaiting_io: "Filed with ARN",
+} as const;
 
 function brinkQA(
   id: string,
@@ -46,34 +53,12 @@ function brinkQA(
   return {
     id,
     q,
-    answer: `As of ${fmtDateTime(o.as_of)}, ${fmt(n.brink)} ${scope} complaints have no reply and 10 days or fewer to the final-response deadline (${fmt(n.buckets["0-3"])} with 3 days or fewer). ${fmt(n.eligible)} are already eligible to approach the Financial Ombudsman Service with no reply, and ${fmt(n.unhappy)} more because the customer is unhappy with the reply. That is ${fmt(n.at_risk)} at risk (${signed(o.delta.at_risk)} since ${fmtDateTime(o.prev_as_of)}), of ${fmt(n.received)} complaints received in the window; ${fmt(n.open)} are open, with no final response yet. Eligibility only; LisN does not predict who will refer.`,
+    answer: `As of ${fmtDateTime(o.as_of)}, ${fmt(n.brink)} ${scope} complaints have a first reply overdue (past 15 business days, bank standard). ${fmt(n.eligible)} have the bank's final decision with a Kundombudsman appeal open, and ${fmt(n.unhappy)} are unhappy with the final decision and ARN eligible. That is ${fmt(n.at_risk)} at risk (${signed(o.delta.at_risk)} since ${fmtDateTime(o.prev_as_of)}), of ${fmt(n.received)} complaints received in the window; ${fmt(n.open)} are open. Eligibility only; LisN does not predict who will file with ARN.`,
     table: {
       head: ["Measure", "Now", "Change"],
-      rows: [
-        ["0–3 days left", fmt(n.buckets["0-3"]), "—"],
-        ["4–7 days left", fmt(n.buckets["4-7"]), "—"],
-        ["8–10 days left", fmt(n.buckets["8-10"]), "—"],
-        [
-          "Within 8 weeks, 10 days or fewer left",
-          fmt(n.brink),
-          signed(o.delta.brink),
-        ],
-        [
-          "Eligible: past 8 weeks, no final response",
-          fmt(n.eligible),
-          signed(o.delta.eligible),
-        ],
-        [
-          "Eligible: unhappy with the reply",
-          fmt(n.unhappy),
-          signed(o.delta.unhappy),
-        ],
-        [
-          "Referred to the Financial Ombudsman",
-          fmt(n.awaiting_io),
-          signed(o.delta.awaiting_io),
-        ],
-      ],
+      rows: (["brink", "eligible", "unhappy", "awaiting_io"] as const).map(
+        (k) => [TILE[k], fmt(n[k]), signed(o.delta[k])],
+      ),
     },
   };
 }
@@ -81,10 +66,17 @@ function brinkQA(
 function ioQA(id: string, o: OmbudsmanBlock, scope: string): AskQA {
   return {
     id,
-    q: `How many ${scope}complaints are referred to the Financial Ombudsman Service?`,
-    answer: `${fmt(o.now.awaiting_io)} ${scope}complaints have been referred to the Financial Ombudsman Service (${signed(o.delta.awaiting_io)} since ${fmtDateTime(o.prev_as_of)}). ${IO_NOTE}`,
+    q: `How many ${scope}complaints are filed with ARN?`,
+    answer: `${fmt(o.now.awaiting_io)} ${scope}complaints are filed with ARN (${signed(o.delta.awaiting_io)} since ${fmtDateTime(o.prev_as_of)}). ${IO_NOTE}`,
   };
 }
+
+const RISK_HEAD = [
+  "At risk",
+  "First reply overdue",
+  "Appeal open",
+  "ARN eligible",
+];
 
 function ombudsmanMd(p: Period): AskQA[] {
   const o = p.ombudsman;
@@ -92,22 +84,18 @@ function ombudsmanMd(p: Period): AskQA[] {
   return [
     brinkQA(
       "md-ombudsman",
-      "How many complaints are on the brink of going to the Financial Ombudsman?",
+      "How many complaints could go to ARN?",
       o,
       "internal",
     ),
     {
       id: "md-ombudsman-business",
-      q: "Which product has the most Financial Ombudsman risk?",
-      answer: `${biz[0].label}: ${fmt(biz[0].at_risk)} of the ${fmt(o.now.at_risk)} at-risk complaints (${fmt(biz[0].brink)} on the brink, ${fmt(biz[0].eligible)} eligible with no reply, ${fmt(biz[0].unhappy)} unhappy with the reply).`,
+      q: "Which product has the most ARN risk?",
+      answer: biz[0]
+        ? `${biz[0].label}: ${fmt(biz[0].at_risk)} of the ${fmt(o.now.at_risk)} at-risk complaints (${fmt(biz[0].brink)} first reply overdue, ${fmt(biz[0].eligible)} with a Kundombudsman appeal open, ${fmt(biz[0].unhappy)} ARN eligible).`
+        : "— (no complaint is at risk in this period).",
       table: {
-        head: [
-          "Product",
-          "At risk",
-          "Within 8 weeks, 10 days or fewer left",
-          "Past 8 weeks, no final response",
-          "Unhappy with reply",
-        ],
+        head: ["Product", ...RISK_HEAD],
         rows: o.by_business.map((x) => [
           x.label,
           fmt(x.at_risk),
@@ -116,14 +104,16 @@ function ombudsmanMd(p: Period): AskQA[] {
           fmt(x.unhappy),
         ]),
       },
-      link: {
-        label: `Open the ${biz[0].label} product view`,
-        href: withPeriod(`/swedbank-pulse/v1/business/${biz[0].id}`, p),
-      },
+      link: biz[0]
+        ? {
+            label: `Open the ${biz[0].label} product view`,
+            href: withPeriod(`/swedbank-pulse/v1/business/${biz[0].id}`, p),
+          }
+        : undefined,
     },
     {
       id: "md-ombudsman-lists",
-      q: "Are customers on our lists at risk of going to the Financial Ombudsman?",
+      q: "Are customers on our lists at risk of going to ARN?",
       answer: `${fmt(o.on_lists.at_risk)} of the ${fmt(o.now.at_risk)} at-risk complaints come from customers on the bank's lists (a customer can be on more than one list). Their owners should hear first.`,
       table: {
         head: ["List", "At-risk complaints"],
@@ -145,39 +135,37 @@ function ombudsmanCards(p: Period): AskQA[] {
   return [
     brinkQA(
       "cards-ombudsman",
-      "How many credit card complaints are close to the Financial Ombudsman?",
+      "How many Everyday accounts and app complaints could go to ARN?",
       o,
-      "Credit cards",
+      "Everyday accounts and app",
     ),
     {
       id: "cards-ombudsman-save",
-      q: "Which credit card complaints should we call today?",
+      q: "Which Everyday accounts and app complaints should we call today?",
       answer: o.save_list[0]
-        ? `${o.save_list.length} complaints, highest risk first. The first: ${o.save_list[0].id}, ${o.save_list[0].issue} (${o.save_list[0].state === "eligible" ? "eligible" : `${o.save_list[0].days_left} days left`}). ${o.save_list[0].reason} Owner: ${o.save_list[0].owner}.`
-        : "No credit card complaint is at risk.",
+        ? `${o.save_list.length} complaints, highest risk first. The first: ${o.save_list[0].id}, ${o.save_list[0].issue} (${o.save_list[0].state === "eligible" ? "Kundombudsman appeal open" : o.save_list[0].days_left === null ? "first reply overdue" : `${o.save_list[0].days_left} days left`}). ${o.save_list[0].reason} Owner: ${o.save_list[0].owner}.`
+        : "No Everyday accounts and app complaint is at risk.",
       table: {
         head: ["Complaint", "Status", "Owner"],
         rows: o.save_list.map((r) => [
           `${r.id} · ${r.issue}`,
-          r.state === "eligible" ? "Eligible" : `${r.days_left} days left`,
+          r.state === "eligible"
+            ? "Appeal open"
+            : r.days_left === null
+              ? "Reply overdue"
+              : `${r.days_left} days left`,
           r.owner,
         ]),
       },
     },
     {
       id: "cards-ombudsman-categories",
-      q: "Which credit card categories feed Financial Ombudsman risk?",
+      q: "Which Everyday accounts and app categories feed ARN risk?",
       answer: cats[0]
-        ? `${cats[0].label} has the most: ${fmt(cats[0].at_risk)} of ${fmt(o.now.at_risk)} at-risk credit card complaints.`
-        : "No credit card category has an at-risk complaint.",
+        ? `${cats[0].label} has the most: ${fmt(cats[0].at_risk)} of ${fmt(o.now.at_risk)} at-risk Everyday accounts and app complaints.`
+        : "No Everyday accounts and app category has an at-risk complaint.",
       table: {
-        head: [
-          "Category",
-          "At risk",
-          "Within 8 weeks, 10 days or fewer left",
-          "Past 8 weeks, no final response",
-          "Unhappy with reply",
-        ],
+        head: ["Category", ...RISK_HEAD],
         rows: cats.map((c) => [
           c.label,
           fmt(c.at_risk),
@@ -187,8 +175,205 @@ function ombudsmanCards(p: Period): AskQA[] {
         ]),
       },
     },
-    ioQA("cards-ombudsman-io", o, "Credit cards "),
+    ioQA("cards-ombudsman-io", o, "Everyday accounts and app "),
   ];
+}
+
+/* ---------------------------------------------------------------- the five persona questions (SW-D12) */
+
+const NINA_MODULE = "/swedbank-pulse/v1/module/nina_digital";
+const pctOf = (a: number, b: number) => (b ? (100 * a) / b : null);
+
+/**
+ * Head of Customer Experience questions, built from the period figures only (no typed figures). `p` is the selected
+ * period; `week` the Last 7 days and `full` the Full window, for the questions that name their own time span.
+ */
+export function personaQuestions(
+  p: Period,
+  week: Period = p,
+  full: Period = p,
+): AskQA[] {
+  return [
+    nkiQA(p),
+    appUpdateQA(full),
+    arnWeekQA(week),
+    measureOwnerQA(p),
+    ninaQA(full),
+  ];
+}
+
+function nkiQA(p: Period): AskQA {
+  // SW-D19: a product with fewer than 3 public items shows its share on the card but never leads a ranking.
+  const rankable = (x: Period["businesses"][number]) => x.external.volume >= 3;
+  const rows = [...p.businesses].sort(
+    (x, y) =>
+      Number(rankable(y)) - Number(rankable(x)) ||
+      (y.external.negative_share ?? -1) - (x.external.negative_share ?? -1) ||
+      y.internal.negative - x.internal.negative,
+  );
+  const inside = [...p.businesses].sort(
+    (x, y) => y.internal.negative - x.internal.negative,
+  )[0];
+  const top = rows[0];
+  const pub =
+    top && top.external.negative_share !== null && rankable(top)
+      ? `In public voice, ${top.label} loses the most: ${fmtPct(top.external.negative_share)} of its ${fmt(top.external.volume)} items are negative, source-weighted${top.top_issue ? `, led by ${top.top_issue.label.toLowerCase()}` : ""}.`
+      : `Public voice is too thin in ${p.label.toLowerCase()} for a negative share (— with ${fmt(p.cx_pulse.external.volume)} items); counts are in the table.`;
+  return {
+    id: "persona-nki",
+    q: "Where is NKI being lost this month?",
+    answer: `${pub}${inside ? ` Inside the bank, ${inside.label} carries the most negative contacts (${fmt(inside.internal.negative)} of ${fmt(inside.internal.volume)}).` : ""} NKI itself is a survey measure; these are the signals that move it.`,
+    table: {
+      head: [
+        "Product",
+        "Public items",
+        "Negative share",
+        "Negative contacts",
+        "Top issue",
+      ],
+      rows: rows.map((x) => [
+        x.label,
+        fmt(x.external.volume),
+        x.external.negative_share === null
+          ? `— (${fmt(x.external.volume)})`
+          : fmtPct(x.external.negative_share),
+        fmt(x.internal.negative),
+        x.top_issue?.label ?? "—",
+      ]),
+    },
+  };
+}
+
+/** SW-D16 Q2: what the app update cost in the stores this month (the full window), from the deep-dive store rows and
+ * the app categories. Every figure comes from the period data. */
+function appUpdateQA(full: Period): AskQA {
+  const stores = full.cards.stores ?? [];
+  const reviews = stores.reduce((s, x) => s + (x.reviews ?? 0), 0);
+  const cats = full.cards.categories ?? [];
+  const upd = cats.find((c) => c.id === "app_update");
+  const rel = cats.find((c) => c.id === "app_reliability");
+  const storeLine = stores
+    .filter((x) => x.reviews)
+    .map(
+      (x) =>
+        `${x.label} ${fmt(x.reviews)} reviews${x.avg_rating !== null ? `, average ${x.avg_rating.toFixed(1)} stars` : ""}${x.share_negative !== null ? `, ${fmtPct(x.share_negative)} negative` : ""}${x.complaints[0] ? ` (top complaint: ${x.complaints[0].label.toLowerCase()}, ${fmt(x.complaints[0].count)})` : ""}`,
+    )
+    .join("; ");
+  return {
+    id: "persona-app-update",
+    q: "What did the app update cost us in the stores this month?",
+    answer: `${
+      upd
+        ? `The app update drew ${fmt(upd.external.volume)} public items, ${fmt(upd.external.negative)} of them negative, and ${fmt(upd.internal.volume)} contacts inside the bank${rel ? `; app crashes and speed add ${fmt(rel.external.volume)} public items and ${fmt(rel.internal.volume)} contacts` : ""}.`
+        : "—"
+    } In the stores since ${fmtDate(full.start)}: ${storeLine || `— (${fmt(reviews)} reviews)`}.`,
+    table: {
+      head: ["Category", "Public items", "Negative public", "Contacts", "Open"],
+      rows: [...cats]
+        .filter((c) => c.id !== "other")
+        .sort((a, b) => b.external.volume - a.external.volume)
+        .map((c) => [
+          c.label,
+          fmt(c.external.volume),
+          fmt(c.external.negative),
+          fmt(c.internal.volume),
+          fmt(c.internal.open),
+        ]),
+    },
+    link: {
+      label: "Open the Everyday accounts and app product view",
+      href: withPeriod(CARDS, full),
+    },
+  };
+}
+
+function arnWeekQA(w: Period): AskQA {
+  const o = w.ombudsman;
+  const n = o.now;
+  const biz = [...o.by_business].sort((a, b) => b.unhappy - a.unhappy);
+  return {
+    id: "persona-arn",
+    q: "Which complaints are ARN-eligible this week?",
+    answer: `As of ${fmtDateTime(o.as_of)}, ${fmt(n.unhappy)} complaints are unhappy with the bank's final decision and ARN eligible (${signed(o.delta.unhappy)} since ${fmtDateTime(o.prev_as_of)}). ${fmt(n.eligible)} more have a Kundombudsman appeal open and ${fmt(n.awaiting_io)} are filed with ARN.${biz[0] ? ` Most sit in ${biz[0].label} (${fmt(biz[0].unhappy)}).` : ""} Eligibility only; LisN does not predict who will file.`,
+    table: {
+      head: ["Product", "ARN eligible", "Appeal open", "First reply overdue"],
+      rows: biz.map((x) => [
+        x.label,
+        fmt(x.unhappy),
+        fmt(x.eligible),
+        fmt(x.brink),
+      ]),
+    },
+  };
+}
+
+function measureOwnerQA(p: Period): AskQA {
+  const q = "How many account-measure customers have no owner?";
+  const lists = p.customer_pulse.lists;
+  const l =
+    lists.find((x) => /account[- ]measure/i.test(x.label)) ??
+    lists.find((x) => x.id === "multi");
+  if (!l)
+    return {
+      id: "persona-measures",
+      q,
+      answer: "— (the account-measure list is not in this period).",
+    };
+  const none = Math.max(0, l.rm.of - l.rm.alerted);
+  return {
+    id: "persona-measures",
+    q,
+    answer: `${fmt(none)} of ${fmt(l.rm.of)} ${l.label.toLowerCase()} customers due an owner alert have no owner alerted yet. In ${p.label.toLowerCase()}, ${fmt(l.in_contact)} of them were in contact, with ${fmt(l.open)} contacts open${l.not_responded_48h === null ? "" : ` and ${fmt(l.not_responded_48h)} with no reply after 48 hours`}.`,
+    table: {
+      head: ["Measure", "Count"],
+      rows: [
+        ["Due an owner alert", fmt(l.rm.of)],
+        ["Owners alerted", fmt(l.rm.alerted)],
+        ["No owner yet", fmt(none)],
+        ["Contacts open", fmt(l.open)],
+        ["No reply 48 h", dash(l.not_responded_48h)],
+      ],
+    },
+  };
+}
+
+function ninaQA(full: Period): AskQA {
+  const q = "Where does Nina hand off and lose the customer?";
+  const link = { label: "Open the Nina module", href: NINA_MODULE };
+  const c = full.cora;
+  if (!c)
+    return {
+      id: "persona-nina",
+      q,
+      answer: "— (no Nina figures in this period).",
+      link,
+    };
+  const rows = [...c.rows].sort(
+    (a, b) => b.internal.volume - a.internal.volume,
+  );
+  const handoff = c.rows.find((r) => r.id === "nina_handoff_lost");
+  const r = c.returns;
+  const back = r?.resolved ? pctOf(r.back_7d, r.resolved) : null;
+  return {
+    id: "persona-nina",
+    q,
+    answer: `${rows[0] ? `${rows[0].label} leads: ${fmt(rows[0].internal.volume)} contacts where Nina did not finish the job, ${fmt(rows[0].internal.open)} still open.` : "—"}${handoff && handoff !== rows[0] ? ` ${handoff.label}: ${fmt(handoff.internal.volume)} contacts.` : ""}${r?.resolved ? ` Of ${fmt(r.resolved)} Nina conversations resolved ${fmtDate(r.from)} to ${fmtDate(r.until)}, ${fmt(r.back_7d)} (${fmtPct(back)}) came back as a call or a complaint within 7 days.` : ""}`,
+    table: {
+      head: [
+        "Where Nina lost the customer",
+        "Contacts",
+        "Open",
+        "Open too long",
+      ],
+      rows: rows.map((x) => [
+        x.label,
+        fmt(x.internal.volume),
+        fmt(x.internal.open),
+        dash(x.internal.open_too_long),
+      ]),
+    },
+    link,
+  };
 }
 
 export function mdQuestions(p: Period): AskQA[] {
@@ -204,7 +389,7 @@ function mdBase(p: Period): AskQA[] {
   const b = p.brief;
   const biz = p.businesses;
   const byNeg = [...biz]
-    .filter((x) => x.external.negative_share !== null)
+    .filter((x) => x.external.negative_share !== null && x.external.volume >= 3)
     .sort(
       (x, y) =>
         (y.external.negative_share ?? 0) - (x.external.negative_share ?? 0),
@@ -233,7 +418,7 @@ function mdBase(p: Period): AskQA[] {
     },
     {
       id: "md-lists",
-      q: "How are our financially vulnerable customers being served?",
+      q: "How are customers in a vulnerable situation being served?",
       answer: `Across the four lists, on the bank's own channels: ${cp.lists.map((l) => `${l.label} ${fmt(l.open)} open`).join("; ")}. Owners alerted for ${fmt(cp.lists.reduce((s, l) => s + l.rm.alerted, 0))} of ${fmt(cp.lists.reduce((s, l) => s + l.rm.of, 0))} customers due an alert, across the four lists (a customer can be on more than one list).`,
       table: {
         head: [
@@ -354,16 +539,16 @@ function mdBase(p: Period): AskQA[] {
     {
       id: "md-response",
       q: "Did the bank respond to public posts?",
-      // NW-D100: both answers, each with its usual tag: replies on review sources (public), handling on social (internal).
-      answer: `Review sources (Public · live): the bank replied to ${fmt(sp.by_source.reduce((n, x) => n + (x.responded ?? 0), 0))} of ${fmt(sp.by_source.filter((x) => x.responded !== null).reduce((n, x) => n + x.mentions, 0))} reviews where the source shows replies. Social (Internal): the social inbox handled ${fmt(hh.handled)} of ${fmt(hh.total)} X and Reddit posts with reach and ${fmt(mh.handled)} of ${fmt(mh.total)} high-priority mentions, ${mh.within_24h_pct ?? "—"}% of mentions within 24 hours. Informational, not a target.`,
+      // SW-D17: every source from the internal social inbox (Internal).
+      answer: `Internal: the social inbox handled ${fmt(sp.by_source.reduce((n, x) => n + (x.responded ?? 0), 0))} of ${fmt(sp.by_source.reduce((n, x) => n + x.mentions, 0))} on-topic public items across the five sources (${sp.by_source.map((x) => `${x.label} ${x.pct ?? "—"}%`).join(", ")}). The social inbox also handled ${fmt(hh.handled)} of ${fmt(hh.total)} X and Reddit posts with reach and ${fmt(mh.handled)} of ${fmt(mh.total)} high-priority mentions, ${mh.within_24h_pct ?? "—"}% of mentions within 24 hours. Informational, not a target.`,
       table: {
         head: ["Source", "Basis", "Posts", "Responded or handled", "Rate"],
         rows: [
           ...sp.by_source.map((x) => [
             x.label,
-            "Public · live",
+            "Internal",
             fmt(x.mentions),
-            x.responded === null ? "no reply data" : fmt(x.responded),
+            fmt(x.responded ?? 0),
             x.pct === null ? "—" : `${x.pct}%`,
           ]),
           [
@@ -406,7 +591,7 @@ function cardsBase(p: Period): AskQA[] {
   return [
     {
       id: "cards-top",
-      q: "What are the top issues in credit cards?",
+      q: "What are the top issues in Everyday accounts and app?",
       answer: `${c.categories[0].label} leads: ${fmt(c.categories[0].internal.volume)} internal contacts and ${fmt(c.categories[0].external.volume)} public items.`,
       table: {
         head: ["Category", "Internal", "Open", "Public", "Negative public"],
@@ -427,7 +612,7 @@ function cardsBase(p: Period): AskQA[] {
       answer:
         c.internal.not_responded_48h === null
           ? "A reply can only be 48 hours late in a period longer than 48 hours; pick 7 days or more."
-          : `${fmt(c.internal.not_responded_48h)} credit card contacts waited more than 48 hours for a first reply. ${late[0].label} has the most (${dash(late[0].internal.not_responded_48h)}). Threads waiting on the customer are not counted.`,
+          : `${fmt(c.internal.not_responded_48h)} Everyday accounts and app contacts waited more than 48 hours for a first reply. ${late[0].label} has the most (${dash(late[0].internal.not_responded_48h)}). Threads waiting on the customer are not counted.`,
       table: {
         head: [
           "Category",
@@ -448,7 +633,7 @@ function cardsBase(p: Period): AskQA[] {
     {
       id: "cards-standards",
       q: "Are we meeting our service standards?",
-      answer: `${fmt(sv.missed_timelines.total)} public credit card posts describe a missed service standard, ${fmt(sv.transparency.count)} ask where something is, and ${fmt(sv.tat_related.contacts)} internal contacts (${fmtPct(sv.tat_related.share)}) carry a delivery service standard. Heard in public; not a compliance figure.`,
+      answer: `${fmt(sv.missed_timelines.total)} public Everyday accounts and app posts describe a missed service standard, ${fmt(sv.transparency.count)} ask where something is, and ${fmt(sv.tat_related.contacts)} internal contacts (${fmtPct(sv.tat_related.share)}) carry a delivery service standard. Heard in public; not a compliance figure.`,
       table: {
         head: ["Request type", "Posts"],
         rows: sv.missed_timelines.rows.map((r) => [r.label, fmt(r.count)]),
@@ -460,7 +645,7 @@ function cardsBase(p: Period): AskQA[] {
     },
     {
       id: "cards-escalate",
-      q: "Where do credit card contacts escalate?",
+      q: "Where do Everyday accounts and app contacts escalate?",
       answer: `${fmt(c.internal.escalations)} internal contacts were escalated to the complaints team or beyond; ${fmt(sv.public_escalation)} public posts use escalation language${sv.targets[0] ? `, most naming ${sv.targets[0].label}` : ""}.`,
       table: {
         head: ["Rung (internal)", "Contacts"],
@@ -473,8 +658,8 @@ function cardsBase(p: Period): AskQA[] {
     },
     {
       id: "cards-channels",
-      q: "Which channels do credit card customers use?",
-      answer: `The bank's own credit card contacts by channel, ${fmt(c.internal.volume)} in all; and ${fmt(c.external.volume)} public items (${Object.entries(
+      q: "Which channels do Everyday accounts and app customers use?",
+      answer: `The bank's own Everyday accounts and app contacts by channel, ${fmt(c.internal.volume)} in all; and ${fmt(c.external.volume)} public items (${Object.entries(
         c.channels.external,
       )
         .map(([k, v]) => `${k} ${fmt(v)}`)
@@ -483,10 +668,10 @@ function cardsBase(p: Period): AskQA[] {
     },
     {
       id: "cards-rising",
-      q: "Which credit card themes are rising in public?",
+      q: "Which Everyday accounts and app themes are rising in public?",
       answer: mk.rising[0]
         ? `${mk.rising[0].label}: share of voice ${fmtSigned(mk.rising[0].share_change_pct)} ${p.compare} (${fmt(mk.rising[0].count)} items).`
-        : "No credit card theme is rising in this period.",
+        : "No Everyday accounts and app theme is rising in this period.",
       table: {
         head: ["Theme", "Items", "Share of voice"],
         rows: mk.rising.map((t) => [
@@ -502,8 +687,8 @@ function cardsBase(p: Period): AskQA[] {
     },
     {
       id: "cards-closure",
-      q: "Are customers saying they will switch or close their card?",
-      answer: `${fmt(sv.closure.public_intent)} public posts say they will close the card or leave. The bank received ${fmt(sv.closure.internal_requests)} closure requests; ${fmt(sv.closure.internal_open)} are still open.`,
+      q: "Are customers saying they will switch bank (byta bank)?",
+      answer: `${fmt(sv.closure.public_intent)} public posts say they will leave or switch bank (byta bank). The bank received ${fmt(sv.closure.internal_requests)} closure requests; ${fmt(sv.closure.internal_open)} are still open.`,
       table: {
         head: ["Measure", "Count"],
         rows: [
@@ -515,7 +700,7 @@ function cardsBase(p: Period): AskQA[] {
     },
     {
       id: "cards-disputes",
-      q: "How are card disputes moving?",
+      q: "How are payment disputes moving?",
       answer: `${sv.disputes.map((d) => `${d.stage.toLowerCase()} ${fmt(d.count)}`).join("; ")}.`,
       table: {
         head: ["Stage", "Disputes"],

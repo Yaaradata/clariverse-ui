@@ -1,14 +1,13 @@
-"""V3 public layer (B7 §2 T2, §4 method fixes), built on the classified Jul–Sep data.
+"""Public layer for the screens (SW-D11): pulse-by-product rows and per-store series, tagged Public · live.
 
-Reads data/out/app_jul_sep/work/classified.jsonl (from scripts/hdfc_pipeline/) and writes, tagged Public · live:
-  data/out/app_jul_sep/products.json      pulse-by-product rows, one product per item
-  data/out/app_jul_sep/store_series.json  per-app, per-store weekly share negative and version ratings (one store at a time)
+Reads data/out/swedbank_pulse/work/classified.jsonl and writes:
+  data/out/swedbank_pulse/products.json      pulse-by-product rows, one product per item
+  data/out/swedbank_pulse/store_series.json  per-store weekly ratings for the Swedbank privat app (one store at a time)
 
-Product tagging, per item (bank entity, on-topic, in the window):
-  cards business → Cards · payments → PayZapp and Faster Payments · loans → Home, Auto and two-wheeler, or Personal loans (by app,
-  then keyword; personal by default) · retail banking → Insurance if the item is about a bank-sold policy, Digital if its
-  primary theme is an app or NetBanking theme, otherwise Accounts and deposits · wealth, SME and merchant, corporate →
-  outside the table (listed separately).
+Product routing is total (SW-D15 point 9): each retail on-topic item carries exactly one product from the checked-in
+labels (classify.py): the six products of common.PRODUCTS or nina_digital (the Nina module, a channel row, never a card).
+product_of() returns that product; for an item without one it applies the same Swedish routing table as classify.py
+(brief Step 4). An item that routes nowhere is an error, never a silent drop.
 """
 
 from __future__ import annotations
@@ -16,76 +15,40 @@ from __future__ import annotations
 import collections
 import datetime as dt
 import json
-import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import PRODUCT_LABEL, PRODUCTS, dump  # noqa: E402
 import aggregate as A  # noqa: E402  (reply statistics, one definition)
-import method as M  # noqa: E402  (scripts/hdfc_pipeline/method.py: source-weighted trends)
+import method as M  # noqa: E402  (source-weighted trends)
+from classify import ROUTED, product_by_rule  # noqa: E402
+from normalise import RETAIL_ENTITY  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "data" / "out" / "swedbank_pulse"
 W_START, W_END, H1_END = "2026-10-22", "2026-11-17", "2026-11-03"
 NON_ISSUE = {"app_praise", "service_praise", "product_advice", "offers_deals", "market_news", "other", "general_dissatisfaction"}
-DIGITAL_GROUP = {"app_speed_crash", "app_usability", "app_login_biometrics", "device_security_block", "new_app_release", "online_banking", "app_praise"}
-HOME = re.compile(r"home ?loan|housing loan|mortgage|property", re.I)
-AUTO = re.compile(r"car loan|auto loan|two[- ]wheeler|bike loan|vehicle loan", re.I)
-INSURANCE = re.compile(r"insurance|policy|premium|ulip|term plan", re.I)
+REVIEW_SOURCES = ("appstore", "playstore", "trustpilot")
+BANK_APP = "Swedbank privat"
 
 
 def load():
     rows = [json.loads(line) for line in open(OUT / "work" / "classified.jsonl", encoding="utf-8")]
-    return [r for r in rows if W_START <= r["created_at"][:10] <= W_END and r["relevant"] == "on_topic" and r["entity"] == "natwest_group"]
-
-
-# NW-D92: product routing by what the post is about (UK words and the theme), in this order. The old HDFC business
-# lines sent almost everything to Current accounts.
-ROUTE = [
-    ("mortgages", re.compile(r"mortgage|remortgag|rate switch|product transfer|redemption|redeem|\bLTV\b|fixed rate (deal|ends)", re.I),
-     {"mortgage_rate_switch", "loan_closure_documents"}),
-    ("savings", re.compile(r"\bsavings?\b|\bisa\b|\bisas\b|interest rate|\bAER\b|bonus rate|saver\b|easy access|regular saver", re.I),
-     {"deposits_rates"}),
-    ("payments_fraud", re.compile(r"faster payment|payment (failed|declined|pending|delayed|not (arrived|received))|transfer|"
-                                  r"\brefund|chargeback|\bfraud|\bscam|blocked (my )?(account|card|payment)|"
-                                  r"direct debit|standing order|open banking|\bpayee\b", re.I),
-     {"faster_payments_failures", "failed_txn_reversal", "refund_delay", "fraud_scam", "unauthorised_txn", "phishing",
-      "app_reimbursement", "account_freeze", "merchant_pos"}),
-    # NW-D98: borrowing words go to Personal loans, checked before cards (APR and a declined application are loans).
-    ("personal_loans", re.compile(r"personal loan|\bapr\b|"
-                                  r"(loan|application|credit|borrowing|overdraft)\w*\s+(was\s+|been\s+|got\s+)?declin|"
-                                  r"declin\w*\s+(for|my)\s+(a\s+)?(loan|credit|overdraft)|"
-                                  r"credit score.{0,40}(loan|borrow|appl)|(loan|borrow|appl\w*).{0,40}credit score|"
-                                  r"\brepayment|settle (it |the loan )?early|early settlement|overdraft (decision|application|limit)",
-                                  re.I),
-     {"loan_processing", "loan_servicing"}),
-    ("cards", re.compile(r"credit card|credit limit|\bcard limit|reward|cashback|balance transfer|annual fee", re.I),
-     {"card_fees_charges", "card_limit", "rewards_value", "reward_redemption", "card_application", "card_eligibility_upgrade",
-      "card_dispatch", "dispute_chargeback"}),
-]
-
-
-# NW-D98: the loose borrowing words route to Personal loans in reviews and Reddit only. On X they are mostly football
-# loans, bank-sector news and corporate lending, so X needs one of the specific phrases in ROUTE.
-LOOSE_LOAN = re.compile(r"\bloans?\b(?! to value)|\bborrow|\blending\b|affordab", re.I)
+    return [r for r in rows if W_START <= r["created_at"][:10] <= W_END and r["relevant"] == "on_topic" and r["entity"] == RETAIL_ENTITY]
 
 
 def product_of(r) -> str | None:
-    if r.get("business") == "group_company":
+    """One of the six products or "nina_digital" for a retail item; None for an item outside retail scope."""
+    if r.get("entity") != RETAIL_ENTITY or r.get("business") == "group_company":
         return None
-    text = f"{r.get('title') or ''} {r.get('text') or ''}"
-    theme = r["themes"][0] if r.get("themes") else None
-    # The theme decides first when it belongs to one product; otherwise the words of the post.
-    for pid, _rx, themes in ROUTE:
-        if theme in themes:
-            return pid
-    for pid, rx, _themes in ROUTE:
-        if pid == "personal_loans" and r.get("source") != "x" and LOOSE_LOAN.search(text):
-            return pid
-        if rx.search(text):
-            return pid
-    return "current_accounts"  # accounts, overdrafts, the app and everyday banking
+    p = r.get("product")
+    if p in ROUTED:
+        return p
+    p = product_by_rule(f"{r.get('title') or ''} {r.get('text') or ''}".lower())
+    if p not in ROUTED:
+        raise ValueError(f"unrouted public item {r.get('id')}")
+    return p
 
 
 def build_products(rows, basis) -> dict:
@@ -95,10 +58,11 @@ def build_products(rows, basis) -> dict:
     excluded = collections.Counter()
     for r in rows:
         p = product_of(r)
-        if p:
-            by[p].append(r)
-        else:
-            excluded[r["business"]] += 1
+        if p is None:
+            raise SystemExit(f"public_v3: unrouted on-topic item {r['id']}")
+        by[p].append(r)
+        if p not in PRODUCT_LABEL:
+            excluded[p] += 1  # nina_digital: the Nina module, not a product card
     basis_all = [r for r in rows if r["_stream"] in basis]
     weights = M.weights(basis_all)
     out = []
@@ -127,10 +91,13 @@ def build_products(rows, basis) -> dict:
                 "escalation": sum(1 for r in rs if r["escalation_intent"]),
                 "repeat": sum(1 for r in rs if r["repeat_contact"]),
                 "promise_break_mentions": sum(1 for r in rs if r["promise_break"]),
-                "share_negative": (round(100 * sum(1 for r in rs if r["source"] in ("appstore", "playstore", "trustpilot")
-                                                and r["sentiment"] == "negative")
-                                         / max(sum(1 for r in rs if r["source"] in ("appstore", "playstore", "trustpilot")), 1), 1)
-                                   if any(r["source"] in ("appstore", "playstore", "trustpilot") for r in rs) else None),  # NW-D91
+                # NW-D91: reviews only, pooled across the stores; n-rule (SW-D11): >= 20 a share, 3-19 indicative, < 3 none.
+                "reviews": (nrev := sum(1 for r in rs if r["source"] in REVIEW_SOURCES)),
+                "share_negative": (round(100 * sum(1 for r in rs if r["source"] in REVIEW_SOURCES and r["sentiment"] == "negative")
+                                         / nrev, 1) if nrev >= M.MIN_INDICATIVE_N else None),
+                "share_rule": M.n_rule(nrev),
+                "social": sum(1 for r in rs if r["source"] in ("x", "reddit")),
+                "quotable": sum(1 for r in rs if A.quotable(r)),
                 "trend_change_pct": change,
                 "trend_basis": {"first_half": f, "second_half": s, "first_share": tr["first_share"], "second_share": tr["second_share"]},
                 "top_issue": {"id": ranked[0][0], "label": labels[ranked[0][0]], "negative": ranked[0][1]["negative"]} if ranked else None,
@@ -143,17 +110,20 @@ def build_products(rows, basis) -> dict:
     total_rows = sum(r["count"] for r in out)
     return {
         "provenance": "public",
-        "scope": "natwest_group · on_topic · window",
+        "scope": "swedbank · on_topic · window",
         "note": (
-            "Each public item is tagged to one product from its business and theme. Loans are split into home, auto "
-            "and personal by app and keyword. Row totals count each item once; issue lists count theme tags (an item "
-            "can carry up to three). Wealth, SME and merchant, and corporate items are outside the product table."
+            "Each retail on-topic public item is routed to exactly one product (or to the Nina module) from what it is "
+            "about. Row totals count each item once; issue lists count theme tags (an item can carry up to three). "
+            "Baltic Banking, Sparbankerna, Swedbank Pay, business customers and investor or corporate news are outside "
+            "the table and outside every count."
         ),
         "rows": out,
         "excluded": dict(excluded),
         "total_rows": total_rows,
         "total_items": meta["records"]["bank_on_topic_window"],
-        "reconciles": total_rows + sum(excluded.values()) == meta["records"]["bank_on_topic_window"],
+        "nina_digital": len(by.get("nina_digital", [])),
+        "routing": {p: len(by.get(p, [])) for p in ROUTED},
+        "reconciles": total_rows + sum(excluded.values()) == meta["records"]["bank_on_topic_window"] == len(rows),
         "trend_rule": (
             "Source-weighted share of trend-basis items, second half (4–17 Nov) vs first half (22 Oct–3 Nov): each "
             "source's share counts in proportion to its share of the window. Shown only when both halves have at "
@@ -185,10 +155,10 @@ def vkey(v: str):
 def build_store_series() -> dict:
     allrows = [json.loads(line) for line in open(OUT / "work" / "classified.jsonl", encoding="utf-8")]
     apps = []
-    for app in ("NatWest app",):
+    for app in (BANK_APP,):
         entry = {"app": app, "stores": []}
         for store, label in (("appstore", "App Store"), ("playstore", "Google Play")):
-            rs = [r for r in allrows if r["source"] == store and r["app_name"] == app]
+            rs = [r for r in allrows if r["source"] == store and r["app_name"] == app and r["entity"] == RETAIL_ENTITY and r["relevant"] == "on_topic"]
             if not rs:
                 continue
             start = min(r["created_at"][:10] for r in rs)
@@ -239,7 +209,9 @@ def main():
     products = build_products(rows, basis)
     dump(products, OUT / "products.json")
     dump(build_store_series(), OUT / "store_series.json")
-    print("products reconcile:", products["reconciles"], products["total_rows"], products["excluded"])
+    print("products reconcile:", products["reconciles"], products["total_rows"], products["routing"])
+    if not products["reconciles"]:
+        raise SystemExit("public_v3: product rows do not reconcile with the on-topic total")
     for r in products["rows"]:
         print(f"  {r['label']:32} {r['count']:5} neg {r['negative']:5} esc {r['escalation']:3} trend {r['trend_change_pct']} top {r['top_issue'] and r['top_issue']['label']}")
 

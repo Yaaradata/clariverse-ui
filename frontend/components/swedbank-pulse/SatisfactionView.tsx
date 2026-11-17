@@ -34,6 +34,7 @@ import {
   BarRow,
   BaselineCaption,
   C,
+  Gloss,
   Kpi,
   MONO,
   MutedNote,
@@ -62,7 +63,7 @@ const SOURCE_LABEL: Record<string, string> = {
 };
 const BUSINESS_LABEL: Record<string, string> = {
   retail_banking: "Retail banking",
-  cards: "Credit cards",
+  cards: "Cards",
   loans: "Loans",
   payments: "Payments",
   wealth: "Wealth",
@@ -71,12 +72,12 @@ const BUSINESS_LABEL: Record<string, string> = {
   group_company: "Group company",
 };
 const PRODUCT_NAME: Record<string, string> = {
-  current_accounts: "Current accounts and app",
-  payments_fraud: "Payments and fraud",
-  cards: "Credit cards",
-  savings: "Savings",
-  mortgages: "Mortgages",
-  personal_loans: "Personal loans",
+  everyday_accounts_app: "Everyday accounts and app",
+  payments_swish: "Payments and Swish",
+  cards: "Cards",
+  savings_funds: "Savings and funds",
+  mortgages: "Mortgages (bolån)",
+  consumer_loans: "Consumer loans",
 };
 const EXCLUDE = new Set(["other", "market_news", "offers_deals"]);
 
@@ -144,14 +145,14 @@ export function SatisfactionView({ b }: { b: Bundle }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov={["public", "internal"]}>
-        <AnswerLine sub="Consumer Duty outcomes from public voice (live); account tiers and journey stages are illustrative until discovery.">
+        <AnswerLine sub="FI focus areas from public voice (live); account tiers and journey stages are from the bank sample until discovery.">
           {satisfactionAnswer(b)}
         </AnswerLine>
       </Tile>
 
       <Tile
         title="Public items this window, by source"
-        sub={`NatWest, on-topic, ${rangeLabel(b.meta.window.start, b.meta.window.end)}`}
+        sub={`Swedbank, on-topic, ${rangeLabel(b.meta.window.start, b.meta.window.end)}`}
         prov="public"
         id="sources"
       >
@@ -179,7 +180,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
 
       <Tile
         title="Interactions and sentiment by account tier"
-        sub="Contacts across all channels at bank scale, in the bank's tier mix, 1 Aug to this morning (illustrative)"
+        sub={`Contacts across all channels at bank scale, in the bank's tier mix, ${fmtDate(b.v3.window.start)} to this morning`}
         prov="internal"
         id="tiers"
       >
@@ -214,8 +215,8 @@ export function SatisfactionView({ b }: { b: Bundle }) {
           ])}
         />
         <MutedNote>
-          Account tiers as named on the bank's website; Premier rows together.
-          Figures are illustrative, not NatWest figures.
+          Account tiers: Bas, Premium and Private Banking; Premium rows
+          together. Inside figures are from the bank sample until discovery.
         </MutedNote>
       </Tile>
 
@@ -304,7 +305,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
       </Tile>
 
       <Tile
-        title="Top themes by Consumer Duty outcome"
+        title="Top themes by FI focus area"
         sub="Tap an outcome to filter. Counts are public items that carry the theme."
         prov="public"
         id="pillars"
@@ -453,6 +454,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
                   style={{ fontSize: 14, color: C.textSec, lineHeight: 1.5 }}
                 >
                   {e?.summary}
+                  <Gloss gloss={e?.gloss} lang={e?.lang} />
                 </div>
                 <div style={{ fontSize: 12.5, color: C.textMut }}>
                   {fmt(t.count)} items · {e?.place}
@@ -465,7 +467,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
 
         <Tile
           title="Retention watchlist"
-          sub={`Switching intent in high-value tiers, routed to the owner. Sample of ${fmt(b.v3.sample.interactions)} contacts (illustrative).`}
+          sub={`Switching intent in high-value tiers, routed to the owner. Sample of ${fmt(b.v3.sample.interactions)} contacts.`}
           prov={["internal", "public"]}
           id="retention"
         >
@@ -482,9 +484,9 @@ export function SatisfactionView({ b }: { b: Bundle }) {
               r.tier,
               fmt(r.customers_with_closure_intent),
               r.top_driver,
-              r.tier.startsWith("Premier")
-                ? "Premier banking managers"
-                : "Current account product owner",
+              r.tier.startsWith("Premium")
+                ? "Premium and Private Banking advisers"
+                : "Everyday banking product owner",
               r.action,
             ])}
           />
@@ -493,7 +495,8 @@ export function SatisfactionView({ b }: { b: Bundle }) {
               <>
                 In public voice,{" "}
                 <strong>{fmt(b.signals.closure_intent.count)}</strong> posts say
-                the customer will switch, close or has closed an account or card
+                the customer will switch bank (byta bank), close or has closed
+                an account
                 {closureEx.length ? ". For example:" : "."}
               </>
             ) : (
@@ -516,6 +519,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
               <span style={{ color: C.textMut }}>
                 ({e.place} · {fmtDate(e.created_at)})
               </span>
+              <Gloss gloss={e.gloss} lang={e.lang} />
             </Link>
           ))}
         </Tile>
@@ -524,7 +528,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
       <div style={PAIRS}>
         <Tile
           title="Where is the struggle? Journey stages"
-          sub={`${fmt(internal.journey_stages.total)} interactions mapped to journey stages (the same demo sample)`}
+          sub={`${fmt(internal.journey_stages.total)} interactions mapped to journey stages (the same bank sample)`}
           prov="internal"
           id="journey"
         >

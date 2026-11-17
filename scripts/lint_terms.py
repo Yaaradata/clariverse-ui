@@ -254,6 +254,14 @@ def main() -> int:
     hits += nw_hits
     print(f"lint_terms: NatWest rules checked on {nw_scanned} files and pages, "
           f"including {lint_natwest.CRAWLED_ROUTES} rendered routes under /natwest-pulse")
+    # Swedbank, scope `swedbank` (docs/swedbank/kickoff_prompt.md Step 7, SW-D15 points 5-6): UK and India terms,
+    # internal labels, names, other banks, on the source, the payloads, the built pages and the crawl.
+    import lint_swedbank  # noqa: PLC0415
+
+    sw_hits, sw_scanned = lint_swedbank.run()
+    hits += sw_hits
+    print(f"lint_terms: Swedbank rules checked on {sw_scanned} files and pages, "
+          f"including {lint_swedbank.CRAWLED_ROUTES} rendered routes under /swedbank-pulse")
     built = scan_build(hits)
     if not built:
         print("lint_terms: NOTE no V2 build in frontend/.next; built pages not checked")

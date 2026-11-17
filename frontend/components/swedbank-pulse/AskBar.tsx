@@ -18,6 +18,7 @@ import {
   type AskScope,
   cardsQuestions,
   mdQuestions,
+  personaQuestions,
 } from "@/lib/swedbank-pulse/askAnswers";
 import { addRecent, pin, useAskSession } from "@/lib/swedbank-pulse/askSession";
 import {
@@ -160,19 +161,24 @@ export function AskBar({
       : null;
   const viewLabel =
     scope === "cards"
-      ? "Credit cards product view"
+      ? "Everyday accounts and app product view"
       : scope === "md"
         ? "Head of Customer Experience"
         : "Full window";
 
   const suggestions: AskQA[] = useMemo(() => {
     // The five persona questions (Pass 2 section 13) lead the list on every view, then the view's own questions.
-    const persona: AskQA[] = ask.prompts.slice(0, 5).map((x) => ({
-      id: x.id,
-      q: x.prompt,
-      answer: x.answer,
-      link: x.links[0],
-    }));
+    // SW-D12: on the Head of CX view they are built from the period figures (askAnswers.personaQuestions), so they
+    // match the screen; elsewhere the server-side answers in ask.json carry the same five.
+    const persona: AskQA[] =
+      period && scope === "md" && periods
+        ? personaQuestions(period, periods.periods["7d"], periods.periods.all)
+        : ask.prompts.slice(0, 5).map((x) => ({
+            id: x.id,
+            q: x.prompt,
+            answer: x.answer,
+            link: x.links[0],
+          }));
     const own =
       period && scope === "cards"
         ? cardsQuestions(period)
@@ -186,7 +192,7 @@ export function AskBar({
             }));
     const seen = new Set(persona.map((x) => x.q));
     return [...persona, ...own.filter((x) => !seen.has(x.q))];
-  }, [period, scope, ask]);
+  }, [period, scope, ask, periods]);
 
   useEffect(() => {
     if (open) input.current?.focus();

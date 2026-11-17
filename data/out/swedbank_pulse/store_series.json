@@ -3,371 +3,132 @@
  "rule": "Ratings are compared within one store only. Each weekly series starts at that store's first exported review; weeks before it are not plotted. Negative = 1–2★, positive = 4–5★.",
  "apps": [
   {
-   "app": "NatWest app",
+   "app": "Swedbank privat",
    "stores": [
     {
      "store": "appstore",
      "store_label": "App Store",
-     "records": 1079,
-     "export_start": "2026-08-12",
-     "export_end": "2026-11-13",
+     "records": 2,
+     "export_start": "2026-11-02",
+     "export_end": "2026-11-14",
      "starts_mid_window": true,
      "window": {
-      "n": 1079,
-      "avg_rating": 4.03,
-      "share_negative": 21.9,
-      "share_positive": 74.8
+      "n": 2,
+      "avg_rating": 1.0,
+      "share_negative": 100.0,
+      "share_positive": 0.0
      },
      "halves": {
       "first": {
-       "n": 436,
-       "avg_rating": 4.2,
-       "share_negative": 17.4,
-       "share_positive": 78.9
+       "n": 1,
+       "avg_rating": 1.0,
+       "share_negative": 100.0,
+       "share_positive": 0.0
       },
       "second": {
-       "n": 643,
-       "avg_rating": 3.91,
-       "share_negative": 24.9,
-       "share_positive": 72.0
+       "n": 1,
+       "avg_rating": 1.0,
+       "share_negative": 100.0,
+       "share_positive": 0.0
       },
       "comparable": false
      },
      "weekly": [
       {
-       "week": "2026-08-10",
-       "n": 47,
-       "avg_rating": 4.13,
-       "share_negative": 21.3,
-       "share_positive": 78.7
-      },
-      {
-       "week": "2026-08-17",
-       "n": 76,
-       "avg_rating": 4.55,
-       "share_negative": 7.9,
-       "share_positive": 89.5
-      },
-      {
-       "week": "2026-08-24",
-       "n": 81,
-       "avg_rating": 4.11,
-       "share_negative": 21.0,
-       "share_positive": 76.5
-      },
-      {
-       "week": "2026-08-31",
-       "n": 83,
-       "avg_rating": 4.24,
-       "share_negative": 15.7,
-       "share_positive": 79.5
-      },
-      {
-       "week": "2026-09-07",
-       "n": 58,
-       "avg_rating": 4.12,
-       "share_negative": 19.0,
-       "share_positive": 75.9
-      },
-      {
-       "week": "2026-09-14",
-       "n": 79,
-       "avg_rating": 3.99,
-       "share_negative": 22.8,
-       "share_positive": 72.2
-      },
-      {
-       "week": "2026-09-21",
-       "n": 72,
-       "avg_rating": 4.03,
-       "share_negative": 20.8,
-       "share_positive": 75.0
-      },
-      {
-       "week": "2026-09-28",
-       "n": 71,
-       "avg_rating": 4.11,
-       "share_negative": 18.3,
-       "share_positive": 77.5
-      },
-      {
-       "week": "2026-10-05",
-       "n": 79,
-       "avg_rating": 3.68,
-       "share_negative": 30.4,
-       "share_positive": 65.8
-      },
-      {
-       "week": "2026-10-12",
-       "n": 78,
-       "avg_rating": 4.03,
-       "share_negative": 21.8,
-       "share_positive": 75.6
-      },
-      {
-       "week": "2026-10-19",
-       "n": 70,
-       "avg_rating": 4.13,
-       "share_negative": 18.6,
-       "share_positive": 77.1
-      },
-      {
-       "week": "2026-10-26",
-       "n": 92,
-       "avg_rating": 4.0,
-       "share_negative": 22.8,
-       "share_positive": 71.7
-      },
-      {
        "week": "2026-11-02",
-       "n": 90,
-       "avg_rating": 4.1,
-       "share_negative": 22.2,
-       "share_positive": 76.7
+       "n": 1,
+       "avg_rating": 1.0,
+       "share_negative": 100.0,
+       "share_positive": 0.0
       },
       {
        "week": "2026-11-09",
-       "n": 103,
-       "avg_rating": 3.46,
-       "share_negative": 36.9,
-       "share_positive": 62.1
+       "n": 1,
+       "avg_rating": 1.0,
+       "share_negative": 100.0,
+       "share_positive": 0.0
       }
      ],
-     "versions": [
-      {
-       "version": "7.72.0",
-       "n": 142,
-       "avg_rating": 4.0,
-       "share_negative": 23.2,
-       "share_positive": 75.4
-      },
-      {
-       "version": "7.71.0",
-       "n": 328,
-       "avg_rating": 4.05,
-       "share_negative": 21.6,
-       "share_positive": 75.0
-      },
-      {
-       "version": "7.70.0",
-       "n": 275,
-       "avg_rating": 4.05,
-       "share_negative": 20.0,
-       "share_positive": 74.5
-      },
-      {
-       "version": "7.69.0",
-       "n": 310,
-       "avg_rating": 4.22,
-       "share_negative": 17.4,
-       "share_positive": 80.0
-      },
-      {
-       "version": "7.56.0",
-       "n": 23,
-       "avg_rating": 1.22,
-       "share_negative": 95.7,
-       "share_positive": 4.3
-      }
-     ],
-     "by_major": {
-      "7": {
-       "n": 1079,
-       "avg_rating": 4.03,
-       "share_negative": 21.9,
-       "share_positive": 74.8
-      }
-     },
+     "versions": [],
+     "by_major": {},
      "replies": 0
     },
     {
      "store": "playstore",
      "store_label": "Google Play",
-     "records": 925,
-     "export_start": "2026-08-01",
-     "export_end": "2026-11-13",
+     "records": 23,
+     "export_start": "2026-10-23",
+     "export_end": "2026-11-14",
      "starts_mid_window": false,
      "window": {
-      "n": 925,
-      "avg_rating": 3.55,
-      "share_negative": 33.3,
-      "share_positive": 62.1
+      "n": 23,
+      "avg_rating": 3.04,
+      "share_negative": 47.8,
+      "share_positive": 52.2
      },
      "halves": {
       "first": {
-       "n": 462,
-       "avg_rating": 3.56,
-       "share_negative": 32.9,
-       "share_positive": 62.3
+       "n": 12,
+       "avg_rating": 2.83,
+       "share_negative": 50.0,
+       "share_positive": 50.0
       },
       "second": {
-       "n": 463,
-       "avg_rating": 3.55,
-       "share_negative": 33.7,
-       "share_positive": 61.8
+       "n": 11,
+       "avg_rating": 3.27,
+       "share_negative": 45.5,
+       "share_positive": 54.5
       },
-      "comparable": true
+      "comparable": false
      },
      "weekly": [
       {
-       "week": "2026-07-27",
-       "n": 17,
-       "avg_rating": 3.88,
-       "share_negative": 23.5,
-       "share_positive": 76.5
-      },
-      {
-       "week": "2026-08-03",
-       "n": 49,
-       "avg_rating": 3.82,
-       "share_negative": 22.4,
-       "share_positive": 67.3
-      },
-      {
-       "week": "2026-08-10",
-       "n": 62,
-       "avg_rating": 3.35,
-       "share_negative": 40.3,
-       "share_positive": 58.1
-      },
-      {
-       "week": "2026-08-17",
-       "n": 56,
-       "avg_rating": 3.64,
-       "share_negative": 28.6,
-       "share_positive": 62.5
-      },
-      {
-       "week": "2026-08-24",
-       "n": 48,
-       "avg_rating": 3.54,
-       "share_negative": 33.3,
-       "share_positive": 60.4
-      },
-      {
-       "week": "2026-08-31",
-       "n": 64,
-       "avg_rating": 3.92,
-       "share_negative": 25.0,
-       "share_positive": 71.9
-      },
-      {
-       "week": "2026-09-07",
-       "n": 83,
-       "avg_rating": 3.39,
-       "share_negative": 36.1,
-       "share_positive": 59.0
-      },
-      {
-       "week": "2026-09-14",
-       "n": 66,
-       "avg_rating": 3.32,
-       "share_negative": 42.4,
-       "share_positive": 56.1
-      },
-      {
-       "week": "2026-09-21",
-       "n": 68,
-       "avg_rating": 3.54,
-       "share_negative": 32.4,
-       "share_positive": 63.2
-      },
-      {
-       "week": "2026-09-28",
-       "n": 70,
-       "avg_rating": 3.2,
-       "share_negative": 42.9,
-       "share_positive": 52.9
-      },
-      {
-       "week": "2026-10-05",
-       "n": 46,
-       "avg_rating": 3.85,
-       "share_negative": 26.1,
-       "share_positive": 67.4
-      },
-      {
-       "week": "2026-10-12",
-       "n": 64,
-       "avg_rating": 3.7,
-       "share_negative": 31.2,
-       "share_positive": 65.6
-      },
-      {
        "week": "2026-10-19",
-       "n": 61,
-       "avg_rating": 3.57,
-       "share_negative": 34.4,
-       "share_positive": 62.3
+       "n": 2,
+       "avg_rating": 3.5,
+       "share_negative": 50.0,
+       "share_positive": 50.0
       },
       {
        "week": "2026-10-26",
-       "n": 59,
-       "avg_rating": 3.36,
-       "share_negative": 42.4,
-       "share_positive": 55.9
+       "n": 8,
+       "avg_rating": 2.75,
+       "share_negative": 50.0,
+       "share_positive": 50.0
       },
       {
        "week": "2026-11-02",
-       "n": 61,
-       "avg_rating": 3.54,
-       "share_negative": 29.5,
-       "share_positive": 63.9
+       "n": 6,
+       "avg_rating": 3.0,
+       "share_negative": 50.0,
+       "share_positive": 50.0
       },
       {
        "week": "2026-11-09",
-       "n": 51,
-       "avg_rating": 3.73,
-       "share_negative": 27.5,
-       "share_positive": 64.7
+       "n": 7,
+       "avg_rating": 3.29,
+       "share_negative": 42.9,
+       "share_positive": 57.1
       }
      ],
      "versions": [
       {
-       "version": "07.72.0000.46402.0",
-       "n": 109,
-       "avg_rating": 3.45,
-       "share_negative": 33.0,
-       "share_positive": 58.7
-      },
-      {
-       "version": "07.71.0000.42882.0",
-       "n": 224,
-       "avg_rating": 3.6,
-       "share_negative": 33.9,
-       "share_positive": 63.4
-      },
-      {
-       "version": "07.70.0000.39862.0",
-       "n": 244,
-       "avg_rating": 3.41,
-       "share_negative": 37.3,
-       "share_positive": 59.4
-      },
-      {
-       "version": "07.69.0000.36742.0",
-       "n": 228,
-       "avg_rating": 3.69,
-       "share_negative": 30.3,
-       "share_positive": 64.9
-      },
-      {
-       "version": "07.68.0000.33733.0",
-       "n": 104,
-       "avg_rating": 3.62,
-       "share_negative": 29.8,
-       "share_positive": 64.4
+       "version": "8.3.0",
+       "n": 15,
+       "avg_rating": 3.53,
+       "share_negative": 33.3,
+       "share_positive": 66.7
       }
      ],
      "by_major": {
-      "07": {
-       "n": 924,
-       "avg_rating": 3.55,
-       "share_negative": 33.3,
-       "share_positive": 62.1
+      "8": {
+       "n": 23,
+       "avg_rating": 3.04,
+       "share_negative": 47.8,
+       "share_positive": 52.2
       }
      },
-     "replies": 676
+     "replies": 4
     }
    ]
   }

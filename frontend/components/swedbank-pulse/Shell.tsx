@@ -7,14 +7,12 @@ import {
   Headphones,
   Inbox,
   LayoutDashboard,
-  MessageSquareText,
   Moon,
   Sun,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, Suspense, useEffect, useState } from "react";
-import { rangeLabel } from "@/lib/swedbank-pulse/format";
 import type { PeriodsFile } from "@/lib/swedbank-pulse/periods";
 import { THEME_KEY, type ThemeName } from "@/lib/swedbank-pulse/theme";
 import type { AskFile, Evidence, Meta, View } from "@/lib/swedbank-pulse/types";
@@ -35,7 +33,7 @@ export type ShellProps = {
   drill?: boolean;
   /** When set, the period filter sits in the header, top right. */
   periods?: PeriodsFile;
-  /** Where the user is, kept on screen in the sticky header while scrolling (e.g. "Credit cards · Product view"). */
+  /** Where the user is, kept on screen in the sticky header while scrolling (e.g. "Everyday accounts and app · Product view"). */
   context?: string;
   /**
    * Drill-down and customer pages show the kept sample rows themselves, not bank-scale totals: they say so with a
@@ -65,8 +63,8 @@ function Nav({ view, collapsed }: { view: View; collapsed: boolean }) {
       exec: true,
     },
     {
-      href: "/swedbank-pulse/v1/business/cards",
-      label: "Credit cards: product view",
+      href: "/swedbank-pulse/v1/business/everyday_accounts_app",
+      label: "Everyday accounts and app: product view",
       icon: CreditCard,
     },
     {
@@ -294,10 +292,10 @@ function ShellInner({
           </div>
           <Nav view={current} collapsed={!navHover} />
           <div style={{ marginTop: "auto" }}>
-            <button
-              type="button"
-              onClick={() => setAskOpen(true)}
-              title="Ask LisN"
+            {/* Back to the role list for Swedbank (Usha, 17 Nov); Ask LisN stays in the bar at the top of the page. */}
+            <Link
+              href="/role-based/swedbank_bank"
+              title="Back to roles"
               style={{
                 width: "100%",
                 display: "flex",
@@ -311,11 +309,13 @@ function ShellInner({
                 padding: "10px",
                 cursor: "pointer",
                 fontSize: 14,
+                textDecoration: "none",
+                boxSizing: "border-box",
               }}
             >
-              <MessageSquareText size={16} color={C.brandInk} />
-              {navHover ? "Ask LisN" : null}
-            </button>
+              <ArrowLeft size={16} color={C.brandInk} />
+              {navHover ? "Back to roles" : null}
+            </Link>
           </div>
         </aside>
 
@@ -376,8 +376,8 @@ function ShellInner({
                     {context}
                   </strong>
                 ) : null}
-                <strong style={{ color: C.text }}>NatWest</strong> · Customer
-                Pulse · {meta.brief_label}, {meta.brief_time}
+                <strong style={{ color: C.text }}>Swedbank</strong> · Customer
+                Pulse · {meta.brief_label} {meta.brief_time}
               </div>
               {periods ? <HeaderPeriodFilter file={periods} /> : null}
               <ThemeToggle />
@@ -435,7 +435,7 @@ function ShellInner({
                 {sampleRows ? (
                   <span
                     data-testid="sample-rows"
-                    title="This page lists the rows kept for drill-down. Its counts are of those rows, not bank-scale totals; the Head of Customer Experience and credit card views show the bank-scale figures."
+                    title="This page lists the rows kept for drill-down. Its counts are of those rows, not bank-scale totals; the Head of Customer Experience and Everyday accounts and app views show the bank-scale figures."
                     style={{
                       display: "inline-block",
                       marginTop: 6,
@@ -461,28 +461,6 @@ function ShellInner({
               </div>
             </div>
             {children}
-            <footer
-              style={{
-                fontSize: 12.5,
-                color: C.textDim,
-                borderTop: `1px solid ${C.border}`,
-                paddingTop: 12,
-                lineHeight: 1.6,
-              }}
-            >
-              {meta.scope_note} Window{" "}
-              {rangeLabel(meta.window.start, meta.window.end)}. Every action is
-              a recommendation routed to its owner; LisN does not execute,
-              authorise or decide. Public figures from NatWest and regulator
-              disclosures as dated in the research pack (12 Nov 2026);
-              regulatory rules as published by the FCA, the PSR and the
-              Financial Ombudsman Service; internal figures illustrative until
-              discovery. Data frozen{" "}
-              <span data-testid="freeze">
-                {meta.brief_label}, {meta.brief_time}
-              </span>
-              .
-            </footer>
           </main>
         </div>
       </div>

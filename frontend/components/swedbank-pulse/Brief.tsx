@@ -12,16 +12,23 @@ import Link from "next/link";
 import { fmt, fmtDate, fmtPct } from "@/lib/swedbank-pulse/format";
 import type { BriefItem, Business, Period } from "@/lib/swedbank-pulse/periods";
 import { SmallRing, TrendChip, titled, withPeriod } from "./Pulse";
-import { C, MONO, Tile, tint } from "./primitives";
+import { C, Gloss, MONO, Tile, tint } from "./primitives";
 
-const CARDS_VIEW = "/swedbank-pulse/v1/business/cards";
+/** SW-D19: "no_items" reads "0 public items" (the card still shows 0%); any other note as written. */
+function noteLabel(note: string | undefined): string | undefined {
+  return note === "no_items" ? "0 public items" : note;
+}
+
+const CARDS_VIEW = "/swedbank-pulse/v1/business/everyday_accounts_app";
+/** SW-D16: the six products in order; Everyday accounts and app carries the deep dive. */
+const DEEP_DIVE = "everyday_accounts_app";
 const BRIEF_ORDER = [
+  "everyday_accounts_app",
+  "payments_swish",
   "cards",
-  "current_accounts",
-  "payments_fraud",
-  "savings",
   "mortgages",
-  "personal_loans",
+  "savings_funds",
+  "consumer_loans",
 ];
 
 /* ---------------------------------------------------------------- morning brief */
@@ -119,7 +126,7 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
         }}
       >
         <strong style={{ fontSize: 16 }}>{x.label}</strong>
-        {x.id === "cards" ? (
+        {x.id === DEEP_DIVE ? (
           <Link
             href={withPeriod(CARDS_VIEW, p)}
             data-testid="deep-dive"
@@ -155,7 +162,7 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
           <span style={{ fontSize: 12, color: C.textMut, lineHeight: 1.3 }}>
             negative
             <br />
-            {e.negative_share_note ?? "public"}
+            {noteLabel(e.negative_share_note) ?? "public"}
           </span>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -215,7 +222,10 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
           Negative public:{" "}
           <strong style={{ color: C.text }}>{fmtPct(e.negative_share)}</strong>
           {e.negative_share_note ? (
-            <span style={{ color: C.textMut }}> {e.negative_share_note}</span>
+            <span style={{ color: C.textMut }}>
+              {" "}
+              {noteLabel(e.negative_share_note)}
+            </span>
           ) : null}
         </span>
         <span>
@@ -249,35 +259,42 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
       </div>
       <div
         style={{
-          fontSize: 13,
-          color: x.anecdote ? C.textSec : C.textMut,
+          alignSelf: "end",
           borderLeft: `2px solid ${C.border}`,
           paddingLeft: 8,
-          lineHeight: 1.45,
-          alignSelf: "end",
-          display: "-webkit-box",
-          WebkitLineClamp: 3,
-          WebkitBoxOrient: "vertical",
-          overflow: "hidden",
+          minWidth: 0,
         }}
       >
-        {x.anecdote ? (
-          <>
-            &ldquo;{x.anecdote.summary}&rdquo;
-            <span style={{ color: C.textMut }}>
-              {" "}
-              · {x.anecdote.source_label}, {fmtDate(x.anecdote.date)}
-            </span>
-          </>
-        ) : (
-          "No quotable public post in this period."
-        )}
+        <div
+          style={{
+            fontSize: 13,
+            color: x.anecdote ? C.textSec : C.textMut,
+            lineHeight: 1.45,
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
+          {x.anecdote ? (
+            <>
+              &ldquo;{x.anecdote.summary}&rdquo;
+              <span style={{ color: C.textMut }}>
+                {" "}
+                · {x.anecdote.source_label}, {fmtDate(x.anecdote.date)}
+              </span>
+            </>
+          ) : (
+            `— (${fmt(x.external.volume)} public item${x.external.volume === 1 ? "" : "s"}, too few to quote)`
+          )}
+        </div>
+        <Gloss gloss={x.anecdote?.gloss} lang={x.anecdote?.lang} />
       </div>
     </>
   );
   const style = {
     background: C.cardAlt,
-    border: `1px solid ${x.id === "cards" ? tint(C.brand, 0.35) : C.border}`,
+    border: `1px solid ${x.id === DEEP_DIVE ? tint(C.brand, 0.35) : C.border}`,
     borderRadius: 12,
     padding: "12px 14px",
     // Rule B: six sections, one per subgrid row, so cards in a row line up section by section.

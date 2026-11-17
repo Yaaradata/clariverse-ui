@@ -1,1083 +1,229 @@
 {
- "definition": "Mood index, from app-store and Trustpilot reviews: net sentiment, (positive − negative) ÷ reviews × 100, over the last 7 days, compared with the window average (1 August to 13 November 2026). X and Reddit are not in it (their sentiment is indicative only). Source-weighted: each source's net sentiment counts in proportion to its share of the whole window, so a burst or a gap in one source's collection cannot move it. Range −100 to +100.",
+ "definition": "Mood index, from app-store and Trustpilot reviews: net sentiment, (positive − negative) ÷ reviews × 100, over the last 7 days, compared with the window average (22 October to 17 November 2026). X and Reddit are not in it (their sentiment is indicative only). The three review sources are pooled (about forty reviews in the window): 20 or more reviews give a figure, 3 to 19 a figure marked indicative, fewer than 3 none. Range −100 to +100.",
  "method": "source_weighted",
  "weekly": [
   {
-   "week": "2026-07-27",
-   "n": 17,
-   "net": 52.9,
-   "net_unweighted": 52.9
-  },
-  {
-   "week": "2026-08-03",
-   "n": 53,
-   "net": 44.9,
-   "net_unweighted": 49.1
-  },
-  {
-   "week": "2026-08-10",
-   "n": 111,
-   "net": 39.2,
-   "net_unweighted": 36.0
-  },
-  {
-   "week": "2026-08-17",
-   "n": 133,
-   "net": 59.7,
-   "net_unweighted": 61.7
-  },
-  {
-   "week": "2026-08-24",
-   "n": 129,
-   "net": 42.5,
-   "net_unweighted": 45.0
-  },
-  {
-   "week": "2026-08-31",
-   "n": 147,
-   "net": 56.1,
-   "net_unweighted": 56.5
-  },
-  {
-   "week": "2026-09-07",
-   "n": 168,
-   "net": 27.6,
-   "net_unweighted": 16.1
-  },
-  {
-   "week": "2026-09-14",
-   "n": 173,
-   "net": 20.1,
-   "net_unweighted": 12.7
-  },
-  {
-   "week": "2026-09-21",
-   "n": 168,
-   "net": 30.6,
-   "net_unweighted": 22.0
-  },
-  {
-   "week": "2026-09-28",
-   "n": 158,
-   "net": 25.6,
-   "net_unweighted": 23.4
-  },
-  {
-   "week": "2026-10-05",
-   "n": 152,
-   "net": 25.9,
-   "net_unweighted": 16.4
-  },
-  {
-   "week": "2026-10-12",
-   "n": 167,
-   "net": 31.7,
-   "net_unweighted": 25.7
-  },
-  {
    "week": "2026-10-19",
-   "n": 148,
-   "net": 32.1,
-   "net_unweighted": 30.4
+   "n": 2,
+   "net": null,
+   "net_unweighted": 0.0
   },
   {
    "week": "2026-10-26",
-   "n": 167,
-   "net": 21.7,
-   "net_unweighted": 24.6
+   "n": 12,
+   "net": -25.0,
+   "net_unweighted": -25.0
   },
   {
    "week": "2026-11-02",
-   "n": 170,
-   "net": 32.0,
-   "net_unweighted": 31.2
+   "n": 10,
+   "net": -60.0,
+   "net_unweighted": -60.0
+  },
+  {
+   "week": "2026-11-09",
+   "n": 13,
+   "net": -38.5,
+   "net_unweighted": -38.5
   }
  ],
- "value": 26.6,
- "window_average": 29.8,
- "delta_pts": -3.2,
+ "value": -42.9,
+ "window_average": -39.5,
+ "delta_pts": -3.4,
  "unweighted": {
-  "value": 25.7,
-  "window_average": 29.8,
-  "delta_pts": -4.1
+  "value": -42.9,
+  "window_average": -39.5,
+  "delta_pts": -3.4
  },
  "by_source": [
   {
-   "source": "appstore",
-   "weight_pct": 48.6,
-   "window_net": 52.9,
-   "last7_net": 32.1,
-   "last7_items": 134,
-   "last7_share_pct": 63.8,
-   "change_pts": -20.8
-  },
-  {
    "source": "playstore",
-   "weight_pct": 41.2,
-   "window_net": 28.9,
-   "last7_net": 42.9,
-   "last7_items": 56,
-   "last7_share_pct": 26.7,
-   "change_pts": 14.0
+   "weight_pct": 60.5,
+   "window_net": -8.7,
+   "last7_net": 14.3,
+   "last7_items": 7,
+   "last7_share_pct": 50.0,
+   "change_pts": 23.0
   },
   {
    "source": "trustpilot",
-   "weight_pct": 10.2,
-   "window_net": -76.2,
-   "last7_net": -65.0,
-   "last7_items": 20,
-   "last7_share_pct": 9.5,
-   "change_pts": 11.2
+   "weight_pct": 34.2,
+   "window_net": -84.6,
+   "last7_net": -100.0,
+   "last7_items": 6,
+   "last7_share_pct": 42.9,
+   "change_pts": -15.4
+  },
+  {
+   "source": "appstore",
+   "weight_pct": 5.3,
+   "window_net": -100.0,
+   "last7_net": null,
+   "last7_items": 1,
+   "last7_share_pct": 7.1,
+   "change_pts": null
   }
  ],
- "n_items": 2221,
+ "n_items": 38,
+ "n_last7": 14,
+ "n_rule": "indicative",
+ "n_rule_window": "share",
+ "pooled": true,
  "daily": [
   {
-   "date": "2026-08-01",
-   "n": 10,
-   "positive": 7,
-   "negative": 3,
-   "net": 40.0,
-   "net_7d": 40.0,
-   "net_7d_unweighted": 40.0
-  },
-  {
-   "date": "2026-08-02",
-   "n": 7,
-   "positive": 6,
-   "negative": 1,
-   "net": 71.4,
-   "net_7d": 52.9,
-   "net_7d_unweighted": 52.9
-  },
-  {
-   "date": "2026-08-03",
-   "n": 4,
-   "positive": 2,
-   "negative": 1,
-   "net": 25.0,
-   "net_7d": 47.6,
-   "net_7d_unweighted": 47.6
-  },
-  {
-   "date": "2026-08-04",
-   "n": 8,
-   "positive": 5,
-   "negative": 3,
-   "net": 25.0,
-   "net_7d": 41.4,
-   "net_7d_unweighted": 41.4
-  },
-  {
-   "date": "2026-08-05",
-   "n": 13,
-   "positive": 11,
-   "negative": 1,
-   "net": 76.9,
-   "net_7d": 51.2,
-   "net_7d_unweighted": 52.4
-  },
-  {
-   "date": "2026-08-06",
-   "n": 9,
-   "positive": 5,
-   "negative": 3,
-   "net": 22.2,
-   "net_7d": 44.9,
-   "net_7d_unweighted": 47.1
-  },
-  {
-   "date": "2026-08-07",
-   "n": 5,
-   "positive": 3,
-   "negative": 1,
-   "net": 40.0,
-   "net_7d": 42.3,
-   "net_7d_unweighted": 46.4
-  },
-  {
-   "date": "2026-08-08",
-   "n": 7,
-   "positive": 5,
-   "negative": 2,
-   "net": 42.9,
-   "net_7d": 42.9,
-   "net_7d_unweighted": 47.2
-  },
-  {
-   "date": "2026-08-09",
-   "n": 7,
-   "positive": 6,
-   "negative": 0,
-   "net": 85.7,
-   "net_7d": 44.9,
-   "net_7d_unweighted": 49.1
-  },
-  {
-   "date": "2026-08-10",
-   "n": 11,
-   "positive": 7,
-   "negative": 4,
-   "net": 27.3,
-   "net_7d": 41.8,
-   "net_7d_unweighted": 46.7
-  },
-  {
-   "date": "2026-08-11",
-   "n": 11,
-   "positive": 7,
-   "negative": 3,
-   "net": 36.4,
-   "net_7d": 42.1,
-   "net_7d_unweighted": 47.6
-  },
-  {
-   "date": "2026-08-12",
-   "n": 14,
-   "positive": 12,
-   "negative": 2,
-   "net": 71.4,
-   "net_7d": 35.8,
-   "net_7d_unweighted": 46.9
-  },
-  {
-   "date": "2026-08-13",
-   "n": 14,
-   "positive": 5,
-   "negative": 9,
-   "net": -28.6,
-   "net_7d": 31.8,
-   "net_7d_unweighted": 34.8
-  },
-  {
-   "date": "2026-08-14",
-   "n": 25,
-   "positive": 16,
-   "negative": 9,
-   "net": 28.0,
-   "net_7d": 34.3,
-   "net_7d_unweighted": 32.6
-  },
-  {
-   "date": "2026-08-15",
-   "n": 17,
-   "positive": 13,
-   "negative": 4,
-   "net": 52.9,
-   "net_7d": 38.3,
-   "net_7d_unweighted": 35.4
-  },
-  {
-   "date": "2026-08-16",
-   "n": 19,
-   "positive": 15,
-   "negative": 4,
-   "net": 57.9,
-   "net_7d": 39.2,
-   "net_7d_unweighted": 36.0
-  },
-  {
-   "date": "2026-08-17",
-   "n": 23,
-   "positive": 15,
-   "negative": 7,
-   "net": 34.8,
-   "net_7d": 39.3,
-   "net_7d_unweighted": 36.6
-  },
-  {
-   "date": "2026-08-18",
-   "n": 22,
-   "positive": 20,
-   "negative": 1,
-   "net": 86.4,
-   "net_7d": 46.9,
-   "net_7d_unweighted": 44.8
-  },
-  {
-   "date": "2026-08-19",
-   "n": 17,
-   "positive": 13,
-   "negative": 4,
-   "net": 52.9,
-   "net_7d": 45.0,
-   "net_7d_unweighted": 43.1
-  },
-  {
-   "date": "2026-08-20",
-   "n": 22,
-   "positive": 14,
-   "negative": 5,
-   "net": 40.9,
-   "net_7d": 50.8,
-   "net_7d_unweighted": 49.7
-  },
-  {
-   "date": "2026-08-21",
-   "n": 17,
-   "positive": 15,
-   "negative": 1,
-   "net": 82.4,
-   "net_7d": 56.6,
-   "net_7d_unweighted": 57.7
-  },
-  {
-   "date": "2026-08-22",
-   "n": 21,
-   "positive": 18,
-   "negative": 3,
-   "net": 71.4,
-   "net_7d": 58.2,
-   "net_7d_unweighted": 60.3
-  },
-  {
-   "date": "2026-08-23",
-   "n": 11,
-   "positive": 9,
-   "negative": 1,
-   "net": 72.7,
-   "net_7d": 59.7,
-   "net_7d_unweighted": 61.7
-  },
-  {
-   "date": "2026-08-24",
-   "n": 15,
-   "positive": 10,
-   "negative": 4,
-   "net": 40.0,
-   "net_7d": 62.4,
-   "net_7d_unweighted": 64.0
-  },
-  {
-   "date": "2026-08-25",
-   "n": 22,
-   "positive": 16,
-   "negative": 5,
-   "net": 50.0,
-   "net_7d": 52.0,
-   "net_7d_unweighted": 57.6
-  },
-  {
-   "date": "2026-08-26",
-   "n": 13,
-   "positive": 8,
-   "negative": 4,
-   "net": 30.8,
-   "net_7d": 48.7,
-   "net_7d_unweighted": 55.4
-  },
-  {
-   "date": "2026-08-27",
-   "n": 22,
-   "positive": 17,
-   "negative": 4,
-   "net": 59.1,
-   "net_7d": 53.5,
-   "net_7d_unweighted": 58.7
-  },
-  {
-   "date": "2026-08-28",
-   "n": 28,
-   "positive": 19,
-   "negative": 9,
-   "net": 35.7,
-   "net_7d": 46.4,
-   "net_7d_unweighted": 50.8
-  },
-  {
-   "date": "2026-08-29",
-   "n": 19,
-   "positive": 14,
-   "negative": 5,
-   "net": 47.4,
-   "net_7d": 44.4,
-   "net_7d_unweighted": 46.9
-  },
-  {
-   "date": "2026-08-30",
-   "n": 10,
-   "positive": 7,
-   "negative": 2,
-   "net": 50.0,
-   "net_7d": 42.5,
-   "net_7d_unweighted": 45.0
-  },
-  {
-   "date": "2026-08-31",
-   "n": 15,
-   "positive": 10,
-   "negative": 5,
-   "net": 33.3,
-   "net_7d": 39.8,
-   "net_7d_unweighted": 44.2
-  },
-  {
-   "date": "2026-09-01",
-   "n": 15,
-   "positive": 12,
-   "negative": 2,
-   "net": 66.7,
-   "net_7d": 43.4,
-   "net_7d_unweighted": 45.9
-  },
-  {
-   "date": "2026-09-02",
-   "n": 33,
-   "positive": 24,
-   "negative": 8,
-   "net": 48.5,
-   "net_7d": 44.0,
-   "net_7d_unweighted": 47.9
-  },
-  {
-   "date": "2026-09-03",
-   "n": 25,
-   "positive": 16,
-   "negative": 6,
-   "net": 40.0,
-   "net_7d": 41.6,
-   "net_7d_unweighted": 44.8
-  },
-  {
-   "date": "2026-09-04",
-   "n": 24,
-   "positive": 20,
-   "negative": 3,
-   "net": 70.8,
-   "net_7d": 50.0,
-   "net_7d_unweighted": 51.1
-  },
-  {
-   "date": "2026-09-05",
-   "n": 17,
-   "positive": 14,
-   "negative": 3,
-   "net": 64.7,
-   "net_7d": 52.3,
-   "net_7d_unweighted": 53.2
-  },
-  {
-   "date": "2026-09-06",
-   "n": 18,
-   "positive": 16,
-   "negative": 2,
-   "net": 77.8,
-   "net_7d": 56.1,
-   "net_7d_unweighted": 56.5
-  },
-  {
-   "date": "2026-09-07",
-   "n": 18,
-   "positive": 10,
-   "negative": 7,
-   "net": 16.7,
-   "net_7d": 55.7,
-   "net_7d_unweighted": 54.0
-  },
-  {
-   "date": "2026-09-08",
-   "n": 27,
-   "positive": 14,
-   "negative": 11,
-   "net": 11.1,
-   "net_7d": 48.3,
-   "net_7d_unweighted": 45.7
-  },
-  {
-   "date": "2026-09-09",
-   "n": 35,
-   "positive": 25,
-   "negative": 10,
-   "net": 42.9,
-   "net_7d": 39.9,
-   "net_7d_unweighted": 44.5
-  },
-  {
-   "date": "2026-09-10",
-   "n": 33,
-   "positive": 19,
-   "negative": 14,
-   "net": 15.2,
-   "net_7d": 43.0,
-   "net_7d_unweighted": 39.5
-  },
-  {
-   "date": "2026-09-11",
-   "n": 26,
-   "positive": 9,
-   "negative": 14,
-   "net": -19.2,
-   "net_7d": 33.2,
-   "net_7d_unweighted": 26.4
-  },
-  {
-   "date": "2026-09-12",
-   "n": 13,
-   "positive": 8,
-   "negative": 5,
-   "net": 23.1,
-   "net_7d": 31.2,
-   "net_7d_unweighted": 22.4
-  },
-  {
-   "date": "2026-09-13",
-   "n": 16,
-   "positive": 9,
-   "negative": 6,
-   "net": 18.8,
-   "net_7d": 27.6,
-   "net_7d_unweighted": 16.1
-  },
-  {
-   "date": "2026-09-14",
-   "n": 26,
-   "positive": 13,
-   "negative": 12,
-   "net": 3.8,
-   "net_7d": 27.2,
-   "net_7d_unweighted": 14.2
-  },
-  {
-   "date": "2026-09-15",
-   "n": 29,
-   "positive": 17,
-   "negative": 10,
-   "net": 24.1,
-   "net_7d": 28.9,
-   "net_7d_unweighted": 16.3
-  },
-  {
-   "date": "2026-09-16",
-   "n": 21,
-   "positive": 9,
-   "negative": 11,
-   "net": -9.5,
-   "net_7d": 17.2,
-   "net_7d_unweighted": 7.3
-  },
-  {
-   "date": "2026-09-17",
-   "n": 29,
-   "positive": 16,
-   "negative": 12,
-   "net": 13.8,
-   "net_7d": 10.7,
-   "net_7d_unweighted": 6.9
-  },
-  {
-   "date": "2026-09-18",
-   "n": 34,
-   "positive": 18,
-   "negative": 16,
-   "net": 5.9,
-   "net_7d": 18.6,
-   "net_7d_unweighted": 10.7
-  },
-  {
-   "date": "2026-09-19",
-   "n": 20,
-   "positive": 13,
-   "negative": 7,
-   "net": 30.0,
-   "net_7d": 18.8,
-   "net_7d_unweighted": 12.0
-  },
-  {
-   "date": "2026-09-20",
-   "n": 14,
-   "positive": 9,
-   "negative": 5,
-   "net": 28.6,
-   "net_7d": 20.1,
-   "net_7d_unweighted": 12.7
-  },
-  {
-   "date": "2026-09-21",
-   "n": 32,
-   "positive": 21,
-   "negative": 9,
-   "net": 37.5,
-   "net_7d": 23.8,
-   "net_7d_unweighted": 18.4
-  },
-  {
-   "date": "2026-09-22",
-   "n": 24,
-   "positive": 14,
-   "negative": 9,
-   "net": 20.8,
-   "net_7d": 24.1,
-   "net_7d_unweighted": 17.8
-  },
-  {
-   "date": "2026-09-23",
-   "n": 28,
-   "positive": 16,
-   "negative": 11,
-   "net": 17.9,
-   "net_7d": 26.8,
-   "net_7d_unweighted": 21.0
-  },
-  {
-   "date": "2026-09-24",
-   "n": 21,
-   "positive": 13,
-   "negative": 8,
-   "net": 23.8,
-   "net_7d": 31.5,
-   "net_7d_unweighted": 22.5
-  },
-  {
-   "date": "2026-09-25",
-   "n": 27,
-   "positive": 14,
-   "negative": 12,
-   "net": 7.4,
-   "net_7d": 31.4,
-   "net_7d_unweighted": 23.5
-  },
-  {
-   "date": "2026-09-26",
-   "n": 19,
-   "positive": 12,
-   "negative": 5,
-   "net": 36.8,
-   "net_7d": 31.5,
-   "net_7d_unweighted": 24.2
-  },
-  {
-   "date": "2026-09-27",
-   "n": 17,
-   "positive": 9,
-   "negative": 8,
-   "net": 5.9,
-   "net_7d": 30.6,
-   "net_7d_unweighted": 22.0
-  },
-  {
-   "date": "2026-09-28",
-   "n": 23,
-   "positive": 15,
-   "negative": 7,
-   "net": 34.8,
-   "net_7d": 28.5,
-   "net_7d_unweighted": 20.8
-  },
-  {
-   "date": "2026-09-29",
-   "n": 16,
-   "positive": 10,
-   "negative": 4,
-   "net": 37.5,
-   "net_7d": 32.0,
-   "net_7d_unweighted": 22.5
-  },
-  {
-   "date": "2026-09-30",
-   "n": 31,
-   "positive": 18,
-   "negative": 13,
-   "net": 16.1,
-   "net_7d": 30.9,
-   "net_7d_unweighted": 22.1
-  },
-  {
-   "date": "2026-10-01",
-   "n": 32,
-   "positive": 20,
-   "negative": 10,
-   "net": 31.2,
-   "net_7d": 29.7,
-   "net_7d_unweighted": 23.6
-  },
-  {
-   "date": "2026-10-02",
-   "n": 19,
-   "positive": 9,
-   "negative": 10,
-   "net": -5.3,
-   "net_7d": 26.9,
-   "net_7d_unweighted": 22.9
-  },
-  {
-   "date": "2026-10-03",
-   "n": 25,
-   "positive": 14,
-   "negative": 10,
-   "net": 16.0,
-   "net_7d": 25.5,
-   "net_7d_unweighted": 20.2
-  },
-  {
-   "date": "2026-10-04",
-   "n": 12,
-   "positive": 8,
-   "negative": 3,
-   "net": 41.7,
-   "net_7d": 25.6,
-   "net_7d_unweighted": 23.4
-  },
-  {
-   "date": "2026-10-05",
-   "n": 19,
-   "positive": 7,
-   "negative": 11,
-   "net": -21.1,
-   "net_7d": 19.6,
-   "net_7d_unweighted": 16.2
-  },
-  {
-   "date": "2026-10-06",
-   "n": 19,
-   "positive": 8,
-   "negative": 10,
-   "net": -10.5,
-   "net_7d": 15.8,
-   "net_7d_unweighted": 10.8
-  },
-  {
-   "date": "2026-10-07",
-   "n": 27,
-   "positive": 16,
-   "negative": 9,
-   "net": 25.9,
-   "net_7d": 18.9,
-   "net_7d_unweighted": 12.4
-  },
-  {
-   "date": "2026-10-08",
-   "n": 27,
-   "positive": 15,
-   "negative": 10,
-   "net": 18.5,
-   "net_7d": 17.5,
-   "net_7d_unweighted": 9.5
-  },
-  {
-   "date": "2026-10-09",
-   "n": 23,
-   "positive": 17,
-   "negative": 6,
-   "net": 47.8,
-   "net_7d": 25.2,
-   "net_7d_unweighted": 17.1
-  },
-  {
-   "date": "2026-10-10",
-   "n": 23,
-   "positive": 16,
-   "negative": 6,
-   "net": 43.5,
-   "net_7d": 29.2,
-   "net_7d_unweighted": 21.3
-  },
-  {
-   "date": "2026-10-11",
-   "n": 14,
-   "positive": 6,
-   "negative": 8,
-   "net": -14.3,
-   "net_7d": 25.9,
-   "net_7d_unweighted": 16.4
-  },
-  {
-   "date": "2026-10-12",
-   "n": 22,
-   "positive": 15,
-   "negative": 5,
-   "net": 45.5,
-   "net_7d": 34.2,
-   "net_7d_unweighted": 25.2
-  },
-  {
-   "date": "2026-10-13",
-   "n": 22,
-   "positive": 11,
-   "negative": 11,
-   "net": 0.0,
-   "net_7d": 31.6,
-   "net_7d_unweighted": 25.9
-  },
-  {
-   "date": "2026-10-14",
-   "n": 21,
-   "positive": 9,
-   "negative": 11,
-   "net": -9.5,
-   "net_7d": 26.4,
-   "net_7d_unweighted": 21.1
-  },
-  {
-   "date": "2026-10-15",
-   "n": 35,
-   "positive": 21,
-   "negative": 14,
-   "net": 20.0,
-   "net_7d": 28.8,
-   "net_7d_unweighted": 21.2
-  },
-  {
-   "date": "2026-10-16",
-   "n": 33,
-   "positive": 26,
-   "negative": 6,
-   "net": 60.6,
-   "net_7d": 31.2,
-   "net_7d_unweighted": 25.3
-  },
-  {
-   "date": "2026-10-17",
-   "n": 13,
-   "positive": 6,
-   "negative": 7,
-   "net": -7.7,
-   "net_7d": 28.0,
-   "net_7d_unweighted": 20.0
-  },
-  {
-   "date": "2026-10-18",
-   "n": 21,
-   "positive": 15,
-   "negative": 6,
-   "net": 42.9,
-   "net_7d": 31.7,
-   "net_7d_unweighted": 25.7
-  },
-  {
-   "date": "2026-10-19",
-   "n": 21,
-   "positive": 11,
-   "negative": 10,
-   "net": 4.8,
-   "net_7d": 28.9,
-   "net_7d_unweighted": 20.5
-  },
-  {
-   "date": "2026-10-20",
-   "n": 20,
-   "positive": 14,
-   "negative": 5,
-   "net": 45.0,
-   "net_7d": 33.3,
-   "net_7d_unweighted": 26.2
-  },
-  {
-   "date": "2026-10-21",
-   "n": 25,
-   "positive": 15,
-   "negative": 9,
-   "net": 24.0,
-   "net_7d": 34.6,
-   "net_7d_unweighted": 30.4
-  },
-  {
-   "date": "2026-10-22",
-   "n": 30,
-   "positive": 22,
-   "negative": 7,
-   "net": 50.0,
-   "net_7d": 38.6,
-   "net_7d_unweighted": 36.2
-  },
-  {
    "date": "2026-10-23",
-   "n": 18,
-   "positive": 11,
-   "negative": 6,
-   "net": 27.8,
-   "net_7d": 33.1,
-   "net_7d_unweighted": 29.7
-  },
-  {
-   "date": "2026-10-24",
-   "n": 22,
-   "positive": 15,
-   "negative": 6,
-   "net": 40.9,
-   "net_7d": 34.8,
-   "net_7d_unweighted": 34.4
-  },
-  {
-   "date": "2026-10-25",
-   "n": 12,
-   "positive": 6,
-   "negative": 6,
+   "n": 2,
+   "positive": 1,
+   "negative": 1,
    "net": 0.0,
-   "net_7d": 32.1,
-   "net_7d_unweighted": 30.4
+   "net_7d": null,
+   "net_7d_unweighted": 0.0
   },
   {
    "date": "2026-10-26",
-   "n": 25,
-   "positive": 14,
-   "negative": 9,
-   "net": 20.0,
-   "net_7d": 31.6,
-   "net_7d_unweighted": 32.2
+   "n": 1,
+   "positive": 0,
+   "negative": 1,
+   "net": -100.0,
+   "net_7d": -33.3,
+   "net_7d_unweighted": -33.3
   },
   {
    "date": "2026-10-27",
-   "n": 21,
-   "positive": 14,
-   "negative": 7,
-   "net": 33.3,
-   "net_7d": 29.3,
-   "net_7d_unweighted": 30.7
+   "n": 4,
+   "positive": 1,
+   "negative": 3,
+   "net": -50.0,
+   "net_7d": -42.9,
+   "net_7d_unweighted": -42.9
   },
   {
    "date": "2026-10-28",
-   "n": 30,
-   "positive": 19,
-   "negative": 10,
-   "net": 30.0,
-   "net_7d": 29.4,
-   "net_7d_unweighted": 31.6
+   "n": 1,
+   "positive": 1,
+   "negative": 0,
+   "net": 100.0,
+   "net_7d": -25.0,
+   "net_7d_unweighted": -25.0
   },
   {
    "date": "2026-10-29",
-   "n": 26,
-   "positive": 12,
-   "negative": 13,
-   "net": -3.8,
-   "net_7d": 19.2,
-   "net_7d_unweighted": 22.1
+   "n": 2,
+   "positive": 0,
+   "negative": 2,
+   "net": -100.0,
+   "net_7d": -40.0,
+   "net_7d_unweighted": -40.0
   },
   {
    "date": "2026-10-30",
-   "n": 34,
-   "positive": 19,
-   "negative": 13,
-   "net": 17.6,
-   "net_7d": 16.7,
-   "net_7d_unweighted": 20.6
-  },
-  {
-   "date": "2026-10-31",
-   "n": 18,
-   "positive": 12,
-   "negative": 6,
-   "net": 33.3,
-   "net_7d": 17.7,
-   "net_7d_unweighted": 19.3
+   "n": 3,
+   "positive": 1,
+   "negative": 1,
+   "net": 0.0,
+   "net_7d": -30.8,
+   "net_7d_unweighted": -30.8
   },
   {
    "date": "2026-11-01",
-   "n": 13,
-   "positive": 11,
-   "negative": 2,
-   "net": 69.2,
-   "net_7d": 21.7,
-   "net_7d_unweighted": 24.6
+   "n": 1,
+   "positive": 1,
+   "negative": 0,
+   "net": 100.0,
+   "net_7d": -21.4,
+   "net_7d_unweighted": -21.4
   },
   {
    "date": "2026-11-02",
-   "n": 27,
-   "positive": 22,
-   "negative": 5,
-   "net": 63.0,
-   "net_7d": 28.7,
-   "net_7d_unweighted": 31.4
-  },
-  {
-   "date": "2026-11-03",
-   "n": 18,
-   "positive": 10,
-   "negative": 7,
-   "net": 16.7,
-   "net_7d": 27.8,
-   "net_7d_unweighted": 29.5
+   "n": 4,
+   "positive": 0,
+   "negative": 3,
+   "net": -75.0,
+   "net_7d": -37.5,
+   "net_7d_unweighted": -37.5
   },
   {
    "date": "2026-11-04",
-   "n": 28,
-   "positive": 16,
-   "negative": 11,
-   "net": 17.9,
-   "net_7d": 27.3,
-   "net_7d_unweighted": 27.4
-  },
-  {
-   "date": "2026-11-05",
-   "n": 28,
-   "positive": 14,
-   "negative": 13,
-   "net": 3.6,
-   "net_7d": 29.4,
-   "net_7d_unweighted": 28.3
+   "n": 3,
+   "positive": 1,
+   "negative": 1,
+   "net": 0.0,
+   "net_7d": -27.8,
+   "net_7d_unweighted": -27.8
   },
   {
    "date": "2026-11-06",
-   "n": 19,
-   "positive": 13,
-   "negative": 6,
-   "net": 36.8,
-   "net_7d": 33.3,
-   "net_7d_unweighted": 31.8
-  },
-  {
-   "date": "2026-11-07",
-   "n": 23,
-   "positive": 17,
-   "negative": 6,
-   "net": 47.8,
-   "net_7d": 33.3,
-   "net_7d_unweighted": 34.0
-  },
-  {
-   "date": "2026-11-08",
-   "n": 27,
-   "positive": 17,
-   "negative": 8,
-   "net": 33.3,
-   "net_7d": 32.0,
-   "net_7d_unweighted": 31.2
+   "n": 3,
+   "positive": 0,
+   "negative": 3,
+   "net": -100.0,
+   "net_7d": -35.3,
+   "net_7d_unweighted": -35.3
   },
   {
    "date": "2026-11-09",
-   "n": 39,
-   "positive": 31,
-   "negative": 8,
-   "net": 59.0,
-   "net_7d": 33.0,
-   "net_7d_unweighted": 32.4
+   "n": 2,
+   "positive": 1,
+   "negative": 1,
+   "net": 0.0,
+   "net_7d": -38.9,
+   "net_7d_unweighted": -38.9
   },
   {
    "date": "2026-11-10",
-   "n": 33,
-   "positive": 20,
-   "negative": 12,
-   "net": 24.2,
-   "net_7d": 33.6,
-   "net_7d_unweighted": 32.5
+   "n": 2,
+   "positive": 1,
+   "negative": 1,
+   "net": 0.0,
+   "net_7d": -27.8,
+   "net_7d_unweighted": -27.8
   },
   {
    "date": "2026-11-11",
-   "n": 27,
-   "positive": 14,
-   "negative": 11,
-   "net": 11.1,
-   "net_7d": 32.3,
-   "net_7d_unweighted": 31.6
+   "n": 3,
+   "positive": 1,
+   "negative": 2,
+   "net": -33.3,
+   "net_7d": -33.3,
+   "net_7d_unweighted": -33.3
   },
   {
    "date": "2026-11-12",
-   "n": 42,
-   "positive": 21,
-   "negative": 21,
-   "net": 0.0,
-   "net_7d": 29.9,
-   "net_7d_unweighted": 29.0
+   "n": 1,
+   "positive": 0,
+   "negative": 1,
+   "net": -100.0,
+   "net_7d": -44.4,
+   "net_7d_unweighted": -44.4
   },
   {
    "date": "2026-11-13",
-   "n": 19,
-   "positive": 9,
-   "negative": 9,
+   "n": 3,
+   "positive": 0,
+   "negative": 3,
+   "net": -100.0,
+   "net_7d": -47.1,
+   "net_7d_unweighted": -47.1
+  },
+  {
+   "date": "2026-11-14",
+   "n": 2,
+   "positive": 1,
+   "negative": 1,
    "net": 0.0,
-   "net_7d": 26.6,
-   "net_7d_unweighted": 25.7
+   "net_7d": -50.0,
+   "net_7d_unweighted": -50.0
+  },
+  {
+   "date": "2026-11-16",
+   "n": 1,
+   "positive": 0,
+   "negative": 1,
+   "net": -100.0,
+   "net_7d": -42.9,
+   "net_7d_unweighted": -42.9
   }
  ],
  "sources_label": "from app-store and Trustpilot reviews",
- "baseline_label": "vs window average (1 Aug–13 Nov); no earlier baseline"
+ "baseline_label": "vs window average (22 Oct–17 Nov); no earlier baseline"
 }

@@ -22,6 +22,7 @@ import {
   AnswerLine,
   BaselineCaption,
   C,
+  Gloss,
   Kpi,
   MutedNote,
   OwnerChip,
@@ -42,12 +43,12 @@ const PILLAR: Record<string, string> = {
   support: "Consumer support",
 };
 const PRODUCT_NAME: Record<string, string> = {
-  current_accounts: "Current accounts and app",
-  payments_fraud: "Payments and fraud",
-  cards: "Credit cards",
-  savings: "Savings",
-  mortgages: "Mortgages",
-  personal_loans: "Personal loans",
+  everyday_accounts_app: "Everyday accounts and app",
+  payments_swish: "Payments and Swish",
+  cards: "Cards",
+  savings_funds: "Savings and funds",
+  mortgages: "Mortgages (bolån)",
+  consumer_loans: "Consumer loans",
 };
 const SOURCE: Record<string, string> = {
   x: "X",
@@ -169,14 +170,15 @@ export function EvidenceList({ items }: { items: Evidence[] }) {
             {e.title ? <strong>{e.title} · </strong> : null}
             {e.redacted_text}
           </div>
+          <Gloss gloss={e.gloss} lang={e.lang} />
         </div>
       ))}
       <MutedNote>
         Anonymised: people's names and personal handles are replaced with a
         role, such as [staff member]; numbers and IDs are redacted. Quotes that
         make an allegation against a named person are not shown. Summaries are
-        paraphrased. Quotes are labelled by source and date; the demo does not
-        link to the original posts.
+        paraphrased. Quotes are labelled by source and date; LisN does not link
+        to the original posts.
       </MutedNote>
     </div>
   );
@@ -206,8 +208,9 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
         </div>
         <Section n={1} title="What">
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
-            Customers talk about {t.label.toLowerCase()}: {fmt(t.count)} NatWest
-            Bank items in the window, {fmtPct(t.share_negative)} negative.
+            Customers talk about {t.label.toLowerCase()}: {fmt(t.count)}{" "}
+            Swedbank Bank items in the window, {fmtPct(t.share_negative)}{" "}
+            negative.
             {t.count_group_companies
               ? ` A further ${fmt(t.count_group_companies)} items concern group companies and are kept separate.`
               : ""}
@@ -258,7 +261,7 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
             {t.trend_mode === "vs_baseline" && t.vs_baseline
               ? `vs baseline: ${t.vs_baseline.window_share}% of store reviews in the window against ${t.vs_baseline.baseline_share}% in the 26 weeks before the window.`
               : t.trend_mode === "insufficient"
-                ? "Most items come from sources that start or change collection mid-window (store exports from late July, Reddit from 1 Sep), so no trend is claimed."
+                ? "Most items come from sources that start or change collection mid-window (App Store, Trustpilot and Google Play start after the window opens), so no trend is claimed."
                 : `Trend within window: ${t.trend.second_half} items (${halfLabel(t.trend.second_half_dates)}) vs ${t.trend.first_half} (${halfLabel(t.trend.first_half_dates)}), compared as a source-weighted share of trend-basis posts in each half (each source by its share of the window).`}{" "}
             Seasonal check: in discovery, using your history.
           </BaselineCaption>
@@ -271,7 +274,7 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
         <Section n={3} title="Where">
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
             <span style={{ fontSize: 14 }}>
-              Consumer Duty outcome: {PILLAR[t.pillar] ?? t.pillar}
+              FI focus area: {PILLAR[t.pillar] ?? t.pillar}
             </span>
             <span style={{ fontSize: 14, color: C.textMut }}>·</span>
             <span style={{ fontSize: 14 }}>
@@ -299,8 +302,8 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
             Highest rung heard: <strong>{t.rung}</strong>.{" "}
             {fmt(t.escalation_count)} items ({fmtPct(t.share_escalation)})
-            mention the FCA, the Financial Ombudsman, a court or a complaint
-            number; {fmt(t.repeat_count)} say they have raised it before.
+            mention FI, ARN, a court or a complaint number;{" "}
+            {fmt(t.repeat_count)} say they have raised it before.
           </div>
         </Section>
         <Section n={5} title="Who and what next">
@@ -309,7 +312,7 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
             <strong>{status === "improving" ? "Monitor" : t.action}</strong>,
             routed with evidence
             {routed
-              ? ` to the ${routed.system}; acknowledged ${routed.acknowledged_at}`
+              ? ` to the ${routed.system}; ${routed.acknowledged_at ? `acknowledged ${routed.acknowledged_at}` : "awaiting owner"}`
               : " into the owner's system"}
             .
           </div>
@@ -326,7 +329,7 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
         <Section n={7} title="Provenance">
           <MutedNote>
             Public voice from X, Reddit, consumer forums, Google Play and App
-            Store, {rangeLong(b.meta.window.start, b.meta.window.end)}, NatWest
+            Store, {rangeLong(b.meta.window.start, b.meta.window.end)}, Swedbank
             Bank only. Classified by LisN; counts reproduce from the classified
             data.
           </MutedNote>

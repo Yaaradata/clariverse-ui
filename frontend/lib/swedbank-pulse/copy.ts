@@ -51,10 +51,10 @@ export function satisfactionAnswer(b: Bundle): string {
   const pub =
     best && worst
       ? `Customers are most positive on ${best.label.toLowerCase()} and least positive on ${worst.label.toLowerCase()}`
-      : "Public voice by Consumer Duty outcome: not yet loaded";
+      : "Public voice by FI focus area: not yet loaded";
   return `${pub}${
     sharpest
-      ? `; inside the bank, ${sharpest.tier} customers show the highest negative share (illustrative).`
+      ? `; inside the bank, ${sharpest.tier} customers show the highest negative share.`
       : "."
   }`;
 }
@@ -81,7 +81,7 @@ export function marketAnswer(b: Bundle): string {
     return "Public posts and reviews: not yet loaded. Leading and rising themes appear here once the public pull lands.";
   return `Across ${fmt(b.themes.total_items)} public posts and reviews since ${fmtDate(b.meta.window.start)}, ${top.label.toLowerCase()} leads; ${riser ? `${riser.label.toLowerCase()} is rising fastest` : "no theme is rising"}; ${
     praise
-      ? "quick, easy app journeys are where NatWest is praised most"
+      ? "quick, easy app journeys are where Swedbank is praised most"
       : "praise is thin"
   }.`;
 }
@@ -94,12 +94,12 @@ export function promiseAnswer(b: Bundle): string {
   const RT: Record<string, string> = {
     card_delivery: "card delivery",
     refund: "refunds",
-    reversal: "failed-transaction reversal",
+    reversal: "failed Swish payments and reversals",
     dispute: "disputes",
     closure: "closure",
-    loan_disbursal: "loan disbursal",
-    credit_report: "credit-report correction",
-    kyc: "Identity checks and profile updates",
+    loan_disbursal: "loan decisions",
+    credit_report: "credit-information correction",
+    kyc: "BankID and identity checks",
   };
   const share = b.signals.transparency_gap.share ?? 0;
   if (!pb.length && !share)

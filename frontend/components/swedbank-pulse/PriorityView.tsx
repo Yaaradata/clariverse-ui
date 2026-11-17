@@ -16,7 +16,7 @@ import {
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { fmt, fmtDateTime } from "@/lib/swedbank-pulse/format";
+import { fmt, fmtDate, fmtDateTime } from "@/lib/swedbank-pulse/format";
 import type { Bundle, Persona, TrailStep } from "@/lib/swedbank-pulse/types";
 import {
   AnswerLine,
@@ -32,19 +32,19 @@ import { useFrom } from "./Shell";
 import { hoursLabel } from "./V3Blocks";
 
 const COHORT_LABEL: Record<string, string> = {
-  priority_a: "Financially vulnerable",
+  priority_a: "Customers in a vulnerable situation",
   priority_b: "Recent complainants",
-  uhni: "Premier",
-  multi: "Multi-product customers",
+  uhni: "Premium and Private Banking",
+  multi: "Account-measure affected",
 };
 const PRODUCT_LABEL: Record<string, string> = {
-  cards: "Credit cards",
-  payments_fraud: "Payments and fraud",
-  current_accounts: "Current accounts and app",
-  personal_loans: "Personal loans",
-  mortgages: "Mortgages",
-  savings: "Savings",
-  digital: "Cora and digital assistant",
+  cards: "Cards",
+  payments_swish: "Payments and Swish",
+  everyday_accounts_app: "Everyday accounts and app",
+  consumer_loans: "Consumer loans",
+  mortgages: "Mortgages (bolån)",
+  savings_funds: "Savings and funds",
+  digital: "Nina and the Copilot assistant",
 };
 const CHANNEL_ORDER = [
   "email",
@@ -118,9 +118,9 @@ export function PriorityView({ b }: { b: Bundle }) {
         <AnswerLine
           sub={
             <>
-              Sample of {fmt(b.v3.sample.interactions)} contacts (illustrative).
-              Flags prioritise service. They never restrict or downgrade it.
-              LisN reads the lists the bank already keeps; it never infers who a
+              Sample of {fmt(b.v3.sample.interactions)} contacts. Flags
+              prioritise service. They never restrict or downgrade it. LisN
+              reads the lists the bank already keeps; it never infers who a
               customer is from public data.
             </>
           }
@@ -184,10 +184,13 @@ export function PriorityView({ b }: { b: Bundle }) {
               <strong style={{ color: C.text }}>
                 {fmt(c.waiting_on_customer)}
               </strong>{" "}
-              (illustrative; a resolution was sent, so not counted as open)
+              (a resolution was sent, so not counted as open)
             </div>
             <Table
-              head={["Negative contacts by channel, since 1 Aug", ""]}
+              head={[
+                `Negative contacts by channel, since ${fmtDate(b.v3.window.start)}`,
+                "",
+              ]}
               align={["left", "right"]}
               rows={CHANNEL_ORDER.filter((ch) => c.negative_by_channel[ch]).map(
                 (ch) => [labels[ch] ?? ch, fmt(c.negative_by_channel[ch])],
@@ -218,7 +221,7 @@ export function PriorityView({ b }: { b: Bundle }) {
               ) : c.id === "multi" ? (
                 "Four or more products held, from the bank's records. LisN reads it; it never adds anyone to the list."
               ) : (
-                "A Premier relationship from core banking. LisN reads it; it never adds anyone to Premier."
+                "A Premium relationship from core banking. LisN reads it; it never adds anyone to Premium."
               )}
             </div>
           </Tile>
@@ -379,14 +382,12 @@ export function PriorityView({ b }: { b: Bundle }) {
             }}
           >
             <li>
-              <strong style={{ color: C.text }}>
-                Consumer Duty vulnerability flag
-              </strong>
-              : set in the bank&apos;s own records. LisN reads the flag; it
-              never stores why a customer has it.
+              <strong style={{ color: C.text }}>FI vulnerability flag</strong>:
+              set in the bank&apos;s own records. LisN reads the flag; it never
+              stores why a customer has it.
             </li>
             <li>
-              <strong style={{ color: C.text }}>Premier relationship</strong>:
+              <strong style={{ color: C.text }}>Premium relationship</strong>:
               from core banking, refreshed daily.
             </li>
             <li>
@@ -631,9 +632,12 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
   const openSteps = p.trail.filter((s) => s.status === "open");
   const oldest = openSteps[0];
   const events = p.trail.filter((s) => s.event).length;
-  // The customer's owner (review round 3): Premier banking managers for Premier customers, otherwise the complaints lead.
-  const ownerKey =
-    p.rm_id === "Premier banking manager" ? "rm" : (p.rm_id ?? "cx");
+  // The customer's owner (review round 3): Premium banking managers for Premium customers, otherwise the complaints lead.
+  const ownerKey = /banking manager|adviser|Private Banking/i.test(
+    p.rm_id ?? "",
+  )
+    ? "rm"
+    : (p.rm_id ?? "cx");
   // Callback owner: the product owner of the oldest open item (review finding #36).
   const callbackOwner = oldest
     ? (b.products.rows.find((r) => r.id === oldest.product)?.owner ?? "cx")
@@ -825,7 +829,7 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
                 marginBottom: 4,
               }}
             >
-              Mock: CRM task (not sent)
+              CRM task draft (not sent)
             </div>
             <strong style={{ color: C.text }}>To:</strong> {p.rm_id} ·{" "}
             <strong style={{ color: C.text }}>Customer:</strong> {p.masked_id} ·{" "}

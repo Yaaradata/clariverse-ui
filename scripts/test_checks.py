@@ -663,9 +663,13 @@ def main() -> int:
     ind_rec = indusind_reconcile_fixtures(fails)
     nw_lint = natwest_lint_fixtures(fails)
     nw_rec = natwest_reconcile_fixtures(fails)
+    import test_swedbank_checks  # noqa: PLC0415  (Swedbank lint, PII, gate and provenance fixtures, SW-D15)
+
+    sw = test_swedbank_checks.run(fails)
     for f in fails:
         print("FAIL", f)
     print(f"test_checks: IndusInd {ind_lint} lint fixtures (26 rules), {ind_rec} reconcile fixtures")
+    print(f"test_checks: Swedbank fixtures {sw}")
     print(f"test_checks: NatWest {nw_lint} lint fixtures, {nw_rec} reconcile fixtures ({len(NW_SKIPPED)} skipped: {NW_SKIPPED})")
     print(
         f"test_checks: {len(FIXTURES)} reconcile fixtures, {len(LINT_MUST_FLAG) + len(LINT_MUST_PASS) + 1 + build_checks} "

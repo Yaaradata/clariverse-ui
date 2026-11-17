@@ -112,7 +112,11 @@ function StoreChart({ s }: { s: StoreSeries }) {
   );
 }
 
-function VersionTable({ s, majors }: { s: StoreSeries; majors: string[] }) {
+/** The three newest major versions in the store's data (none typed in). */
+function VersionTable({ s }: { s: StoreSeries }) {
+  const majors = Object.keys(s.by_major)
+    .sort((a, z) => Number(z) - Number(a))
+    .slice(0, 3);
   const rows = majors
     .filter((m) => s.by_major[m])
     .map((m) => {
@@ -156,19 +160,19 @@ const GRID2 = {
 
 export function DigitalModule({ b }: { b: Bundle }) {
   const from = useFrom();
-  // Pass 2 section 12: the Cora module reads the Cora themes inside the bank (bank scale, full window). Public
+  // Pass 2 section 12: the Nina module reads the Nina themes inside the bank (bank scale, full window). Public
   // columns stay in place and read "not yet loaded" until the pull lands.
   const full = b.periods.periods.all;
   const cora = full?.cora;
   const sample = b.v3.cora;
-  if (!cora || !sample) return <MutedNote>No Cora data.</MutedNote>;
+  if (!cora || !sample) return <MutedNote>No Nina data.</MutedNote>;
   const i = cora.internal;
   const rows = [...cora.rows].sort(
     (a, c) => (c.internal.open_too_long ?? 0) - (a.internal.open_too_long ?? 0),
   );
   const top = rows[0];
   const rp = releasePulse(b);
-  const app = b.storeSeries.apps.find((a) => a.app === "NatWest app");
+  const app = b.storeSeries.apps[0];
   const play = app?.stores.find((s) => s.store === "playstore");
   const ios = app?.stores.find((s) => s.store === "appstore");
   const publicLoaded = full.public_loaded !== false && !!rp;
@@ -178,9 +182,9 @@ export function DigitalModule({ b }: { b: Bundle }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov={["internal", "public"]} accent tone="red">
         <AnswerLine
-          sub={`Inside the bank, illustrative, at bank scale: contacts tagged to a Cora theme on any channel, ${fmtDate(full.start)} to ${fmtDate(full.end)}. Public reviews of Cora: ${publicLoaded ? "on the market view" : "not yet loaded"}.`}
+          sub={`Inside the bank, at bank scale: contacts tagged to a Nina theme on any channel, ${fmtDate(full.start)} to ${fmtDate(full.end)}. Public reviews of Nina: ${publicLoaded ? "on the market view" : "not yet loaded"}.`}
         >
-          Cora: {fmt(i.volume)} contacts where Cora did not finish the job;{" "}
+          Nina: {fmt(i.volume)} contacts where Nina did not finish the job;{" "}
           {fmt(i.open)} still open, {fmt(i.open_too_long)} open too long.{" "}
           {top ? `${top.label} leads the open-too-long list.` : null}
         </AnswerLine>
@@ -193,11 +197,11 @@ export function DigitalModule({ b }: { b: Bundle }) {
 
         <Section n={1} title="What">
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
-            Contacts where Cora did not finish the job: unresolved so the
+            Contacts where Nina did not finish the job: unresolved so the
             customer had to call, a wrong answer, a hand-off that lost the
             context, or no way to reach a person. Each sits with the product the
             query was about; {fmt(sample.via_cora)} of {fmt(sample.dials.total)}{" "}
-            in the demo sample came in through Cora itself.
+            in the sample came in through Nina itself.
           </div>
         </Section>
 
@@ -209,7 +213,7 @@ export function DigitalModule({ b }: { b: Bundle }) {
             {cora.returns?.resolved ? (
               <>
                 {" "}
-                Of {fmt(cora.returns.resolved)} Cora conversations resolved{" "}
+                Of {fmt(cora.returns.resolved)} Nina conversations resolved{" "}
                 {fmtDate(cora.returns.from)} to {fmtDate(cora.returns.until)},{" "}
                 {fmt(cora.returns.back_7d)} (
                 {Math.round(
@@ -226,8 +230,8 @@ export function DigitalModule({ b }: { b: Bundle }) {
                 <StoreChart s={play} />
               </div>
               <div style={GRID2}>
-                <VersionTable s={play} majors={["11", "10", "9"]} />
-                <VersionTable s={ios} majors={["11", "10", "8"]} />
+                <VersionTable s={play} />
+                <VersionTable s={ios} />
               </div>
             </>
           ) : (
@@ -258,22 +262,21 @@ export function DigitalModule({ b }: { b: Bundle }) {
             ])}
           />
           <MutedNote>
-            Inside figures are illustrative, at bank scale, from the demo
-            sample. Open too long: open past the service standard for the
-            request.
+            Inside figures are at bank scale, from the bank sample. Open too
+            long: open past the service standard for the request.
           </MutedNote>
         </Section>
 
         <Section n={4} title="Where">
           <div style={{ fontSize: 15, color: C.textSec }}>
-            Consumer Duty outcome: Consumer support · Module: Cora and digital
+            FI focus area: clear information · Module: Nina and the Copilot
             assistant · Channels: all, with the product the query was about.
           </div>
         </Section>
 
         <Section n={5} title="How high">
           <div style={{ fontSize: 15, color: C.textSec }}>
-            Rung: Repeat. A Cora failure brings the customer back on another
+            Rung: Repeat. A Nina failure brings the customer back on another
             channel; {fmt(i.escalations)} of these contacts carried escalation
             language.
           </div>
@@ -281,9 +284,9 @@ export function DigitalModule({ b }: { b: Bundle }) {
 
         <Section n={6} title="Owner and action">
           <div style={{ fontSize: 15, color: C.textSec }}>
-            Owner: <strong>Digital and Cora</strong>. Recommended action:{" "}
+            Owner: <strong>Digital and Nina</strong>. Recommended action:{" "}
             <strong>Route with evidence</strong>: the fix list, with the
-            conversations behind each row, goes to the Cora backlog. Track open
+            conversations behind each row, goes to the Nina backlog. Track open
             too long weekly.
           </div>
         </Section>
@@ -296,46 +299,74 @@ export function DigitalModule({ b }: { b: Bundle }) {
       <MutedNote>
         Theme detail:{" "}
         <a
-          href={signalHref("cora_unresolved", from)}
+          href={signalHref("nina_unresolved", from)}
           style={{ color: C.textSec }}
         >
-          Cora unresolved, had to call
+          Nina unresolved, had to call
         </a>
       </MutedNote>
     </div>
   );
 }
 
-/* ================================================================= M2 cards */
+/* ================================================================= M2 Everyday accounts and app (the deep dive) */
 
+/** One quote each from the lead Everyday accounts and app themes; slice.ts sends the same ids. */
+export const DEEP_DIVE_EVIDENCE_THEMES_IDS = [
+  "new_app_release",
+  "app_speed_crash",
+  "account_freeze",
+];
+
+/** The Everyday accounts and app issue list: the deep-dive categories (SW-D16), each with its themes. */
 const CARD_ISSUES: { label: string; themes: string[]; note?: string }[] = [
   {
-    label: "Eligibility and card changes",
-    themes: ["card_eligibility_upgrade"],
+    label: "App update and new release",
+    themes: ["new_app_release"],
   },
   {
-    label: "Application rejection and verification",
-    themes: ["card_application"],
+    label: "App crashes, speed and outages",
+    themes: ["app_speed_crash", "online_banking"],
   },
   {
-    label: "Rewards value and caps",
-    themes: ["rewards_value", "reward_redemption"],
+    label: "BankID and sign-in",
+    themes: [
+      "app_login_biometrics",
+      "identity_checks",
+      "device_security_block",
+    ],
   },
-  { label: "Fees and charges", themes: ["card_fees_charges"] },
-  { label: "Limits", themes: ["card_limit"] },
-  { label: "Disputes and chargebacks", themes: ["dispute_chargeback"] },
   {
-    label: "Closure",
-    themes: ["closure_requests"],
-    note: "Bank service standard: confirm with the bank",
+    label: "Account measures: frozen or restricted accounts",
+    themes: ["account_freeze", "closure_requests"],
+  },
+  {
+    label: "App features and usability",
+    themes: ["app_usability", "statements_documents"],
+  },
+  {
+    label: "Account fees and opening",
+    themes: ["fees_charges_bank", "account_opening"],
+  },
+  {
+    label: "Service, branch (kontor) and complaint handling",
+    themes: [
+      "complaint_handling",
+      "care_unreachable",
+      "branch_service",
+      "branch_closure",
+      "premium_service",
+      "unsolicited_calls",
+    ],
   },
 ];
 
 export function CardsModule({ b }: { b: Bundle }) {
   const from = useFrom();
-  const pub = b.products.rows.find((r) => r.id === "cards");
-  const inn = b.v3.products.find((r) => r.id === "cards");
-  if (!pub || !inn) return <MutedNote>No cards data.</MutedNote>;
+  const pub = b.products.rows.find((r) => r.id === "everyday_accounts_app");
+  const inn = b.v3.products.find((r) => r.id === "everyday_accounts_app");
+  if (!pub || !inn)
+    return <MutedNote>No Everyday accounts and app data.</MutedNote>;
   const pubIssue = Object.fromEntries(pub.issues.map((i) => [i.id, i]));
   const inIssue = Object.fromEntries(
     b.v3.cards_issues.map((i) => [i.theme, i]),
@@ -344,17 +375,18 @@ export function CardsModule({ b }: { b: Bundle }) {
   const ledger = Object.fromEntries(b.v3.deliverables.map((d) => [d.id, d]));
   const rows = CARD_ISSUES.map((ci) => {
     const pm = ci.themes.reduce(
-      (s, t) => s + (pubIssue[t]?.count ?? tm[t]?.by_business?.cards ?? 0),
+      (s, t) => s + (pubIssue[t]?.count ?? tm[t]?.by_business?.payments ?? 0),
       0,
     );
     const pn = ci.themes.reduce((s, t) => {
       if (pubIssue[t]) return s + pubIssue[t].negative;
       const th = tm[t];
-      // Not in the product's issue list: estimate from the theme's negative share on its credit card items.
+      // Not in the product's issue list: estimate from the theme's negative share on its Everyday accounts and app items.
       return th?.count
         ? s +
             Math.round(
-              (th.sentiment.negative * (th.by_business.cards ?? 0)) / th.count,
+              (th.sentiment.negative * (th.by_business.payments ?? 0)) /
+                th.count,
             )
         : s;
     }, 0);
@@ -380,8 +412,9 @@ export function CardsModule({ b }: { b: Bundle }) {
     top.pn > 0
       ? `${top.ci.label} leads.`
       : `Inside the bank, ${top.ci.label.toLowerCase()} leads (${fmt(top.inter)} interactions in the sample).`;
-  const ev = ["card_eligibility_upgrade", "card_fees_charges", "rewards_value"]
-    .flatMap((t) => (tm[t]?.exemplars ?? []).slice(0, 1))
+  const ev = DEEP_DIVE_EVIDENCE_THEMES_IDS.flatMap((t) =>
+    (tm[t]?.exemplars ?? []).slice(0, 1),
+  )
     .map((id) => b.evidence[id])
     .filter(Boolean);
   const channels = Object.entries(inn.by_channel).sort((a, z) => z[1] - a[1]);
@@ -391,10 +424,10 @@ export function CardsModule({ b }: { b: Bundle }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov={["public", "internal"]} accent tone="red">
         <AnswerLine
-          sub={`Inside the bank (illustrative): ${fmt(inn.total)} card interactions in the sample, ${fmt(inn.open)} open, ${fmt(inn.waiting_on_customer)} waiting on customer, ${fmt(inn.open_too_long)} past their service standard.`}
+          sub={`Inside the bank: ${fmt(inn.total)} Everyday accounts and app interactions in the sample, ${fmt(inn.open)} open, ${fmt(inn.waiting_on_customer)} waiting on customer, ${fmt(inn.open_too_long)} past their service standard.`}
         >
-          Credit cards: {fmt(pub.negative)} negative public items out of{" "}
-          {fmt(pub.count)}
+          Everyday accounts and app: {fmt(pub.negative)} negative public items
+          out of {fmt(pub.count)}
           {trend !== null
             ? `, share of voice ${fmtSigned(trend)} in the second half of the window (source-weighted)`
             : ""}
@@ -402,16 +435,17 @@ export function CardsModule({ b }: { b: Bundle }) {
         </AnswerLine>
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
           <Status value="needs_you" />
-          <OwnerChip owner="cards" />
+          <OwnerChip owner="payments" />
           <RungChip rung="Complaint" />
           <ActionChip action="Set a new date" />
         </div>
 
         <Section n={1} title="What">
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
-            Everything customers say about credit cards, in public and to the
-            bank, on one page: the same issue list the credit cards product
-            owner reviews, with public voice beside the bank&apos;s own queues.
+            Everything customers say about Everyday accounts and app, in public
+            and to the bank, on one page: the same issue list the Everyday
+            accounts and app product owner reviews, with public voice beside the
+            bank&apos;s own queues.
           </div>
         </Section>
 
@@ -438,7 +472,7 @@ export function CardsModule({ b }: { b: Bundle }) {
             <Kpi
               label="Inside: negative"
               value={fmt(inn.negative)}
-              sub="card interactions (illustrative)"
+              sub="Everyday accounts and app interactions"
               tone="violet"
             />
             <Kpi
@@ -454,13 +488,13 @@ export function CardsModule({ b }: { b: Bundle }) {
           </div>
           <WeeklyBars
             data={inn.negative_weekly}
-            yLabel="Negative card interactions (inside, illustrative)"
+            yLabel="Negative Everyday accounts and app interactions (inside)"
           />
           <BaselineCaption>
             Public trend is the source-weighted share of trend-basis items,
             second half vs first half of the window: each source counts by its
             share of the window, so a burst in one source cannot swing it.
-            Internal weeks are from the demo sample.
+            Internal weeks are from the bank sample.
           </BaselineCaption>
         </Section>
 
@@ -505,15 +539,15 @@ export function CardsModule({ b }: { b: Bundle }) {
             ])}
           />
           <MutedNote>
-            Public mentions count theme tags on credit card items (an item can
-            carry up to three). Inside figures are from the synthetic sample and
-            are illustrative until discovery.
+            Public mentions count theme tags on Everyday accounts and app items
+            (an item can carry up to three). Inside figures are from the bank
+            sample.
           </MutedNote>
         </Section>
 
         <Section n={4} title="Where">
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
-            Inside the bank, card contacts arrive by{" "}
+            Inside the bank, Everyday accounts and app contacts arrive by{" "}
             {channels
               .slice(0, 4)
               .map(
@@ -521,24 +555,24 @@ export function CardsModule({ b }: { b: Bundle }) {
                   `${(b.v3.channel_labels[ch] ?? ch).toLowerCase()} (${fmt(n)})`,
               )
               .join(", ")}
-            . In public, on X, Reddit and card forums.
+            . In public, on X, Reddit, Trustpilot and the app stores.
           </div>
         </Section>
 
         <Section n={5} title="How high">
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
-            {fmt(pub.escalation)} public credit card items name a regulator, a
-            court or the Financial Ombudsman. Inside: {fmt(inn.high_impact)}{" "}
-            high-impact card complaints in the sample.
+            {fmt(pub.escalation)} public Everyday accounts and app items name a
+            regulator, a court or ARN. Inside: {fmt(inn.high_impact)}{" "}
+            high-impact Everyday accounts and app complaints in the sample.
           </div>
         </Section>
 
         <Section n={6} title="Owner and action">
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
-            Owner: <strong>Credit cards</strong>. Set a date on eligibility and
-            card-change requests and tell customers before anything on their
-            card changes; close cards within the bank's standard (confirm with
-            the bank).
+            Owner: <strong>Everyday banking product owner</strong>. Set a date
+            on every manipulated-transfer investigation (15 business days, bank
+            standard) and tell customers before an account measure blocks a
+            payment.
           </div>
         </Section>
 
@@ -546,7 +580,7 @@ export function CardsModule({ b }: { b: Bundle }) {
           <EvidenceList items={ev} />
         </Section>
       </Tile>
-      <DialsRow b={b} product="cards" />
+      <DialsRow b={b} product="everyday_accounts_app" />
     </div>
   );
 }

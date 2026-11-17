@@ -22,17 +22,18 @@ export default async function BusinessPage({
   const b = loadBundle();
   const row = b.products.rows.find((r) => r.id === product);
   if (!row) notFound();
-  const cards = product === "cards";
+  // SW-D16: Everyday accounts and app carries the worked deep dive; every other product is an ordinary product page.
+  const cards = product === "everyday_accounts_app";
   const sliced = sliceBundle(b, { view: "business" });
   return (
     <Shell
       {...shellProps(b)}
       periods={cards ? sliced.periods : undefined}
-      context={cards ? "Credit cards · Product view" : undefined}
+      context={cards ? "Everyday accounts and app · Product view" : undefined}
       title={`${row.label}: product view`}
       subtitle={
         cards
-          ? "For the credit cards product owner: the issue pulse, issues by category and what customers say, for the selected period."
+          ? "For the Everyday accounts and app owner: the issue pulse, issues by category and what customers say, for the selected period."
           : "Coming soon."
       }
     >

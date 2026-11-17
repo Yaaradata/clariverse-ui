@@ -1,70 +1,79 @@
 {
- "note": "Internal · illustrative. Each kept row stands for w bank-scale contacts; each customer for cw contacting customers.",
+ "note": "Each kept row stands for w bank-scale contacts; each customer for cw contacting customers.",
  "sample": {
   "rows": 32000,
   "customers": 5000
  },
  "targets": {
-  "total_contacts": 5800000,
+  "total_contacts": 361000,
   "channel_mix": {
-   "calls": 0.44,
-   "whatsapp": 0.3,
-   "chat": 0.09,
-   "emails": 0.06,
-   "branch": 0.1,
+   "calls": 0.38,
+   "whatsapp": 0.35,
+   "chat": 0.15,
+   "emails": 0.02,
+   "branch": 0.09,
    "social": 0.01
   },
-  "complaints": 49700,
+  "complaints": 21700,
   "product_mix": {
-   "current_accounts": 0.4,
-   "cards": 0.2,
-   "payments_fraud": 0.16,
-   "mortgages": 0.11,
-   "savings": 0.07,
-   "personal_loans": 0.06
+   "payments_swish": 0.24,
+   "everyday_accounts_app": 0.34,
+   "cards": 0.14,
+   "mortgages": 0.12,
+   "savings_funds": 0.09,
+   "consumer_loans": 0.07
   },
   "negative_share": {
-   "cards": 0.15,
-   "personal_loans": 0.16,
-   "mortgages": 0.15,
-   "payments_fraud": 0.11,
-   "savings": 0.11,
-   "current_accounts": 0.1
+   "everyday_accounts_app": 0.16,
+   "payments_swish": 0.14,
+   "cards": 0.13,
+   "mortgages": 0.12,
+   "savings_funds": 0.11,
+   "consumer_loans": 0.13
   },
   "negative_of_complaints": 0.85,
   "complaint_mix": {
-   "current_accounts": 0.4,
-   "payments_fraud": 0.2,
-   "cards": 0.17,
+   "everyday_accounts_app": 0.34,
+   "payments_swish": 0.28,
+   "cards": 0.14,
    "mortgages": 0.1,
-   "savings": 0.07,
-   "personal_loans": 0.06
+   "savings_funds": 0.08,
+   "consumer_loans": 0.06
   },
   "escalation": {
-   "rbi_ombudsman": 2200,
-   "md_office": 3000
+   "rbi_ombudsman": 38,
+   "md_office": 651
   },
   "lists": {
    "priority_a": {
-    "size": 1780000,
-    "in_contact": 0.3
+    "size": 380000,
+    "in_contact": 0.05
    },
    "priority_b": {
-    "size": 43000,
-    "in_contact": 0.6
+    "size": 74000,
+    "in_contact": 0.25
    },
    "uhni": {
-    "size": 750000,
-    "in_contact": 0.25
+    "size": 228000,
+    "in_contact": 0.05
+   },
+   "multi": {
+    "size": 57000,
+    "in_contact": 0.2
    }
   },
   "contacts_per_contacting_customer": 2.5,
-  "contacting_customers": 2320000
+  "contacting_customers": 144400,
+  "private_customers": 3800000,
+  "window_days": 26.36,
+  "complaints_per_year": 300000,
+  "contacts_per_year": 5000000,
+  "arn_filings_per_week": 10
  },
  "list_sizes": {
-  "priority_a": 1780000,
-  "priority_b": 43000,
-  "uhni": 750000,
-  "multi": 757900
+  "priority_a": 380000,
+  "priority_b": 74000,
+  "uhni": 228000,
+  "multi": 57000
  }
 }

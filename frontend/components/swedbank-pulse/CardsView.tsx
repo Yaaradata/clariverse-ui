@@ -52,6 +52,7 @@ import {
   BaselineCaption,
   C,
   cols,
+  Gloss,
   HalfGauge,
   Kpi,
   MONO,
@@ -71,35 +72,38 @@ import {
 const pct = (a: number | null | undefined, b: number) =>
   a === null || a === undefined || !b ? null : (100 * a) / b;
 
-const CARDS = "/swedbank-pulse/v1/business/cards";
+const CARDS = "/swedbank-pulse/v1/business/everyday_accounts_app";
 
 /** A short quote, or a matching-height placeholder so tiles in a row end at the same line. */
-function QuoteLine({ q }: { q: Quote | null }) {
+function QuoteLine({ q, n }: { q: Quote | null; n?: number }) {
   return (
-    <div
-      style={{
-        fontSize: 13,
-        color: q ? C.textSec : C.textMut,
-        borderLeft: `2px solid ${C.border}`,
-        paddingLeft: 8,
-        lineHeight: 1.45,
-        display: "-webkit-box",
-        WebkitLineClamp: 2,
-        WebkitBoxOrient: "vertical",
-        overflow: "hidden",
-      }}
-    >
-      {q ? (
-        <>
-          &ldquo;{q.summary}&rdquo;
-          <span style={{ color: C.textMut }}>
-            {" "}
-            · {q.source_label}, {fmtDate(q.date)}
-          </span>
-        </>
-      ) : (
-        "No quote in this period."
-      )}
+    <div style={{ minWidth: 0 }}>
+      <div
+        style={{
+          fontSize: 13,
+          color: q ? C.textSec : C.textMut,
+          borderLeft: `2px solid ${C.border}`,
+          paddingLeft: 8,
+          lineHeight: 1.45,
+          display: "-webkit-box",
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+        }}
+      >
+        {q ? (
+          <>
+            &ldquo;{q.summary}&rdquo;
+            <span style={{ color: C.textMut }}>
+              {" "}
+              · {q.source_label}, {fmtDate(q.date)}
+            </span>
+          </>
+        ) : (
+          `— (${fmt(n ?? 0)} item${n === 1 ? "" : "s"}, too few to quote)`
+        )}
+      </div>
+      <Gloss gloss={q?.gloss} lang={q?.lang} />
     </div>
   );
 }
@@ -138,8 +142,8 @@ function IssuePulse({ p }: { p: Period }) {
   return (
     <Tile
       id="issue-pulse"
-      title={titled("Issue pulse: Credit cards", p)}
-      sub="The bank's own credit card contacts and public voice about credit cards, side by side. The same figures as the credit cards card on the Head of Customer Experience view."
+      title={titled("Issue pulse: Everyday accounts and app", p)}
+      sub="The bank's own Everyday accounts and app contacts and public voice about Everyday accounts and app, side by side. The same figures as the Everyday accounts and app tile on the Head of Customer Experience view."
       prov={["internal", "public"]}
       tone="violet"
     >
@@ -543,20 +547,6 @@ function Categories({ p }: { p: Period }) {
           ))}
         </div>
       </div>
-      <MutedNote>
-        Each contact and each public item counts once, under its main theme, so
-        the categories add up to the issue pulse: resolved + open + waiting on
-        customer = volume. Waiting on customer: the bank has sent a resolution
-        or proposed one; not counted as open or as not responded to. Not
-        responded to in 48h+: waited more than 48 hours for a first reply.
-        Escalations: internal contacts escalated to the complaints team or
-        beyond; external posts with escalation language. Trend: internal plus
-        public volume over the last {p.cards.categories[0]?.trend.length ?? 0}{" "}
-        periods of the same length. About a service standard: the category
-        carries a delivery standard; compliance is not shown here. Owners are
-        roles in the credit cards team. The at-risk pill counts complaints on
-        the Financial Ombudsman watch (internal, illustrative).
-      </MutedNote>
     </Tile>
   );
 }
@@ -575,6 +565,7 @@ function QuestionCard({
   gauges,
   stats,
   saying,
+  gloss,
   prov,
   accent,
 }: {
@@ -589,6 +580,8 @@ function QuestionCard({
   gauges: { label: string; value: number | null; sub: string; tone?: Tone }[];
   stats: { label: string; value: string; sub: string; color?: string }[];
   saying: string;
+  /** SW-D11: the English gloss of the quote, when the original is not English. */
+  gloss?: Quote | null;
   prov: ("public" | "internal")[];
   accent: string;
 }) {
@@ -784,6 +777,7 @@ function QuestionCard({
         >
           {saying}
         </p>
+        <Gloss gloss={gloss?.gloss} lang={gloss?.lang} />
       </div>
       <div
         style={{ display: "flex", gap: 6, flexWrap: "wrap", alignSelf: "end" }}
@@ -836,28 +830,28 @@ function QuestionCards({ p }: { p: Period }) {
         accent={C.violet}
         icon={<Activity size={18} />}
         title="Are my customers happy?"
-        micro="Sentiment · Consumer Duty outcomes · Top pain"
+        micro="Sentiment · FI focus areas · Top pain"
         answer={
           m.items
-            ? `Net sentiment of credit card reviews (app stores and Trustpilot) is ${fmtSigned(m.net, "", 0)} (${fmtSigned(change, " pts", 0)} ${p.compare}), source-weighted. ${topPain ? `${topPain.label} draws the most negative posts.` : ""}`
-            : `Public voice about credit cards is not yet loaded; inside the bank, ${fmt(pct(c.internal.resolved, c.internal.volume))}% of credit card contacts in the period are resolved.`
+            ? `Net sentiment of Everyday accounts and app reviews (app stores and Trustpilot) is ${fmtSigned(m.net, "", 0)} (${fmtSigned(change, " pts", 0)} ${p.compare}), source-weighted. ${topPain ? `${topPain.label} draws the most negative posts.` : ""}`
+            : `Public voice about Everyday accounts and app is not yet loaded; inside the bank, ${fmt(pct(c.internal.resolved, c.internal.volume))}% of Everyday accounts and app contacts in the period are resolved.`
         }
         headlineLabel="Net sentiment"
         headline={fmtSigned(m.net, "", 0)}
-        caption={`${fmt(m.items)} public items about credit cards in the period. Positive share minus negative share, each source weighted by its share of the window.`}
+        caption={`${fmt(m.items)} public items about Everyday accounts and app in the period. Positive share minus negative share, each source weighted by its share of the window.`}
         gauges={[
           {
             label: "Positive share",
             value: c.external.volume ? (c.external.positive_share ?? 0) : null,
             sub: c.external.volume
-              ? "of credit card public voice"
+              ? "of Everyday accounts and app public voice"
               : "public voice not yet loaded",
             tone: "green",
           },
           {
             label: "Resolved",
             value: pct(c.internal.resolved, c.internal.volume) ?? 0,
-            sub: "of the bank's credit card contacts",
+            sub: "of the bank's Everyday accounts and app contacts",
             tone: "green",
           },
         ]}
@@ -875,8 +869,10 @@ function QuestionCards({ p }: { p: Period }) {
           },
         ]}
         saying={
-          h.saying[0]?.summary ?? "No quotable public item in this period."
+          h.saying[0]?.summary ??
+          `— (${fmt(p.cards.external.volume)} public items, too few to quote)`
         }
+        gloss={h.saying[0]}
         prov={["public", "internal"]}
       />
       <QuestionCard
@@ -885,10 +881,10 @@ function QuestionCards({ p }: { p: Period }) {
         icon={<Shield size={18} />}
         title="What is the market saying about us?"
         micro="Themes · Rising · App pulse"
-        answer={`${riser ? `${riser.label} is rising fastest (share of voice ${fmtSigned(riser.share_change_pct)} ${p.compare}).` : "No credit card theme is rising by the 30% rule in this period."} ${mk.reach.volume ? `${fmt(mk.reach.volume)} posts with reach.` : "No posts with reach."}`}
+        answer={`${riser ? `${riser.label} is rising fastest (share of voice ${fmtSigned(riser.share_change_pct)} ${p.compare}).` : "No Everyday accounts and app theme is rising by the 30% rule in this period."} ${mk.reach.volume ? `${fmt(mk.reach.volume)} posts with reach.` : "No posts with reach."}`}
         headlineLabel="Public posts and reviews"
         headline={fmt(c.external.volume)}
-        caption={`About credit cards, in the period: X, Reddit, forums, Google Play, App Store. ${fmt(c.external.escalation)} use escalation language.`}
+        caption={`About Everyday accounts and app, in the period: X, Reddit, Trustpilot, Google Play, App Store. ${fmt(c.external.escalation)} use escalation language.`}
         gauges={[
           {
             label: "Google Play",
@@ -922,8 +918,10 @@ function QuestionCards({ p }: { p: Period }) {
           },
         ]}
         saying={
-          riserQuote?.summary ?? "No quotable public item in this period."
+          riserQuote?.summary ??
+          `— (${fmt(p.cards.external.volume)} public items, too few to quote)`
         }
+        gloss={riserQuote}
         prov={["public"]}
       />
       <QuestionCard
@@ -932,15 +930,15 @@ function QuestionCards({ p }: { p: Period }) {
         icon={<Timer size={18} />}
         title="Are we meeting our service standards?"
         micro="Missed service standards · Status-seeking · Escalation"
-        answer={`${fmt(sv.missed_timelines.total)} public credit card posts describe a missed service standard; ${fmt(sv.transparency.count)} ask where something is; ${fmt(sv.public_escalation)} use escalation language.`}
+        answer={`${fmt(sv.missed_timelines.total)} public Everyday accounts and app posts describe a missed service standard; ${fmt(sv.transparency.count)} ask where something is; ${fmt(sv.public_escalation)} use escalation language.`}
         headlineLabel="Missed service standards heard"
         headline={fmt(sv.missed_timelines.total)}
-        caption={`Public posts in the period, by request type on the drill-down. Inside the bank: ${late === null ? "the 48-hour figure needs 48 hours" : `${fmt(late)} credit card contacts not responded to in 48h+`}.`}
+        caption={`Public posts in the period, by request type on the drill-down. Inside the bank: ${late === null ? "the 48-hour figure needs 48 hours" : `${fmt(late)} Everyday accounts and app contacts not responded to in 48h+`}.`}
         gauges={[
           {
             label: "Repeat contact",
             value: pct(internalRepeat, c.internal.volume) ?? 0,
-            sub: "of the bank's credit card contacts",
+            sub: "of the bank's Everyday accounts and app contacts",
             tone: "red",
           },
           {
@@ -950,7 +948,7 @@ function QuestionCards({ p }: { p: Period }) {
               sv.transparency.share === null ||
               sv.transparency.share === undefined
                 ? "public voice not yet loaded"
-                : "of credit card public posts",
+                : "of Everyday accounts and app public posts",
             tone: "amber",
           },
         ]}
@@ -966,15 +964,16 @@ function QuestionCards({ p }: { p: Period }) {
           {
             label: "service standard-related contacts",
             value: fmt(sv.tat_related.contacts),
-            sub: `${fmtPct(sv.tat_related.share)} of credit card contacts · ${fmt(sv.tat_related.open)} open`,
+            sub: `${fmtPct(sv.tat_related.share)} of Everyday accounts and app contacts · ${fmt(sv.tat_related.open)} open`,
             color: C.amber,
           },
         ]}
         saying={
           sv.transparency.quote?.summary ??
           sv.closure.quote?.summary ??
-          "No quotable public item in this period."
+          `— (${fmt(p.cards.external.volume)} public items, too few to quote)`
         }
+        gloss={sv.transparency.quote ?? sv.closure.quote}
         prov={["public", "internal"]}
       />
     </div>
@@ -993,7 +992,7 @@ export function JourneyPanel({ p }: { p: Period }) {
     <Tile
       id="happy-journey"
       title={titled("Where contacts come from", p)}
-      sub="The bank's own credit card contacts by journey stage."
+      sub="The bank's own Everyday accounts and app contacts by journey stage."
       prov="internal"
     >
       <Table
@@ -1055,7 +1054,7 @@ export function StoresPanel({ p }: { p: Period }) {
     <Tile
       id="market-stores"
       title={titled("Top complaints and feature requests", p)}
-      sub="Credit card reviews, one store at a time: top complaints, feature requests and the existing features customers praise."
+      sub="Everyday accounts and app reviews, one store at a time: top complaints, feature requests and the existing features customers praise."
       prov="public"
     >
       <div style={SPLIT}>
@@ -1070,7 +1069,7 @@ export function StoresPanel({ p }: { p: Period }) {
             }}
           >
             <strong>
-              {st.label}: {fmt(st.reviews)} credit card reviews
+              {st.label}: {fmt(st.reviews)} Everyday accounts and app reviews
               {st.avg_rating === null
                 ? ""
                 : ` · ${st.avg_rating.toFixed(1)}★ · ${fmtPct(st.share_positive)} 4–5★`}
@@ -1101,12 +1100,13 @@ export function StoresPanel({ p }: { p: Period }) {
             />
             {st.reviews < 5 ? (
               <MutedNote>
-                Too few credit card reviews on this store in this period to read
-                much into.
+                Too few Everyday accounts and app reviews on this store in this
+                period to read much into.
               </MutedNote>
             ) : (
               <MutedNote>
-                Reviews tagged to credit cards on this store in the period.
+                Reviews tagged to Everyday accounts and app on this store in the
+                period.
               </MutedNote>
             )}
           </div>
@@ -1140,7 +1140,7 @@ export function Happy({ p }: { p: Period }) {
         <Tile
           id="happy-tiers"
           title={titled("Contacts by customer list", p)}
-          sub="The bank's own credit card contacts by the Customer pulse lists, with their sentiment. A customer can be on more than one list, so the rows add to more than the total."
+          sub="The bank's own Everyday accounts and app contacts by the Customer pulse lists, with their sentiment. A customer can be on more than one list, so the rows add to more than the total."
           prov="internal"
         >
           <Table
@@ -1180,7 +1180,7 @@ export function Happy({ p }: { p: Period }) {
           <Kpi
             label="Net sentiment"
             value={fmtSigned(m.net, "", 0)}
-            sub={`${fmt(m.items)} public items about credit cards`}
+            sub={`${fmt(m.items)} public items about Everyday accounts and app`}
             tone={(m.net ?? 0) < 0 ? "red" : "green"}
           />
           <Kpi
@@ -1244,7 +1244,7 @@ export function Happy({ p }: { p: Period }) {
       <Tile
         id="happy-trend"
         title={titled("Sentiment trend", p)}
-        sub={`Net sentiment of credit card reviews (app stores and Trustpilot) per ${p.id === "all" ? "week" : "period of the same length"}, source-weighted. Dashed line: the average of the points shown.`}
+        sub={`Net sentiment of Everyday accounts and app reviews (app stores and Trustpilot) per ${p.id === "all" ? "week" : "period of the same length"}, source-weighted. Dashed line: the average of the points shown.`}
         prov="public"
       >
         <div style={SPLIT}>
@@ -1276,7 +1276,7 @@ export function Happy({ p }: { p: Period }) {
       <Tile
         id="happy-saying"
         title={titled("What customers are saying", p)}
-        sub="One anonymised quote for each of the largest negative credit card themes. Names are replaced by roles; quotes that make an allegation are not shown."
+        sub="One anonymised quote for each of the largest negative Everyday accounts and app themes. Names are replaced by roles; quotes that make an allegation are not shown."
         prov="public"
       >
         <div
@@ -1321,23 +1321,25 @@ export function Happy({ p }: { p: Period }) {
                   {fmt(s.count)} items
                 </span>
               </div>
-              <QuoteLine q={s} />
+              <QuoteLine q={s} n={s.count} />
             </div>
           ))}
           {h.saying.length === 0 ? (
-            <MutedNote>No quotable public items in this period.</MutedNote>
+            <MutedNote>
+              — ({fmt(p.cards.external.volume)} public items, too few to quote)
+            </MutedNote>
           ) : null}
         </div>
       </Tile>
 
       <Tile
         id="happy-pillars"
-        title={titled("Themes by Consumer Duty outcome", p)}
-        sub="Public voice about credit cards by Consumer Duty outcome: items, net sentiment and the top themes in each."
+        title={titled("Themes by FI focus area", p)}
+        sub="Public voice about Everyday accounts and app by FI focus area: items, net sentiment and the top themes in each."
         prov="public"
       >
         <Table
-          head={["Outcome", "Items", "Net sentiment", "Top themes"]}
+          head={["FI focus area", "Items", "Net sentiment", "Top themes"]}
           align={["left", "right", "right", "left"]}
           rows={p.cards.pillars.map((x) => [
             x.label,
@@ -1362,7 +1364,10 @@ export function Market({ p }: { p: Period }) {
     <>
       <Tile
         id="market-themes"
-        title={titled("All credit card themes in public voice", p)}
+        title={titled(
+          "All Everyday accounts and app themes in public voice",
+          p,
+        )}
         sub="Each item once, under its main theme. Share of voice is source-weighted; its change is against the comparison window."
         prov="public"
       >
@@ -1396,8 +1401,11 @@ export function Market({ p }: { p: Period }) {
 
       <Tile
         id="market-topsix"
-        title={titled("Top six credit card themes: share of voice", p)}
-        sub={`Each theme's source-weighted share of credit card public voice, per ${p.id === "all" ? "week" : "period of the same length"}.`}
+        title={titled(
+          "Top six Everyday accounts and app themes: share of voice",
+          p,
+        )}
+        sub={`Each theme's source-weighted share of Everyday accounts and app public voice, per ${p.id === "all" ? "week" : "period of the same length"}.`}
         prov="public"
       >
         <div
@@ -1451,7 +1459,7 @@ export function Market({ p }: { p: Period }) {
         <Tile
           id="market-rising"
           title={titled("Rising themes", p)}
-          sub={`Credit card themes whose share of voice grew the most, ${p.compare}.`}
+          sub={`Everyday accounts and app themes whose share of voice grew the most, ${p.compare}.`}
           prov="public"
         >
           {mk.rising.length ? (
@@ -1483,7 +1491,7 @@ export function Market({ p }: { p: Period }) {
         <Tile
           id="market-safety"
           title={titled("Safety and reputation watch", p)}
-          sub="Fraud, phishing, security blocks and collection conduct, on credit cards."
+          sub="Fraud, phishing, security blocks and collection conduct, on Everyday accounts and app."
           prov={["internal", "public"]}
           tone="red"
         >
@@ -1528,7 +1536,7 @@ export function Market({ p }: { p: Period }) {
       <Tile
         id="market-reach"
         title={titled("Voices with reach", p)}
-        sub="Credit card posts with reach: an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Anonymised: no accounts are shown."
+        sub="Everyday accounts and app posts with reach: an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Anonymised: no accounts are shown."
         prov="public"
       >
         <div
@@ -1567,7 +1575,7 @@ export function Market({ p }: { p: Period }) {
                 ? `${fmt(r.responded.responded)} of ${fmt(r.responded.reviews)}`
                 : "—"
             }
-            sub="Google Play reviews only"
+            sub="Store reviews handled in the social inbox · Internal"
           />
           <Kpi
             label="Top themes"
@@ -1598,8 +1606,8 @@ export function Service({ p }: { p: Period }) {
     <>
       <Tile
         id="service-handling"
-        title={titled("How credit card contacts were handled", p)}
-        sub="The bank's own credit card contacts in the period."
+        title={titled("How Everyday accounts and app contacts were handled", p)}
+        sub="The bank's own Everyday accounts and app contacts in the period."
         prov="internal"
       >
         <div
@@ -1628,7 +1636,7 @@ export function Service({ p }: { p: Period }) {
                 ? "—"
                 : `${sr.median_first_response_hours_written} h`
             }
-            sub="median, email / Cora / social"
+            sub="median, email / Nina / social"
           />
           <Kpi
             label="service standard-related contacts"
@@ -1648,7 +1656,7 @@ export function Service({ p }: { p: Period }) {
       <Tile
         id="service-ladder"
         title={titled("Escalation ladder", p)}
-        sub="Hear it on the first rung. Left: the bank's own credit card contacts, and how far they climbed. Right: public credit card posts with escalation language, by who they name."
+        sub="Hear it on the first rung. Left: the bank's own Everyday accounts and app contacts, and how far they climbed. Right: public Everyday accounts and app posts with escalation language, by who they name."
         prov={["internal", "public"]}
         tone="red"
       >
@@ -1672,9 +1680,9 @@ export function Service({ p }: { p: Period }) {
             <div style={{ fontSize: 12.5, color: C.textMut }}>
               Contacts and Repeat count the bank's own contacts. Complaint and
               the rungs above are flows in the period from the complaint
-              register the Financial Ombudsman watch reads: complaints received,
-              passed to the complaints team after summary resolution (3 business
-              days), final responses issued, referrals made.
+              register the ARN watch reads: complaints received, passed to the
+              complaints team after summary resolution (3 business days), final
+              decisions issued, referrals made.
             </div>
           </div>
           <div>
@@ -1722,7 +1730,7 @@ export function Service({ p }: { p: Period }) {
             <Kpi
               label="Public posts"
               value={fmt(sv.closure.public_intent)}
-              sub="say they will close the card or leave"
+              sub="say they will leave or switch bank (byta bank)"
               tone="red"
             />
             <div style={{ fontSize: 13.5, color: C.textSec }}>
@@ -1732,7 +1740,7 @@ export function Service({ p }: { p: Period }) {
               </strong>
               , {fmt(sv.closure.internal_open)} still open.
             </div>
-            <QuoteLine q={sv.closure.quote} />
+            <QuoteLine q={sv.closure.quote} n={sv.closure.public_intent} />
           </div>
         </Tile>
         <Tile
@@ -1755,7 +1763,7 @@ export function Service({ p }: { p: Period }) {
                 .map((t) => `${t.label} (${fmt(t.count)})`)
                 .join(" · ") || "—"}
             </div>
-            <QuoteLine q={sv.cure.quote} />
+            <QuoteLine q={sv.cure.quote} n={sv.cure.count} />
           </div>
         </Tile>
         <Tile
@@ -1769,13 +1777,13 @@ export function Service({ p }: { p: Period }) {
             <Kpi
               label="Public posts"
               value={fmt(sv.transparency.count)}
-              sub={`${fmtPct(sv.transparency.share)} of credit card posts, source-weighted`}
+              sub={`${fmtPct(sv.transparency.share)} of Everyday accounts and app posts, source-weighted`}
               tone="amber"
             />
             <div style={{ fontSize: 13.5, color: C.textSec }}>
               A status message would answer these before the customer asks.
             </div>
-            <QuoteLine q={sv.transparency.quote} />
+            <QuoteLine q={sv.transparency.quote} n={sv.transparency.count} />
           </div>
         </Tile>
       </div>
@@ -1784,7 +1792,7 @@ export function Service({ p }: { p: Period }) {
         <Tile
           id="service-disputes"
           title={titled("Dispute recovery funnel", p)}
-          sub="Card disputes raised with the bank in the period. Each stage is a subset of the one before."
+          sub="Payment and card disputes raised with the bank in the period. Each stage is a subset of the one before."
           prov="internal"
         >
           {sv.disputes.map((d) => (
@@ -1803,7 +1811,7 @@ export function Service({ p }: { p: Period }) {
         <Tile
           id="service-failures"
           title={titled("Top service failures", p)}
-          sub="Credit card themes with the most negative public items."
+          sub="Everyday accounts and app themes with the most negative public items."
           prov="public"
           tone="red"
         >
@@ -1826,7 +1834,7 @@ export function Service({ p }: { p: Period }) {
       <Tile
         id="service-standards"
         title={titled("Service standards customers say were missed", p)}
-        sub="Public credit card posts describing a missed service standard, by the request it concerned. Heard in public; not a compliance figure."
+        sub="Public Everyday accounts and app posts describing a missed service standard, by the request it concerned. Heard in public; not a compliance figure."
         prov="public"
       >
         <div style={SPLIT}>
@@ -1895,11 +1903,11 @@ export function ComingSoon({ label }: { label: string }) {
   return (
     <Tile title={`${label}: product view`} prov="internal">
       <MutedNote>
-        Coming soon. The credit cards product view is the first; the others
-        follow the same layout once it is agreed.
+        Coming soon. The Everyday accounts and app product view is the first;
+        the others follow the same layout once it is agreed.
       </MutedNote>
       <Link href={CARDS} style={{ color: C.brandInk, fontSize: 14 }}>
-        Open the credit cards product view
+        Open the Everyday accounts and app product view
       </Link>
     </Tile>
   );

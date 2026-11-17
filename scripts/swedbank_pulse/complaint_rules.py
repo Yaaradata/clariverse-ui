@@ -1,23 +1,26 @@
-"""How a formal complaint turns out (Internal · illustrative). NatWest: the final response rule (8 weeks; 15 business days
-for payment services) and referral to the Financial Ombudsman Service (docs/natwest/brief.md Step 3.9). The ids below
-(io_reviewed_at, "rbi_ombudsman") are the oct13 field names, kept so the screens read them unchanged.
+"""How a formal complaint turns out (internal layer). Swedbank (SW-D06): the bank's complaints process is Kundcenter or
+kontor → the bank's decision → appeal to the Kundombudsman (the bank's Customer Ombudsman) → ARN (Allmänna
+reklamationsnämnden, the National Board for Consumer Disputes). The field names below (io_reviewed_at, "rbi_ombudsman",
+"awaiting_io") are the copied pipeline's, kept so the screens and the reconcile read them unchanged:
+  final_reply_at / reply   the bank's decision on the complaint (the first written reply that settles it)
+  decision_at              when the bank decided to reject in part or in full
+  io_reviewed_at           when that rejection was reviewed before the decision letter went out
+  unhappy_at               the customer came back unhappy with the decision (appealed to the Kundombudsman, or contacted
+                           again on the issue): ARN eligible from then
+  referred_at              the customer filed with ARN
 
-Copied from the oct13 pipeline: One place, used by the seed (to mark which contacts went to
-the Internal Ombudsman) and by the complaint register (seed_complaints_v3.py), so every IO figure comes from one source:
-the escalation ladder's IO rung, the IO queue and "awaiting IO review" cannot disagree.
+Parameters (all on the record in docs/swedbank/volume_validation.md; tags never reach a screen):
+  FIRST_REPLY_DAYS   15 business days to the bank's reply, for every product (bank standard, confirm with the bank;
+                     the same figure as the Payment Services Act's 15 business days for payment services)
+  ARN_WINDOW         ARN takes a case filed within one year of the complaint to the bank
+  ARN_OPEN           a filed case stays on the "Filed with ARN" tile for 90 days (the ADR rule: ARN decides within
+                     90 days of a complete file)
+  ARN pace           about 10 filings a week (ASSUMPTION, scale_v3.ARN_FILINGS_PER_WEEK): choose_filers picks that many
+                     of the customers unhappy with a rejecting decision
+ARN takes a case only after the bank has said no in whole or in part, so a filing always comes from a rejected or
+partly rejected complaint whose customer came back unhappy: "Filed with ARN" stays within tiles 2 and 3.
 
 Deterministic: each complaint draws from its own generator, seeded with SEED and the contact's id.
-
-Rates (MORNING_DECISIONS D31):
-  reject rate          about 10% of complaints end partly or fully rejected, in line with peer bank disclosures (6-10%).
-                       A reply inside two days is always a resolution: a rejection has to pass the Internal Ombudsman.
-  open, decided        of complaints still open after two days, the same share already carry a decision to reject and
-                       are waiting for IO review.
-  unhappy with reply   30% of partly or fully rejected complaints come back (reopen, or contact again on the issue);
-                       2.2% of resolved ones do.
-  RBI Ombudsman        a complaint reaches the RBI Ombudsman only from the at-risk states: 40% of those unhappy with
-                       the reply, and 12% of those left without a reply for more than 30 days. scale_v3 then holds the
-                       total at the anchor (O7/O8).
 """
 
 from __future__ import annotations
@@ -26,13 +29,13 @@ import datetime as dt
 import hashlib
 import random
 
-from common import PERIOD_END, SEED, is_business_day
+from common import DATA_START, PERIOD_END, SEED, is_business_day
 
 END = dt.datetime.fromisoformat(PERIOD_END)
-REJECT = {"base": 0.80, "negative": 0.86}  # NatWest: about 55% upheld overall (H1 2026 anchor); summary resolutions are upheld  # share of replied complaints partly or fully rejected, before the two-day rule
+REJECT = {"base": 0.62, "negative": 0.68}  # share of replied complaints partly or fully rejected, before the two-day rule (ASSUMPTION)
 PARTLY_OF_REJECTED = 0.6
 OPEN_DECIDED = {"base": 0.30, "negative": 0.34}
-UNHAPPY = {"resolved": 0.02, "partly_rejected": 0.12, "rejected": 0.14}
+UNHAPPY = {"resolved": 0.0, "partly_rejected": 0.035, "rejected": 0.045}  # ASSUMPTION; an upheld complaint has nothing to take to ARN
 REOPEN_OF_UNHAPPY = 0.4  # the rest contact the bank again on the same issue
 
 
@@ -78,71 +81,81 @@ def decide(r: dict) -> dict:
     return out
 
 
+FIRST_REPLY_DAYS = 15  # business days, every product (bank standard, confirm with the bank)
+ARN_WINDOW = dt.timedelta(days=365)  # ARN: file within one year of the complaint to the bank
+ARN_OPEN = dt.timedelta(days=90)  # a filed case is open at ARN for 90 days (ADR rule: decision within 90 days)
+APPEAL_OPEN = dt.timedelta(days=21)  # watch horizon for a Kundombudsman appeal after a rejecting decision (ASSUMPTION, confirm)
+
+
 def deadline(received: dt.datetime, product: str) -> dt.datetime:
-    """Final response due: 8 weeks; 15 business days for payment-services complaints (register REG-DISP-8W,
-    REG-PSD-15). The 35-business-day exception is not modelled."""
-    if product == "payments_fraud":
-        d, n = received, 0
-        while n < 15:
-            d += dt.timedelta(days=1)
-            if is_business_day(d):
-                n += 1
-        return d
-    return received + dt.timedelta(days=56)
+    """The bank's reply due: 15 business days from the complaint, every product (bank standard, confirm with the bank)."""
+    d, n = received, 0
+    while n < FIRST_REPLY_DAYS:
+        d += dt.timedelta(days=1)
+        if is_business_day(d):
+            n += 1
+    return d
 
 
-# Referral rates (review round 3, NW-D67; were 52% / 25% in NW-D62): with Premier complaints in proportion, these keep the
-# "Referred" tile at about 150 a week, the brief's 5,935 in 9 months.
-UNHAPPY_REFER = 0.47  # NW-D84: re-tuned after the re-freeze to 13 Nov (was 0.62)
-LATE_REFER = 0.23  # NW-D84 (was 0.30)
+def choose_filers(rows: list[dict], n: int) -> set[str]:
+    """The sample complaints whose customers file with ARN: n of those unhappy with a rejecting decision, in a fixed
+    order (a hash of the contact id). n is set from the ARN pace (ASSUMPTION, about 10 a week) and the sample's mean
+    complaint weight, so the pace is held exactly instead of swinging with a few heavy rows. seed_internal_v3 marks
+    them ("arn_filer") on the contact, so the register reads the same choice."""
+    cands = []
+    for r in rows:
+        if not is_complaint(r):
+            continue
+        d = decide(r)
+        if d["unhappy_at"] and d["outcome"] in ("rejected", "partly_rejected"):
+            cands.append(r["id"])
+    cands.sort(key=lambda i: hashlib.sha1(f"arn:{i}".encode()).hexdigest())
+    return set(cands[:n])
 
 
 def filed_with_ombudsman(r: dict, d: dict) -> bool:
-    """Whether this complaint was referred to the Financial Ombudsman Service. Only complaints at risk can be: the
-    customer came back unhappy with the final response, or had none by the deadline."""
+    """Whether this complaint was filed with ARN by the freeze (name kept from the copied pipeline)."""
     return referred_at(r, d) is not None
 
 
 def referred_at(r: dict, d: dict):
-    """When the customer referred the complaint to the Financial Ombudsman Service, or None. ASSUMPTION (Pass 2 section 4, about 150 referrals a week; NW-D56, NW-D62, NW-D84): 39% of those
-    unhappy with the final response, 19% of those past the deadline with no final response; referral 3-30 days later.
-    Rates now UNHAPPY_REFER and LATE_REFER (NW-D67)."""
+    """When the customer filed with ARN, or None. Only a customer unhappy with a rejecting decision files, 3-30 days
+    after coming back, and only within ARN's one year from the complaint."""
     t = referral_due(r, d)
     return t if t and t <= END else None
 
 
 def referral_due(r: dict, d: dict):
-    """The same referral without the freeze cap: when it falls after the freeze it has not happened yet. The steady
-    register's earlier copies use it (NW-D56), since for them that moment is in the past."""
-    h = int(hashlib.sha1(f"fos:{r['id']}".encode()).hexdigest(), 16) % 10_000 / 10_000
+    """The same filing without the freeze cap: when it falls after the freeze it has not happened yet. The steady
+    register's earlier copies use it, since for them that moment is in the past."""
     lag = dt.timedelta(days=3 + 27 * (int(hashlib.sha1(f"lag:{r['id']}".encode()).hexdigest(), 16) % 1000 / 1000))
-    if d["unhappy_at"] and h < UNHAPPY_REFER:
-        t = d["unhappy_at"] + lag
-    elif d["reply"] is None and h < LATE_REFER:
-        t = deadline(ts(r["created_at"]), r["product"]) + lag
-    else:
+    if not (r.get("arn_filer") and d["unhappy_at"] and d["outcome"] in ("rejected", "partly_rejected")):
         return None
-    return t
+    t = d["unhappy_at"] + lag
+    return t if t <= ts(r["created_at"]) + ARN_WINDOW else None
 
 
-# ---------------------------------------------------------------- steady-state register (review round 1, NW-D56)
-# The sample holds about 2,200 complaints with bank-scale weights from 1 to about 400, and none before 1 August, so the
-# Financial Ombudsman stocks (on the brink, past 8 weeks, unhappy, referred) were lumpy and still filling up in the
-# window. For the Ombudsman watch only, the register is read as a steady state:
+# ---------------------------------------------------------------- steady-state register
+# The sample holds about 2,300 complaints, all received inside the 27-day window, so the ARN-watch stocks (reply
+# overdue, appeal open, unhappy and ARN eligible for up to a year, filed with ARN for 90 days) would be empty at the
+# start and still filling up. For the ARN watch the register is read as a steady state:
 #   - each complaint stands for an equal share of its product's complaints (same product totals);
-#   - each is spread over CLONE_OFFSETS days (eleven copies a few days apart, same course and outcome);
-#   - two earlier copies of the whole window (PRIOR_SHIFT and twice that before) stand for the complaints received
-#     before 1 August, so stocks that last up to 6 months are full from the start. They count in stocks, never as
-#     received in the window.
-# A referral stays on the "referred" tile for REFERRAL_OPEN (8 weeks) after the referral.
-CLONE_OFFSETS = (-20, -16, -12, -8, -4, 0, 4, 8, 12, 16, 20)
-PREMIER_SHARE = 750_000 / 13_000_000  # Premier customers' share of the 13 million base (NW-D49), about 5.8%
-PRIOR_SHIFT = 105
-REFERRAL_OPEN = dt.timedelta(weeks=8)
+#   - each is spread over CLONE_OFFSETS days (seven copies a few days apart, same course and outcome);
+#   - copies of the whole window shifted back by whole window lengths (PRIOR_SHIFT, N_PRIOR of them, a little over a
+#     year) stand for the complaints received before 22 October, so stocks that last up to ARN's one year are full from
+#     the start. They count in stocks, never as received in the window;
+#   - one copy shifted forward by a window length fills the last days before the freeze, which the spread would
+#     otherwise leave thin. Shifting by exactly one window length makes the copies tile time evenly.
+CLONE_OFFSETS = (-9, -6, -3, 0, 3, 6, 9)
+UPPER_TIER_SHARE = 0.06  # Premium and Private Banking customers' share of the 3.8 million private customers (ASSUMPTION)
+START_OF_WINDOW = dt.datetime.fromisoformat(DATA_START)
+PRIOR_SHIFT = (END - START_OF_WINDOW).total_seconds() / 86400  # one window length, in days
+N_PRIOR = 14  # 14 windows back: about 369 days, past ARN's one year
+REFERRAL_OPEN = ARN_OPEN
 _TIME_KEYS = ("received_at", "final_reply_at", "decision_at", "io_reviewed_at", "unhappy_at", "referred_at")
 
 
-def _shift(c: dict, days: int) -> dict:
+def _shift(c: dict, days: float) -> dict:
     out = dict(c)
     d = dt.timedelta(days=days)
     for k in _TIME_KEYS:
@@ -153,18 +166,18 @@ def _shift(c: dict, days: int) -> dict:
 
 
 def steady_register(raw: list[dict]) -> list[dict]:
-    """The Ombudsman watch's reading of the register (see above). Integer weights; product totals kept."""
+    """The ARN watch's reading of the register (see above). Integer weights; product totals kept."""
     by_p: dict[str, list[dict]] = {}
     for c in sorted(raw, key=lambda c: c["id"]):
         by_p.setdefault(c["product"], []).append(c)
     out = []
     for p, cs in by_p.items():
         total = sum(c["w"] for c in cs)
-        # Premier in proportion (review round 3, NW-D67): the sample over-represents Premier customers (two thirds of its
-        # complaints), so Premier complaints carry PREMIER_SHARE of the product's complaints, the rest the remainder.
+        # Premium and Private Banking in proportion: the sample over-represents these customers (a large share of its
+        # complaints), so their complaints carry UPPER_TIER_SHARE of the product's complaints, the rest the remainder.
         prem = [c for c in cs if "uhni" in c.get("lists", [])]
         rest = [c for c in cs if "uhni" not in c.get("lists", [])]
-        groups = [(prem, round(total * PREMIER_SHARE)), (rest, total - round(total * PREMIER_SHARE))] if prem and rest else [(cs, total)]
+        groups = [(prem, round(total * UPPER_TIER_SHARE)), (rest, total - round(total * UPPER_TIER_SHARE))] if prem and rest else [(cs, total)]
         weighted = []
         for grp, gtotal in groups:
             copies = [(c, k) for c in grp for k in range(len(CLONE_OFFSETS))]
@@ -177,22 +190,22 @@ def steady_register(raw: list[dict]) -> list[dict]:
             for i in sorted(range(len(ws)), key=lambda i: exact[i] - ws[i], reverse=True)[: gtotal - sum(ws)]:
                 ws[i] += 1
             weighted += [(c, k, w) for (c, k), w in zip(copies, ws)]
+        mid = CLONE_OFFSETS.index(0)
         for c, k, w in weighted:
-            for prior in (0, 1, 2):
+            for prior in range(-1, N_PRIOR + 1):
                 src = c
-                if prior and c.get("referral_due_at"):
+                if prior > 0 and c.get("referral_due_at"):
                     src = {**src, "referred_at": c["referral_due_at"]}
                 shift = CLONE_OFFSETS[k] - prior * PRIOR_SHIFT
                 if shift < 0 and not c.get("final_reply_at"):
                     # Still open at the freeze: a copy received earlier has run on past the point the original has
-                    # reached, so it gets its final response 0-40 days after that point (deterministic per copy).
+                    # reached, so it gets its decision 0-40 days after that point (deterministic per copy).
                     extra = int(hashlib.sha1(f"reply:{c['id']}:{k}:{prior}".encode()).hexdigest(), 16) % 40
                     src = {**src, "final_reply_at": (END + dt.timedelta(days=extra)).isoformat(timespec="minutes")}
                 x = _shift(src, shift)
-                mid = CLONE_OFFSETS.index(0)
                 x["id"] = c["id"] if (k == mid and prior == 0) else f"{c['id']}~{k}{prior}"
                 x["original"] = k == mid and prior == 0
-                x["prior"] = prior > 0 or dt.datetime.fromisoformat(x["received_at"]) < START_OF_WINDOW
+                x["prior"] = dt.datetime.fromisoformat(x["received_at"]) < START_OF_WINDOW
                 x["w"] = w
                 out.append(x)
     return out
@@ -202,22 +215,22 @@ def referral_open(ref: dt.datetime | None, T: dt.datetime) -> bool:
     return ref is not None and ref <= T < ref + REFERRAL_OPEN
 
 
-START_OF_WINDOW = dt.datetime(2026, 8, 1, tzinfo=dt.timezone.utc)
-
-
-# ---------------------------------------------------------------- one register for the ladders (review round 3, NW-D66)
-# The escalation ladders (bank-wide on the service standards view, per product on the product view) read the complaint
-# rungs from the same steady register the Financial Ombudsman watch reads, as flows in the period:
-#   Complaint             complaints received in the period
-#   Complaints team       complaints passed to the complaints team in the period: not settled by the close of the third
-#                         business day (summary resolution)
-#   Final response        final responses issued in the period to complaints that went past summary resolution
-#   Financial Ombudsman   referrals to the Financial Ombudsman Service made in the period
+# ---------------------------------------------------------------- one register for the ladders
+# The escalation ladders (bank-wide on the service standards view, per product on the deep-dive view) read the
+# complaint rungs from the same steady register the ARN watch reads, as flows in the period:
+#   Complaint         complaints received in the period
+#   Complaints team   complaints passed to the complaints team in the period: not settled by the close of the third
+#                     business day at the Kundcenter or kontor
+#   Bank's final decision  the bank's decisions issued in the period to complaints that reached the complaints team
+#   ARN               filings with ARN made in the period
+# Rung names in screen order; periods_v3 and check_reconcile_v3 match on these strings.
+LADDER_RUNGS = ("Complaint", "Complaints team", "Bank's final decision", "ARN")
 SUMMARY_DAYS = 3
 
 
 def summary_close(received: dt.datetime) -> dt.datetime:
-    """Close of the third business day after the complaint was received (summary resolution, FCA DISP)."""
+    """Close of the third business day after the complaint was received (settled at first contact, before the
+    complaints team)."""
     d, n = received, 0
     while n < SUMMARY_DAYS:
         d += dt.timedelta(days=1)
@@ -229,7 +242,7 @@ def summary_close(received: dt.datetime) -> dt.datetime:
 def ladder_flows(steady: list[dict], a: dt.datetime, b: dt.datetime) -> dict:
     """Complaint rungs for one scope (pass a product's slice) and one period [a, b)."""
     t = lambda c, k: dt.datetime.fromisoformat(c[k]) if c.get(k) else None  # noqa: E731
-    out = {"Complaint": 0, "Complaints team": 0, "Final response": 0, "Financial Ombudsman Service": 0}
+    out = dict.fromkeys(LADDER_RUNGS, 0)
     for c in steady:
         rec, reply, ref = t(c, "received_at"), t(c, "final_reply_at"), t(c, "referred_at")
         past_summary = reply is None or reply > summary_close(rec)
@@ -239,7 +252,7 @@ def ladder_flows(steady: list[dict], a: dt.datetime, b: dt.datetime) -> dict:
         if past_summary and a <= sc < b and sc <= END:
             out["Complaints team"] += c["w"]
         if reply and a <= reply < b and reply <= END and past_summary:
-            out["Final response"] += c["w"]
+            out["Bank's final decision"] += c["w"]
         if ref and a <= ref < b and ref <= END:
-            out["Financial Ombudsman Service"] += c["w"]
+            out["ARN"] += c["w"]
     return out

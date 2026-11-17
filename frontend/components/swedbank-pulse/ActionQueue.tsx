@@ -118,7 +118,7 @@ function EmailCard({ e }: { e: EscalationEmail }) {
                 <button
                   type="button"
                   disabled
-                  title="Mock: in the bank's system an agent approves, edits and sends. LisN never sends."
+                  title="In the bank's system an agent approves, edits and sends. LisN never sends."
                   style={{
                     background: "transparent",
                     border: `1px solid ${C.border}`,
@@ -248,8 +248,8 @@ export function ActionQueue({ b }: { b: Bundle }) {
           </div>
         </div>
         <MutedNote>
-          Time and resolution figures are illustrative assumptions for the demo,
-          to be replaced with the email team&apos;s own measures in discovery.
+          Time and resolution figures are working estimates, to be replaced with
+          the email team&apos;s own measures in discovery.
         </MutedNote>
       </Tile>
 

@@ -431,7 +431,7 @@ export function Dial({
 }
 
 // One row of n dials on desktop; wraps to fewer columns when a column would be narrower than 104px, so seven-digit
-// figures never run into each other on a phone (NatWest layout QA, 13 Nov).
+// figures never run into each other on a phone (Swedbank layout QA).
 const DIALS = (n: number) => ({
   display: "grid",
   gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, max(104px, calc((100% - ${(n - 1) * 8}px) / ${n}))), 1fr))`,
@@ -1219,10 +1219,13 @@ function HandledLine({ h, tip }: { h: Handled; tip: string }) {
 function ExternalCard({
   title,
   tip,
+  internal,
   children,
 }: {
   title: string;
   tip?: string;
+  /** SW-D17: the card's figures come from the internal social inbox; the header carries "Internal" once. */
+  internal?: boolean;
   children: ReactNode;
 }) {
   return (
@@ -1240,11 +1243,25 @@ function ExternalCard({
         minWidth: 0,
       }}
     >
-      <strong
-        style={{ fontSize: "clamp(13.5px, 1.02vw, 15.5px)", lineHeight: 1.25 }}
+      <span
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 8,
+          minWidth: 0,
+        }}
       >
-        {title}
-      </strong>
+        <strong
+          style={{
+            fontSize: "clamp(13.5px, 1.02vw, 15.5px)",
+            lineHeight: 1.25,
+          }}
+        >
+          {title}
+        </strong>
+        {internal ? <ProvenanceTag kind="internal" short /> : null}
+      </span>
       <div
         style={{
           flex: 1,
@@ -1317,7 +1334,7 @@ const GAUGE_PAIR = {
   gap: 6,
 };
 
-/** NatWest (HL-15): while no public source is loaded, an external block says so instead of showing zeros. */
+/** Swedbank (HL-15): while no public source is loaded, an external block says so instead of showing zeros. */
 export function PublicNotLoaded() {
   return (
     <div
@@ -1540,7 +1557,7 @@ function ExternalBlock({ p }: { p: Period }) {
             </div>
             <HandledLine
               h={hh}
-              tip="X and Reddit posts with reach, handled in the bank's social inbox: acknowledged, replied in thread or moved to secure message."
+              tip="X and Reddit posts with reach, handled in the bank's social inbox: acknowledged, replied in thread or moved to app and internet-bank message."
             />
             {peak ? (
               <button
@@ -1587,8 +1604,9 @@ function ExternalBlock({ p }: { p: Period }) {
           </ExternalCard>
 
           <ExternalCard
-            title="Bank response · informational"
-            tip="Response here means acknowledged and routed to an official channel. Shown for information, not as a target."
+            title="Bank response"
+            internal
+            tip="Handled in the bank's social inbox: acknowledged, replied or moved to an app or internet-bank message. Shown for information, not as a target."
           >
             <Headline
               big={sp.response_pct === null ? "—" : `${sp.response_pct}%`}
@@ -1611,14 +1629,10 @@ function ExternalBlock({ p }: { p: Period }) {
               {sp.by_source.map((x, i) => (
                 <div
                   key={x.source}
-                  title={
-                    x.pct === null
-                      ? `${x.label}: no reply data in this pull`
-                      : `${fmt(x.responded)} of ${fmt(x.mentions)}`
-                  }
+                  title={`${x.label}: ${fmt(x.responded)} of ${fmt(x.mentions)}`}
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "66px minmax(0, 1fr) 36px",
+                    gridTemplateColumns: "66px minmax(0, 1fr) auto",
                     alignItems: "center",
                     gap: 8,
                     fontSize: 12,
@@ -1627,39 +1641,45 @@ function ExternalBlock({ p }: { p: Period }) {
                   }}
                 >
                   <span style={{ whiteSpace: "nowrap" }}>{x.label}</span>
-                  {x.pct === null ? (
-                    <span style={{ color: C.textMut, fontSize: 11.5 }}>
-                      no reply data
-                    </span>
-                  ) : (
+                  {/* SW-D17: every source from the internal social inbox: share, bar and n of m. */}
+                  <span
+                    aria-hidden
+                    style={{
+                      height: 6,
+                      borderRadius: 999,
+                      background: C.inner,
+                      overflow: "hidden",
+                    }}
+                  >
                     <span
-                      aria-hidden
                       style={{
-                        height: 6,
+                        display: "block",
+                        height: "100%",
+                        width: `${x.pct ?? 0}%`,
+                        background: SERIES[i % SERIES.length],
                         borderRadius: 999,
-                        background: C.inner,
-                        overflow: "hidden",
                       }}
-                    >
-                      <span
-                        style={{
-                          display: "block",
-                          height: "100%",
-                          width: `${x.pct}%`,
-                          background: SERIES[i % SERIES.length],
-                          borderRadius: 999,
-                        }}
-                      />
-                    </span>
-                  )}
+                    />
+                  </span>
                   <strong
                     style={{
                       fontFamily: MONO,
                       color: C.text,
                       textAlign: "right",
+                      whiteSpace: "nowrap",
                     }}
                   >
-                    {x.pct === null ? "—" : `${x.pct}%`}
+                    {x.pct === null ? "—" : `${x.pct}%`}{" "}
+                    <span
+                      style={{
+                        fontFamily: "inherit",
+                        fontWeight: 400,
+                        color: C.textMut,
+                        fontSize: 11,
+                      }}
+                    >
+                      {fmt(x.responded)} of {fmt(x.mentions)}
+                    </span>
                   </strong>
                 </div>
               ))}
@@ -1723,7 +1743,7 @@ function ExternalBlock({ p }: { p: Period }) {
                 </div>
                 <HandledLine
                   h={m.handled}
-                  tip="Handled in the bank's social inbox: acknowledged, replied in thread or moved to secure message."
+                  tip="Handled in the bank's social inbox: acknowledged, replied in thread or moved to app and internet-bank message."
                 />
               </div>
             </div>
@@ -2141,9 +2161,7 @@ export function CxPulse({ p }: { p: Period }) {
               color={C.red}
               big={na ? "—" : fmt(i.open_too_long)}
               label="Open too long"
-              sub={
-                na ? "needs 48 hours" : "over 48 hours (bank SLA, illustrative)"
-              }
+              sub={na ? "needs 48 hours" : "over 48 hours (bank standard)"}
             />
           </div>
         </div>

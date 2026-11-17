@@ -46,13 +46,13 @@ const OWNER: Record<string, string> = {
   query_response: "cx",
 };
 const SHORT: Record<string, string> = {
-  cards: "Credit cards",
-  payments_fraud: "Payments",
-  current_accounts: "Accounts",
-  personal_loans: "Loans",
-  mortgages: "Mortgages",
-  savings: "Savings",
-  digital: "Cora",
+  cards: "Cards",
+  payments_swish: "Payments",
+  everyday_accounts_app: "Accounts",
+  consumer_loans: "Loans",
+  mortgages: "Mortgages (bolån)",
+  savings_funds: "Savings and funds",
+  digital: "Nina",
 };
 
 /** The recommended action for a ledger row, from its own figures (review finding #40). */
@@ -70,6 +70,7 @@ function rowAction(r: {
 
 function TatCell({ row }: { row: LedgerRow }) {
   switch (row.source) {
+    case "law":
     case "fca":
     case "psr":
     case "psrs":
@@ -83,7 +84,9 @@ function TatCell({ row }: { row: LedgerRow }) {
           <div
             style={{
               fontSize: 12,
-              color: ["fca", "psr", "psrs", "scheme"].includes(row.source)
+              color: ["law", "fca", "psr", "psrs", "scheme"].includes(
+                row.source,
+              )
                 ? C.cyan
                 : C.textMut,
             }}
@@ -116,7 +119,7 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
     <>
       <Tile prov={["internal", "public"]} accent tone="violet">
         <AnswerLine
-          sub={`Sample of ${fmt(b.v3.sample.interactions)} contacts (illustrative). Weakest: ${worst?.label.toLowerCase()} at ${fmtPct(worst?.met_pct)} met. Rows citing the FCA, the PSRs or Faster Payments are published standards; the rest are the bank's own, shown as figures once the bank confirms them.`}
+          sub={`Sample of ${fmt(b.v3.sample.interactions)} contacts. Weakest: ${worst?.label.toLowerCase()} at ${fmtPct(worst?.met_pct)} met. Rows citing the Payment Services Act (betaltjänstlagen) or the Swish rule are published standards; the rest are the bank's own, shown as figures once the bank confirms them.`}
         >
           {fmtPct((100 * met) / measured)} of service standards met across{" "}
           {rows.length} service standard types; {fmt(otl)} items are open past
@@ -126,7 +129,7 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
       <Tile
         id="ledger"
         title="Service standards ledger"
-        sub={`Inside figures: a sample of ${fmt(b.v3.sample.interactions)} contacts, illustrative until discovery; public posts describing a delay are live.`}
+        sub={`Inside figures: a sample of ${fmt(b.v3.sample.interactions)} contacts; public posts describing a delay are live.`}
         prov={["internal", "public"]}
         tone="violet"
       >
@@ -182,20 +185,20 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
           ])}
         />
         <MutedNote>
-          FCA rows use published FCA standards. Where FCA sets none, the
-          standard is the bank&apos;s confirmed SLA, with its source document
-          under the standard. Any row still reading &ldquo;Bank standard:
-          confirm in discovery&rdquo; is unconfirmed; on those rows, met,
-          outside and open too long come from the illustrative sample, measured
-          against a placeholder that is not a bank figure. Met = closed within
-          the standard (for the first-response row: answered within it). Outside
-          = settled late, or open and already past the standard. Business days
-          skip weekends and bank holidays. Public posts describing a delay are
-          matched to a service standard by request type; &ldquo;—&rdquo; where
-          public voice has no matching type. Action: set a new date when a
-          quarter or more of the open items are past the standard; route with
-          evidence when under 80% is met; update and close when a few items are
-          past the standard; otherwise monitor.
+          Payment Services Act rows use the law; the Swish row uses the Swish
+          rule. Where neither sets a standard, the standard is the bank&apos;s
+          confirmed SLA, with its source document under the standard. Any row
+          still reading &ldquo;Bank standard: confirm with the bank&rdquo; is
+          unconfirmed; on those rows, met, outside and open too long come from
+          the bank sample, measured against a placeholder that is not a bank
+          figure. Met = closed within the standard (for the first-response row:
+          answered within it). Outside = settled late, or open and already past
+          the standard. Business days skip weekends and Swedish public holidays.
+          Public posts describing a delay are matched to a service standard by
+          request type; &ldquo;—&rdquo; where public voice has no matching type.
+          Action: set a new date when a quarter or more of the open items are
+          past the standard; route with evidence when under 80% is met; update
+          and close when a few items are past the standard; otherwise monitor.
         </MutedNote>
       </Tile>
       <Tile

@@ -1,51 +1,56 @@
 {
  "provenance": "public",
- "raw_dir": "data/raw/natwest",
+ "raw_dir": "data/raw/swedbank",
  "sources": [
   {
    "id": "appstore",
    "label": "App Store",
    "loaded": true,
    "files": 1,
-   "items": 1200,
-   "start": "2026-08-12",
-   "pulled": 1200
+   "items": 3,
+   "start": "2026-11-02",
+   "pulled": 3,
+   "on_topic": 2
   },
   {
    "id": "playstore",
    "label": "Google Play",
    "loaded": true,
    "files": 1,
-   "items": 1034,
-   "start": "2026-08-01",
-   "pulled": 1034
+   "items": 23,
+   "start": "2026-10-23",
+   "pulled": 23,
+   "on_topic": 23
   },
   {
    "id": "x",
    "label": "X",
    "loaded": true,
    "files": 1,
-   "items": 1706,
-   "start": "2026-08-01",
-   "pulled": 1881
+   "items": 237,
+   "start": "2026-10-22",
+   "pulled": 237,
+   "on_topic": 18
   },
   {
    "id": "reddit",
    "label": "Reddit",
    "loaded": true,
    "files": 1,
-   "items": 807,
-   "start": "2026-08-01",
-   "pulled": 807
+   "items": 66,
+   "start": "2026-10-22",
+   "pulled": 66,
+   "on_topic": 21
   },
   {
    "id": "trustpilot",
-   "label": "Trustpilot (forums: Trustpilot only)",
+   "label": "Trustpilot",
    "loaded": true,
    "files": 1,
-   "items": 233,
-   "start": "2026-09-01",
-   "pulled": 233
+   "items": 15,
+   "start": "2026-10-27",
+   "pulled": 15,
+   "on_topic": 13
   }
  ]
 }

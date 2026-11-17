@@ -13,7 +13,7 @@ export function generateStaticParams() {
   return DRILL_DOWNS.map((d) => ({ section: d.id }));
 }
 
-/** One of the three Cards drill-downs (30 Sep review C4): happy, market or service, for the selected period. */
+/** One of the three Everyday accounts and app drill-downs (the deep dive, SW-D16): happy, market or service, for the selected period. */
 export default async function CardsDrillDownPage({
   params,
 }: {
@@ -27,10 +27,10 @@ export default async function CardsDrillDownPage({
   return (
     <Shell
       {...shellProps(b)}
-      title={`Credit cards: ${d.title}`}
+      title={`Everyday accounts and app: ${d.title}`}
       subtitle={d.sub}
       periods={sliced.periods}
-      context="Credit cards · Product view"
+      context="Everyday accounts and app · Product view"
       drill
     >
       <CardsDrillDown b={sliced} id={section as DrillDownId} />

@@ -2,14 +2,15 @@
  {
   "masked_id": "XXXX4821",
   "persona": "Persona 1",
-  "descriptor": "Customer for 14 years, London",
-  "segment": "Premier Reward",
+  "descriptor": "Customer for 14 years, Göteborg",
+  "segment": "Bas",
   "cohorts": [
+   "multi",
    "priority_a"
   ],
   "products": [
-   "cards",
-   "current_accounts",
+   "everyday_accounts_app",
+   "payments_swish",
    "mortgages"
   ],
   "rm_id": "Complaints lead",
@@ -19,304 +20,303 @@
   "trail": [
    {
     "event": true,
-    "at": "2026-11-11T19:42+00:00",
+    "at": "2026-11-11T07:42+00:00",
     "channel": "system",
-    "product": "cards",
-    "theme": "card_limit",
-    "summary": "Card declined at a hotel abroad: international usage limit reached."
+    "product": "payments_swish",
+    "theme": "account_freeze",
+    "summary": "Account measure set under the AML rules: outgoing payments and Swish stopped after several incoming Swish transfers."
    },
    {
-    "at": "2026-11-11T19:44+00:00",
-    "channel": "ivr_bot",
-    "product": "cards",
-    "theme": "card_limit",
-    "summary": "Automated call read out the decline reason. The customer asked for a limit change; the bot could not make it.",
+    "at": "2026-11-11T08:05+00:00",
+    "channel": "whatsapp",
+    "product": "payments_swish",
+    "theme": "nina_handoff_lost",
+    "summary": "Asked Nina why Swish stopped working; Nina could not see the account measure and handed over without the context.",
     "sentiment": "negative",
     "status": "closed",
     "outcome": "unresolved",
-    "closed_at": "2026-11-11T19:47+00:00",
-    "first_response_at": "2026-11-11T19:44+00:00",
+    "closed_at": "2026-11-11T08:11+00:00",
+    "first_response_at": "2026-11-11T08:05+00:00",
     "flag_set": true
    },
    {
-    "at": "2026-11-11T20:31+00:00",
+    "at": "2026-11-11T12:31+00:00",
     "channel": "email",
     "sender": "proxy",
-    "product": "cards",
-    "theme": "card_limit",
-    "summary": "Email from the customer's assistant, on their behalf: the card was declined twice abroad; please raise the limit tonight. Linked through the bank's own contact records.",
+    "product": "payments_swish",
+    "theme": "account_freeze",
+    "summary": "Message from the customer's legal guardian (god man): rent and the bolån payment are stuck; asks what documents the bank needs. Linked through the bank's own contact records.",
     "sentiment": "negative",
     "status": "open",
     "first_response_at": null
    },
    {
-    "at": "2026-11-12T10:12+00:00",
+    "at": "2026-11-12T09:12+00:00",
     "channel": "inbound_voice",
-    "product": "current_accounts",
+    "product": "everyday_accounts_app",
     "theme": "care_unreachable",
-    "summary": "Called the accounts helpline to move funds for the same payment; asked why no one had called back about the card.",
+    "summary": "Called the Kundcenter after 40 minutes in the queue; asked why no one had called back about the account measure.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-11-12T10:12+00:00",
+    "first_response_at": "2026-11-12T09:12+00:00",
     "flag_follows": true
    },
    {
-    "at": "2026-11-12T13:05+00:00",
+    "at": "2026-11-13T13:05+00:00",
     "channel": "social_inbox",
-    "product": "cards",
+    "product": "payments_swish",
     "theme": "complaint_handling",
-    "summary": "Public reply to the bank's care handle: two days, three contacts, still no answer. Linked through a verified contact the bank already holds.",
+    "summary": "Public reply to the bank's service account: three days without Swish, three contacts, still no answer. Linked through a verified contact the bank already holds.",
     "sentiment": "negative",
     "status": "open",
     "first_response_at": null,
     "high_impact": []
    },
    {
-    "at": "2026-11-12T18:20+00:00",
-    "channel": "inbound_voice",
-    "product": "cards",
-    "theme": "card_limit",
-    "summary": "Repeat call: limit raised for 48 hours; the agent said someone would call back about the declines. No callback logged.",
+    "at": "2026-11-14T08:20+00:00",
+    "channel": "branch",
+    "product": "payments_swish",
+    "theme": "account_freeze",
+    "summary": "Visited the kontor with documents on the incoming transfers; the review was logged and a callback promised. No callback logged.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-11-12T18:20+00:00"
+    "first_response_at": "2026-11-14T08:20+00:00"
    }
   ]
  },
  {
   "masked_id": "XXXX2317",
   "persona": "Persona 2",
-  "descriptor": "Customer for 9 years, Manchester",
-  "segment": "Premier Reward",
+  "descriptor": "Customer for 9 years, Malmö",
+  "segment": "Bas",
   "cohorts": [
    "priority_a"
   ],
   "products": [
-   "cards",
-   "current_accounts"
+   "payments_swish",
+   "everyday_accounts_app"
   ],
   "rm_id": "Complaints lead",
   "proxy_contacts": 1,
   "rm_notified": true,
   "trail": [
    {
-    "at": "2026-11-10T11:05+00:00",
+    "at": "2026-11-11T10:05+00:00",
     "channel": "email",
-    "product": "current_accounts",
-    "theme": "complaint_handling",
-    "summary": "Complaint about a closed service request that was not resolved; names the Financial Ombudsman Service as the next step.",
+    "product": "payments_swish",
+    "theme": "manipulated_transfer",
+    "summary": "Complaint after a manipulated Swish transfer to a caller posing as the bank; names ARN as the next step.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-11-10T16:40+00:00",
+    "first_response_at": "2026-11-11T15:40+00:00",
     "high_impact": [
      "regulator_named"
     ]
    },
    {
-    "at": "2026-11-11T09:30+00:00",
+    "at": "2026-11-12T09:30+00:00",
     "channel": "outbound_voice",
-    "product": "current_accounts",
-    "theme": "complaint_handling",
-    "summary": "The complaints lead called back and logged a fresh request; resolution committed within two working days.",
+    "product": "payments_swish",
+    "theme": "manipulated_transfer",
+    "summary": "The fraud team called back and opened an investigation; a written decision promised within 15 business days.",
     "sentiment": "neutral",
     "status": "open",
-    "first_response_at": "2026-11-11T09:30+00:00"
+    "first_response_at": "2026-11-12T09:30+00:00"
    }
   ]
  },
  {
   "masked_id": "XXXX3390",
   "persona": "Persona 3",
-  "descriptor": "Customer for 6 years, York",
-  "segment": "Premier Select",
+  "descriptor": "Customer for 6 years, Uppsala",
+  "segment": "Bas",
   "cohorts": [
    "priority_b"
   ],
   "products": [
    "cards",
-   "current_accounts",
-   "payments_fraud"
+   "everyday_accounts_app",
+   "payments_swish"
   ],
   "rm_id": "Complaints lead",
   "proxy_contacts": 0,
   "rm_notified": false,
-  "cohort_added_at": "2026-11-09T15:10+00:00",
+  "cohort_added_at": "2026-11-13T15:10+00:00",
   "cohort_added_by": "lisn_suggested_bank_confirmed",
   "trail": [
    {
-    "at": "2026-11-08T21:14+00:00",
+    "at": "2026-11-12T20:14+00:00",
     "channel": "chat",
-    "product": "payments_fraud",
-    "theme": "failed_txn_reversal",
-    "summary": "Faster Payment debited but failed; money not returned within the same-day Faster Payments standard.",
+    "product": "payments_swish",
+    "theme": "swish_payment_failures",
+    "summary": "Swish payment shown as failed in the app but the money left the account; not returned the same day.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-11-08T21:15+00:00"
+    "first_response_at": "2026-11-12T20:15+00:00"
    },
    {
-    "at": "2026-11-11T12:02+00:00",
+    "at": "2026-11-14T11:02+00:00",
     "channel": "inbound_voice",
     "product": "cards",
     "theme": "card_limit",
-    "summary": "Asked why the credit limit was cut without notice; the card is now close to its limit.",
+    "summary": "Asked why the card limit was lowered without notice; the card is now close to its limit.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-11-11T12:02+00:00"
+    "first_response_at": "2026-11-14T11:02+00:00"
    }
   ]
  },
  {
   "masked_id": "XXXX1576",
   "persona": "Persona 4",
-  "descriptor": "Customer for 21 years, Newcastle",
-  "segment": "Premier Reward",
+  "descriptor": "Customer for 21 years, Västerås",
+  "segment": "Premium",
   "cohorts": [
    "priority_a"
   ],
   "products": [
-   "cards",
-   "current_accounts",
+   "everyday_accounts_app",
    "mortgages",
-   "savings"
+   "savings_funds"
   ],
   "rm_id": "Complaints lead",
   "proxy_contacts": 1,
   "rm_notified": true,
   "trail": [
    {
-    "at": "2026-11-06T10:00+00:00",
+    "at": "2026-11-11T09:00+00:00",
     "channel": "email",
     "sender": "proxy",
     "product": "mortgages",
     "theme": "loan_closure_documents",
-    "summary": "Email from the customer's solicitor: the mortgage redemption statement has not arrived and the sale completes next week.",
+    "summary": "Message from the customer's estate agent: the bolån redemption papers have not arrived and access day is next week.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-11-06T15:30+00:00"
+    "first_response_at": "2026-11-11T14:30+00:00"
    }
   ]
  },
  {
   "masked_id": "XXXX5203",
   "persona": "Persona 5",
-  "descriptor": "Premier relationship, 4 years, Bristol",
-  "segment": "Premier Reward",
+  "descriptor": "Private Banking, 4 years, Stockholm",
+  "segment": "Private Banking",
   "cohorts": [
    "uhni"
   ],
   "products": [
-   "cards",
-   "current_accounts"
+   "everyday_accounts_app",
+   "savings_funds"
   ],
-  "rm_id": "Premier banking manager",
+  "rm_id": "Premium and Private Banking adviser",
   "proxy_contacts": 0,
   "rm_notified": false,
   "trail": [
    {
-    "at": "2026-11-12T22:48+00:00",
+    "at": "2026-11-15T21:48+00:00",
     "channel": "chat",
-    "product": "current_accounts",
-    "theme": "device_security_block",
-    "summary": "App blocked on a new phone with a security alert; cannot approve a large transfer.",
+    "product": "everyday_accounts_app",
+    "theme": "app_login_biometrics",
+    "summary": "BankID stopped working on a new phone; cannot sign a large transfer to the ISK before a deadline.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-11-12T22:49+00:00"
+    "first_response_at": "2026-11-15T21:49+00:00"
    }
   ]
  },
  {
   "masked_id": "XXXX2688",
   "persona": "Persona 6",
-  "descriptor": "Customer for 11 years, Nottingham",
-  "segment": "Premier Select",
+  "descriptor": "Customer for 11 years, Örebro",
+  "segment": "Bas",
   "cohorts": [
    "priority_b"
   ],
   "products": [
    "cards",
-   "current_accounts"
+   "everyday_accounts_app"
   ],
   "rm_id": "Complaints lead",
   "proxy_contacts": 0,
   "rm_notified": false,
   "trail": [
    {
-    "at": "2026-11-07T16:20+00:00",
+    "at": "2026-11-11T15:20+00:00",
     "channel": "inbound_voice",
     "product": "cards",
     "theme": "dispute_chargeback",
-    "summary": "Disputed a foreign merchant charge; no update since the dispute was raised.",
+    "summary": "Disputed a card charge from a foreign web shop; no update since the dispute was raised.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-11-07T16:20+00:00"
+    "first_response_at": "2026-11-11T15:20+00:00"
    },
    {
-    "at": "2026-11-12T09:40+00:00",
+    "at": "2026-11-13T09:40+00:00",
     "channel": "branch",
-    "product": "current_accounts",
-    "theme": "loan_servicing",
-    "summary": "Visited the branch about a missed direct debit; mentioned the open card dispute.",
+    "product": "everyday_accounts_app",
+    "theme": "statements_documents",
+    "summary": "Visited the kontor about a missed autogiro payment; mentioned the open card dispute.",
     "sentiment": "neutral",
     "status": "closed",
-    "closed_at": "2026-11-12T10:05+00:00",
-    "first_response_at": "2026-11-12T09:40+00:00"
+    "closed_at": "2026-11-13T10:05+00:00",
+    "first_response_at": "2026-11-13T09:40+00:00"
    }
   ]
  },
  {
   "masked_id": "XXXX4077",
   "persona": "Persona 7",
-  "descriptor": "Customer for 17 years, Leeds",
-  "segment": "Premier Reward",
+  "descriptor": "Customer for 17 years, Linköping",
+  "segment": "Premium",
   "cohorts": [
    "priority_a"
   ],
   "products": [
    "cards",
-   "current_accounts"
+   "everyday_accounts_app",
+   "payments_swish"
   ],
   "rm_id": "Complaints lead",
   "proxy_contacts": 1,
   "rm_notified": true,
   "trail": [
    {
-    "at": "2026-11-04T12:15+00:00",
+    "at": "2026-11-11T11:15+00:00",
     "channel": "email",
-    "product": "cards",
-    "theme": "closure_requests",
-    "summary": "Asked to close a supplementary card; closure confirmation not received.",
+    "product": "payments_swish",
+    "theme": "phishing",
+    "summary": "Reported a text message with a fake BankID link; asked the bank to confirm nothing was signed.",
     "sentiment": "negative",
     "status": "closed",
-    "closed_at": "2026-11-10T14:00+00:00",
-    "first_response_at": "2026-11-04T17:10+00:00"
+    "closed_at": "2026-11-13T14:00+00:00",
+    "first_response_at": "2026-11-11T16:10+00:00"
    }
   ]
  },
  {
   "masked_id": "XXXX1942",
   "persona": "Persona 8",
-  "descriptor": "Customer for 8 years, Birmingham",
-  "segment": "Premier Select",
+  "descriptor": "Customer for 8 years, Umeå",
+  "segment": "Bas",
   "cohorts": [
    "multi"
   ],
   "products": [
-   "cards",
-   "current_accounts",
-   "payments_fraud",
-   "personal_loans",
-   "savings"
+   "everyday_accounts_app",
+   "payments_swish",
+   "consumer_loans",
+   "savings_funds"
   ],
   "rm_id": "Complaints lead",
   "proxy_contacts": 0,
   "rm_notified": false,
   "trail": [
    {
-    "at": "2026-11-12T14:30+00:00",
+    "at": "2026-11-14T13:30+00:00",
     "channel": "whatsapp",
-    "product": "personal_loans",
-    "theme": "fees_charges_bank",
-    "summary": "Questioned an early repayment charge on a personal loan that was not in the loan agreement.",
+    "product": "everyday_accounts_app",
+    "theme": "account_freeze",
+    "summary": "Asked Nina why the account was restricted after the yearly customer questions (kundkännedom) were answered online.",
     "sentiment": "negative",
     "status": "open",
     "first_response_at": null
@@ -326,30 +326,29 @@
  {
   "masked_id": "XXXX3815",
   "persona": "Persona 9",
-  "descriptor": "Customer for 12 years, London",
-  "segment": "Premier Reward",
+  "descriptor": "Customer for 12 years, Stockholm",
+  "segment": "Premium",
   "cohorts": [
    "priority_b"
   ],
   "products": [
-   "cards",
-   "current_accounts",
-   "savings"
+   "everyday_accounts_app",
+   "savings_funds"
   ],
   "rm_id": "Complaints lead",
   "proxy_contacts": 1,
   "rm_notified": false,
   "trail": [
    {
-    "at": "2026-11-09T11:45+00:00",
+    "at": "2026-11-12T10:45+00:00",
     "channel": "email",
     "sender": "proxy",
-    "product": "savings",
+    "product": "savings_funds",
     "theme": "mis_selling",
-    "summary": "Email from the customer's solicitor: the account was moved to a packaged account with a fee, without a clear explanation.",
+    "summary": "Message from the customer's lawyer: savings were moved into a fund with a higher fee without a clear explanation.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-11-10T10:00+00:00",
+    "first_response_at": "2026-11-13T09:00+00:00",
     "high_impact": [
      "legal_language"
     ]
@@ -359,89 +358,89 @@
  {
   "masked_id": "XXXX2950",
   "persona": "Persona 10",
-  "descriptor": "Premier relationship, 3 years, Cardiff",
-  "segment": "Premier Select",
+  "descriptor": "Premium, 3 years, Lund",
+  "segment": "Premium",
   "cohorts": [
    "uhni"
   ],
   "products": [
    "cards",
-   "current_accounts",
-   "payments_fraud"
+   "everyday_accounts_app",
+   "payments_swish",
+   "savings_funds"
   ],
-  "rm_id": "Premier banking manager",
+  "rm_id": "Premium and Private Banking adviser",
   "proxy_contacts": 0,
   "rm_notified": false,
   "trail": [
    {
-    "at": "2026-11-11T08:55+00:00",
+    "at": "2026-11-13T07:55+00:00",
     "channel": "chat",
-    "product": "cards",
-    "theme": "rewards_value",
-    "summary": "Reward points on travel spending lower than expected after the cap change.",
+    "product": "savings_funds",
+    "theme": "deposits_rates",
+    "summary": "Asked why the savings account rate dropped while the bolån rate did not.",
     "sentiment": "negative",
     "status": "closed",
-    "closed_at": "2026-11-11T11:30+00:00",
-    "first_response_at": "2026-11-11T08:56+00:00"
+    "closed_at": "2026-11-13T10:30+00:00",
+    "first_response_at": "2026-11-13T07:56+00:00"
    }
   ]
  },
  {
   "masked_id": "XXXX5566",
   "persona": "Persona 11",
-  "descriptor": "Premier relationship, 19 years, Norwich",
-  "segment": "Premier Reward",
+  "descriptor": "Private Banking, 19 years, Helsingborg",
+  "segment": "Private Banking",
   "cohorts": [
    "uhni"
   ],
   "products": [
    "cards",
-   "current_accounts"
+   "everyday_accounts_app"
   ],
-  "rm_id": "Premier banking manager",
+  "rm_id": "Premium and Private Banking adviser",
   "proxy_contacts": 1,
   "rm_notified": false,
   "trail": [
    {
-    "at": "2026-11-12T19:10+00:00",
+    "at": "2026-11-15T18:10+00:00",
     "channel": "inbound_voice",
     "product": "cards",
     "theme": "unauthorised_txn",
-    "summary": "Reported two card transactions the customer did not make; card blocked; refund due by the end of the next business day.",
+    "summary": "Reported two card transactions the customer did not make; card blocked; refund due by the next business day.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-11-12T19:10+00:00"
+    "first_response_at": "2026-11-15T18:10+00:00"
    }
   ]
  },
  {
   "masked_id": "XXXX1318",
   "persona": "Persona 12",
-  "descriptor": "Customer for 7 years, Brighton",
-  "segment": "Premier Select",
+  "descriptor": "Customer for 7 years, Jönköping",
+  "segment": "Bas",
   "cohorts": [
    "multi"
   ],
   "products": [
-   "cards",
-   "current_accounts",
+   "everyday_accounts_app",
    "mortgages",
-   "savings"
+   "savings_funds"
   ],
   "rm_id": "Complaints lead",
   "proxy_contacts": 0,
   "rm_notified": true,
   "trail": [
    {
-    "at": "2026-11-05T10:25+00:00",
+    "at": "2026-11-11T09:25+00:00",
     "channel": "email",
-    "product": "current_accounts",
+    "product": "everyday_accounts_app",
     "theme": "identity_checks",
-    "summary": "Identity check documents submitted twice; account still shows as restricted.",
+    "summary": "Sent proof of the origin of funds twice; the account is still restricted.",
     "sentiment": "negative",
     "status": "closed",
-    "closed_at": "2026-11-12T12:00+00:00",
-    "first_response_at": "2026-11-05T15:00+00:00"
+    "closed_at": "2026-11-15T12:00+00:00",
+    "first_response_at": "2026-11-11T14:00+00:00"
    }
   ]
  }

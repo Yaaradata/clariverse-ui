@@ -5,16 +5,16 @@ export const DRILL_DOWNS: { id: DrillDownId; title: string; sub: string }[] = [
   {
     id: "happy",
     title: "Are my customers happy?",
-    sub: "Public voice about credit cards, source-weighted; the bank's own credit card contacts by list and stage.",
+    sub: "Public voice about Everyday accounts and app, source-weighted; the bank's own Everyday accounts and app contacts by list and stage.",
   },
   {
     id: "market",
     title: "What is the market saying about us?",
-    sub: "Every public credit card theme in the period, what is rising, who has reach, and the stores.",
+    sub: "Every public Everyday accounts and app theme in the period, what is rising, who has reach, and the stores.",
   },
   {
     id: "service",
     title: "Are we meeting our service standards?",
-    sub: "How credit card contacts are handled, where they escalate, and which service standards customers say were missed. No service standard compliance figures.",
+    sub: "How Everyday accounts and app contacts are handled, where they escalate, and which service standards customers say were missed. No service standard compliance figures.",
   },
 ];

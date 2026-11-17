@@ -1,12 +1,12 @@
 "use client";
 
 /**
- * LisN · NatWest Group demo — global components (B4 §2), built once and used on every /swedbank-pulse/v1 screen.
+ * LisN · Swedbank Group demo — global components (B4 §2), built once and used on every /swedbank-pulse/v1 screen.
  * Visual language follows the Cards Portfolio v2 dashboard (dark canvas, inline styles, Outfit / JetBrains Mono)
  * Five colours, one meaning each, on every screen:
  *   red    critical / negative        amber  needs attention / rising
  *   green  good / improving           cyan   neutral data and public voice
- *   violet brand, insight, owners and internal (illustrative) data
+ *   violet brand, insight, owners and internal data
  */
 
 import Link from "next/link";
@@ -120,7 +120,7 @@ export const SPLIT3: CSSProperties = {
 
 const PROV_LABEL: Record<Prov, string> = {
   public: "Public · live",
-  internal: "Internal · illustrative until discovery",
+  internal: "Internal until discovery",
   joined: "Joined · needs bank systems",
 };
 
@@ -266,8 +266,8 @@ const RUNG_COLOR: Record<string, string> = {
   Repeat: C.amber,
   Complaint: C.amber,
   "Complaints team": C.amber,
-  "Final response": C.amber,
-  "Financial Ombudsman Service": C.red,
+  "Bank's final decision": C.amber,
+  ARN: C.red,
   Public: C.red,
 };
 
@@ -277,15 +277,15 @@ export function rungColor(rung: string) {
 
 export const OWNER_LABEL: Record<string, string> = {
   cx: "CX",
-  digital: "Digital and Cora",
-  cards: "Credit cards",
+  digital: "Digital and Nina",
+  cards: "Cards",
   retail: "Retail",
   loans: "Loans",
   payments: "Payments",
   fraud_cyber: "Fraud and Cyber",
   compliance: "Compliance",
   operations: "Operations",
-  rm: "Premier banking managers",
+  rm: "Premium and Private Banking advisers",
   product: "Product",
   policy_credit: "Policy and Credit",
 };
@@ -302,7 +302,7 @@ export function RungChip({ rung }: { rung: string }) {
       label="Rung"
       value={rung}
       color={rungColor(rung)}
-      title="Voice · Repeat · Complaint · Complaints team · Final response · Financial Ombudsman Service · Public"
+      title="Voice · Repeat · Complaint · Complaints team · Bank's final decision · ARN · Public"
     />
   );
 }
@@ -925,6 +925,39 @@ export function BarRow({
   );
 }
 
+/**
+ * SW-D11: the English gloss under a non-English quote (the original stays in the quote slot). One muted line; nothing
+ * when the original is English or the payload carries no gloss.
+ */
+export function Gloss({
+  gloss,
+  lang,
+}: {
+  gloss?: string | null;
+  lang?: string | null;
+}) {
+  if (!gloss || lang === "en") return null;
+  return (
+    <div
+      data-testid="gloss"
+      lang="en"
+      style={{
+        fontSize: 12.5,
+        color: C.textMut,
+        lineHeight: 1.45,
+        fontStyle: "italic",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        display: "-webkit-box",
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: "vertical",
+      }}
+    >
+      In English: {gloss}
+    </div>
+  );
+}
+
 export function MutedNote({ children }: { children: ReactNode }) {
   return (
     <div style={{ fontSize: 13, color: C.textMut, lineHeight: 1.5 }}>
@@ -1060,7 +1093,7 @@ export function HalfGauge({
         height="56"
         viewBox="0 0 84 48"
         role="img"
-        aria-label={`${label} ${empty ? "no data" : `${Math.round(v)}%`}`}
+        aria-label={`${label} ${empty ? "—" : `${Math.round(v)}%`}`}
       >
         <path
           d="M8 44 A34 34 0 0 1 76 44"

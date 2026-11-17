@@ -9,7 +9,7 @@ import { sliceBundle } from "@/lib/swedbank-pulse/slice";
 
 export const dynamicParams = false;
 
-/** NatWest (NW-D29): a page for every taxonomy theme, so every on-screen theme link resolves; while no public source is
+/** Swedbank (NW-D29): a page for every taxonomy theme, so every on-screen theme link resolves; while no public source is
  * loaded, a theme with no public items shows its name and "Public data not yet loaded". */
 type NwMeta = {
   public_loaded?: boolean;

@@ -19,12 +19,12 @@ def main() -> None:
     personas = json.loads((ROOT / "data" / "seed" / "swedbank_pulse" / "aggregates.json").read_text(encoding="utf-8"))["personas"]
     routes = ["/swedbank-pulse", P, f"{P}/head-of-cx", f"{P}/mds-office", f"{P}/head-cx", f"{P}/satisfaction", f"{P}/market", f"{P}/priority",
               f"{P}/action-queue", f"{P}/deliverables", f"{P}/service-promise", f"{P}/my-view",
-              f"{P}/module/cards", f"{P}/module/cora_digital"]
+              f"{P}/module/everyday_accounts_app", f"{P}/module/nina_digital"]
     routes += [f"{P}/business/{p}" for p in products]
-    routes += [f"{P}/business/cards/{s}" for s in ("happy", "market", "service")]
+    routes += [f"{P}/business/everyday_accounts_app/{s}" for s in ("happy", "market", "service")]  # SW-D16 deep dive
     routes += [f"{P}/signal/{t}" for t in themes]
     routes += [f"{P}/customer/{personas[0]['masked_id']}"] if personas else []
-    routes += [f"{P}/mds-office?period={p}" for p in ("brief", "14d", "all")]
+    routes += [f"{P}/head-of-cx?period={p}" for p in ("brief", "7d", "14d", "all")]
     dest = ROOT / "scripts" / "routes_swedbank.json"
     dest.write_text(json.dumps(routes, indent=1) + "\n", encoding="utf-8", newline="\n")
     print(f"swedbank_routes: {len(routes)} routes -> {dest.relative_to(ROOT)}")

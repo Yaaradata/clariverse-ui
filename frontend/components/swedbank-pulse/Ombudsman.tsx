@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Ombudsman watch (docs/demo-rebuild/ombudsman_watch_design.md). Internal · illustrative. A snapshot of the complaint
+ * ARN watch (docs/demo-rebuild/ombudsman_watch_design.md). Internal. A snapshot of the complaint
  * register as of the end of the selected period, compared with the end of the previous period; every figure comes from
  * periods.json. Eligibility and risk only: LisN flags and recommends, people act, and nothing contacts a customer.
  */
@@ -15,7 +15,7 @@ import type {
   Period,
 } from "@/lib/swedbank-pulse/periods";
 import { Delta, Dial, titled } from "./Pulse";
-import { C, cols, MONO, MutedNote, Tile, tint } from "./primitives";
+import { C, cols, MONO, Tile, tint } from "./primitives";
 
 const pct = (a: number, b: number) => (b ? (100 * a) / b : null);
 
@@ -59,9 +59,9 @@ function RiskLegend() {
         color: C.textMut,
       }}
     >
-      {dot(C.amber, "Within 8 weeks, 10 days or fewer left")}
-      {dot(C.red, "Past 8 weeks, no final response")}
-      {dot(C.violet, "Unhappy with the final response")}
+      {dot(C.amber, "First reply overdue")}
+      {dot(C.red, "Final decision issued, Kundombudsman appeal open")}
+      {dot(C.violet, "Unhappy with the final decision (ARN eligible)")}
     </div>
   );
 }
@@ -91,7 +91,7 @@ function Split({
         }}
       >
         {title}
-        {/* The definitions and FCA rules stay reachable without taking room on the tile. */}
+        {/* The definitions and ARN rules stay reachable without taking room on the tile. */}
         <span
           role="img"
           aria-label={info}
@@ -147,10 +147,9 @@ function Split({
 }
 
 const SHORT_LABEL: Record<string, string> = {
-  current_accounts: "Current accounts",
-  applications: "Applications",
+  everyday_accounts_app: "Everyday accounts",
+  measures: "Account measures",
   disputes: "Disputes and refunds",
-  rewards: "Rewards",
 };
 
 export function OmbudsmanWatch({
@@ -181,12 +180,10 @@ export function OmbudsmanWatch({
     <Tile
       id="ombudsman-watch"
       title={titled(
-        scope === "bank"
-          ? "Financial Ombudsman watch"
-          : "Financial Ombudsman watch: Credit cards",
+        scope === "bank" ? "ARN watch" : "ARN watch: Everyday accounts and app",
         p,
       )}
-      sub={`Complaints eligible to go to the Financial Ombudsman Service, or close to it. As of ${fmtDateTime(o.as_of)}; changes ${since}.`}
+      sub={`ARN (Allmänna reklamationsnämnden): complaints eligible to go to ARN, or close to it. As of ${fmtDateTime(o.as_of)}; changes ${since}.`}
       prov="internal"
       tone="red"
     >
@@ -216,10 +213,10 @@ export function OmbudsmanWatch({
               value={pct(n.brink, n.received)}
               color={C.amber}
               big={fmt(n.brink)}
-              label="Within 8 weeks, 10 days or fewer left"
+              label="First reply overdue"
               sub={
                 <>
-                  10 days or fewer left
+                  past 15 business days, bank standard
                   <br />
                   <Delta n={o.delta.brink} label={since} goodDown />
                 </>
@@ -229,10 +226,10 @@ export function OmbudsmanWatch({
               value={pct(n.eligible, n.received)}
               color={C.red}
               big={fmt(n.eligible)}
-              label="Past 8 weeks, no final response"
+              label="Final decision issued, Kundombudsman appeal open"
               sub={
                 <>
-                  past 8 weeks, no final response
+                  appeal to the Kundombudsman open
                   <br />
                   <Delta n={o.delta.eligible} label={since} goodDown />
                 </>
@@ -242,10 +239,10 @@ export function OmbudsmanWatch({
               value={pct(n.unhappy, n.received)}
               color={C.violet}
               big={fmt(n.unhappy)}
-              label="Unhappy with the final response"
+              label="Unhappy with the final decision (ARN eligible)"
               sub={
                 <>
-                  within 6 months of it
+                  may file with ARN
                   <br />
                   <Delta n={o.delta.unhappy} label={since} goodDown />
                 </>
@@ -255,10 +252,10 @@ export function OmbudsmanWatch({
               value={pct(n.awaiting_io, n.received)}
               color={C.cyan}
               big={fmt(n.awaiting_io)}
-              label="Referred to the Financial Ombudsman"
+              label="Filed with ARN"
               sub={
                 <>
-                  with the Financial Ombudsman Service
+                  ARN pace: assumption
                   <br />
                   <Delta n={o.delta.awaiting_io} label={since} goodDown />
                 </>
@@ -279,7 +276,7 @@ export function OmbudsmanWatch({
             title={
               scope === "bank" ? "At risk, by product" : "At risk, by category"
             }
-            info={`Within 8 weeks, 10 days or fewer left: no final response yet and 10 days or fewer to the deadline (8 weeks; 15 business days for payment services). Past 8 weeks: no final response by the deadline. Unhappy with the reply: after the reply the customer reopened the complaint or contacted the bank again about the issue. At risk counts each complaint once. Rings show the share of all complaints received in the window; open complaints are only those with no final response yet and not referred. ${o.rules}`}
+            info={`First reply overdue: no first reply within 15 business days (bank standard, confirm with the bank). Final decision issued, Kundombudsman appeal open: the bank has decided and the customer can still appeal to the Kundombudsman. Unhappy with the final decision (ARN eligible): after the decision the customer reopened the complaint or contacted the bank again about the issue. Filed with ARN: ARN pace is an assumption. At risk counts each complaint once. Rings show the share of all complaints received in the window; open complaints are only those with no final decision yet and not referred. ${o.rules}`}
             rows={split}
           />
         </div>
@@ -294,7 +291,7 @@ export function SaveList({ o, p }: { o: CardsOmbudsman; p: Period }) {
     <Tile
       id="save-list"
       title={titled("Save list: call today", p)}
-      sub={`The ${o.save_list.length} credit card complaints most at risk as of ${fmtDateTime(o.as_of)}, each with why and who owns it. Sample rows: these are from the rows kept for drill-down, and the counts above are bank scale. LisN recommends; people call.`}
+      sub={`The ${o.save_list.length} Everyday accounts and app complaints most at risk as of ${fmtDateTime(o.as_of)}, each with why and who owns it. Sample rows: these are from the rows kept for drill-down, and the counts above are bank scale. LisN recommends; people call.`}
       prov="internal"
       tone="red"
     >
@@ -340,8 +337,10 @@ export function SaveList({ o, p }: { o: CardsOmbudsman; p: Period }) {
                 </span>
                 <strong style={{ color, whiteSpace: "nowrap", fontSize: 13.5 }}>
                   {r.state === "eligible"
-                    ? "Eligible"
-                    : `${r.days_left} day${r.days_left === 1 ? "" : "s"} left`}
+                    ? "Appeal open"
+                    : r.days_left === null
+                      ? "Reply overdue"
+                      : `${r.days_left} day${r.days_left === 1 ? "" : "s"} left`}
                 </strong>
               </div>
               <div style={{ fontSize: 14, fontWeight: 650 }}>
@@ -372,14 +371,6 @@ export function SaveList({ o, p }: { o: CardsOmbudsman; p: Period }) {
           );
         })}
       </ol>
-      <MutedNote>
-        Ordered by a points score from signals LisN already holds: days to the
-        limit or eligibility, an unhappy reply, repeat contacts, channels used,
-        escalation language, the bank&apos;s lists and a public post that
-        reached the social inbox. The score orders the list; it is not a
-        probability. Owners are roles. Final response: 8 weeks (FCA DISP); 15
-        business days for payment services.
-      </MutedNote>
     </Tile>
   );
 }
@@ -392,7 +383,7 @@ export function RiskPill({ r }: { r?: OmbudsmanRisk }) {
   return (
     <span
       data-testid="ombudsman-pill"
-      title={`Financial Ombudsman risk: ${r.at_risk} at risk (${r.brink} on the brink, ${r.eligible} eligible with no reply, ${r.unhappy} unhappy with the reply)`}
+      title={`ARN risk: ${r.at_risk} at risk (${r.brink} first reply overdue, ${r.eligible} with a Kundombudsman appeal open, ${r.unhappy} unhappy with the final decision)`}
       style={{
         display: "inline-flex",
         alignItems: "center",

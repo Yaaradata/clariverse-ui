@@ -180,7 +180,7 @@ export function AskLisN({
               <Sparkles size={16} color={C.brandInk} /> Ask LisN
             </div>
             <div style={{ fontSize: 13, color: C.textMut }}>
-              Answers come from this demo&apos;s public data, with the items
+              Answers come from the public data in this window, with the items
               cited.
             </div>
           </div>

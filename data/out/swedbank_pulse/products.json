@@ -1,1064 +1,509 @@
 {
  "provenance": "public",
- "scope": "natwest_group · on_topic · window",
- "note": "Each public item is tagged to one product from its business and theme. Loans are split into home, auto and personal by app and keyword. Row totals count each item once; issue lists count theme tags (an item can carry up to three). Wealth, SME and merchant, and corporate items are outside the product table.",
+ "scope": "swedbank · on_topic · window",
+ "note": "Each retail on-topic public item is routed to exactly one product (or to the Nina module) from what it is about. Row totals count each item once; issue lists count theme tags (an item can carry up to three). Baltic Banking, Sparbankerna, Swedbank Pay, business customers and investor or corporate news are outside the table and outside every count.",
  "rows": [
   {
-   "id": "cards",
-   "label": "Credit cards",
-   "owner": "cards",
-   "module": "cards",
-   "count": 148,
-   "negative": 76,
-   "escalation": 3,
-   "repeat": 10,
-   "promise_break_mentions": 18,
-   "share_negative": 64.7,
-   "trend_change_pct": -18.7,
+   "id": "everyday_accounts_app",
+   "label": "Everyday accounts and app",
+   "owner": "retail",
+   "module": "everyday_accounts_app",
+   "count": 43,
+   "negative": 27,
+   "escalation": 2,
+   "repeat": 1,
+   "promise_break_mentions": 0,
+   "reviews": 35,
+   "share_negative": 62.9,
+   "share_rule": "share",
+   "social": 8,
+   "quotable": 17,
+   "trend_change_pct": null,
    "trend_basis": {
-    "first_half": 18,
-    "second_half": 19,
-    "first_share": 2.41,
-    "second_share": 1.96
+    "first_half": 13,
+    "second_half": 17,
+    "first_share": 43.68,
+    "second_share": 54.03
    },
    "top_issue": {
-    "id": "app_usability",
-    "label": "App features and usability",
-    "negative": 14
+    "id": "app_login_biometrics",
+    "label": "App login and BankID",
+    "negative": 7
    },
    "issues": [
     {
-     "id": "app_usability",
-     "label": "App features and usability",
-     "count": 14,
-     "negative": 14,
+     "id": "app_login_biometrics",
+     "label": "App login and BankID",
+     "count": 7,
+     "negative": 7,
      "escalation": 0
     },
     {
-     "id": "card_eligibility_upgrade",
-     "label": "Credit card eligibility and card changes",
-     "count": 27,
-     "negative": 13,
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 7,
+     "negative": 6,
+     "escalation": 0
+    },
+    {
+     "id": "app_usability",
+     "label": "App features and usability",
+     "count": 6,
+     "negative": 5,
      "escalation": 0
     },
     {
      "id": "care_unreachable",
      "label": "Could not get through",
-     "count": 12,
-     "negative": 11,
-     "escalation": 0
-    },
-    {
-     "id": "dispute_chargeback",
-     "label": "Disputes and chargebacks",
-     "count": 10,
-     "negative": 6,
-     "escalation": 1
-    },
-    {
-     "id": "card_application",
-     "label": "Card applications and identity checks",
-     "count": 9,
-     "negative": 6,
-     "escalation": 0
-    },
-    {
-     "id": "branch_service",
-     "label": "Branch service",
-     "count": 7,
-     "negative": 5,
-     "escalation": 0
-    },
-    {
-     "id": "atm_debit_card",
-     "label": "Debit card and cash machines",
-     "count": 7,
-     "negative": 5,
-     "escalation": 0
-    },
-    {
-     "id": "app_login_biometrics",
-     "label": "App login and biometrics",
-     "count": 5,
-     "negative": 5,
-     "escalation": 0
-    },
-    {
-     "id": "account_freeze",
-     "label": "Fraud block or account freeze",
-     "count": 6,
+     "count": 4,
      "negative": 4,
      "escalation": 0
     },
     {
      "id": "app_speed_crash",
      "label": "App outages, speed and crashes",
-     "count": 5,
-     "negative": 4,
-     "escalation": 0
-    },
-    {
-     "id": "rewards_value",
-     "label": "Rewards value and caps",
-     "count": 7,
+     "count": 4,
      "negative": 3,
      "escalation": 0
     },
     {
-     "id": "card_limit",
-     "label": "Credit limit",
-     "count": 6,
+     "id": "branch_service",
+     "label": "Branch (kontor) service",
+     "count": 3,
      "negative": 3,
      "escalation": 1
     },
     {
-     "id": "closure_requests",
-     "label": "Account and card closure",
-     "count": 4,
+     "id": "fees_charges_bank",
+     "label": "Account charges and fees",
+     "count": 2,
      "negative": 2,
      "escalation": 0
     },
     {
-     "id": "merchant_pos",
-     "label": "Card machines and merchant services",
-     "count": 3,
+     "id": "mis_selling",
+     "label": "Mis-selling and add-on products",
+     "count": 2,
      "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "account_opening",
+     "label": "Account opening and switching bank (byta bank)",
+     "count": 2,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "swish_payment_failures",
+     "label": "Swish, Bankgiro and payment failures",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "identity_checks",
+     "label": "Know-your-customer questions and identity checks",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "fair_treatment",
+     "label": "Clear information and fair treatment (FI focus area)",
+     "count": 1,
+     "negative": 1,
+     "escalation": 1
+    },
+    {
+     "id": "online_banking",
+     "label": "Internet bank",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "account_freeze",
+     "label": "Account measures: frozen or restricted accounts",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "branch_closure",
+     "label": "Branch (kontor) closures and access",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    }
+   ],
+   "by_source": {
+    "appstore": 2,
+    "playstore": 22,
+    "x": 7,
+    "reddit": 1,
+    "trustpilot": 11
+   },
+   "replies": {
+    "reviews": 24,
+    "responded": 13,
+    "responded_pct": 54.2,
+    "open": 11,
+    "open_pct": 45.8,
+    "open_too_long": 11,
+    "open_too_long_pct_of_open": 100.0,
+    "open_too_long_pct_of_reviews": 45.8,
+    "median_reply_minutes": 2424,
+    "median_reply_hours": 40.4,
+    "replied_within_48h": 10,
+    "redirect_only": 0,
+    "redirect_only_pct_of_replied": 0.0
+   }
+  },
+  {
+   "id": "payments_swish",
+   "label": "Payments and Swish",
+   "owner": "payments",
+   "module": null,
+   "count": 2,
+   "negative": 2,
+   "escalation": 0,
+   "repeat": 0,
+   "promise_break_mentions": 0,
+   "reviews": 1,
+   "share_negative": null,
+   "share_rule": "none",
+   "social": 1,
+   "quotable": 2,
+   "trend_change_pct": null,
+   "trend_basis": {
+    "first_half": 1,
+    "second_half": 0,
+    "first_share": 4.84,
+    "second_share": 0.0
+   },
+   "top_issue": {
+    "id": "account_freeze",
+    "label": "Account measures: frozen or restricted accounts",
+    "negative": 1
+   },
+   "issues": [
+    {
+     "id": "account_freeze",
+     "label": "Account measures: frozen or restricted accounts",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "identity_checks",
+     "label": "Know-your-customer questions and identity checks",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "fair_treatment",
+     "label": "Clear information and fair treatment (FI focus area)",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    }
+   ],
+   "by_source": {
+    "x": 1,
+    "trustpilot": 1
+   },
+   "replies": {
+    "reviews": 0,
+    "responded": 0,
+    "responded_pct": null,
+    "open": 0,
+    "open_pct": null,
+    "open_too_long": 0,
+    "open_too_long_pct_of_open": null,
+    "open_too_long_pct_of_reviews": null,
+    "median_reply_minutes": null,
+    "median_reply_hours": null,
+    "replied_within_48h": 0,
+    "redirect_only": 0,
+    "redirect_only_pct_of_replied": 0.0
+   }
+  },
+  {
+   "id": "cards",
+   "label": "Cards",
+   "owner": "cards",
+   "module": null,
+   "count": 4,
+   "negative": 0,
+   "escalation": 0,
+   "repeat": 0,
+   "promise_break_mentions": 0,
+   "reviews": 0,
+   "share_negative": null,
+   "share_rule": "none",
+   "social": 4,
+   "quotable": 3,
+   "trend_change_pct": null,
+   "trend_basis": {
+    "first_half": 0,
+    "second_half": 4,
+    "first_share": 0.0,
+    "second_share": 19.35
+   },
+   "top_issue": {
+    "id": "rewards_value",
+    "label": "Card benefits, cashback and lounge access",
+    "negative": 0
+   },
+   "issues": [
+    {
+     "id": "rewards_value",
+     "label": "Card benefits, cashback and lounge access",
+     "count": 2,
+     "negative": 0,
      "escalation": 0
     },
     {
      "id": "card_fees_charges",
      "label": "Card interest and charges",
-     "count": 3,
-     "negative": 2,
-     "escalation": 0
-    },
-    {
-     "id": "statements_documents",
-     "label": "Statements and documents",
-     "count": 3,
-     "negative": 2,
-     "escalation": 0
-    },
-    {
-     "id": "complaint_handling",
-     "label": "Complaints closed without resolution",
-     "count": 2,
-     "negative": 2,
-     "escalation": 0
-    },
-    {
-     "id": "new_app_release",
-     "label": "New app and update experience",
-     "count": 2,
-     "negative": 2,
-     "escalation": 0
-    },
-    {
-     "id": "mis_selling",
-     "label": "Mis-selling and add-on products",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "international_payments",
-     "label": "International payments",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "unsolicited_calls",
-     "label": "Unwanted marketing and use of data",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "loan_closure_documents",
-     "label": "Loan and mortgage redemption",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "fraud_scam",
-     "label": "Fraud and scam contact",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "fees_charges_bank",
-     "label": "Account charges and fees",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "cora_unresolved",
-     "label": "Cora unresolved, had to call",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "card_dispatch",
-     "label": "Card dispatch and delivery",
      "count": 1,
      "negative": 0,
      "escalation": 0
     },
     {
-     "id": "premier_service",
-     "label": "Relationship manager service (Premier)",
+     "id": "card_application",
+     "label": "Card applications and identity checks",
      "count": 1,
      "negative": 0,
      "escalation": 0
     }
    ],
    "by_source": {
-    "appstore": 36,
-    "playstore": 20,
-    "x": 17,
-    "reddit": 46,
-    "trustpilot": 29
+    "reddit": 4
    },
    "replies": {
-    "reviews": 20,
-    "responded": 14,
-    "responded_pct": 70.0,
-    "open": 6,
-    "open_pct": 30.0,
-    "open_too_long": 6,
-    "open_too_long_pct_of_open": 100.0,
-    "open_too_long_pct_of_reviews": 30.0,
-    "median_reply_minutes": 1837,
-    "median_reply_hours": 30.62,
-    "replied_within_48h": 10,
-    "redirect_only": 13,
-    "redirect_only_pct_of_replied": 92.9
-   }
-  },
-  {
-   "id": "current_accounts",
-   "label": "Current accounts and app",
-   "owner": "retail",
-   "module": null,
-   "count": 2750,
-   "negative": 658,
-   "escalation": 7,
-   "repeat": 57,
-   "promise_break_mentions": 47,
-   "share_negative": 29.0,
-   "trend_change_pct": -3.3,
-   "trend_basis": {
-    "first_half": 645,
-    "second_half": 797,
-    "first_share": 87.28,
-    "second_share": 84.36
-   },
-   "top_issue": {
-    "id": "app_usability",
-    "label": "App features and usability",
-    "negative": 251
-   },
-   "issues": [
-    {
-     "id": "app_usability",
-     "label": "App features and usability",
-     "count": 251,
-     "negative": 251,
-     "escalation": 0
-    },
-    {
-     "id": "app_login_biometrics",
-     "label": "App login and biometrics",
-     "count": 120,
-     "negative": 88,
-     "escalation": 0
-    },
-    {
-     "id": "care_unreachable",
-     "label": "Could not get through",
-     "count": 97,
-     "negative": 62,
-     "escalation": 1
-    },
-    {
-     "id": "app_speed_crash",
-     "label": "App outages, speed and crashes",
-     "count": 82,
-     "negative": 60,
-     "escalation": 0
-    },
-    {
-     "id": "branch_service",
-     "label": "Branch service",
-     "count": 130,
-     "negative": 44,
-     "escalation": 1
-    },
-    {
-     "id": "new_app_release",
-     "label": "New app and update experience",
-     "count": 36,
-     "negative": 32,
-     "escalation": 0
-    },
-    {
-     "id": "closure_requests",
-     "label": "Account and card closure",
-     "count": 18,
-     "negative": 14,
-     "escalation": 0
-    },
-    {
-     "id": "statements_documents",
-     "label": "Statements and documents",
-     "count": 24,
-     "negative": 12,
-     "escalation": 1
-    },
-    {
-     "id": "cora_unresolved",
-     "label": "Cora unresolved, had to call",
-     "count": 12,
-     "negative": 12,
-     "escalation": 0
-    },
-    {
-     "id": "complaint_handling",
-     "label": "Complaints closed without resolution",
-     "count": 12,
-     "negative": 11,
-     "escalation": 0
-    },
-    {
-     "id": "atm_debit_card",
-     "label": "Debit card and cash machines",
-     "count": 14,
-     "negative": 9,
-     "escalation": 0
-    },
-    {
-     "id": "account_opening",
-     "label": "Account opening and switching",
-     "count": 13,
-     "negative": 6,
-     "escalation": 0
-    },
-    {
-     "id": "account_freeze",
-     "label": "Fraud block or account freeze",
-     "count": 5,
-     "negative": 4,
-     "escalation": 0
-    },
-    {
-     "id": "online_banking",
-     "label": "Online banking",
-     "count": 3,
-     "negative": 3,
-     "escalation": 0
-    },
-    {
-     "id": "merchant_pos",
-     "label": "Card machines and merchant services",
-     "count": 2,
-     "negative": 2,
-     "escalation": 0
-    },
-    {
-     "id": "recovery_conduct",
-     "label": "Collections and arrears conduct",
-     "count": 2,
-     "negative": 2,
-     "escalation": 1
-    },
-    {
-     "id": "credit_report",
-     "label": "Credit file corrections",
-     "count": 2,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "fees_charges_bank",
-     "label": "Account charges and fees",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "mis_selling",
-     "label": "Mis-selling and add-on products",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "investments_wealth",
-     "label": "Investments",
-     "count": 2,
-     "negative": 0,
-     "escalation": 0
-    },
-    {
-     "id": "international_payments",
-     "label": "International payments",
-     "count": 1,
-     "negative": 0,
-     "escalation": 0
-    }
-   ],
-   "by_source": {
-    "appstore": 923,
-    "playstore": 825,
-    "x": 617,
-    "reddit": 251,
-    "trustpilot": 134
-   },
-   "replies": {
-    "reviews": 825,
-    "responded": 601,
-    "responded_pct": 72.8,
-    "open": 224,
-    "open_pct": 27.2,
-    "open_too_long": 208,
-    "open_too_long_pct_of_open": 92.9,
-    "open_too_long_pct_of_reviews": 25.2,
-    "median_reply_minutes": 1824,
-    "median_reply_hours": 30.41,
-    "replied_within_48h": 392,
-    "redirect_only": 247,
-    "redirect_only_pct_of_replied": 41.1
-   }
-  },
-  {
-   "id": "payments_fraud",
-   "label": "Payments and fraud",
-   "owner": "payments",
-   "module": null,
-   "count": 328,
-   "negative": 173,
-   "escalation": 1,
-   "repeat": 8,
-   "promise_break_mentions": 32,
-   "share_negative": 54.7,
-   "trend_change_pct": 38.6,
-   "trend_basis": {
-    "first_half": 49,
-    "second_half": 99,
-    "first_share": 6.95,
-    "second_share": 9.63
-   },
-   "top_issue": {
-    "id": "app_usability",
-    "label": "App features and usability",
-    "negative": 38
-   },
-   "issues": [
-    {
-     "id": "app_usability",
-     "label": "App features and usability",
-     "count": 38,
-     "negative": 38,
-     "escalation": 0
-    },
-    {
-     "id": "branch_service",
-     "label": "Branch service",
-     "count": 44,
-     "negative": 37,
-     "escalation": 0
-    },
-    {
-     "id": "care_unreachable",
-     "label": "Could not get through",
-     "count": 22,
-     "negative": 19,
-     "escalation": 0
-    },
-    {
-     "id": "fraud_scam",
-     "label": "Fraud and scam contact",
-     "count": 21,
-     "negative": 17,
-     "escalation": 0
-    },
-    {
-     "id": "app_login_biometrics",
-     "label": "App login and biometrics",
-     "count": 19,
-     "negative": 16,
-     "escalation": 0
-    },
-    {
-     "id": "account_freeze",
-     "label": "Fraud block or account freeze",
-     "count": 21,
-     "negative": 13,
-     "escalation": 0
-    },
-    {
-     "id": "app_speed_crash",
-     "label": "App outages, speed and crashes",
-     "count": 11,
-     "negative": 9,
-     "escalation": 0
-    },
-    {
-     "id": "unauthorised_txn",
-     "label": "Unauthorised transactions",
-     "count": 9,
-     "negative": 8,
-     "escalation": 0
-    },
-    {
-     "id": "closure_requests",
-     "label": "Account and card closure",
-     "count": 8,
-     "negative": 6,
-     "escalation": 0
-    },
-    {
-     "id": "refund_delay",
-     "label": "Refunds not credited",
-     "count": 6,
-     "negative": 5,
-     "escalation": 1
-    },
-    {
-     "id": "new_app_release",
-     "label": "New app and update experience",
-     "count": 5,
-     "negative": 5,
-     "escalation": 0
-    },
-    {
-     "id": "statements_documents",
-     "label": "Statements and documents",
-     "count": 5,
-     "negative": 4,
-     "escalation": 0
-    },
-    {
-     "id": "atm_debit_card",
-     "label": "Debit card and cash machines",
-     "count": 5,
-     "negative": 4,
-     "escalation": 0
-    },
-    {
-     "id": "cora_unresolved",
-     "label": "Cora unresolved, had to call",
-     "count": 4,
-     "negative": 4,
-     "escalation": 0
-    },
-    {
-     "id": "dispute_chargeback",
-     "label": "Disputes and chargebacks",
-     "count": 4,
-     "negative": 4,
-     "escalation": 0
-    },
-    {
-     "id": "account_opening",
-     "label": "Account opening and switching",
-     "count": 3,
-     "negative": 3,
-     "escalation": 0
-    },
-    {
-     "id": "international_payments",
-     "label": "International payments",
-     "count": 6,
-     "negative": 2,
-     "escalation": 0
-    },
-    {
-     "id": "recovery_conduct",
-     "label": "Collections and arrears conduct",
-     "count": 3,
-     "negative": 2,
-     "escalation": 0
-    },
-    {
-     "id": "loan_servicing",
-     "label": "Loan repayments and servicing",
-     "count": 2,
-     "negative": 2,
-     "escalation": 0
-    },
-    {
-     "id": "complaint_handling",
-     "label": "Complaints closed without resolution",
-     "count": 2,
-     "negative": 2,
-     "escalation": 0
-    },
-    {
-     "id": "online_banking",
-     "label": "Online banking",
-     "count": 2,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "failed_txn_reversal",
-     "label": "Failed payment returns",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "card_eligibility_upgrade",
-     "label": "Credit card eligibility and card changes",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "mis_selling",
-     "label": "Mis-selling and add-on products",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "merchant_pos",
-     "label": "Card machines and merchant services",
-     "count": 11,
-     "negative": 0,
-     "escalation": 0
-    },
-    {
-     "id": "investments_wealth",
-     "label": "Investments",
-     "count": 2,
-     "negative": 0,
-     "escalation": 0
-    },
-    {
-     "id": "phishing",
-     "label": "Phishing messages and fake links",
-     "count": 1,
-     "negative": 0,
-     "escalation": 0
-    }
-   ],
-   "by_source": {
-    "appstore": 90,
-    "playstore": 46,
-    "x": 102,
-    "reddit": 45,
-    "trustpilot": 45
-   },
-   "replies": {
-    "reviews": 46,
-    "responded": 39,
-    "responded_pct": 84.8,
-    "open": 7,
-    "open_pct": 15.2,
-    "open_too_long": 7,
-    "open_too_long_pct_of_open": 100.0,
-    "open_too_long_pct_of_reviews": 15.2,
-    "median_reply_minutes": 1890,
-    "median_reply_hours": 31.5,
-    "replied_within_48h": 23,
-    "redirect_only": 30,
-    "redirect_only_pct_of_replied": 76.9
-   }
-  },
-  {
-   "id": "savings",
-   "label": "Savings",
-   "owner": "product",
-   "module": null,
-   "count": 75,
-   "negative": 22,
-   "escalation": 1,
-   "repeat": 0,
-   "promise_break_mentions": 5,
-   "share_negative": 41.2,
-   "trend_change_pct": null,
-   "trend_basis": {
-    "first_half": 6,
-    "second_half": 18,
-    "first_share": 0.9,
-    "second_share": 1.78
-   },
-   "top_issue": {
-    "id": "app_usability",
-    "label": "App features and usability",
-    "negative": 6
-   },
-   "issues": [
-    {
-     "id": "app_usability",
-     "label": "App features and usability",
-     "count": 6,
-     "negative": 6,
-     "escalation": 0
-    },
-    {
-     "id": "care_unreachable",
-     "label": "Could not get through",
-     "count": 3,
-     "negative": 3,
-     "escalation": 0
-    },
-    {
-     "id": "account_opening",
-     "label": "Account opening and switching",
-     "count": 5,
-     "negative": 2,
-     "escalation": 0
-    },
-    {
-     "id": "branch_service",
-     "label": "Branch service",
-     "count": 3,
-     "negative": 2,
-     "escalation": 0
-    },
-    {
-     "id": "closure_requests",
-     "label": "Account and card closure",
-     "count": 3,
-     "negative": 2,
-     "escalation": 0
-    },
-    {
-     "id": "cora_unresolved",
-     "label": "Cora unresolved, had to call",
-     "count": 2,
-     "negative": 2,
-     "escalation": 1
-    },
-    {
-     "id": "statements_documents",
-     "label": "Statements and documents",
-     "count": 2,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "fees_charges_bank",
-     "label": "Account charges and fees",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "app_login_biometrics",
-     "label": "App login and biometrics",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "recovery_conduct",
-     "label": "Collections and arrears conduct",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "complaint_handling",
-     "label": "Complaints closed without resolution",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "atm_debit_card",
-     "label": "Debit card and cash machines",
-     "count": 1,
-     "negative": 0,
-     "escalation": 0
-    },
-    {
-     "id": "new_app_release",
-     "label": "New app and update experience",
-     "count": 1,
-     "negative": 0,
-     "escalation": 0
-    },
-    {
-     "id": "investments_wealth",
-     "label": "Investments",
-     "count": 1,
-     "negative": 0,
-     "escalation": 0
-    }
-   ],
-   "by_source": {
-    "appstore": 20,
-    "playstore": 7,
-    "x": 17,
-    "reddit": 24,
-    "trustpilot": 7
-   },
-   "replies": {
-    "reviews": 7,
-    "responded": 6,
-    "responded_pct": 85.7,
-    "open": 1,
-    "open_pct": 14.3,
-    "open_too_long": 1,
-    "open_too_long_pct_of_open": 100.0,
-    "open_too_long_pct_of_reviews": 14.3,
-    "median_reply_minutes": 1857,
-    "median_reply_hours": 30.95,
-    "replied_within_48h": 4,
-    "redirect_only": 5,
-    "redirect_only_pct_of_replied": 83.3
+    "reviews": 0,
+    "responded": 0,
+    "responded_pct": null,
+    "open": 0,
+    "open_pct": null,
+    "open_too_long": 0,
+    "open_too_long_pct_of_open": null,
+    "open_too_long_pct_of_reviews": null,
+    "median_reply_minutes": null,
+    "median_reply_hours": null,
+    "replied_within_48h": 0,
+    "redirect_only": 0,
+    "redirect_only_pct_of_replied": 0.0
    }
   },
   {
    "id": "mortgages",
-   "label": "Mortgages",
+   "label": "Mortgages (bolån)",
    "owner": "loans",
    "module": null,
-   "count": 58,
-   "negative": 20,
+   "count": 15,
+   "negative": 5,
    "escalation": 0,
-   "repeat": 1,
-   "promise_break_mentions": 4,
-   "share_negative": 62.1,
+   "repeat": 0,
+   "promise_break_mentions": 0,
+   "reviews": 1,
+   "share_negative": null,
+   "share_rule": "none",
+   "social": 14,
+   "quotable": 7,
    "trend_change_pct": null,
    "trend_basis": {
-    "first_half": 14,
-    "second_half": 22,
-    "first_share": 1.94,
-    "second_share": 2.15
+    "first_half": 5,
+    "second_half": 9,
+    "first_share": 14.52,
+    "second_share": 26.61
    },
    "top_issue": {
-    "id": "app_usability",
-    "label": "App features and usability",
-    "negative": 6
+    "id": "mortgage_rate",
+    "label": "Mortgage rate and amortisation",
+    "negative": 4
    },
    "issues": [
     {
-     "id": "app_usability",
-     "label": "App features and usability",
-     "count": 6,
-     "negative": 6,
+     "id": "mortgage_rate",
+     "label": "Mortgage rate and amortisation",
+     "count": 13,
+     "negative": 4,
      "escalation": 0
     },
     {
-     "id": "statements_documents",
-     "label": "Statements and documents",
-     "count": 5,
-     "negative": 5,
-     "escalation": 0
-    },
-    {
-     "id": "branch_service",
-     "label": "Branch service",
-     "count": 5,
-     "negative": 3,
-     "escalation": 0
-    },
-    {
-     "id": "app_speed_crash",
-     "label": "App outages, speed and crashes",
+     "id": "fair_treatment",
+     "label": "Clear information and fair treatment (FI focus area)",
      "count": 2,
      "negative": 2,
-     "escalation": 0
-    },
-    {
-     "id": "app_login_biometrics",
-     "label": "App login and biometrics",
-     "count": 3,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "fraud_scam",
-     "label": "Fraud and scam contact",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "care_unreachable",
-     "label": "Could not get through",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "mis_selling",
-     "label": "Mis-selling and add-on products",
-     "count": 1,
-     "negative": 0,
-     "escalation": 0
-    },
-    {
-     "id": "loan_servicing",
-     "label": "Loan repayments and servicing",
-     "count": 1,
-     "negative": 0,
-     "escalation": 0
-    },
-    {
-     "id": "investments_wealth",
-     "label": "Investments",
-     "count": 1,
-     "negative": 0,
-     "escalation": 0
-    }
-   ],
-   "by_source": {
-    "appstore": 7,
-    "playstore": 13,
-    "x": 23,
-    "reddit": 6,
-    "trustpilot": 9
-   },
-   "replies": {
-    "reviews": 13,
-    "responded": 12,
-    "responded_pct": 92.3,
-    "open": 1,
-    "open_pct": 7.7,
-    "open_too_long": 1,
-    "open_too_long_pct_of_open": 100.0,
-    "open_too_long_pct_of_reviews": 7.7,
-    "median_reply_minutes": 1486,
-    "median_reply_hours": 24.77,
-    "replied_within_48h": 9,
-    "redirect_only": 8,
-    "redirect_only_pct_of_replied": 66.7
-   }
-  },
-  {
-   "id": "personal_loans",
-   "label": "Personal loans",
-   "owner": "loans",
-   "module": null,
-   "count": 18,
-   "negative": 9,
-   "escalation": 2,
-   "repeat": 1,
-   "promise_break_mentions": 1,
-   "share_negative": 70.0,
-   "trend_change_pct": null,
-   "trend_basis": {
-    "first_half": 4,
-    "second_half": 1,
-    "first_share": 0.52,
-    "second_share": 0.12
-   },
-   "top_issue": {
-    "id": "app_usability",
-    "label": "App features and usability",
-    "negative": 2
-   },
-   "issues": [
-    {
-     "id": "app_usability",
-     "label": "App features and usability",
-     "count": 2,
-     "negative": 2,
-     "escalation": 0
-    },
-    {
-     "id": "closure_requests",
-     "label": "Account and card closure",
-     "count": 2,
-     "negative": 1,
-     "escalation": 1
-    },
-    {
-     "id": "app_speed_crash",
-     "label": "App outages, speed and crashes",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "statements_documents",
-     "label": "Statements and documents",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "complaint_handling",
-     "label": "Complaints closed without resolution",
-     "count": 1,
-     "negative": 1,
-     "escalation": 1
-    },
-    {
-     "id": "care_unreachable",
-     "label": "Could not get through",
-     "count": 1,
-     "negative": 1,
-     "escalation": 0
-    },
-    {
-     "id": "branch_service",
-     "label": "Branch service",
-     "count": 1,
-     "negative": 0,
      "escalation": 0
     },
     {
      "id": "loan_processing",
      "label": "Loan and mortgage applications",
-     "count": 1,
-     "negative": 0,
+     "count": 2,
+     "negative": 1,
      "escalation": 0
     },
     {
-     "id": "loan_servicing",
-     "label": "Loan repayments and servicing",
+     "id": "branch_service",
+     "label": "Branch (kontor) service",
      "count": 1,
-     "negative": 0,
+     "negative": 1,
      "escalation": 0
     }
    ],
    "by_source": {
-    "appstore": 3,
-    "playstore": 4,
-    "x": 1,
-    "reddit": 7,
-    "trustpilot": 3
+    "x": 8,
+    "reddit": 6,
+    "trustpilot": 1
    },
    "replies": {
-    "reviews": 4,
-    "responded": 4,
-    "responded_pct": 100.0,
+    "reviews": 0,
+    "responded": 0,
+    "responded_pct": null,
     "open": 0,
-    "open_pct": 0.0,
+    "open_pct": null,
     "open_too_long": 0,
     "open_too_long_pct_of_open": null,
-    "open_too_long_pct_of_reviews": 0.0,
-    "median_reply_minutes": 1415,
-    "median_reply_hours": 23.58,
-    "replied_within_48h": 4,
-    "redirect_only": 4,
-    "redirect_only_pct_of_replied": 100.0
+    "open_too_long_pct_of_reviews": null,
+    "median_reply_minutes": null,
+    "median_reply_hours": null,
+    "replied_within_48h": 0,
+    "redirect_only": 0,
+    "redirect_only_pct_of_replied": 0.0
+   }
+  },
+  {
+   "id": "savings_funds",
+   "label": "Savings and funds",
+   "owner": "product",
+   "module": null,
+   "count": 13,
+   "negative": 2,
+   "escalation": 0,
+   "repeat": 0,
+   "promise_break_mentions": 0,
+   "reviews": 1,
+   "share_negative": null,
+   "share_rule": "none",
+   "social": 12,
+   "quotable": 3,
+   "trend_change_pct": null,
+   "trend_basis": {
+    "first_half": 13,
+    "second_half": 0,
+    "first_share": 36.96,
+    "second_share": 0.0
+   },
+   "top_issue": {
+    "id": "investments_wealth",
+    "label": "Funds and investments (Robur, ISK)",
+    "negative": 2
+   },
+   "issues": [
+    {
+     "id": "investments_wealth",
+     "label": "Funds and investments (Robur, ISK)",
+     "count": 12,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    }
+   ],
+   "by_source": {
+    "playstore": 1,
+    "x": 2,
+    "reddit": 10
+   },
+   "replies": {
+    "reviews": 1,
+    "responded": 0,
+    "responded_pct": 0.0,
+    "open": 1,
+    "open_pct": 100.0,
+    "open_too_long": 1,
+    "open_too_long_pct_of_open": 100.0,
+    "open_too_long_pct_of_reviews": 100.0,
+    "median_reply_minutes": null,
+    "median_reply_hours": null,
+    "replied_within_48h": 0,
+    "redirect_only": 0,
+    "redirect_only_pct_of_replied": 0.0
+   }
+  },
+  {
+   "id": "consumer_loans",
+   "label": "Consumer loans",
+   "owner": "loans",
+   "module": null,
+   "count": 0,
+   "negative": 0,
+   "escalation": 0,
+   "repeat": 0,
+   "promise_break_mentions": 0,
+   "reviews": 0,
+   "share_negative": null,
+   "share_rule": "none",
+   "social": 0,
+   "quotable": 0,
+   "trend_change_pct": null,
+   "trend_basis": {
+    "first_half": 0,
+    "second_half": 0,
+    "first_share": 0.0,
+    "second_share": 0.0
+   },
+   "top_issue": null,
+   "issues": [],
+   "by_source": {},
+   "replies": {
+    "reviews": 0,
+    "responded": 0,
+    "responded_pct": null,
+    "open": 0,
+    "open_pct": null,
+    "open_too_long": 0,
+    "open_too_long_pct_of_open": null,
+    "open_too_long_pct_of_reviews": null,
+    "median_reply_minutes": null,
+    "median_reply_hours": null,
+    "replied_within_48h": 0,
+    "redirect_only": 0,
+    "redirect_only_pct_of_replied": 0.0
    }
   }
  ],
  "excluded": {},
- "total_rows": 3377,
- "total_items": 3377,
+ "total_rows": 77,
+ "total_items": 77,
+ "nina_digital": 0,
+ "routing": {
+  "payments_swish": 2,
+  "everyday_accounts_app": 43,
+  "cards": 4,
+  "mortgages": 15,
+  "savings_funds": 13,
+  "consumer_loans": 0,
+  "nina_digital": 0
+ },
  "reconciles": true,
- "trend_rule": "Source-weighted share of trend-basis items, second half (22 Sep–13 Nov) vs first half (1 Aug–21 Sep): each source's share counts in proportion to its share of the window. Shown only when both halves have at least 15 items.",
+ "trend_rule": "Source-weighted share of trend-basis items, second half (4–17 Nov) vs first half (22 Oct–3 Nov): each source's share counts in proportion to its share of the window. Shown only when both halves have at least 15 items.",
  "labels": {
-  "cards": "Credit cards",
-  "current_accounts": "Current accounts and app",
-  "payments_fraud": "Payments and fraud",
-  "savings": "Savings",
-  "mortgages": "Mortgages",
-  "personal_loans": "Personal loans"
+  "everyday_accounts_app": "Everyday accounts and app",
+  "payments_swish": "Payments and Swish",
+  "cards": "Cards",
+  "mortgages": "Mortgages (bolån)",
+  "savings_funds": "Savings and funds",
+  "consumer_loans": "Consumer loans"
  }
 }

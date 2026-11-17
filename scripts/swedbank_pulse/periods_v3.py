@@ -31,6 +31,7 @@ import re
 import sys
 from pathlib import Path
 
+from common import DEEP_DIVE_PRODUCT  # noqa: E402  (SW-D04: Payments and Swish is the worked deep dive)
 from common import (
     CARDS_CATEGORIES,
     CARDS_OTHER,
@@ -63,7 +64,7 @@ import complaint_rules  # noqa: E402
 import ombudsman_v3 as omb  # noqa: E402  (Ombudsman watch: snapshots of the complaint register)
 import v4_blocks as v4  # noqa: E402  (B11: V4 additions, from the same records)
 from taxonomy import OUTCOMES  # noqa: E402  (Consumer Duty outcomes, Pass 2)
-CORA_THEMES = ["cora_unresolved", "cora_wrong_answer", "cora_handoff_lost", "cora_no_person"]
+CORA_THEMES = ["nina_unresolved", "nina_wrong_answer", "nina_handoff_lost", "nina_no_person"]
 
 END = dt.datetime.fromisoformat(PERIOD_END)
 START = dt.datetime.fromisoformat(DATA_START)
@@ -74,11 +75,11 @@ TREND_SOURCES = {"playstore", "appstore", "trustpilot", "x", "reddit"}  # one co
 # HL-13: a source counts in a trend only when it was collecting before the comparison window began.
 SOURCE_START = {s["id"]: dt.datetime.fromisoformat(s["start"] + "T00:00:00+00:00")
                 for s in json.load(open(OUT_APP / "sources.json", encoding="utf-8"))["sources"] if s.get("start")}
-LIST_LABEL = {  # NatWest cohorts (brief Step 5.2); the ids are the oct13 list ids
-    "priority_a": "Financially vulnerable (Consumer Duty)",
+LIST_LABEL = {  # Swedbank cohorts (SW-D05, seed_internal_v3.COHORTS); the ids are the oct13 list ids
+    "priority_a": "Customers in a vulnerable situation",
     "priority_b": "Recent complainants (90 days)",
-    "uhni": "Premier",
-    "multi": "Multi-product customers (four or more products)",
+    "uhni": "Premium and Private Banking",
+    "multi": "Account-measure affected (frozen or restricted under AML rules)",
 }
 PRODUCT_ORDER = [p["id"] for p in PUB_PRODUCTS]
 
@@ -364,7 +365,7 @@ def load_public():
     rows = [json.loads(line) for line in open(OUT_APP / "work" / "classified.jsonl", encoding="utf-8")]
     out = []
     for r in rows:
-        if r["relevant"] != "on_topic" or r["entity"] != "natwest_group":
+        if r["relevant"] != "on_topic" or r["entity"] != "swedbank":  # SW-D11: retail Swedish Banking (normalise.RETAIL_ENTITY)
             continue
         c = ts(r["created_at"])
         if not (START <= c <= PUBLIC_END):
@@ -420,31 +421,34 @@ def weighted_share(rs, pred, W, min_items: int = 3):
 
 # Bank replies on public posts (NatWest, HL-15): a reply counts only where the source itself carries it (store and
 # Trustpilot reply fields). Nothing is simulated: the oct13 simulated replies (an HDFC exception) are not carried over.
-REPLY_SOURCES = {"playstore"}  # sources whose export carries the bank's reply (NW-D82)
+# SW-D17 (Usha): every source's reply figures read the internal social-inbox seed (kind "source_reply"); the public
+# crawl cannot fetch bank replies. On screen the block carries the one tag "Internal".
+REPLY_SOURCES = {"appstore", "playstore", "x", "reddit", "trustpilot"}
 
 
 def responded(r) -> bool:
-    return bool(r.get("reply"))
+    rec = inbox().get(("source_reply", r["id"]))
+    return bool(rec and rec["status"] != "no_action")
 
 
 def response_by_source(rs) -> list[dict]:
     out = []
-    for src in ("appstore", "playstore", "x", "reddit", "trustpilot", "forum"):
+    for src in ("appstore", "playstore", "x", "reddit", "trustpilot"):
         xs = [r for r in rs if r["source"] == src]
         if xs:
-            # Only Google Play carries the bank's replies in this pull; elsewhere there is no reply data (not 0%).
-            has = src in REPLY_SOURCES
-            n = sum(1 for r in xs if responded(r)) if has else None
+            n = sum(1 for r in xs if responded(r))
+            hrs = sorted(inbox()[("source_reply", r["id"])]["handling_hours"] for r in xs if responded(r))
             out.append({"source": src, "label": SOURCE_LABEL[src], "mentions": len(xs), "responded": n,
-                        "pct": pct(n, len(xs), 0) if has else None, "reply_data": has, "illustrative": False})
+                        "pct": pct(n, len(xs), 0), "reply_data": True, "internal": True, "illustrative": False,
+                        "median_hours": hrs[len(hrs) // 2] if hrs else None})
     return out
 
 
 def replies(rs) -> dict:
-    ps = [r for r in rs if r["source"] == "playstore"]
+    ps = [r for r in rs if r["source"] in ("appstore", "playstore")]  # SW-D17: store reviews, internal seed
     pos = [r for r in ps if r["sentiment"] == "positive"]
     neg = [r for r in ps if r["sentiment"] == "negative"]
-    rep = lambda xs: sum(1 for r in xs if r.get("reply"))  # noqa: E731
+    rep = lambda xs: sum(1 for r in xs if responded(r))  # noqa: E731  (SW-D17: the internal seed)
     return {
         "reviews": len(ps),
         "responded": rep(ps),
@@ -561,6 +565,7 @@ def social_pulse(pub, w, W) -> dict:
         "text": r["summary"], "platform": SOURCE_LABEL[r["source"]], "date": r["created_at"][:10],
         "sentiment": r["sentiment"], "engagement": engagement_of(r), "score": score(r),
         "responded": responded(r) if r["source"] in REPLY_SOURCES else None, "illustrative": False,
+        "lang": r.get("lang"), "gloss": r.get("gloss"),
     }
     posts = [as_post(r) for r in top]
     # High impact: the busiest day in the period, the posts of that day, and the change against the comparison window.
@@ -604,23 +609,28 @@ def social_pulse(pub, w, W) -> dict:
         "high_impact_change_pct": change(hi_cur, hi_prev),
         "high_impact_peak": peak,
         "high_impact_response_pct": pct(hi_resp, len(hi), 0),
-        # NW-D100: X and Reddit posts with reach, handled in the internal social inbox (internal · illustrative).
+        # NW-D100: X and Reddit posts with reach, handled in the internal social inbox (internal).
         "high_impact_handled": handled_block([inbox()[("high_impact", r["id"])] for r in hi
                                               if ("high_impact", r["id"]) in inbox()]),
         "posts": posts,
         "good_response": good,
+        # SW-D12: on-topic public items per calendar day in the window (the 5 Nov question reads it).
+        "daily": [{"date": d, "count": n} for d, n in sorted(collections.Counter(r["created_at"][:10] for r in rs).items())],
         "rule": "High impact (virality rule): an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Trending posts are ranked by likes, replies and reposts (upvotes and helpful votes on Reddit and the stores).",
     }
 
 
-QUOTE_FIRST_PERSON = re.compile(r"\b(i|i'm|im|i've|ive|i'd|my|me|we|our|us)\b", re.I)
-QUOTE_PRODUCT = {  # NW-D92: a card's quote must name the product the card is about
-    "current_accounts": re.compile(r"current account|\baccount\b|overdraft|debit card|\bapp\b|branch", re.I),
-    "payments_fraud": re.compile(r"payment|transfer|\bfraud|\bscam|refund|chargeback|direct debit|payee", re.I),
-    "cards": re.compile(r"credit card|\bcard\b|credit limit|reward|cashback", re.I),
-    "savings": re.compile(r"\bsavings?\b|\bisas?\b|interest|saver", re.I),
-    "mortgages": re.compile(r"mortgage|remortgag|rate switch|redemption", re.I),
-    "personal_loans": re.compile(r"\bloan", re.I),
+# SW-D11: Swedish and English first person (jag, mig, min, mitt, mina, vi, oss, vår…).
+QUOTE_FIRST_PERSON = re.compile(r"\b(i|i'm|im|i've|ive|i'd|my|me|we|our|us|jag|mig|mej|min|mitt|mina|vi|oss|vår|vårt|våra)\b", re.I)
+QUOTE_PRODUCT = {  # NW-D92: a card's quote must name the product the card is about (SW-D04 routing words, sv + en)
+    "everyday_accounts_app": re.compile(r"\bkont\w*|\baccount\b|\bapp\w*|bankid|inloggning|logga in|spärr|fryst|stängt|"
+                                    r"internetbank|\bkontor\b|branch|login", re.I),
+    "payments_swish": re.compile(r"swish|betalning|betala|överföring|bedrägeri|bedragare|spärrat kort|bankgiro|"
+                                 r"payment|transfer|\bfraud|\bscam|refund", re.I),
+    "cards": re.compile(r"\bkort\w*|kreditkort|mastercard|\bvisa\b|\bcard\b|credit card", re.I),
+    "savings_funds": re.compile(r"\bfond\w*|\bisk\b|sparkonto|\bspar\w*|robur|savings?|\bfunds?\b", re.I),
+    "mortgages": re.compile(r"bolån|\bränta|räntan|amorter\w*|mortgage", re.I),
+    "consumer_loans": re.compile(r"privatlån|blancolån|\blån\b|\bloan", re.I),
 }
 
 
@@ -654,7 +664,9 @@ def anecdote(rs, theme, pid=None):
         return sum(v for v in e.values() if isinstance(v, (int, float)))
 
     r = sorted(pick, key=lambda r: (eng(r), r["created_at"]), reverse=True)[0]
-    return {"summary": r["summary"], "source_label": SOURCE_LABEL[r["source"]], "date": r["created_at"][:10]}
+    # SW-D11: the original (usually Swedish) with an English gloss when the public layer wrote one.
+    return {"summary": r["summary"], "source_label": SOURCE_LABEL[r["source"]], "date": r["created_at"][:10],
+            "lang": r.get("lang"), "gloss": r.get("gloss")}
 
 
 def theme_labels():
@@ -672,17 +684,17 @@ MIN_REVIEWS = 20  # NW-D93
 MIN_PUBLIC = 3  # NW-D95, lowered in NW-D98
 
 
-# NW-D98: a product's top issue. App themes (outages, login, biometrics, features, Cora) lead only Current accounts and
-# app; Personal loans takes its top issue from loan themes (decision, payout, repayment, early settlement, affordability).
+# NW-D98: a product's top issue. App themes (outages, login, biometrics, features, Nina) lead only Everyday accounts and
+# app; Consumer loans takes its top issue from loan themes (decision, payout, repayment, early settlement, affordability).
 APP_THEMES = {"app_speed_crash", "app_login_biometrics", "app_usability", "new_app_release", "device_security_block",
-              "online_banking", "app_praise", "cora_unresolved", "cora_wrong_answer", "cora_handoff_lost", "cora_no_person"}
+              "online_banking", "app_praise", "nina_unresolved", "nina_wrong_answer", "nina_handoff_lost", "nina_no_person"}
 LOAN_THEMES = {"loan_processing", "loan_servicing", "loan_closure_documents", "recovery_conduct", "credit_report"}
 
 
 def fits_product(theme: str, pid: str) -> bool:
-    if pid == "personal_loans":
+    if pid == "consumer_loans":
         return theme in LOAN_THEMES
-    return pid == "current_accounts" or theme not in APP_THEMES
+    return pid == "everyday_accounts_app" or theme not in APP_THEMES
 
 
 def businesses(inter, pub, w, W, labels) -> list[dict]:
@@ -709,13 +721,13 @@ def businesses(inter, pub, w, W, labels) -> list[dict]:
         if n_rev < MIN_REVIEWS:
             # NW-D95: fewer than 20 reviews -> all on-topic public items for the product, labelled indicative; fewer than
             # 5 public items of any kind -> no figure.
+            # SW-D19 (Usha, 17 Nov): every product card shows a number in every window. Below 20 reviews the share is
+            # of all on-topic public items, marked indicative; with no public item in the window it reads 0% and the
+            # card says "0 public items". Never a made-up item (HL-15).
             n_all = len(prs)
-            if n_all >= MIN_PUBLIC:
-                pb["negative_share"] = pct(sum(1 for r in prs if r["sentiment"] == "negative"), n_all)
-                pb["negative_share_note"] = "indicative"
-            else:
-                pb["negative_share"] = None
-                pb["negative_share_note"] = None  # fewer than 5 public items: "—" (no count shown, Usha 17 Nov)
+            pb["negative_share"] = pct(sum(1 for r in prs if r["sentiment"] == "negative"), n_all) if n_all else 0.0
+            pb["negative_share_note"] = "indicative" if n_all else "no_items"
+            pb["public_items"] = n_all
         neg_t = collections.Counter(r["themes"][0] for r in prs if r["sentiment"] == "negative" and fits_product(r["themes"][0], pid))
         top = neg_t.most_common(1)[0] if neg_t else None
         if not top:  # thin public voice: fall back to the internal top issue, and say so
@@ -859,8 +871,8 @@ def cat_of(theme: str) -> dict:
 
 def cards_view(inter, customers, pub, w, W, labels) -> dict:
     a, b = w["start"], w["end"]
-    irs = [r for r in inter if r["product"] == "cards"]
-    keep = lambda r: r["_product"] == "cards"  # noqa: E731
+    irs = [r for r in inter if r["product"] == DEEP_DIVE_PRODUCT]
+    keep = lambda r: r["_product"] == DEEP_DIVE_PRODUCT  # noqa: E731
     prs_all = [r for r in pub if keep(r)]
     pa_, pb_, _p, _c = pub_span(w)
     prs = [r for r in prs_all if pa_ <= r["_c"] < pb_]
@@ -984,11 +996,11 @@ def cards_view(inter, customers, pub, w, W, labels) -> dict:
 # ------------------------------------------------------------------ Cards drill-downs (30 Sep review, changes_30sep.md C4)
 # The three MD drill-downs (satisfaction, market, service), rebuilt for Cards only and for the selected period.
 TARGET_LABEL = {
-    "rbi": "Regulator named or tagged (FCA)",
-    "rbi_ombudsman": "Financial Ombudsman Service",
-    "consumer_court": "Small claims court or consumer body",
+    "rbi": "Regulator named or tagged (Finansinspektionen)",
+    "rbi_ombudsman": "ARN",
+    "consumer_court": "Konsumenternas Bank- och finansbyrå or a consumer body",
     "legal": "Legal action",
-    "ministers": "MP tagged",
+    "ministers": "Politician tagged",
     "grievance": "Complaints team",
 }
 REQUEST_LABEL = {
@@ -1002,7 +1014,7 @@ REQUEST_LABEL = {
     "kyc": "Identity checks and profile updates",
     "other": "Other request",
 }
-RUNG_LABEL = [("grievance", "Complaint"), ("md_office", "Complaints team"), ("io", "Final response"), ("rbi_ombudsman", "Financial Ombudsman Service")]
+RUNG_LABEL = [("grievance", "Complaint"), ("md_office", "Complaints team"), ("io", "Bank's final decision"), ("rbi_ombudsman", "ARN")]  # complaint_rules.LADDER_RUNGS
 
 
 def quote_of(rs):
@@ -1019,7 +1031,9 @@ def quote_of(rs):
         return sum(v for v in e.values() if isinstance(v, (int, float)))
 
     r = sorted(cands, key=lambda r: (eng(r), r["created_at"]), reverse=True)[0]
-    return {"summary": r["summary"], "source_label": SOURCE_LABEL[r["source"]], "date": r["created_at"][:10]}
+    # SW-D11: the original with its English gloss when the public layer wrote one.
+    return {"summary": r["summary"], "source_label": SOURCE_LABEL[r["source"]], "date": r["created_at"][:10],
+            "lang": r.get("lang"), "gloss": r.get("gloss")}
 
 
 def cards_drilldowns(inter, customers, pub, w, W, labels, ivol, prs, prs_all, irs) -> dict:
@@ -1182,10 +1196,10 @@ def v4_period(inter, customers, pub, cards_complaints, w, labels) -> dict:
     """B11 additions for one period (v4_blocks.py): Cards first, then open too long for the bank and each business."""
     a, b = w["start"], w["end"]
     vol = [r for r in inter if in_win(r, a, b)]
-    cvol = [r for r in vol if r["product"] == "cards"]
+    cvol = [r for r in vol if r["product"] == DEEP_DIVE_PRODUCT]
     pend = min(b, PUBLIC_END)
     pa_, pb_, _p, _c = pub_span(w)
-    cprs = [r for r in pub if r["_product"] == "cards" and pa_ <= r["_c"] < pb_]
+    cprs = [r for r in pub if r["_product"] == DEEP_DIVE_PRODUCT and pa_ <= r["_c"] < pb_]
     bprs = [r for r in pub if pa_ <= r["_c"] < pb_]
     for r in cprs + bprs:
         r["_reach"] = reach(r)
@@ -1239,7 +1253,7 @@ def main():
     W = source_weights(pub)
     labels = theme_labels()
     complaints = omb.load_complaints()
-    cards_complaints = [c for c in complaints if c["product"] == "cards"]
+    cards_complaints = [c for c in complaints if c["product"] == DEEP_DIVE_PRODUCT]
     products = [(pid, PRODUCT_LABEL[pid]) for pid in PRODUCT_ORDER]
     out = {"end": PERIOD_END, "public_end": PUBLIC_END.isoformat(), "default": DEFAULT_PERIOD,
            # Internal figures are bank-scale weighted sums of the kept sample rows (scale_v3.py).
@@ -1257,7 +1271,7 @@ def main():
             "id": p["id"], "label": p["label"], "short": p["short"],
             "start": w["start"].isoformat(), "end": w["end"].isoformat(),
             "public_start": pub_span(w)[0].isoformat(), "public_end": min(pub_span(w)[1], PUBLIC_END).isoformat(),
-            # NatWest (HL-15): false while data/raw/natwest/ holds nothing; the external blocks then read "Public data
+            # HL-15: false while data/raw/swedbank/ holds nothing; the external blocks then read "Public data
             # not yet loaded" instead of zeros.
             "public_loaded": bool(pub),
             "compare": w["compare"],
@@ -1279,10 +1293,10 @@ def main():
         cp = out["periods"][p["id"]]
         # Ombudsman watch (design: ombudsman_watch_design.md). Cards: the same block scoped to Cards, plus the risk by
         # category and the save list. A material risk leads the brief's "What needs you" (at most three items).
-        cp["cards"]["ombudsman"] = {**omb.block(cards_complaints, w, [("cards", PRODUCT_LABEL["cards"])]),
+        cp["cards"]["ombudsman"] = {**omb.block(cards_complaints, w, [(DEEP_DIVE_PRODUCT, PRODUCT_LABEL[DEEP_DIVE_PRODUCT])]),
                                     **omb.cards_extra(complaints, w, labels)}
         # One register (review round 3, NW-D66): the credit-card ladder's complaint rungs are the credit-card slice of
-        # the steady register the credit-card Financial Ombudsman tile reads, as flows in the period.
+        # the steady register the deep-dive ARN tile reads, as flows in the period.
         flows = complaint_rules.ladder_flows(cards_complaints, w["start"], w["end"])
         for rung in cp["cards"]["service_full"]["ladder"]:
             if rung["rung"] in flows:
@@ -1300,8 +1314,8 @@ def main():
         if item:
             cp["brief"]["needs_you"] = [item, *cp["brief"]["needs_you"]][:3]
         cp["brief"]["rules"] += (
-            " A Financial Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline "
-            "limit, or more complaints are already eligible than at the previous period end.")
+            " An ARN watch item leads What needs you when any complaint has 3 days or fewer to the 15-business-day first-reply "
+            "deadline, or more first replies are overdue than at the previous period end.")
         print(p["id"], "internal", internal["volume"], "external", external["volume"], "lists",
               [(x["id"], x["volume"], x["open"], x["not_responded_48h"]) for x in cp["customer_pulse"]["lists"]],
               "mix", external["source_mix"])
