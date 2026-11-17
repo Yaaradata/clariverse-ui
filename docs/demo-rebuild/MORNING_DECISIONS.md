@@ -1113,3 +1113,25 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
   where ids and routes are not visible): "business" except business days, "MD's", "undefined", and a bare "fca"/"psr"
   cell. Escalation targets now read in UK terms (Complaints team, Small claims court or Citizens Advice, MP or minister
   tagged, Chief executive named). Fixtures for every new rule.
+
+### Review round 2 (17 Nov): fixes as decided by Usha
+
+- **NW-D60 · Item 2, ids.** Register ids are off screen (the standards notes and the Ombudsman rules read "FCA DISP" and
+  the rule itself); the customer page no longer shows the linked contact's id ("Someone acting for the customer").
+  Accepted: complaint ids (CMP-nnnnn) and masked customer ids (XXXXnnnn) stay on the save list, the customer pages and
+  the Ask answer: a save list needs a case reference, oct13 shows them, and a banker expects one.
+- **NW-D61 · Cora open too long.** A Cora conversation is closed or handed to a person within 40 hours (`resolution_hours`
+  caps the Cora channel; the random draw is kept so the seed's sequence does not change). Open too long on Cora is now
+  14-21% of Cora open and below Calls in every period. The reconcile holds it (at most 25% of Cora open, below Calls) and
+  a fixture tampers it back to 49% to prove the check trips.
+- **NW-D62 · One referral series.** The escalation ladder's Financial Ombudsman Service rung counts the referrals made in
+  the window from the same steady register the Ombudsman watch reads (written by `seed_complaints_v3.py`). Referral rate
+  52% of those unhappy with the final response, 25% of those past the deadline: the "Referred" tile runs at about 147 a
+  week and the ladder at about 134 a week (target about 150). The reconcile keeps the two within 15%.
+- **NW-D63 · Owners for recent complainants.** Every recent complainant has an owner (the complaints lead, unless a
+  Premier banking manager holds the relationship), so the Recent complainants card shows owners alerted (30 of 244 in
+  the last 7 days; owners hear about roughly one in five due alerts by design, the gap LisN closes).
+- **NW-D64 · Sample labels.** The /priority headline and the retention watchlist say "Sample of 32,000 contacts
+  (illustrative)".
+- **NW-D65 · Item 6.** "Rewards" in the at-risk bar list. Accepted: the inherited "Repeat contact by category" scroll box
+  on the credit-card happy page, which cuts a row mid-line at the box edge (oct13 layout; the box scrolls).

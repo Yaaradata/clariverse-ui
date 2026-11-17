@@ -150,6 +150,7 @@ const SHORT_LABEL: Record<string, string> = {
   current_accounts: "Current accounts",
   applications: "Applications",
   disputes: "Disputes and refunds",
+  rewards: "Rewards",
 };
 
 export function OmbudsmanWatch({

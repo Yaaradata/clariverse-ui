@@ -31,7 +31,7 @@ import json
 import random
 
 import complaint_rules
-from common import PERIOD_END, SEED, SEED_V3, load
+from common import PERIOD_END, SEED, SEED_V3, dump, load
 from complaint_rules import decide
 
 END = dt.datetime.fromisoformat(PERIOD_END)
@@ -128,7 +128,19 @@ def main():
     with open(SEED_V3 / "complaints.jsonl", "w", encoding="utf-8") as f:
         for c in out:
             f.write(json.dumps(c, ensure_ascii=False) + "\n")
+    # One referral series (review round 2, NW-D62): the escalation ladder's Financial Ombudsman Service rung counts the
+    # same referrals the Ombudsman watch reads, from the steady register: referrals made in the window.
+    agg_path = SEED_V3 / "aggregates.json"
+    agg = load(agg_path)
+    start, end = complaint_rules.START_OF_WINDOW, dt.datetime.fromisoformat(PERIOD_END)
+    window_refs = sum(c["w"] for c in complaint_rules.steady_register(out)
+                      if c.get("referred_at") and start <= dt.datetime.fromisoformat(c["referred_at"]) <= end)
+    for rung in agg["deliverables_detail"].get("ladder_bank", []):
+        if rung["rung"] == "Financial Ombudsman Service":
+            rung["count"] = window_refs
+    dump(agg, agg_path)
     replied = [c for c in out if c["final_reply_at"]]
+    print("referrals in the window (steady register)", window_refs)
     print("complaints", len(out), "replied", len(replied),
           "outcomes", dict(collections.Counter(c["outcome"] for c in replied)),
           "open with a decision", sum(1 for c in out if not c["final_reply_at"] and c["decision_at"]),

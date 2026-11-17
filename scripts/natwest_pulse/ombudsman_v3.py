@@ -21,7 +21,7 @@ BUCKETS = [("8-10", 8, 10), ("4-7", 4, 7), ("0-3", 0, 3)]  # days left before th
 LIST_LABEL = {"priority_a": "Financially vulnerable (Consumer Duty)", "priority_b": "Recent complainants (90 days)", "uhni": "Premier"}
 IO_OWNER = "Final-response team"
 RULES = (
-    "Financial Ombudsman Service rules only (register REG-DISP-8W, REG-PSD-15, REG-FOS-6M). The bank has 8 weeks to "
+    "Financial Ombudsman Service rules only (FCA DISP). The bank has 8 weeks to "
     "send a final response; 15 business days for payment-services complaints. The customer may refer the complaint to "
     "the Financial Ombudsman Service when there is no final response by then, or when unhappy with the final response, "
     "within 6 months of it. Eligibility and risk only: LisN never predicts that a customer will refer."

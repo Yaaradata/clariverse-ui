@@ -117,6 +117,7 @@ export function PriorityView({ b }: { b: Bundle }) {
         <AnswerLine
           sub={
             <>
+              Sample of {fmt(b.v3.sample.interactions)} contacts (illustrative).
               Flags prioritise service. They never restrict or downgrade it.
               LisN reads the lists the bank already keeps; it never infers who a
               customer is from public data.
@@ -127,7 +128,7 @@ export function PriorityView({ b }: { b: Bundle }) {
           an issue open this morning; {fmt(over24)} issues on the
           vulnerable-customer list have been open for more than 24 hours. Owners
           have been told about {fmt(rmDid)} of the {fmt(rmShould)} customers
-          with an Owner alert due.
+          with an owner alert due.
         </AnswerLine>
       </Tile>
 
@@ -624,7 +625,6 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
   const openSteps = p.trail.filter((s) => s.status === "open");
   const oldest = openSteps[0];
   const events = p.trail.filter((s) => s.event).length;
-  const contactId = p.trail.find((s) => s.contact_id)?.contact_id;
   // Callback owner: the product owner of the oldest open item (review finding #36).
   const callbackOwner = oldest
     ? (b.products.rows.find((r) => r.id === oldest.product)?.owner ?? "cx")
@@ -708,7 +708,7 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
           </Field>
           <Field label="Linked contacts">
             {p.proxy_contacts
-              ? `An assistant${contactId ? ` (contact ${contactId})` : ""}, linked through the bank's own contact records`
+              ? `Someone acting for the customer, linked through the bank's own contact records`
               : "None"}
           </Field>
         </div>

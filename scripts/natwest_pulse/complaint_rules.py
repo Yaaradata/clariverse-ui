@@ -98,8 +98,8 @@ def filed_with_ombudsman(r: dict, d: dict) -> bool:
 
 
 def referred_at(r: dict, d: dict):
-    """When the customer referred the complaint to the Financial Ombudsman Service, or None. ASSUMPTION (Pass 2 section 4, about 150 referrals a week; NW-D56): 35% of those
-    unhappy with the final response, 17% of those past the deadline with no final response; referral 3-30 days later."""
+    """When the customer referred the complaint to the Financial Ombudsman Service, or None. ASSUMPTION (Pass 2 section 4, about 150 referrals a week; NW-D56, NW-D62): 52% of those
+    unhappy with the final response, 25% of those past the deadline with no final response; referral 3-30 days later."""
     t = referral_due(r, d)
     return t if t and t <= END else None
 
@@ -109,9 +109,9 @@ def referral_due(r: dict, d: dict):
     register's earlier copies use it (NW-D56), since for them that moment is in the past."""
     h = int(hashlib.sha1(f"fos:{r['id']}".encode()).hexdigest(), 16) % 10_000 / 10_000
     lag = dt.timedelta(days=3 + 27 * (int(hashlib.sha1(f"lag:{r['id']}".encode()).hexdigest(), 16) % 1000 / 1000))
-    if d["unhappy_at"] and h < 0.35:
+    if d["unhappy_at"] and h < 0.52:
         t = d["unhappy_at"] + lag
-    elif d["reply"] is None and h < 0.17:
+    elif d["reply"] is None and h < 0.25:
         t = deadline(ts(r["created_at"]), r["product"]) + lag
     else:
         return None

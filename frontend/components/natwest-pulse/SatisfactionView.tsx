@@ -465,7 +465,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
 
         <Tile
           title="Retention watchlist"
-          sub="Switching intent in high-value tiers, routed to the owner"
+          sub={`Switching intent in high-value tiers, routed to the owner. Sample of ${fmt(b.v3.sample.interactions)} contacts (illustrative).`}
           prov={["internal", "public"]}
           id="retention"
         >

@@ -412,6 +412,26 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
        f"(worst: {100 * worst[0]:.0f}% divisible by {worst[1]})")
     ordered = [per["periods"][k]["cx_pulse"]["internal"]["volume"] for k in ("brief", "7d", "30d", "all")]
     ok(ordered == sorted(ordered), f"periods nest: Morning brief <= 7 days <= 30 days <= full window {ordered}")
+    # Cora open too long (review round 2, NW-D61): it drifted from 23% to 49% of Cora open between runs while nothing
+    # held it. A Cora conversation is closed or handed on within 40 hours, so open too long stays at most 25% of
+    # Cora open and below Calls in every period.
+    for pid, p in per["periods"].items():
+        ch = p["cx_pulse"]["internal"]["by_channel"]
+        cora, calls = ch.get("whatsapp", {}), ch.get("calls", {})
+        otl = cora.get("open_too_long")
+        if otl is None:
+            continue
+        ok(otl <= 0.25 * cora.get("open", 0) and otl < (calls.get("open_too_long") or 0),
+           f"[{pid}] Cora open too long within 25% of Cora open and below Calls ({otl} of {cora.get('open')}; Calls {calls.get('open_too_long')})")
+    # One referral series (NW-D62): the ladder's Financial Ombudsman Service rung (referrals made in the window) and the
+    # Ombudsman watch's "Referred" tile (referrals in the last 8 weeks) run at the same weekly pace, within 15%.
+    lb = {r["rung"]: r["count"] for r in agg["deliverables_detail"].get("ladder_bank", [])}
+    full = per["periods"]["all"]
+    weeks = (dt.datetime.fromisoformat(full["end"]) - dt.datetime(2026, 8, 1, tzinfo=dt.timezone.utc)) / dt.timedelta(weeks=1)
+    ladder_pace = lb.get("Financial Ombudsman Service", 0) / weeks
+    tile_pace = full["ombudsman"]["now"]["awaiting_io"] / 8
+    ok(ladder_pace > 0 and abs(tile_pace - ladder_pace) <= 0.15 * ladder_pace,
+       f"one referral series: Referred tile {tile_pace:.0f} a week = ladder {ladder_pace:.0f} a week, within 15%")
     ombudsman_checks(seed_dir, per, inter, ok)
     v4_checks(per, ok)
 

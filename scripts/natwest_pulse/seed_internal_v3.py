@@ -225,6 +225,9 @@ def build_customers():
         c["cohorts"].insert(0, "priority_a")
     for c in pool[500:620]:
         c["cohorts"].insert(0, "priority_b")
+        # A recent complainant always has an owner (review round 2, NW-D63): the complaints lead, unless a Premier
+        # banking manager already holds the relationship. No random draw, so the seed's sequence is unchanged.
+        c["rm_id"] = c["rm_id"] or "Complaints lead"
     for c in customers:
         if "uhni" in c["cohorts"]:
             c["proxy_contacts"] = 1 if rng.random() < 0.45 else 0
@@ -279,7 +282,13 @@ def resolution_hours(deliv: str, theme: str, cohort: bool, channel: str) -> floa
         median *= 0.45
     if cohort:
         median *= 0.75  # a little faster, not reliably so: the gap Vidya described
-    return tat_h * math.exp(math.log(median) + sigma * rng.gauss(0, 1))
+    hours = tat_h * math.exp(math.log(median) + sigma * rng.gauss(0, 1))
+    if channel == "whatsapp":
+        # Cora (review round 2, NW-D61): a Cora conversation is closed or handed to a person within 40 hours, so open
+        # too long on Cora comes from what follows the hand-off, not from Cora itself. The draw above is kept so the
+        # seed's random sequence does not change.
+        hours = min(hours, 40.0)
+    return hours
 
 
 def high_impact_reasons(theme_row: dict, channel: str, sender: str) -> list[str]:

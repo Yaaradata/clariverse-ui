@@ -455,7 +455,7 @@ def natwest_reconcile_fixtures(fails: list[str]) -> int:
         if got:
             fails.append(f"NatWest: untouched data must pass, but {len(got)} check(s) failed: {got[:3]}")
         public_loaded = json.loads((out / "meta.json").read_text(encoding="utf-8")).get("public_loaded")
-        for name, expect, tamper in FIXTURES:
+        for name, expect, tamper in FIXTURES + NW_FIXTURES:
             expect = expect.replace("Bank TAT: confirm in discovery", "Bank standard: confirm with the bank")
             if not public_loaded and name in PUBLIC_ONLY_FIXTURES:
                 print(f"SKIP NatWest fixture '{name}': needs public data (not loaded; the check is vacuous until it lands)")
@@ -481,6 +481,33 @@ def natwest_reconcile_fixtures(fails: list[str]) -> int:
     return n
 
 
+def _cora_drift(o):
+    """Cora open too long back at about half of Cora open (the drift seen between runs before NW-D61)."""
+    def fn(per):
+        ch = per["periods"]["7d"]["cx_pulse"]["internal"]["by_channel"]["whatsapp"]
+        ch["open_too_long"] = round(0.49 * ch["open"])
+    _rw_json(o / "periods.json", fn)
+
+
+# NatWest-only fixtures (review round 2): checks the HDFC build does not have.
+def _flip_rm_nw(seed: Path):
+    """The cohort owner-alert fixture on a NatWest cohort (the HDFC one tampers the hni cohort NatWest no longer has)."""
+    agg = json.loads((seed / "aggregates.json").read_text(encoding="utf-8"))
+    custs = json.loads((seed / "customers.json").read_text(encoding="utf-8"))
+    members = {c["masked_id"] for c in custs if {"uhni", "priority_b"} & set(c["cohorts"])}
+    personas = {p["masked_id"] for p in agg["personas"]}
+
+    def fn(notes):
+        n = _first(notes, lambda n: n["masked_id"] in members and n["masked_id"] not in personas)
+        n["notified_today"] = not n["notified_today"]
+
+    _rw_json(seed / "rm_notifications.json", fn)
+
+
+NW_FIXTURES = [
+    ("Cora open too long drifts", "Cora open too long within 25% of Cora open", lambda s, o: _cora_drift(o)),
+    ("cohort owner alerts (NatWest cohorts)", "RM alerts recomputed", lambda s, o: _flip_rm_nw(s)),
+]
 NW_SKIPPED: list[str] = []
 PUBLIC_ONLY_FIXTURES = {"unweighted share with a dominant source"}
 NW_MODULES: dict = {}
