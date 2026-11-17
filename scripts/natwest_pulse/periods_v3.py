@@ -670,10 +670,10 @@ def businesses(inter, pub, w, W, labels) -> list[dict]:
             n_all = len(prs)
             if n_all >= MIN_PUBLIC:
                 pb["negative_share"] = pct(sum(1 for r in prs if r["sentiment"] == "negative"), n_all)
-                pb["negative_share_note"] = f"indicative (n={n_all})"
+                pb["negative_share_note"] = "indicative"
             else:
                 pb["negative_share"] = None
-                pb["negative_share_note"] = f"n={n_all}"
+                pb["negative_share_note"] = None  # fewer than 5 public items: "—" (no count shown, Usha 17 Nov)
         neg_t = collections.Counter(r["themes"][0] for r in prs if r["sentiment"] == "negative")
         top = neg_t.most_common(1)[0] if neg_t else None
         if not top:  # thin public voice: fall back to the internal top issue, and say so

@@ -1292,3 +1292,8 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
   internal figures are illustrative, and the crawl checks that instead). The header is no longer a block: the brand line,
   period buttons and theme toggle sit on a transparent background, and only the Ask LisN bar stays fixed at the top with
   transparent space either side. Logged as NW-D96 because the request numbered NW-D95 above arrived with it.
+- **NW-D97 · No counts in labels; seed order fixed (17 Nov).** "(n=…)" is removed everywhere (Usha): below 20 reviews the
+  negative-public figure reads "indicative"; below 5 public items it reads "—". The FULL run found the open backlog's
+  weekly change at 32% (check ±15%): putting credit cards first (NW-D95) had changed the order the internal generator
+  draws products in, so every synthetic contact was redrawn. The generator now draws in its own fixed order (SEED_ORDER),
+  independent of the display order; the internal data is again identical to the reviewed data.

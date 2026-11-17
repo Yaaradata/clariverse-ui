@@ -1097,7 +1097,7 @@
        "x": 50.0
       },
       "review_items": 2,
-      "negative_share_note": "n=4"
+      "negative_share_note": null
      },
      "top_issue": {
       "id": "card_eligibility_upgrade",
@@ -1269,7 +1269,7 @@
        "trustpilot": 14.3
       },
       "review_items": 2,
-      "negative_share_note": "indicative (n=7)"
+      "negative_share_note": "indicative"
      },
      "top_issue": {
       "id": "branch_service",
@@ -1351,7 +1351,7 @@
        "x": 100.0
       },
       "review_items": 0,
-      "negative_share_note": "n=1"
+      "negative_share_note": null
      },
      "top_issue": {
       "id": "fees_charges_bank",
@@ -1437,7 +1437,7 @@
        "x": 100.0
       },
       "review_items": 0,
-      "negative_share_note": "n=2"
+      "negative_share_note": null
      },
      "top_issue": {
       "id": "recovery_conduct",
@@ -1517,7 +1517,7 @@
       },
       "source_mix": {},
       "review_items": 0,
-      "negative_share_note": "n=0"
+      "negative_share_note": null
      },
      "top_issue": {
       "id": "fees_charges_bank",
@@ -7346,7 +7346,7 @@
        "reddit": 7.1
       },
       "review_items": 8,
-      "negative_share_note": "indicative (n=14)"
+      "negative_share_note": "indicative"
      },
      "top_issue": {
       "id": "card_eligibility_upgrade",
@@ -7525,7 +7525,7 @@
        "playstore": 3.8
       },
       "review_items": 18,
-      "negative_share_note": "indicative (n=52)"
+      "negative_share_note": "indicative"
      },
      "top_issue": {
       "id": "branch_service",
@@ -7614,7 +7614,7 @@
        "trustpilot": 9.1
       },
       "review_items": 2,
-      "negative_share_note": "indicative (n=11)"
+      "negative_share_note": "indicative"
      },
      "top_issue": {
       "id": "fees_charges_bank",
@@ -7702,7 +7702,7 @@
        "trustpilot": 14.3
       },
       "review_items": 2,
-      "negative_share_note": "indicative (n=7)"
+      "negative_share_note": "indicative"
      },
      "top_issue": {
       "id": "app_usability",
@@ -7786,7 +7786,7 @@
       },
       "source_mix": {},
       "review_items": 0,
-      "negative_share_note": "n=0"
+      "negative_share_note": null
      },
      "top_issue": {
       "id": "recovery_conduct",
@@ -16156,7 +16156,7 @@
        "trustpilot": 3.0
       },
       "review_items": 11,
-      "negative_share_note": "indicative (n=33)"
+      "negative_share_note": "indicative"
      },
      "top_issue": {
       "id": "app_usability",
@@ -16246,7 +16246,7 @@
        "reddit": 4.8
       },
       "review_items": 11,
-      "negative_share_note": "indicative (n=21)"
+      "negative_share_note": "indicative"
      },
      "top_issue": {
       "id": "app_usability",
@@ -16334,7 +16334,7 @@
        "trustpilot": 25.0
       },
       "review_items": 2,
-      "negative_share_note": "n=4"
+      "negative_share_note": null
      },
      "top_issue": {
       "id": "app_speed_crash",
@@ -25458,7 +25458,7 @@
        "trustpilot": 11.1
       },
       "review_items": 7,
-      "negative_share_note": "indicative (n=18)"
+      "negative_share_note": "indicative"
      },
      "top_issue": {
       "id": "app_usability",

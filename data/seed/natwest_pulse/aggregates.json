@@ -25,6 +25,102 @@
  },
  "products": [
   {
+   "id": "cards",
+   "label": "Credit cards",
+   "total": 5096,
+   "closed": 4872,
+   "waiting_on_customer": 92,
+   "closed_or_responded": 5086,
+   "open": 132,
+   "open_too_long": 12,
+   "closed_or_responded_pct": 99.8,
+   "open_pct": 2.6,
+   "open_too_long_pct_of_open": 9.1,
+   "negative": 1546,
+   "high_impact": 11,
+   "deliverables": {
+    "measured": 4905,
+    "met": 4575,
+    "outside": 330,
+    "met_pct": 93.3,
+    "open_within": 120
+   },
+   "negative_weekly": [
+    {
+     "week": "2026-08-03",
+     "count": 109
+    },
+    {
+     "week": "2026-08-10",
+     "count": 89
+    },
+    {
+     "week": "2026-08-17",
+     "count": 102
+    },
+    {
+     "week": "2026-08-24",
+     "count": 92
+    },
+    {
+     "week": "2026-08-31",
+     "count": 107
+    },
+    {
+     "week": "2026-09-07",
+     "count": 113
+    },
+    {
+     "week": "2026-09-14",
+     "count": 116
+    },
+    {
+     "week": "2026-09-21",
+     "count": 85
+    },
+    {
+     "week": "2026-09-28",
+     "count": 105
+    },
+    {
+     "week": "2026-10-05",
+     "count": 98
+    },
+    {
+     "week": "2026-10-12",
+     "count": 121
+    },
+    {
+     "week": "2026-10-19",
+     "count": 103
+    },
+    {
+     "week": "2026-10-26",
+     "count": 106
+    },
+    {
+     "week": "2026-11-02",
+     "count": 105
+    }
+   ],
+   "negative_change_pct": -3.1,
+   "top_issue": {
+    "id": "card_fees_charges",
+    "label": "Card interest and charges",
+    "negative": 279
+   },
+   "by_channel": {
+    "branch": 423,
+    "email": 386,
+    "inbound_voice": 1800,
+    "outbound_voice": 233,
+    "whatsapp": 1213,
+    "ivr_bot": 379,
+    "chat": 568,
+    "social_inbox": 94
+   }
+  },
+  {
    "id": "current_accounts",
    "label": "Current accounts and app",
    "total": 15004,
@@ -214,102 +310,6 @@
     "ivr_bot": 404,
     "email": 451,
     "social_inbox": 137
-   }
-  },
-  {
-   "id": "cards",
-   "label": "Credit cards",
-   "total": 5096,
-   "closed": 4872,
-   "waiting_on_customer": 92,
-   "closed_or_responded": 5086,
-   "open": 132,
-   "open_too_long": 12,
-   "closed_or_responded_pct": 99.8,
-   "open_pct": 2.6,
-   "open_too_long_pct_of_open": 9.1,
-   "negative": 1546,
-   "high_impact": 11,
-   "deliverables": {
-    "measured": 4905,
-    "met": 4575,
-    "outside": 330,
-    "met_pct": 93.3,
-    "open_within": 120
-   },
-   "negative_weekly": [
-    {
-     "week": "2026-08-03",
-     "count": 109
-    },
-    {
-     "week": "2026-08-10",
-     "count": 89
-    },
-    {
-     "week": "2026-08-17",
-     "count": 102
-    },
-    {
-     "week": "2026-08-24",
-     "count": 92
-    },
-    {
-     "week": "2026-08-31",
-     "count": 107
-    },
-    {
-     "week": "2026-09-07",
-     "count": 113
-    },
-    {
-     "week": "2026-09-14",
-     "count": 116
-    },
-    {
-     "week": "2026-09-21",
-     "count": 85
-    },
-    {
-     "week": "2026-09-28",
-     "count": 105
-    },
-    {
-     "week": "2026-10-05",
-     "count": 98
-    },
-    {
-     "week": "2026-10-12",
-     "count": 121
-    },
-    {
-     "week": "2026-10-19",
-     "count": 103
-    },
-    {
-     "week": "2026-10-26",
-     "count": 106
-    },
-    {
-     "week": "2026-11-02",
-     "count": 105
-    }
-   ],
-   "negative_change_pct": -3.1,
-   "top_issue": {
-    "id": "card_fees_charges",
-    "label": "Card interest and charges",
-    "negative": 279
-   },
-   "by_channel": {
-    "branch": 423,
-    "email": 386,
-    "inbound_voice": 1800,
-    "outbound_voice": 233,
-    "whatsapp": 1213,
-    "ivr_bot": 379,
-    "chat": 568,
-    "social_inbox": 94
    }
   },
   {
@@ -1047,17 +1047,6 @@
    ],
    "products": [
     {
-     "product": "current_accounts",
-     "label": "Current accounts and app",
-     "total": 43,
-     "measured": 40,
-     "met": 39,
-     "outside": 1,
-     "met_pct": 97.5,
-     "open_within": 3,
-     "open_too_long": 0
-    },
-    {
      "product": "cards",
      "label": "Credit cards",
      "total": 16,
@@ -1066,6 +1055,17 @@
      "outside": 4,
      "met_pct": 75.0,
      "open_within": 0,
+     "open_too_long": 0
+    },
+    {
+     "product": "current_accounts",
+     "label": "Current accounts and app",
+     "total": 43,
+     "measured": 40,
+     "met": 39,
+     "outside": 1,
+     "met_pct": 97.5,
+     "open_within": 3,
      "open_too_long": 0
     },
     {
@@ -1100,17 +1100,6 @@
    ],
    "products": [
     {
-     "product": "payments_fraud",
-     "label": "Payments and fraud",
-     "total": 417,
-     "measured": 416,
-     "met": 383,
-     "outside": 33,
-     "met_pct": 92.1,
-     "open_within": 1,
-     "open_too_long": 1
-    },
-    {
      "product": "cards",
      "label": "Credit cards",
      "total": 513,
@@ -1120,6 +1109,17 @@
      "met_pct": 87.7,
      "open_within": 2,
      "open_too_long": 0
+    },
+    {
+     "product": "payments_fraud",
+     "label": "Payments and fraud",
+     "total": 417,
+     "measured": 416,
+     "met": 383,
+     "outside": 33,
+     "met_pct": 92.1,
+     "open_within": 1,
+     "open_too_long": 1
     }
    ]
   },
@@ -1204,6 +1204,17 @@
    ],
    "products": [
     {
+     "product": "cards",
+     "label": "Credit cards",
+     "total": 411,
+     "measured": 355,
+     "met": 350,
+     "outside": 5,
+     "met_pct": 98.6,
+     "open_within": 31,
+     "open_too_long": 2
+    },
+    {
      "product": "current_accounts",
      "label": "Current accounts and app",
      "total": 1009,
@@ -1224,17 +1235,6 @@
      "met_pct": 99.7,
      "open_within": 29,
      "open_too_long": 0
-    },
-    {
-     "product": "cards",
-     "label": "Credit cards",
-     "total": 411,
-     "measured": 355,
-     "met": 350,
-     "outside": 5,
-     "met_pct": 98.6,
-     "open_within": 31,
-     "open_too_long": 2
     },
     {
      "product": "savings",
@@ -1393,6 +1393,17 @@
    ],
    "products": [
     {
+     "product": "cards",
+     "label": "Credit cards",
+     "total": 1592,
+     "measured": 1565,
+     "met": 1433,
+     "outside": 132,
+     "met_pct": 91.6,
+     "open_within": 14,
+     "open_too_long": 3
+    },
+    {
      "product": "current_accounts",
      "label": "Current accounts and app",
      "total": 3597,
@@ -1413,17 +1424,6 @@
      "met_pct": 86.0,
      "open_within": 6,
      "open_too_long": 0
-    },
-    {
-     "product": "cards",
-     "label": "Credit cards",
-     "total": 1592,
-     "measured": 1565,
-     "met": 1433,
-     "outside": 132,
-     "met_pct": 91.6,
-     "open_within": 14,
-     "open_too_long": 3
     },
     {
      "product": "savings",
@@ -1550,6 +1550,17 @@
    "themes": [],
    "products": [
     {
+     "product": "cards",
+     "label": "Credit cards",
+     "total": 1333,
+     "measured": 1330,
+     "met": 1323,
+     "outside": 7,
+     "met_pct": 99.5,
+     "open_within": 8,
+     "open_too_long": 0
+    },
+    {
      "product": "current_accounts",
      "label": "Current accounts and app",
      "total": 10355,
@@ -1569,17 +1580,6 @@
      "outside": 0,
      "met_pct": 100.0,
      "open_within": 1,
-     "open_too_long": 0
-    },
-    {
-     "product": "cards",
-     "label": "Credit cards",
-     "total": 1333,
-     "measured": 1330,
-     "met": 1323,
-     "outside": 7,
-     "met_pct": 99.5,
-     "open_within": 8,
      "open_too_long": 0
     },
     {
@@ -3452,6 +3452,69 @@
  "qa": {
   "theme_mix": [
    {
+    "product": "cards",
+    "theme": "card_fees_charges",
+    "public_share": 18.1,
+    "internal_share": 18.1,
+    "within_20pct": true
+   },
+   {
+    "product": "cards",
+    "theme": "dispute_chargeback",
+    "public_share": 16.1,
+    "internal_share": 16.1,
+    "within_20pct": true
+   },
+   {
+    "product": "cards",
+    "theme": "card_application",
+    "public_share": 10.1,
+    "internal_share": 10.1,
+    "within_20pct": true
+   },
+   {
+    "product": "cards",
+    "theme": "card_limit",
+    "public_share": 10.1,
+    "internal_share": 10.1,
+    "within_20pct": true
+   },
+   {
+    "product": "cards",
+    "theme": "unauthorised_txn",
+    "public_share": 10.1,
+    "internal_share": 10.1,
+    "within_20pct": true
+   },
+   {
+    "product": "cards",
+    "theme": "rewards_value",
+    "public_share": 8.1,
+    "internal_share": 8.1,
+    "within_20pct": true
+   },
+   {
+    "product": "cards",
+    "theme": "card_dispatch",
+    "public_share": 8.1,
+    "internal_share": 8.1,
+    "within_20pct": true
+   },
+   {
+    "product": "cards",
+    "theme": "complaint_handling",
+    "public_share": 8.1,
+    "internal_share": 8.1,
+    "within_20pct": true
+   },
+   {
+    "product": "cards",
+    "theme": "reward_redemption",
+    "public_share": 6.0,
+    "internal_share": 6.1,
+    "within_20pct": true
+   },
+   {
     "product": "current_accounts",
     "theme": "fees_charges_bank",
     "public_share": 13.4,
@@ -3561,69 +3624,6 @@
     "theme": "phishing",
     "public_share": 5.7,
     "internal_share": 5.7,
-    "within_20pct": true
-   },
-   {
-    "product": "cards",
-    "theme": "card_fees_charges",
-    "public_share": 18.1,
-    "internal_share": 18.1,
-    "within_20pct": true
-   },
-   {
-    "product": "cards",
-    "theme": "dispute_chargeback",
-    "public_share": 16.1,
-    "internal_share": 16.1,
-    "within_20pct": true
-   },
-   {
-    "product": "cards",
-    "theme": "card_application",
-    "public_share": 10.1,
-    "internal_share": 10.1,
-    "within_20pct": true
-   },
-   {
-    "product": "cards",
-    "theme": "card_limit",
-    "public_share": 10.1,
-    "internal_share": 10.1,
-    "within_20pct": true
-   },
-   {
-    "product": "cards",
-    "theme": "unauthorised_txn",
-    "public_share": 10.1,
-    "internal_share": 10.1,
-    "within_20pct": true
-   },
-   {
-    "product": "cards",
-    "theme": "rewards_value",
-    "public_share": 8.1,
-    "internal_share": 8.1,
-    "within_20pct": true
-   },
-   {
-    "product": "cards",
-    "theme": "card_dispatch",
-    "public_share": 8.1,
-    "internal_share": 8.1,
-    "within_20pct": true
-   },
-   {
-    "product": "cards",
-    "theme": "complaint_handling",
-    "public_share": 8.1,
-    "internal_share": 8.1,
-    "within_20pct": true
-   },
-   {
-    "product": "cards",
-    "theme": "reward_redemption",
-    "public_share": 6.0,
-    "internal_share": 6.1,
     "within_20pct": true
    },
    {

@@ -110,6 +110,9 @@ HOLD_P = {
 }
 # Hand-set theme mixes, every product: the NatWest public pull is not loaded (NW-D04), so no product's mix can follow
 # public voice. Logged in the QA block as the disclosed substitute. Assumption until discovery.
+# The order the generator draws products in (NW-D95): fixed, independent of the display order, so moving a card on
+# screen never redraws the synthetic contacts.
+SEED_ORDER = ["current_accounts", "payments_fraud", "cards", "savings", "mortgages", "personal_loans"]
 HAND_MIX = {
     "cards": {"card_fees_charges": 18, "dispute_chargeback": 16, "card_application": 10, "card_limit": 10,
               "unauthorised_txn": 10, "rewards_value": 8, "card_dispatch": 8, "complaint_handling": 8,
@@ -200,7 +203,7 @@ def build_customers():
     rm_pool = ["Premier banking manager"] * 120  # a role, never an id
     for i in range(N_CUSTOMERS):
         seg = pick(dict(SEGMENTS))
-        held = [p for p in PRODUCT_IDS if rng.random() < HOLD_P[p]]
+        held = [p for p in SEED_ORDER if rng.random() < HOLD_P[p]]
         if "current_accounts" not in held:
             held.append("current_accounts")
         cohorts = []
@@ -211,7 +214,7 @@ def build_customers():
                 "masked_id": masked(1000 + i * 1 + (i * 7919) % 8000 if False else 1000 + i),
                 "segment": seg,
                 "cohorts": cohorts,
-                "products": sorted(held, key=PRODUCT_IDS.index),
+                "products": sorted(held, key=SEED_ORDER.index),
                 "rm_id": rng.choice(rm_pool) if seg.startswith("Premier") else None,
                 "proxy_contacts": 0,
                 "cohort_added_at": None,
@@ -651,7 +654,7 @@ def aggregates(customers, inter, bot_calls, emails, themes, products_pub):
         "pairs": [
             {"pair": f"{PRODUCT_LABEL[a]} + {PRODUCT_LABEL[b]}", "customers": n}
             for (a, b), n in collections.Counter(
-                tuple(sorted({r["product"] for r in rs if r["sentiment"] == "negative"}, key=PRODUCT_IDS.index)[:2])
+                tuple(sorted({r["product"] for r in rs if r["sentiment"] == "negative"}, key=SEED_ORDER.index)[:2])
                 for rs in multi_neg.values()
             ).most_common(5)
         ],
