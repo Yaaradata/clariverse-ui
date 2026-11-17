@@ -60,7 +60,7 @@ def spread(items):
             else:
                 status, hours = "no_action", None
         handled_at = None if hours is None else (created + dt.timedelta(hours=hours)).isoformat()
-        out.append({"id": "SI-" + hashlib.sha1(key.encode()).hexdigest()[:10], "kind": kind, "ref": ref, "source": source,
+        out.append({"id": "SI-" + P.inbox_ref(key)[:10], "kind": kind, "ref": ref, "source": source,
                     "created_at": created.isoformat(), "w": w, "status": status, "handled_at": handled_at,
                     "handling_hours": hours})
     return out
@@ -72,11 +72,11 @@ def main():
     inter, customers, _notes = P.load_internal()
     listed = {m for m, c in customers.items() if any(k in c["cohorts"] for k in P.PULSE_LISTS)}
     ment = sorted((r for r in inter if r["_ch"] == "social" and r["masked_id"] in listed), key=lambda r: (r["_c"], r["id"]))
-    recs = spread([(f"pub:{r['id']}", r["_c"], 1, None, "high_impact", r["id"], r["source"]) for r in reach])
+    recs = spread([(f"pub:{r['id']}", r["_c"], 1, None, "high_impact", P.inbox_ref(r["id"]), r["source"]) for r in reach])
     # A mention the bank already replied to in public is "replied in thread"; the rest are spread to the 65% target.
     recs += spread([(f"ment:{r['id']}", r["_c"], r["w"], "replied_in_thread" if r.get("mention_replied") else None,
-                     "mention", r["id"], "social_inbox") for r in ment])
-    P.dump({"provenance": "internal", "note": "Synthetic social-inbox handling (NW-D100), internal · illustrative.",
+                     "mention", P.inbox_ref(r["id"]), "social_inbox") for r in ment])
+    P.dump({"provenance": "internal", "note": "Synthetic social-inbox handling, internal · illustrative.",
             "statuses": list(STATUSES), "within_24h_target": WITHIN_24H, "records": recs}, OUT, indent=None)
     for kind in ("high_impact", "mention"):
         rs = [r for r in recs if r["kind"] == kind]

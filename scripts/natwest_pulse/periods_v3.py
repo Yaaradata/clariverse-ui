@@ -350,7 +350,8 @@ def customer_pulse(inter, customers, notes, w) -> dict:
             "unanswered_series": [{"end": e.isoformat(), "count": sum(r["w"] for r in all_ment if in_win(r, s, e) and not replied(r))}
                                   for s, e in w["series"]],
             "response_pct": pct(responded, wn(ment), 0),
-            "handled": handled_block([inbox()[("mention", r["id"])] for r in ment if ("mention", r["id"]) in inbox()]),
+            "handled": handled_block([inbox()[("mention", inbox_ref(r["id"]))] for r in ment
+                                       if ("mention", inbox_ref(r["id"])) in inbox()]),
             "by_list": by_list,
             "rule": "A post counts only when the bank's own verified handles or contact records link it to a customer on the bank's lists; LisN never matches people from public data.",
         },
@@ -523,6 +524,15 @@ def redact_reply(text: str) -> str:
 _INBOX: dict = {}
 
 
+def inbox_ref(record_id: str) -> str:
+    """The inbox record points at its post by a short hash, never the raw post or contact id (a long number)."""
+    # Letters only, so no run of digits in it reads as a phone or account number (check_pii).
+    return hashlib.sha1(f"inbox:{record_id}".encode()).hexdigest()[:12].translate(_LETTERS)
+
+
+_LETTERS = str.maketrans("0123456789", "ghijklmnop")
+
+
 def inbox() -> dict:
     if not _INBOX:
         path = SEED_V3 / "social_inbox.json"
@@ -605,8 +615,8 @@ def social_pulse(pub, w, W) -> dict:
         "high_impact_peak": peak,
         "high_impact_response_pct": pct(hi_resp, len(hi), 0),
         # NW-D100: X and Reddit posts with reach, handled in the internal social inbox (internal · illustrative).
-        "high_impact_handled": handled_block([inbox()[("high_impact", r["id"])] for r in hi
-                                              if ("high_impact", r["id"]) in inbox()]),
+        "high_impact_handled": handled_block([inbox()[("high_impact", inbox_ref(r["id"]))] for r in hi
+                                              if ("high_impact", inbox_ref(r["id"])) in inbox()]),
         "posts": posts,
         "good_response": good,
         "rule": "High impact (virality rule): an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Trending posts are ranked by likes, replies and reposts (upvotes and helpful votes on Reddit and the stores).",

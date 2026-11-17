@@ -85,6 +85,9 @@ CX_RE = re.compile(r"card|account|app|customer|service|branch|loan|mortgage|char
 STOCK_RE = re.compile(r"share\s*price|\bnwg\b|\bftse\b|dividend|buyback|results|analysts?|stake", re.I)
 
 REDACT = [
+    # Wallet addresses and long hashes (a 0x… address, or 16+ hex characters with letters and digits) become "[number]".
+    (re.compile(r"\b0x[0-9a-fA-F]{6,}\w*"), "[number]"),
+    (re.compile(r"\b(?=[0-9a-f]*\d)(?=[0-9a-f]*[a-f])[0-9a-f]{16,}\b"), "[number]"),
     # Links inside post text (HL-02, NW-D84): a markdown link keeps its words; any bare link becomes "[link]".
     (re.compile(r"\[([^\]]{1,80})\]\((?:https?://|www\.)[^)\s]*\)"), r"\1"),
     (re.compile(r"(?:https?://|www\.)\S+", re.I), "[link]"),

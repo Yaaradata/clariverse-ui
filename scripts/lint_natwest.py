@@ -250,7 +250,7 @@ def customer_quotes() -> list[str]:
     out = set()
     for e in json.loads(ev.read_text(encoding="utf-8")).values():
         for k in ("summary", "title", "redacted_text"):
-            v = (e.get(k) or "").strip()
+            v = " ".join((e.get(k) or "").split())  # pages collapse the quote's line breaks
             if len(v) >= 15:
                 out.add(v)
                 out.add(v[:120])  # pages often show the opening of a long quote
@@ -298,8 +298,13 @@ def run() -> tuple[list[str], int]:
     if crawl.exists():
         pages = json.loads(crawl.read_text(encoding="utf-8"))
         CRAWLED_ROUTES = len(pages)
+        quote_text = "\n".join(quotes)
         for page in pages:
             for line in page["text"].splitlines():
+                line = " ".join(line.split())
+                # A quote arrives in pieces when the page wraps it; a piece of a customer quote is exempt too.
+                if len(line) >= 30 and line in quote_text:
+                    continue
                 line = without_quotes(line, quotes)
                 if line.strip():
                     hits += text_rules(line, f"route {page['route']}", allow_peer_names=page["route"].split("?")[0].endswith("/market"))

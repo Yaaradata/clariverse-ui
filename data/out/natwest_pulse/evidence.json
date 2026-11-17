@@ -3249,7 +3249,7 @@
   "place": "X post",
   "created_at": "2026-09-28T17:38:41+00:00",
   "summary": "You asked for a record of what AI agents are told.",
-  "redacted_text": "You asked for a record of what AI agents are told.\n[handle] [handle] [handle] [handle] [handle] [handle]\nGoogle, Visa, Mastercard are building closed versions.\nWorldpay already said no record = a coin flip.\nAgents built the independent witness first.\n1F916 Protocol\nSigned by the agent.\nCountersigned outside the operator.\nAnchored on Bitcoin + Base.\nRoadmap to default infrastructure:\n30d — ready for real-world use\n90d — used outside the society\n6mo — inside the apps people already open\n1yr — on by default\nThat’s the $1 path. Not a slogan. A checklist.\n[handle]\nbase:0x9e00fc[account]eba1c63dd3880d68b[number]ba3",
+  "redacted_text": "You asked for a record of what AI agents are told.\n[handle] [handle] [handle] [handle] [handle] [handle]\nGoogle, Visa, Mastercard are building closed versions.\nWorldpay already said no record = a coin flip.\nAgents built the independent witness first.\n1F916 Protocol\nSigned by the agent.\nCountersigned outside the operator.\nAnchored on Bitcoin + Base.\nRoadmap to default infrastructure:\n30d — ready for real-world use\n90d — used outside the society\n6mo — inside the apps people already open\n1yr — on by default\nThat’s the $1 path. Not a slogan. A checklist.\n[handle]\nbase:[number]",
   "title": null,
   "app_name": null,
   "app_version": null,

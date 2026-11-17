@@ -32,9 +32,10 @@
   "theme": "dark",
   "route": "/natwest-pulse",
   "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\""
+   "\"▼ −7%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"Credit card eligibility \""
   ],
-  "overlapCount": 1,
+  "overlapCount": 2,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -42,7 +43,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
+   "2 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"Credit card eligibility \""
   ]
  },
  {
@@ -50,9 +51,10 @@
   "theme": "dark",
   "route": "/natwest-pulse/v1",
   "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\""
+   "\"▼ −7%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"Credit card eligibility \""
   ],
-  "overlapCount": 1,
+  "overlapCount": 2,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -60,7 +62,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
+   "2 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"Credit card eligibility \""
   ]
  },
  {
@@ -68,9 +70,10 @@
   "theme": "dark",
   "route": "/natwest-pulse/v1/mds-office",
   "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\""
+   "\"▼ −7%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"Credit card eligibility \""
   ],
-  "overlapCount": 1,
+  "overlapCount": 2,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -78,7 +81,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
+   "2 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"Credit card eligibility \""
   ]
  },
  {
@@ -86,9 +89,10 @@
   "theme": "dark",
   "route": "/natwest-pulse/v1/head-cx",
   "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\""
+   "\"▼ −7%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"Credit card eligibility \""
   ],
-  "overlapCount": 1,
+  "overlapCount": 2,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -96,7 +100,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
+   "2 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"Credit card eligibility \""
   ]
  },
  {
@@ -118,16 +122,16 @@
   "theme": "dark",
   "route": "/natwest-pulse/v1/market",
   "overlaps": [
-   "\"Card offers and deals\" x \"Public · live\"",
+   "\"Statements and documents\" x \"Public · live\"",
+   "\"Operations · 90% negativ\" x \"App features and usabili\"",
    "\"Credit cards product own\" x \"Branch service\"",
-   "\"Credit cards product own\" x \"App login and biometrics\"",
-   "\"Operations · — negative\" x \"Could not get through\"",
-   "\"30\" x \"143\"",
-   "\"Digital and Cora · — neg\" x \"App outages, speed and c\"",
-   "\"22\" x \"103\"",
-   "\"Fraud operations · — neg\" x \"Card machines and mercha\"",
-   "\"15\" x \"Card machines and mercha\"",
-   "\"15\" x \"81\""
+   "\"Current accounts product\" x \"App login and biometrics\"",
+   "\"21\" x \"148\"",
+   "\"Payments operations · 10\" x \"Could not get through\"",
+   "\"16\" x \"136\"",
+   "\"Fraud operations · 100% \" x \"App outages, speed and c\"",
+   "\"9\" x \"101\"",
+   "\"Complaints lead · 100% n\" x \"New app and update exper\""
   ],
   "overlapCount": 21,
   "pageOverflow": 0,
@@ -137,7 +141,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "21 overlapping text: \"Card offers and deals\" x \"Public · live\"; \"Credit cards product own\" x \"Branch service\"; \"Credit cards product own\" x \"App login and biometrics\""
+   "21 overlapping text: \"Statements and documents\" x \"Public · live\"; \"Operations · 90% negativ\" x \"App features and usabili\"; \"Credit cards product own\" x \"Branch service\""
   ]
  },
  {
@@ -241,6 +245,20 @@
  {
   "size": "390",
   "theme": "dark",
+  "route": "/natwest-pulse/v1/business/cards",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 0,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "390",
+  "theme": "dark",
   "route": "/natwest-pulse/v1/business/current_accounts",
   "overlaps": [],
   "overlapCount": 0,
@@ -256,20 +274,6 @@
   "size": "390",
   "theme": "dark",
   "route": "/natwest-pulse/v1/business/payments_fraud",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 0,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "390",
-  "theme": "dark",
-  "route": "/natwest-pulse/v1/business/cards",
   "overlaps": [],
   "overlapCount": 0,
   "pageOverflow": 0,
@@ -328,17 +332,17 @@
   "route": "/natwest-pulse/v1/business/cards/happy",
   "overlaps": [
    "\"284 internal repeats of \" x \"Public · live\"",
-   "\"33 internal repeats of 5\" x \"−39\"",
-   "\"33\" x \"Net sentiment\"",
-   "\"Other\" x \"−39\"",
-   "\"Other\" x \"33 public items about cr\"",
-   "\"20\" x \"33 public items about cr\"",
+   "\"33 internal repeats of 5\" x \"Net sentiment\"",
+   "\"Other\" x \"−80\"",
+   "\"20 internal repeats of 2\" x \"14 public items about cr\"",
+   "\"20\" x \"−80\"",
+   "\"20\" x \"14 public items about cr\"",
    "\"Rewards and redemption\" x \"Change\"",
-   "\"Rewards and redemption\" x \"−16 pts\"",
-   "\"7 internal repeats of 8,\" x \"−16 pts\"",
-   "\"7 internal repeats of 8,\" x \"vs previous period\""
+   "\"7 internal repeats of 8,\" x \"−80 pts\"",
+   "\"7\" x \"Change\"",
+   "\"Eligibility and card cha\" x \"vs previous period\""
   ],
-  "overlapCount": 21,
+  "overlapCount": 19,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -346,7 +350,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "21 overlapping text: \"284 internal repeats of \" x \"Public · live\"; \"33 internal repeats of 5\" x \"−39\"; \"33\" x \"Net sentiment\""
+   "19 overlapping text: \"284 internal repeats of \" x \"Public · live\"; \"33 internal repeats of 5\" x \"Net sentiment\"; \"Other\" x \"−80\""
   ]
  },
  {
@@ -411,14 +415,9 @@
   "route": "/natwest-pulse/v1/mds-office?period=brief",
   "overlaps": [
    "\"▼ −2%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"Faster Payments or Open \"",
-   "\"Faster Payments or Open \" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"Complaints closed withou\"",
-   "\"Complaints closed withou\" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Account charges and fees\" x \"(internal; thin public v\""
+   "\"Top issue:\" x \"Credit card eligibility \""
   ],
-  "overlapCount": 7,
+  "overlapCount": 2,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -426,7 +425,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "7 overlapping text: \"▼ −2%\" x \"open backlog vs previous\"; \"Top issue:\" x \"Faster Payments or Open \"; \"Faster Payments or Open \" x \"(internal; thin public v\""
+   "2 overlapping text: \"▼ −2%\" x \"open backlog vs previous\"; \"Top issue:\" x \"Credit card eligibility \""
   ]
  },
  {
@@ -434,9 +433,10 @@
   "theme": "dark",
   "route": "/natwest-pulse/v1/mds-office?period=30d",
   "overlaps": [
-   "\"▼ −0%\" x \"open backlog vs previous\""
+   "\"▼ −0%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"Credit card eligibility \""
   ],
-  "overlapCount": 1,
+  "overlapCount": 2,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -444,7 +444,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "1 overlapping text: \"▼ −0%\" x \"open backlog vs previous\""
+   "2 overlapping text: \"▼ −0%\" x \"open backlog vs previous\"; \"Top issue:\" x \"Credit card eligibility \""
   ]
  },
  {
@@ -452,28 +452,21 @@
   "theme": "dark",
   "route": "/natwest-pulse/v1/mds-office?period=all",
   "overlaps": [
-   "\"1,780,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\"",
-   "\"43,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\"",
-   "\"750,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\"",
-   "\"757,900 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\""
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"Top issue:\" x \"Credit card eligibility \""
   ],
-  "overlapCount": 8,
-  "pageOverflow": 29,
-  "offscreen": [
-   "span \"no earlier period: the data starts on 1 August\" right=419"
-  ],
-  "offscreenCount": 8,
+  "overlapCount": 5,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
   "clipped": [],
   "rails": 0,
   "ask": 0,
   "problems": [
-   "page scrolls sideways by 29px",
-   "8 element(s) off-screen",
-   "8 overlapping text: \"1,780,000 customers\" x \"open backlog, no earlier\"; \"open backlog, no earlier\" x \"no earlier period: the d\"; \"43,000 customers\" x \"open backlog, no earlier\""
+   "5 overlapping text: \"no earlier period\" x \"no earlier period\"; \"no earlier period\" x \"no earlier period\"; \"no earlier period\" x \"no earlier period\""
   ]
  },
  {
@@ -509,9 +502,10 @@
   "theme": "light",
   "route": "/natwest-pulse",
   "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\""
+   "\"▼ −7%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"Credit card eligibility \""
   ],
-  "overlapCount": 1,
+  "overlapCount": 2,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -519,7 +513,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
+   "2 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"Credit card eligibility \""
   ]
  },
  {
@@ -527,9 +521,10 @@
   "theme": "light",
   "route": "/natwest-pulse/v1",
   "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\""
+   "\"▼ −7%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"Credit card eligibility \""
   ],
-  "overlapCount": 1,
+  "overlapCount": 2,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -537,7 +532,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
+   "2 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"Credit card eligibility \""
   ]
  },
  {
@@ -545,9 +540,10 @@
   "theme": "light",
   "route": "/natwest-pulse/v1/mds-office",
   "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\""
+   "\"▼ −7%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"Credit card eligibility \""
   ],
-  "overlapCount": 1,
+  "overlapCount": 2,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -555,7 +551,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
+   "2 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"Credit card eligibility \""
   ]
  },
  {
@@ -563,9 +559,10 @@
   "theme": "light",
   "route": "/natwest-pulse/v1/head-cx",
   "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\""
+   "\"▼ −7%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"Credit card eligibility \""
   ],
-  "overlapCount": 1,
+  "overlapCount": 2,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -573,7 +570,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
+   "2 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"Credit card eligibility \""
   ]
  },
  {
@@ -595,16 +592,16 @@
   "theme": "light",
   "route": "/natwest-pulse/v1/market",
   "overlaps": [
-   "\"Card offers and deals\" x \"Public · live\"",
+   "\"Statements and documents\" x \"Public · live\"",
+   "\"Operations · 90% negativ\" x \"App features and usabili\"",
    "\"Credit cards product own\" x \"Branch service\"",
-   "\"Credit cards product own\" x \"App login and biometrics\"",
-   "\"Operations · — negative\" x \"Could not get through\"",
-   "\"30\" x \"143\"",
-   "\"Digital and Cora · — neg\" x \"App outages, speed and c\"",
-   "\"22\" x \"103\"",
-   "\"Fraud operations · — neg\" x \"Card machines and mercha\"",
-   "\"15\" x \"Card machines and mercha\"",
-   "\"15\" x \"81\""
+   "\"Current accounts product\" x \"App login and biometrics\"",
+   "\"21\" x \"148\"",
+   "\"Payments operations · 10\" x \"Could not get through\"",
+   "\"16\" x \"136\"",
+   "\"Fraud operations · 100% \" x \"App outages, speed and c\"",
+   "\"9\" x \"101\"",
+   "\"Complaints lead · 100% n\" x \"New app and update exper\""
   ],
   "overlapCount": 21,
   "pageOverflow": 0,
@@ -614,7 +611,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "21 overlapping text: \"Card offers and deals\" x \"Public · live\"; \"Credit cards product own\" x \"Branch service\"; \"Credit cards product own\" x \"App login and biometrics\""
+   "21 overlapping text: \"Statements and documents\" x \"Public · live\"; \"Operations · 90% negativ\" x \"App features and usabili\"; \"Credit cards product own\" x \"Branch service\""
   ]
  },
  {
@@ -718,6 +715,20 @@
  {
   "size": "390",
   "theme": "light",
+  "route": "/natwest-pulse/v1/business/cards",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 0,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "390",
+  "theme": "light",
   "route": "/natwest-pulse/v1/business/current_accounts",
   "overlaps": [],
   "overlapCount": 0,
@@ -733,20 +744,6 @@
   "size": "390",
   "theme": "light",
   "route": "/natwest-pulse/v1/business/payments_fraud",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 0,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "390",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/business/cards",
   "overlaps": [],
   "overlapCount": 0,
   "pageOverflow": 0,
@@ -805,17 +802,17 @@
   "route": "/natwest-pulse/v1/business/cards/happy",
   "overlaps": [
    "\"284 internal repeats of \" x \"Public · live\"",
-   "\"33 internal repeats of 5\" x \"−39\"",
-   "\"33\" x \"Net sentiment\"",
-   "\"Other\" x \"−39\"",
-   "\"Other\" x \"33 public items about cr\"",
-   "\"20\" x \"33 public items about cr\"",
+   "\"33 internal repeats of 5\" x \"Net sentiment\"",
+   "\"Other\" x \"−80\"",
+   "\"20 internal repeats of 2\" x \"14 public items about cr\"",
+   "\"20\" x \"−80\"",
+   "\"20\" x \"14 public items about cr\"",
    "\"Rewards and redemption\" x \"Change\"",
-   "\"Rewards and redemption\" x \"−16 pts\"",
-   "\"7 internal repeats of 8,\" x \"−16 pts\"",
-   "\"7 internal repeats of 8,\" x \"vs previous period\""
+   "\"7 internal repeats of 8,\" x \"−80 pts\"",
+   "\"7\" x \"Change\"",
+   "\"Eligibility and card cha\" x \"vs previous period\""
   ],
-  "overlapCount": 21,
+  "overlapCount": 19,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -823,7 +820,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "21 overlapping text: \"284 internal repeats of \" x \"Public · live\"; \"33 internal repeats of 5\" x \"−39\"; \"33\" x \"Net sentiment\""
+   "19 overlapping text: \"284 internal repeats of \" x \"Public · live\"; \"33 internal repeats of 5\" x \"Net sentiment\"; \"Other\" x \"−80\""
   ]
  },
  {
@@ -888,14 +885,9 @@
   "route": "/natwest-pulse/v1/mds-office?period=brief",
   "overlaps": [
    "\"▼ −2%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"Faster Payments or Open \"",
-   "\"Faster Payments or Open \" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"Complaints closed withou\"",
-   "\"Complaints closed withou\" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Account charges and fees\" x \"(internal; thin public v\""
+   "\"Top issue:\" x \"Credit card eligibility \""
   ],
-  "overlapCount": 7,
+  "overlapCount": 2,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -903,7 +895,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "7 overlapping text: \"▼ −2%\" x \"open backlog vs previous\"; \"Top issue:\" x \"Faster Payments or Open \"; \"Faster Payments or Open \" x \"(internal; thin public v\""
+   "2 overlapping text: \"▼ −2%\" x \"open backlog vs previous\"; \"Top issue:\" x \"Credit card eligibility \""
   ]
  },
  {
@@ -911,9 +903,10 @@
   "theme": "light",
   "route": "/natwest-pulse/v1/mds-office?period=30d",
   "overlaps": [
-   "\"▼ −0%\" x \"open backlog vs previous\""
+   "\"▼ −0%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"Credit card eligibility \""
   ],
-  "overlapCount": 1,
+  "overlapCount": 2,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -921,7 +914,7 @@
   "rails": 0,
   "ask": 0,
   "problems": [
-   "1 overlapping text: \"▼ −0%\" x \"open backlog vs previous\""
+   "2 overlapping text: \"▼ −0%\" x \"open backlog vs previous\"; \"Top issue:\" x \"Credit card eligibility \""
   ]
  },
  {
@@ -929,33 +922,508 @@
   "theme": "light",
   "route": "/natwest-pulse/v1/mds-office?period=all",
   "overlaps": [
-   "\"1,780,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\"",
-   "\"43,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\"",
-   "\"750,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\"",
-   "\"757,900 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\""
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"Top issue:\" x \"Credit card eligibility \""
+  ],
+  "overlapCount": 5,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 0,
+  "ask": 0,
+  "problems": [
+   "5 overlapping text: \"no earlier period\" x \"no earlier period\"; \"no earlier period\" x \"no earlier period\"; \"no earlier period\" x \"no earlier period\""
+  ]
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/role-based",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 0,
+  "ask": null,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/role-based/natwest_bank",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 0,
+  "ask": null,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse",
+  "overlaps": [
+   "\"▼ −7%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"(internal; thin public v\"",
+   "\"Collections and arrears \" x \"(internal; thin public v\""
+  ],
+  "overlapCount": 3,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": [
+   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Collections and arrears \" x \"(internal; thin public v\""
+  ]
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1",
+  "overlaps": [
+   "\"▼ −7%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"(internal; thin public v\"",
+   "\"Collections and arrears \" x \"(internal; thin public v\""
+  ],
+  "overlapCount": 3,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": [
+   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Collections and arrears \" x \"(internal; thin public v\""
+  ]
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/mds-office",
+  "overlaps": [
+   "\"▼ −7%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"(internal; thin public v\"",
+   "\"Collections and arrears \" x \"(internal; thin public v\""
+  ],
+  "overlapCount": 3,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": [
+   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Collections and arrears \" x \"(internal; thin public v\""
+  ]
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/head-cx",
+  "overlaps": [
+   "\"▼ −7%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"(internal; thin public v\"",
+   "\"Collections and arrears \" x \"(internal; thin public v\""
+  ],
+  "overlapCount": 3,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": [
+   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Collections and arrears \" x \"(internal; thin public v\""
+  ]
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/satisfaction",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/market",
+  "overlaps": [
+   "\"Account and card closure\" x \"Public · live\"",
+   "\"Operations · 80% negativ\" x \"190\"",
+   "\"Operations · 80% negativ\" x \"App login and biometrics\"",
+   "\"32\" x \"148\"",
+   "\"Fraud operations · 63% n\" x \"101\"",
+   "\"Fraud operations · 63% n\" x \"New app and update exper\"",
+   "\"23\" x \"44\"",
+   "\"Complaints closed withou\" x \"Dashed line: the theme's\"",
+   "\"18\" x \"Dashed line: the theme's\"",
+   "\"Payments operations · 10\" x \"Competitor view: availab\""
+  ],
+  "overlapCount": 15,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": [
+   "15 overlapping text: \"Account and card closure\" x \"Public · live\"; \"Operations · 80% negativ\" x \"190\"; \"Operations · 80% negativ\" x \"App login and biometrics\""
+  ]
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/priority",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/action-queue",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/deliverables",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/service-promise",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/my-view",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/module/cards",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/module/cora_digital",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/business/cards",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/business/current_accounts",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/business/payments_fraud",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/business/savings",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/business/mortgages",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/business/personal_loans",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/business/cards/happy",
+  "overlaps": [
+   "\"Service and complaint ha\" x \"Public · live\"",
+   "\"Other\" x \"Negative share\"",
+   "\"20 internal repeats of 2\" x \"80%\"",
+   "\"20 internal repeats of 2\" x \"5\"",
+   "\"20\" x \"Sources\"",
+   "\"20\" x \"5\"",
+   "\"Rewards and redemption\" x \"source-weighted\"",
+   "\"Rewards and redemption\" x \"App Store, Google Play, \"",
+   "\"7 internal repeats of 8,\" x \"Negative\"",
+   "\"7 internal repeats of 8,\" x \"Net\""
+  ],
+  "overlapCount": 21,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": [
+   "21 overlapping text: \"Service and complaint ha\" x \"Public · live\"; \"Other\" x \"Negative share\"; \"20 internal repeats of 2\" x \"80%\""
+  ]
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/business/cards/market",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/business/cards/service",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/signal/complaint_handling",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/customer/XXXX4821",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/mds-office?period=brief",
+  "overlaps": [
+   "\"▼ −2%\" x \"open backlog vs previous\"",
+   "\"13%\" x \"(last 7 days: too few co\"",
+   "\"11%\" x \"(last 7 days: too few co\"",
+   "\"Top issue:\" x \"(internal; thin public v\"",
+   "\"Collections and arrears \" x \"(internal; thin public v\"",
+   "\"10%\" x \"(last 7 days: too few co\"",
+   "\"Top issue:\" x \"(internal; thin public v\"",
+   "\"Loan and mortgage applic\" x \"(internal; thin public v\""
   ],
   "overlapCount": 8,
-  "pageOverflow": 29,
-  "offscreen": [
-   "span \"no earlier period: the data starts on 1 August\" right=419"
-  ],
-  "offscreenCount": 8,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
   "clipped": [],
-  "rails": 0,
+  "rails": 1,
   "ask": 0,
   "problems": [
-   "page scrolls sideways by 29px",
-   "8 element(s) off-screen",
-   "8 overlapping text: \"1,780,000 customers\" x \"open backlog, no earlier\"; \"open backlog, no earlier\" x \"no earlier period: the d\"; \"43,000 customers\" x \"open backlog, no earlier\""
+   "8 overlapping text: \"▼ −2%\" x \"open backlog vs previous\"; \"13%\" x \"(last 7 days: too few co\"; \"11%\" x \"(last 7 days: too few co\""
   ]
  },
  {
   "size": "1440",
   "theme": "dark",
+  "route": "/natwest-pulse/v1/mds-office?period=30d",
+  "overlaps": [
+   "\"▼ −0%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"(internal; thin public v\"",
+   "\"Loan and mortgage applic\" x \"(internal; thin public v\""
+  ],
+  "overlapCount": 3,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": [
+   "3 overlapping text: \"▼ −0%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Loan and mortgage applic\" x \"(internal; thin public v\""
+  ]
+ },
+ {
+  "size": "1440",
+  "theme": "dark",
+  "route": "/natwest-pulse/v1/mds-office?period=all",
+  "overlaps": [
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"Top issue:\" x \"(internal; thin public v\"",
+   "\"Loan and mortgage applic\" x \"(internal; thin public v\""
+  ],
+  "overlapCount": 6,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": [
+   "6 overlapping text: \"no earlier period\" x \"no earlier period\"; \"no earlier period\" x \"no earlier period\"; \"no earlier period\" x \"no earlier period\""
+  ]
+ },
+ {
+  "size": "1440",
+  "theme": "light",
   "route": "/role-based",
   "overlaps": [],
   "overlapCount": 0,
@@ -969,7 +1437,7 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/role-based/natwest_bank",
   "overlaps": [],
   "overlapCount": 0,
@@ -983,16 +1451,14 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse",
   "overlaps": [
    "\"▼ −7%\" x \"open backlog vs previous\"",
    "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
    "\"Collections and arrears \" x \"(internal; thin public v\""
   ],
-  "overlapCount": 5,
+  "overlapCount": 3,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -1000,21 +1466,19 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "5 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
+   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Collections and arrears \" x \"(internal; thin public v\""
   ]
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1",
   "overlaps": [
    "\"▼ −7%\" x \"open backlog vs previous\"",
    "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
    "\"Collections and arrears \" x \"(internal; thin public v\""
   ],
-  "overlapCount": 5,
+  "overlapCount": 3,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -1022,21 +1486,19 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "5 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
+   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Collections and arrears \" x \"(internal; thin public v\""
   ]
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/mds-office",
   "overlaps": [
    "\"▼ −7%\" x \"open backlog vs previous\"",
    "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
    "\"Collections and arrears \" x \"(internal; thin public v\""
   ],
-  "overlapCount": 5,
+  "overlapCount": 3,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -1044,21 +1506,19 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "5 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
+   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Collections and arrears \" x \"(internal; thin public v\""
   ]
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/head-cx",
   "overlaps": [
    "\"▼ −7%\" x \"open backlog vs previous\"",
    "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
    "\"Collections and arrears \" x \"(internal; thin public v\""
   ],
-  "overlapCount": 5,
+  "overlapCount": 3,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -1066,12 +1526,12 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "5 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
+   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Collections and arrears \" x \"(internal; thin public v\""
   ]
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/satisfaction",
   "overlaps": [],
   "overlapCount": 0,
@@ -1085,21 +1545,21 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/market",
   "overlaps": [
-   "\"Credit card eligibility \" x \"Public · live\"",
-   "\"Operations · — negative\" x \"145\"",
-   "\"Operations · — negative\" x \"Could not get through\"",
-   "\"40\" x \"143\"",
-   "\"Complaints lead · — nega\" x \"Card machines and mercha\"",
-   "\"Complaints lead · — nega\" x \"81\"",
-   "\"Complaints lead · — nega\" x \"Account and card closure\"",
-   "\"32\" x \"66\"",
-   "\"Account opening and swit\" x \"Dashed line: the theme's\"",
-   "\"24\" x \"Dashed line: the theme's\""
+   "\"Account and card closure\" x \"Public · live\"",
+   "\"Operations · 80% negativ\" x \"190\"",
+   "\"Operations · 80% negativ\" x \"App login and biometrics\"",
+   "\"32\" x \"148\"",
+   "\"Fraud operations · 63% n\" x \"101\"",
+   "\"Fraud operations · 63% n\" x \"New app and update exper\"",
+   "\"23\" x \"44\"",
+   "\"Complaints closed withou\" x \"Dashed line: the theme's\"",
+   "\"18\" x \"Dashed line: the theme's\"",
+   "\"Payments operations · 10\" x \"Competitor view: availab\""
   ],
-  "overlapCount": 16,
+  "overlapCount": 15,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -1107,12 +1567,12 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "16 overlapping text: \"Credit card eligibility \" x \"Public · live\"; \"Operations · — negative\" x \"145\"; \"Operations · — negative\" x \"Could not get through\""
+   "15 overlapping text: \"Account and card closure\" x \"Public · live\"; \"Operations · 80% negativ\" x \"190\"; \"Operations · 80% negativ\" x \"App login and biometrics\""
   ]
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/priority",
   "overlaps": [],
   "overlapCount": 0,
@@ -1126,7 +1586,7 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/action-queue",
   "overlaps": [],
   "overlapCount": 0,
@@ -1140,7 +1600,7 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/deliverables",
   "overlaps": [],
   "overlapCount": 0,
@@ -1154,7 +1614,7 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/service-promise",
   "overlaps": [],
   "overlapCount": 0,
@@ -1168,7 +1628,7 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/my-view",
   "overlaps": [],
   "overlapCount": 0,
@@ -1182,7 +1642,7 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/module/cards",
   "overlaps": [],
   "overlapCount": 0,
@@ -1196,7 +1656,7 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/module/cora_digital",
   "overlaps": [],
   "overlapCount": 0,
@@ -1210,35 +1670,7 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
-  "route": "/natwest-pulse/v1/business/current_accounts",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "dark",
-  "route": "/natwest-pulse/v1/business/payments_fraud",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/business/cards",
   "overlaps": [],
   "overlapCount": 0,
@@ -1252,7 +1684,35 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
+  "route": "/natwest-pulse/v1/business/current_accounts",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "light",
+  "route": "/natwest-pulse/v1/business/payments_fraud",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1440",
+  "theme": "light",
   "route": "/natwest-pulse/v1/business/savings",
   "overlaps": [],
   "overlapCount": 0,
@@ -1266,7 +1726,7 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/business/mortgages",
   "overlaps": [],
   "overlapCount": 0,
@@ -1280,7 +1740,7 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/business/personal_loans",
   "overlaps": [],
   "overlapCount": 0,
@@ -1294,19 +1754,19 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/business/cards/happy",
   "overlaps": [
    "\"Service and complaint ha\" x \"Public · live\"",
    "\"Other\" x \"Negative share\"",
-   "\"20 internal repeats of 2\" x \"—\"",
+   "\"20 internal repeats of 2\" x \"80%\"",
    "\"20 internal repeats of 2\" x \"5\"",
    "\"20\" x \"Sources\"",
    "\"20\" x \"5\"",
    "\"Rewards and redemption\" x \"source-weighted\"",
    "\"Rewards and redemption\" x \"App Store, Google Play, \"",
-   "\"7 internal repeats of 8,\" x \"Net\"",
-   "\"7 internal repeats of 8,\" x \"Weight\""
+   "\"7 internal repeats of 8,\" x \"Negative\"",
+   "\"7 internal repeats of 8,\" x \"Net\""
   ],
   "overlapCount": 21,
   "pageOverflow": 0,
@@ -1316,12 +1776,12 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "21 overlapping text: \"Service and complaint ha\" x \"Public · live\"; \"Other\" x \"Negative share\"; \"20 internal repeats of 2\" x \"—\""
+   "21 overlapping text: \"Service and complaint ha\" x \"Public · live\"; \"Other\" x \"Negative share\"; \"20 internal repeats of 2\" x \"80%\""
   ]
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/business/cards/market",
   "overlaps": [],
   "overlapCount": 0,
@@ -1335,7 +1795,7 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/business/cards/service",
   "overlaps": [],
   "overlapCount": 0,
@@ -1349,7 +1809,7 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/signal/complaint_handling",
   "overlaps": [],
   "overlapCount": 0,
@@ -1363,7 +1823,7 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/customer/XXXX4821",
   "overlaps": [],
   "overlapCount": 0,
@@ -1377,21 +1837,19 @@
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/mds-office?period=brief",
   "overlaps": [
    "\"▼ −2%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Debit card and cash mach\" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Faster Payments or Open \" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Complaints closed withou\" x \"(internal; thin public v\"",
    "\"13%\" x \"(last 7 days: too few co\"",
+   "\"11%\" x \"(last 7 days: too few co\"",
    "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\""
+   "\"Collections and arrears \" x \"(internal; thin public v\"",
+   "\"10%\" x \"(last 7 days: too few co\"",
+   "\"Top issue:\" x \"(internal; thin public v\"",
+   "\"Loan and mortgage applic\" x \"(internal; thin public v\""
   ],
-  "overlapCount": 14,
+  "overlapCount": 8,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -1399,15 +1857,86 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "14 overlapping text: \"▼ −2%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Debit card and cash mach\" x \"(internal; thin public v\""
+   "8 overlapping text: \"▼ −2%\" x \"open backlog vs previous\"; \"13%\" x \"(last 7 days: too few co\"; \"11%\" x \"(last 7 days: too few co\""
   ]
  },
  {
   "size": "1440",
-  "theme": "dark",
+  "theme": "light",
   "route": "/natwest-pulse/v1/mds-office?period=30d",
   "overlaps": [
-   "\"▼ −0%\" x \"open backlog vs previous\""
+   "\"▼ −0%\" x \"open backlog vs previous\"",
+   "\"Top issue:\" x \"(internal; thin public v\"",
+   "\"Loan and mortgage applic\" x \"(internal; thin public v\""
+  ],
+  "overlapCount": 3,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": [
+   "3 overlapping text: \"▼ −0%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Loan and mortgage applic\" x \"(internal; thin public v\""
+  ]
+ },
+ {
+  "size": "1440",
+  "theme": "light",
+  "route": "/natwest-pulse/v1/mds-office?period=all",
+  "overlaps": [
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"Top issue:\" x \"(internal; thin public v\"",
+   "\"Loan and mortgage applic\" x \"(internal; thin public v\""
+  ],
+  "overlapCount": 6,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": [
+   "6 overlapping text: \"no earlier period\" x \"no earlier period\"; \"no earlier period\" x \"no earlier period\"; \"no earlier period\" x \"no earlier period\""
+  ]
+ },
+ {
+  "size": "1536x730@1.25",
+  "theme": "dark",
+  "route": "/role-based",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 0,
+  "ask": null,
+  "problems": []
+ },
+ {
+  "size": "1536x730@1.25",
+  "theme": "dark",
+  "route": "/role-based/natwest_bank",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 0,
+  "ask": null,
+  "problems": []
+ },
+ {
+  "size": "1536x730@1.25",
+  "theme": "dark",
+  "route": "/natwest-pulse",
+  "overlaps": [
+   "\"▼ −7%\" x \"open backlog vs previous\""
   ],
   "overlapCount": 1,
   "pageOverflow": 0,
@@ -1417,495 +1946,15 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "1 overlapping text: \"▼ −0%\" x \"open backlog vs previous\""
+   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
   ]
  },
  {
-  "size": "1440",
+  "size": "1536x730@1.25",
   "theme": "dark",
-  "route": "/natwest-pulse/v1/mds-office?period=all",
-  "overlaps": [
-   "\"1,780,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\"",
-   "\"open backlog, no earlier\" x \"43,000 customers\"",
-   "\"no earlier period: the d\" x \"43,000 customers\"",
-   "\"no earlier period: the d\" x \"open backlog, no earlier\"",
-   "\"43,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\"",
-   "\"open backlog, no earlier\" x \"750,000 customers\"",
-   "\"no earlier period: the d\" x \"750,000 customers\"",
-   "\"no earlier period: the d\" x \"open backlog, no earlier\""
-  ],
-  "overlapCount": 17,
-  "pageOverflow": 28,
-  "offscreen": [
-   "span \"no earlier period: the data starts on 1 August\" right=1468"
-  ],
-  "offscreenCount": 2,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": [
-   "page scrolls sideways by 28px",
-   "2 element(s) off-screen",
-   "17 overlapping text: \"1,780,000 customers\" x \"open backlog, no earlier\"; \"open backlog, no earlier\" x \"no earlier period: the d\"; \"open backlog, no earlier\" x \"43,000 customers\""
-  ]
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/role-based",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 0,
-  "ask": null,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/role-based/natwest_bank",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 0,
-  "ask": null,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse",
-  "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Collections and arrears \" x \"(internal; thin public v\""
-  ],
-  "overlapCount": 5,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": [
-   "5 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
-  ]
- },
- {
-  "size": "1440",
-  "theme": "light",
   "route": "/natwest-pulse/v1",
   "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Collections and arrears \" x \"(internal; thin public v\""
-  ],
-  "overlapCount": 5,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": [
-   "5 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
-  ]
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/mds-office",
-  "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Collections and arrears \" x \"(internal; thin public v\""
-  ],
-  "overlapCount": 5,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": [
-   "5 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
-  ]
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/head-cx",
-  "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Collections and arrears \" x \"(internal; thin public v\""
-  ],
-  "overlapCount": 5,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": [
-   "5 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
-  ]
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/satisfaction",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/market",
-  "overlaps": [
-   "\"Credit card eligibility \" x \"Public · live\"",
-   "\"Operations · — negative\" x \"145\"",
-   "\"Operations · — negative\" x \"Could not get through\"",
-   "\"40\" x \"143\"",
-   "\"Complaints lead · — nega\" x \"Card machines and mercha\"",
-   "\"Complaints lead · — nega\" x \"81\"",
-   "\"Complaints lead · — nega\" x \"Account and card closure\"",
-   "\"32\" x \"66\"",
-   "\"Account opening and swit\" x \"Dashed line: the theme's\"",
-   "\"24\" x \"Dashed line: the theme's\""
-  ],
-  "overlapCount": 16,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": [
-   "16 overlapping text: \"Credit card eligibility \" x \"Public · live\"; \"Operations · — negative\" x \"145\"; \"Operations · — negative\" x \"Could not get through\""
-  ]
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/priority",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/action-queue",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/deliverables",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/service-promise",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/my-view",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/module/cards",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/module/cora_digital",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/business/current_accounts",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/business/payments_fraud",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/business/cards",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/business/savings",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/business/mortgages",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/business/personal_loans",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/business/cards/happy",
-  "overlaps": [
-   "\"Service and complaint ha\" x \"Public · live\"",
-   "\"Other\" x \"Negative share\"",
-   "\"20 internal repeats of 2\" x \"—\"",
-   "\"20 internal repeats of 2\" x \"5\"",
-   "\"20\" x \"Sources\"",
-   "\"20\" x \"5\"",
-   "\"Rewards and redemption\" x \"source-weighted\"",
-   "\"Rewards and redemption\" x \"App Store, Google Play, \"",
-   "\"7 internal repeats of 8,\" x \"Net\"",
-   "\"7 internal repeats of 8,\" x \"Weight\""
-  ],
-  "overlapCount": 21,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": [
-   "21 overlapping text: \"Service and complaint ha\" x \"Public · live\"; \"Other\" x \"Negative share\"; \"20 internal repeats of 2\" x \"—\""
-  ]
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/business/cards/market",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/business/cards/service",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/signal/complaint_handling",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/customer/XXXX4821",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/mds-office?period=brief",
-  "overlaps": [
-   "\"▼ −2%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Debit card and cash mach\" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Faster Payments or Open \" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Complaints closed withou\" x \"(internal; thin public v\"",
-   "\"13%\" x \"(last 7 days: too few co\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\""
-  ],
-  "overlapCount": 14,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": [
-   "14 overlapping text: \"▼ −2%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Debit card and cash mach\" x \"(internal; thin public v\""
-  ]
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/mds-office?period=30d",
-  "overlaps": [
-   "\"▼ −0%\" x \"open backlog vs previous\""
+   "\"▼ −7%\" x \"open backlog vs previous\""
   ],
   "overlapCount": 1,
   "pageOverflow": 0,
@@ -1915,106 +1964,7 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "1 overlapping text: \"▼ −0%\" x \"open backlog vs previous\""
-  ]
- },
- {
-  "size": "1440",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/mds-office?period=all",
-  "overlaps": [
-   "\"1,780,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\"",
-   "\"open backlog, no earlier\" x \"43,000 customers\"",
-   "\"no earlier period: the d\" x \"43,000 customers\"",
-   "\"no earlier period: the d\" x \"open backlog, no earlier\"",
-   "\"43,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\"",
-   "\"open backlog, no earlier\" x \"750,000 customers\"",
-   "\"no earlier period: the d\" x \"750,000 customers\"",
-   "\"no earlier period: the d\" x \"open backlog, no earlier\""
-  ],
-  "overlapCount": 17,
-  "pageOverflow": 28,
-  "offscreen": [
-   "span \"no earlier period: the data starts on 1 August\" right=1468"
-  ],
-  "offscreenCount": 2,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": [
-   "page scrolls sideways by 28px",
-   "2 element(s) off-screen",
-   "17 overlapping text: \"1,780,000 customers\" x \"open backlog, no earlier\"; \"open backlog, no earlier\" x \"no earlier period: the d\"; \"open backlog, no earlier\" x \"43,000 customers\""
-  ]
- },
- {
-  "size": "1536x730@1.25",
-  "theme": "dark",
-  "route": "/role-based",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 0,
-  "ask": null,
-  "problems": []
- },
- {
-  "size": "1536x730@1.25",
-  "theme": "dark",
-  "route": "/role-based/natwest_bank",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 0,
-  "ask": null,
-  "problems": []
- },
- {
-  "size": "1536x730@1.25",
-  "theme": "dark",
-  "route": "/natwest-pulse",
-  "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\""
-  ],
-  "overlapCount": 3,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": [
-   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
-  ]
- },
- {
-  "size": "1536x730@1.25",
-  "theme": "dark",
-  "route": "/natwest-pulse/v1",
-  "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\""
-  ],
-  "overlapCount": 3,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": [
-   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
+   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
   ]
  },
  {
@@ -2022,11 +1972,9 @@
   "theme": "dark",
   "route": "/natwest-pulse/v1/mds-office",
   "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\""
+   "\"▼ −7%\" x \"open backlog vs previous\""
   ],
-  "overlapCount": 3,
+  "overlapCount": 1,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -2034,7 +1982,7 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
+   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
   ]
  },
  {
@@ -2042,11 +1990,9 @@
   "theme": "dark",
   "route": "/natwest-pulse/v1/head-cx",
   "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\""
+   "\"▼ −7%\" x \"open backlog vs previous\""
   ],
-  "overlapCount": 3,
+  "overlapCount": 1,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -2054,7 +2000,7 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
+   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
   ]
  },
  {
@@ -2076,18 +2022,18 @@
   "theme": "dark",
   "route": "/natwest-pulse/v1/market",
   "overlaps": [
-   "\"Credit cards product own\" x \"Public · live\"",
-   "\"Statements and documents\" x \"Public · live\"",
-   "\"Fraud block or account f\" x \"145\"",
-   "\"40\" x \"143\"",
-   "\"Fraud and scam contact\" x \"Card machines and mercha\"",
-   "\"Operations · — negative\" x \"Dashed line: the theme's\"",
-   "\"Current accounts product\" x \"Competitor view: availab\"",
-   "\"24\" x \"Competitor view: availab\"",
-   "\"Digital and Cora · — neg\" x \"Retail figures: NatWest \"",
-   "\"International payments\" x \"Retail figures: NatWest \""
+   "\"Operations · 70% negativ\" x \"Public · live\"",
+   "\"Praise for service\" x \"Public · live\"",
+   "\"33\" x \"148\"",
+   "\"Debit card and cash mach\" x \"101\"",
+   "\"Current accounts product\" x \"Dashed line: the theme's\"",
+   "\"Complaints lead · 100% n\" x \"Competitor view: availab\"",
+   "\"18\" x \"Competitor view: availab\"",
+   "\"Payments operations · 10\" x \"Retail figures: NatWest \"",
+   "\"Disputes and chargebacks\" x \"Retail figures: NatWest \"",
+   "\"Operations · 100% negati\" x \"Retail figures: NatWest \""
   ],
-  "overlapCount": 12,
+  "overlapCount": 11,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -2095,7 +2041,7 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "12 overlapping text: \"Credit cards product own\" x \"Public · live\"; \"Statements and documents\" x \"Public · live\"; \"Fraud block or account f\" x \"145\""
+   "11 overlapping text: \"Operations · 70% negativ\" x \"Public · live\"; \"Praise for service\" x \"Public · live\"; \"33\" x \"148\""
   ]
  },
  {
@@ -2199,6 +2145,20 @@
  {
   "size": "1536x730@1.25",
   "theme": "dark",
+  "route": "/natwest-pulse/v1/business/cards",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1536x730@1.25",
+  "theme": "dark",
   "route": "/natwest-pulse/v1/business/current_accounts",
   "overlaps": [],
   "overlapCount": 0,
@@ -2214,20 +2174,6 @@
   "size": "1536x730@1.25",
   "theme": "dark",
   "route": "/natwest-pulse/v1/business/payments_fraud",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1536x730@1.25",
-  "theme": "dark",
-  "route": "/natwest-pulse/v1/business/cards",
   "overlaps": [],
   "overlapCount": 0,
   "pageOverflow": 0,
@@ -2287,14 +2233,14 @@
   "overlaps": [
    "\"Service and complaint ha\" x \"Public · live\"",
    "\"Other\" x \"Negative share\"",
-   "\"20 internal repeats of 2\" x \"—\"",
+   "\"20 internal repeats of 2\" x \"80%\"",
    "\"20 internal repeats of 2\" x \"5\"",
    "\"20\" x \"Sources\"",
    "\"20\" x \"5\"",
    "\"Rewards and redemption\" x \"source-weighted\"",
    "\"Rewards and redemption\" x \"App Store, Google Play, \"",
-   "\"7 internal repeats of 8,\" x \"Net\"",
-   "\"7 internal repeats of 8,\" x \"Weight\""
+   "\"7 internal repeats of 8,\" x \"Negative\"",
+   "\"7 internal repeats of 8,\" x \"Net\""
   ],
   "overlapCount": 21,
   "pageOverflow": 0,
@@ -2304,7 +2250,7 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "21 overlapping text: \"Service and complaint ha\" x \"Public · live\"; \"Other\" x \"Negative share\"; \"20 internal repeats of 2\" x \"—\""
+   "21 overlapping text: \"Service and complaint ha\" x \"Public · live\"; \"Other\" x \"Negative share\"; \"20 internal repeats of 2\" x \"80%\""
   ]
  },
  {
@@ -2369,17 +2315,11 @@
   "route": "/natwest-pulse/v1/mds-office?period=brief",
   "overlaps": [
    "\"▼ −2%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Faster Payments or Open \" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Complaints closed withou\" x \"(internal; thin public v\"",
    "\"13%\" x \"(last 7 days: too few co\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\"",
    "\"11%\" x \"(last 7 days: too few co\"",
    "\"10%\" x \"(last 7 days: too few co\""
   ],
-  "overlapCount": 10,
+  "overlapCount": 4,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -2387,7 +2327,7 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "10 overlapping text: \"▼ −2%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Faster Payments or Open \" x \"(internal; thin public v\""
+   "4 overlapping text: \"▼ −2%\" x \"open backlog vs previous\"; \"13%\" x \"(last 7 days: too few co\"; \"11%\" x \"(last 7 days: too few co\""
   ]
  },
  {
@@ -2413,30 +2353,20 @@
   "theme": "dark",
   "route": "/natwest-pulse/v1/mds-office?period=all",
   "overlaps": [
-   "\"1,780,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\"",
-   "\"no earlier period: the d\" x \"43,000 customers\"",
-   "\"no earlier period: the d\" x \"open backlog, no earlier\"",
-   "\"43,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\"",
-   "\"no earlier period: the d\" x \"750,000 customers\"",
-   "\"no earlier period: the d\" x \"open backlog, no earlier\"",
-   "\"750,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\""
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\""
   ],
-  "overlapCount": 14,
-  "pageOverflow": 25,
-  "offscreen": [
-   "span \"no earlier period: the data starts on 1 August\" right=1561"
-  ],
-  "offscreenCount": 2,
+  "overlapCount": 4,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
   "clipped": [],
   "rails": 1,
   "ask": 0,
   "problems": [
-   "page scrolls sideways by 25px",
-   "2 element(s) off-screen",
-   "14 overlapping text: \"1,780,000 customers\" x \"open backlog, no earlier\"; \"open backlog, no earlier\" x \"no earlier period: the d\"; \"no earlier period: the d\" x \"43,000 customers\""
+   "4 overlapping text: \"no earlier period\" x \"no earlier period\"; \"no earlier period\" x \"no earlier period\"; \"no earlier period\" x \"no earlier period\""
   ]
  },
  {
@@ -2472,11 +2402,9 @@
   "theme": "light",
   "route": "/natwest-pulse",
   "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\""
+   "\"▼ −7%\" x \"open backlog vs previous\""
   ],
-  "overlapCount": 3,
+  "overlapCount": 1,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -2484,7 +2412,7 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
+   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
   ]
  },
  {
@@ -2492,11 +2420,9 @@
   "theme": "light",
   "route": "/natwest-pulse/v1",
   "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\""
+   "\"▼ −7%\" x \"open backlog vs previous\""
   ],
-  "overlapCount": 3,
+  "overlapCount": 1,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -2504,7 +2430,7 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
+   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
   ]
  },
  {
@@ -2512,11 +2438,9 @@
   "theme": "light",
   "route": "/natwest-pulse/v1/mds-office",
   "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\""
+   "\"▼ −7%\" x \"open backlog vs previous\""
   ],
-  "overlapCount": 3,
+  "overlapCount": 1,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -2524,7 +2448,7 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
+   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
   ]
  },
  {
@@ -2532,11 +2456,9 @@
   "theme": "light",
   "route": "/natwest-pulse/v1/head-cx",
   "overlaps": [
-   "\"▼ −7%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\""
+   "\"▼ −7%\" x \"open backlog vs previous\""
   ],
-  "overlapCount": 3,
+  "overlapCount": 1,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -2544,7 +2466,7 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "3 overlapping text: \"▼ −7%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Identity checks and prof\" x \"(internal; thin public v\""
+   "1 overlapping text: \"▼ −7%\" x \"open backlog vs previous\""
   ]
  },
  {
@@ -2566,18 +2488,18 @@
   "theme": "light",
   "route": "/natwest-pulse/v1/market",
   "overlaps": [
-   "\"Credit cards product own\" x \"Public · live\"",
-   "\"Statements and documents\" x \"Public · live\"",
-   "\"Fraud block or account f\" x \"145\"",
-   "\"40\" x \"143\"",
-   "\"Fraud and scam contact\" x \"Card machines and mercha\"",
-   "\"Operations · — negative\" x \"Dashed line: the theme's\"",
-   "\"Current accounts product\" x \"Competitor view: availab\"",
-   "\"24\" x \"Competitor view: availab\"",
-   "\"Digital and Cora · — neg\" x \"Retail figures: NatWest \"",
-   "\"International payments\" x \"Retail figures: NatWest \""
+   "\"Operations · 70% negativ\" x \"Public · live\"",
+   "\"Praise for service\" x \"Public · live\"",
+   "\"33\" x \"148\"",
+   "\"Debit card and cash mach\" x \"101\"",
+   "\"Current accounts product\" x \"Dashed line: the theme's\"",
+   "\"Complaints lead · 100% n\" x \"Competitor view: availab\"",
+   "\"18\" x \"Competitor view: availab\"",
+   "\"Payments operations · 10\" x \"Retail figures: NatWest \"",
+   "\"Disputes and chargebacks\" x \"Retail figures: NatWest \"",
+   "\"Operations · 100% negati\" x \"Retail figures: NatWest \""
   ],
-  "overlapCount": 12,
+  "overlapCount": 11,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -2585,7 +2507,7 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "12 overlapping text: \"Credit cards product own\" x \"Public · live\"; \"Statements and documents\" x \"Public · live\"; \"Fraud block or account f\" x \"145\""
+   "11 overlapping text: \"Operations · 70% negativ\" x \"Public · live\"; \"Praise for service\" x \"Public · live\"; \"33\" x \"148\""
   ]
  },
  {
@@ -2689,6 +2611,20 @@
  {
   "size": "1536x730@1.25",
   "theme": "light",
+  "route": "/natwest-pulse/v1/business/cards",
+  "overlaps": [],
+  "overlapCount": 0,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
+  "clipped": [],
+  "rails": 1,
+  "ask": 0,
+  "problems": []
+ },
+ {
+  "size": "1536x730@1.25",
+  "theme": "light",
   "route": "/natwest-pulse/v1/business/current_accounts",
   "overlaps": [],
   "overlapCount": 0,
@@ -2704,20 +2640,6 @@
   "size": "1536x730@1.25",
   "theme": "light",
   "route": "/natwest-pulse/v1/business/payments_fraud",
-  "overlaps": [],
-  "overlapCount": 0,
-  "pageOverflow": 0,
-  "offscreen": [],
-  "offscreenCount": 0,
-  "clipped": [],
-  "rails": 1,
-  "ask": 0,
-  "problems": []
- },
- {
-  "size": "1536x730@1.25",
-  "theme": "light",
-  "route": "/natwest-pulse/v1/business/cards",
   "overlaps": [],
   "overlapCount": 0,
   "pageOverflow": 0,
@@ -2777,14 +2699,14 @@
   "overlaps": [
    "\"Service and complaint ha\" x \"Public · live\"",
    "\"Other\" x \"Negative share\"",
-   "\"20 internal repeats of 2\" x \"—\"",
+   "\"20 internal repeats of 2\" x \"80%\"",
    "\"20 internal repeats of 2\" x \"5\"",
    "\"20\" x \"Sources\"",
    "\"20\" x \"5\"",
    "\"Rewards and redemption\" x \"source-weighted\"",
    "\"Rewards and redemption\" x \"App Store, Google Play, \"",
-   "\"7 internal repeats of 8,\" x \"Net\"",
-   "\"7 internal repeats of 8,\" x \"Weight\""
+   "\"7 internal repeats of 8,\" x \"Negative\"",
+   "\"7 internal repeats of 8,\" x \"Net\""
   ],
   "overlapCount": 21,
   "pageOverflow": 0,
@@ -2794,7 +2716,7 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "21 overlapping text: \"Service and complaint ha\" x \"Public · live\"; \"Other\" x \"Negative share\"; \"20 internal repeats of 2\" x \"—\""
+   "21 overlapping text: \"Service and complaint ha\" x \"Public · live\"; \"Other\" x \"Negative share\"; \"20 internal repeats of 2\" x \"80%\""
   ]
  },
  {
@@ -2859,17 +2781,11 @@
   "route": "/natwest-pulse/v1/mds-office?period=brief",
   "overlaps": [
    "\"▼ −2%\" x \"open backlog vs previous\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Faster Payments or Open \" x \"(internal; thin public v\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Complaints closed withou\" x \"(internal; thin public v\"",
    "\"13%\" x \"(last 7 days: too few co\"",
-   "\"Top issue:\" x \"(internal; thin public v\"",
-   "\"Identity checks and prof\" x \"(internal; thin public v\"",
    "\"11%\" x \"(last 7 days: too few co\"",
    "\"10%\" x \"(last 7 days: too few co\""
   ],
-  "overlapCount": 10,
+  "overlapCount": 4,
   "pageOverflow": 0,
   "offscreen": [],
   "offscreenCount": 0,
@@ -2877,7 +2793,7 @@
   "rails": 1,
   "ask": 0,
   "problems": [
-   "10 overlapping text: \"▼ −2%\" x \"open backlog vs previous\"; \"Top issue:\" x \"(internal; thin public v\"; \"Faster Payments or Open \" x \"(internal; thin public v\""
+   "4 overlapping text: \"▼ −2%\" x \"open backlog vs previous\"; \"13%\" x \"(last 7 days: too few co\"; \"11%\" x \"(last 7 days: too few co\""
   ]
  },
  {
@@ -2903,30 +2819,20 @@
   "theme": "light",
   "route": "/natwest-pulse/v1/mds-office?period=all",
   "overlaps": [
-   "\"1,780,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\"",
-   "\"no earlier period: the d\" x \"43,000 customers\"",
-   "\"no earlier period: the d\" x \"open backlog, no earlier\"",
-   "\"43,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\"",
-   "\"no earlier period: the d\" x \"750,000 customers\"",
-   "\"no earlier period: the d\" x \"open backlog, no earlier\"",
-   "\"750,000 customers\" x \"open backlog, no earlier\"",
-   "\"open backlog, no earlier\" x \"no earlier period: the d\""
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\"",
+   "\"no earlier period\" x \"no earlier period\""
   ],
-  "overlapCount": 14,
-  "pageOverflow": 25,
-  "offscreen": [
-   "span \"no earlier period: the data starts on 1 August\" right=1561"
-  ],
-  "offscreenCount": 2,
+  "overlapCount": 4,
+  "pageOverflow": 0,
+  "offscreen": [],
+  "offscreenCount": 0,
   "clipped": [],
   "rails": 1,
   "ask": 0,
   "problems": [
-   "page scrolls sideways by 25px",
-   "2 element(s) off-screen",
-   "14 overlapping text: \"1,780,000 customers\" x \"open backlog, no earlier\"; \"open backlog, no earlier\" x \"no earlier period: the d\"; \"no earlier period: the d\" x \"43,000 customers\""
+   "4 overlapping text: \"no earlier period\" x \"no earlier period\"; \"no earlier period\" x \"no earlier period\"; \"no earlier period\" x \"no earlier period\""
   ]
  }
 ]

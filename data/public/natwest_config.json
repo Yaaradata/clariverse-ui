@@ -8,8 +8,8 @@
   "review_sources": {"sources": ["appstore", "playstore", "trustpilot"], "accuracy": "49/51", "accuracy_pct": 96},
   "social_sources": {"sources": ["x", "reddit"], "accuracy": "35/49", "accuracy_pct": 71, "status": "indicative only"},
   "samples": [
-   {"file": "qa/natwest_l2_sample_check.md", "seed": 20261116, "result": "qa/natwest_l2_sample_check_result.md", "sentiment": "76/100", "rules": "before NW-D90"},
-   {"file": "qa/natwest_l2_sample_check_v2.md", "seed": 20261117, "result": "qa/natwest_l2_sample_check_v2_result.md", "sentiment": "84/100", "rules": "NW-D90"}
+   {"file": "qa/natwest_l2_sample_check.md", "seed": 20261116, "result": "qa/natwest_l2_sample_check_result.md", "sentiment": "76/100", "rules": "first-pass sentiment rules"},
+   {"file": "qa/natwest_l2_sample_check_v2.md", "seed": 20261117, "result": "qa/natwest_l2_sample_check_v2_result.md", "sentiment": "84/100", "rules": "revised sentiment rules (first person, aimed at the bank)"}
   ]
  }
 }

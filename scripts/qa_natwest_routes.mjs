@@ -50,7 +50,8 @@ while (queue.length && pages.length < 300) {
   // the page without them (NW-D85).
   const ownText = await p.evaluate(() => {
     const c = document.body.cloneNode(true);
-    for (const q of c.querySelectorAll('[data-testid="evidence"], [data-quote]')) q.remove();
+    // Scripts and styles are not on screen (a detached clone's innerText includes them, with the quotes' data).
+    for (const q of c.querySelectorAll('[data-testid="evidence"], [data-quote], script, style, noscript')) q.remove();
     return c.innerText ?? c.textContent ?? "";
   });
   const other = ownText.match(OTHER);

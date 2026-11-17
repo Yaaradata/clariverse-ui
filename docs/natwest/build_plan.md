@@ -14,7 +14,7 @@ Work on `main` (pulled 13 Nov 2026 at `d3664f9`; up to date). Layout: the `oct13
 3. **NatWest public pull missing** (Usha): `data/raw/natwest/` does not exist. App Store, Google Play, X, Reddit,
    Trustpilot and MoneySavingExpert: all not loaded. Public tiles read "Public data not yet loaded". NW-D04.
 4. **Peer figures** (Lloyds, Barclays, HSBC UK, Santander UK; Monzo, Starling greyed): names only until the pack. NW-D09.
-5. **Data freeze**: 12 Nov 2026 23:59 GMT for the illustrative layer; confirm. NW-D05.
+5. **Data freeze**: 13 Nov 2026 07:45 GMT (re-frozen in round 3, step 1). NW-D05.
 
 ## What oct13 is (recorded before copying)
 
@@ -67,10 +67,10 @@ Target: `app/natwest-pulse/v1/` with the same folders; `components/natwest-pulse
 
 | Item | Status |
 |---|---|
-| Public pull (all six sources) | Missing |
-| Research pack (register, anchors, peers) | Missing; five figures quoted in the brief |
-| Seed (L3) | To build, fixed seed |
-| Register | To build: `data/public/natwest_register.json` |
+| Public pull | Loaded: App Store, Google Play, X, Reddit, Trustpilot (1 Aug-13 Nov 2026; `data/raw/natwest/`, gitignored) |
+| Research pack (register, anchors, peers) | In the repo: `docs/natwest/research_pack.md`; register bound to it (NW-D80) |
+| Seed (L3) | Built, fixed seed and draw order (NW-D97); social-inbox handling layer (NW-D100) |
+| Register | Built: `data/public/natwest_register.json` |
 | Peers | Names only |
 
 ## Steps
@@ -85,9 +85,12 @@ Target: `app/natwest-pulse/v1/` with the same folders; `components/natwest-pulse
 | 4–5 | Copy and register swap; `oct13` sections relabelled | Built | 1756eed |
 | — | Signal pages for every theme; empty-public fixes | Built | 9349ad3 |
 | F | Checks, screenshots, checklist (`qa/natwest_qa_checklist.md`) | Built | (this commit) |
-| P | Push to main | Blocked (Deployment Protection not confirmed) | |
+| P | Push to main | Done: protection confirmed by Usha, 17 Nov 2026 | f673d8b |
 | — | Brand filter on screen | Not built (layout rule, NW-D27) | |
-| — | Public layer (L2) | Blocked (`data/raw/natwest/` empty) | |
+| R3-0 | Research pack in the repo, register and peers bound, footer citation | Built | b3eb493 |
+| R3-1 | Public pull loaded, re-frozen to 13 Nov 07:45, ingest rules, redaction, negative-share gate | Built | 9198bea |
+| — | NW-D90 to NW-D101: sentiment, routing, windows, header, personal loans, social-inbox handling | Built | 00e46e7 to f673d8b |
+| R3-2 | Checks, screenshots, checklist (round 3) | Built | (this commit) |
 
 ## Conflicts
 
