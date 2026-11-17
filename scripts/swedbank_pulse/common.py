@@ -257,6 +257,11 @@ CARDS_CATEGORIES = [
      "themes": ["fees_charges_bank", "account_opening"]},
     {"id": "service", "label": "Service, branch (kontor) and complaint handling", "owner": "Everyday banking · Service lead", "tat": True,
      "themes": ["complaint_handling", "care_unreachable", "branch_service", "branch_closure", "premium_service", "unsolicited_calls"]},
+    # SW-D18 addendum (Usha): praise one-liners and negatives that name no product or journey are named rows, not Other.
+    {"id": "praise", "label": "Praise and loyalty", "owner": "Everyday banking · CX lead", "tat": False,
+     "themes": ["app_praise", "service_praise"]},
+    {"id": "dissatisfaction", "label": "General dissatisfaction", "owner": "Everyday banking · CX lead", "tat": False,
+     "themes": ["general_dissatisfaction"]},
 ]
 CARDS_OTHER = {"id": "other", "label": "Other", "owner": "Everyday banking · CX lead", "tat": False, "themes": []}
 
