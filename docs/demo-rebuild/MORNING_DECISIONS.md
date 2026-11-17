@@ -1297,3 +1297,15 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
   weekly change at 32% (check ±15%): putting credit cards first (NW-D95) had changed the order the internal generator
   draws products in, so every synthetic contact was redrawn. The generator now draws in its own fixed order (SEED_ORDER),
   independent of the display order; the internal data is again identical to the reviewed data.
+- **NW-D98 · Personal loans (Usha's "NW-D97", 17 Nov).** (1) Loan routing widened and checked before cards: personal
+  loan, APR (moved from cards), a declined loan, credit or overdraft application, credit score near borrowing, repayment,
+  settle early, early settlement, overdraft decision or limit; the loose words (loan, borrow, lending, affordability)
+  route only for reviews, Trustpilot and Reddit, since on X they were football loans, bank-sector news and corporate lending.
+  Public count: 18 before, of which about 7 were X noise; 35 with the loose words on X too; 18 after, of which 17 are
+  from customer sources (App Store 3, Google Play 4, Reddit 7, Trustpilot 3, X 1). (2) The floor is 3 public items: from
+  3 the figure shows with "indicative"; below 3 it reads "—". The label carries no count, which keeps NW-D97 ("remove (n=..)
+  everywhere"); the request asked for "indicative (n=…)" and the two conflict, so the later wording is not applied
+  without a decision. (3) Top issue is chosen in selection, not by redrawing the seed: app themes (outages, login,
+  biometrics, device block, features, online banking, Cora) lead only Current accounts and app; Personal loans takes
+  its top issue from loan themes only (applications and decisions, servicing and repayment, closure documents, arrears).
+  Internal figures unchanged.

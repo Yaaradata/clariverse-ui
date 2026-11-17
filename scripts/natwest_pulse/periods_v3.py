@@ -640,7 +640,20 @@ def theme_labels():
 
 THIN_ROWS = 30
 MIN_REVIEWS = 20  # NW-D93
-MIN_PUBLIC = 5  # NW-D95
+MIN_PUBLIC = 3  # NW-D95, lowered in NW-D98
+
+
+# NW-D98: a product's top issue. App themes (outages, login, biometrics, features, Cora) lead only Current accounts and
+# app; Personal loans takes its top issue from loan themes (decision, payout, repayment, early settlement, affordability).
+APP_THEMES = {"app_speed_crash", "app_login_biometrics", "app_usability", "new_app_release", "device_security_block",
+              "online_banking", "app_praise", "cora_unresolved", "cora_wrong_answer", "cora_handoff_lost", "cora_no_person"}
+LOAN_THEMES = {"loan_processing", "loan_servicing", "loan_closure_documents", "recovery_conduct", "credit_report"}
+
+
+def fits_product(theme: str, pid: str) -> bool:
+    if pid == "personal_loans":
+        return theme in LOAN_THEMES
+    return pid == "current_accounts" or theme not in APP_THEMES
 
 
 def businesses(inter, pub, w, W, labels) -> list[dict]:
@@ -674,10 +687,11 @@ def businesses(inter, pub, w, W, labels) -> list[dict]:
             else:
                 pb["negative_share"] = None
                 pb["negative_share_note"] = None  # fewer than 5 public items: "—" (no count shown, Usha 17 Nov)
-        neg_t = collections.Counter(r["themes"][0] for r in prs if r["sentiment"] == "negative")
+        neg_t = collections.Counter(r["themes"][0] for r in prs if r["sentiment"] == "negative" and fits_product(r["themes"][0], pid))
         top = neg_t.most_common(1)[0] if neg_t else None
         if not top:  # thin public voice: fall back to the internal top issue, and say so
-            it = wcounter([r for r in irs if in_win(r, a, b) and r["sentiment"] == "negative"], lambda r: r["theme"]).most_common(1)
+            it = wcounter([r for r in irs if in_win(r, a, b) and r["sentiment"] == "negative" and fits_product(r["theme"], pid)],
+                          lambda r: r["theme"]).most_common(1)
             top_issue = {"id": it[0][0], "label": labels.get(it[0][0], it[0][0]), "count": it[0][1], "source": "internal"} if it else None
         else:
             top_issue = {"id": top[0], "label": labels.get(top[0], top[0]), "count": top[1], "source": "public"}

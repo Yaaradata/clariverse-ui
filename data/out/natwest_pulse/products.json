@@ -8,12 +8,12 @@
    "label": "Credit cards",
    "owner": "cards",
    "module": "cards",
-   "count": 149,
+   "count": 148,
    "negative": 76,
    "escalation": 3,
    "repeat": 10,
    "promise_break_mentions": 18,
-   "share_negative": 64.0,
+   "share_negative": 64.7,
    "trend_change_pct": -18.7,
    "trend_basis": {
     "first_half": 18,
@@ -65,7 +65,7 @@
     {
      "id": "branch_service",
      "label": "Branch service",
-     "count": 8,
+     "count": 7,
      "negative": 5,
      "escalation": 0
     },
@@ -114,7 +114,7 @@
     {
      "id": "closure_requests",
      "label": "Account and card closure",
-     "count": 5,
+     "count": 4,
      "negative": 2,
      "escalation": 0
     },
@@ -218,7 +218,7 @@
     }
    ],
    "by_source": {
-    "appstore": 37,
+    "appstore": 36,
     "playstore": 20,
     "x": 17,
     "reddit": 46,
@@ -245,18 +245,18 @@
    "label": "Current accounts and app",
    "owner": "retail",
    "module": null,
-   "count": 2749,
-   "negative": 660,
-   "escalation": 9,
-   "repeat": 58,
-   "promise_break_mentions": 46,
-   "share_negative": 29.1,
+   "count": 2750,
+   "negative": 658,
+   "escalation": 7,
+   "repeat": 57,
+   "promise_break_mentions": 47,
+   "share_negative": 29.0,
    "trend_change_pct": -3.3,
    "trend_basis": {
-    "first_half": 643,
-    "second_half": 794,
-    "first_share": 86.94,
-    "second_share": 84.11
+    "first_half": 645,
+    "second_half": 797,
+    "first_share": 87.28,
+    "second_share": 84.36
    },
    "top_issue": {
     "id": "app_usability",
@@ -288,14 +288,14 @@
     {
      "id": "app_speed_crash",
      "label": "App outages, speed and crashes",
-     "count": 81,
-     "negative": 59,
+     "count": 82,
+     "negative": 60,
      "escalation": 0
     },
     {
      "id": "branch_service",
      "label": "Branch service",
-     "count": 129,
+     "count": 130,
      "negative": 44,
      "escalation": 1
     },
@@ -309,21 +309,14 @@
     {
      "id": "closure_requests",
      "label": "Account and card closure",
-     "count": 19,
-     "negative": 15,
-     "escalation": 1
+     "count": 18,
+     "negative": 14,
+     "escalation": 0
     },
     {
      "id": "statements_documents",
      "label": "Statements and documents",
-     "count": 25,
-     "negative": 13,
-     "escalation": 1
-    },
-    {
-     "id": "complaint_handling",
-     "label": "Complaints closed without resolution",
-     "count": 13,
+     "count": 24,
      "negative": 12,
      "escalation": 1
     },
@@ -332,6 +325,13 @@
      "label": "Cora unresolved, had to call",
      "count": 12,
      "negative": 12,
+     "escalation": 0
+    },
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 12,
+     "negative": 11,
      "escalation": 0
     },
     {
@@ -414,25 +414,25 @@
    ],
    "by_source": {
     "appstore": 923,
-    "playstore": 826,
-    "x": 611,
-    "reddit": 254,
-    "trustpilot": 135
+    "playstore": 825,
+    "x": 617,
+    "reddit": 251,
+    "trustpilot": 134
    },
    "replies": {
-    "reviews": 826,
-    "responded": 602,
-    "responded_pct": 72.9,
+    "reviews": 825,
+    "responded": 601,
+    "responded_pct": 72.8,
     "open": 224,
-    "open_pct": 27.1,
+    "open_pct": 27.2,
     "open_too_long": 208,
     "open_too_long_pct_of_open": 92.9,
     "open_too_long_pct_of_reviews": 25.2,
-    "median_reply_minutes": 1821,
-    "median_reply_hours": 30.35,
-    "replied_within_48h": 393,
-    "redirect_only": 248,
-    "redirect_only_pct_of_replied": 41.2
+    "median_reply_minutes": 1824,
+    "median_reply_hours": 30.41,
+    "replied_within_48h": 392,
+    "redirect_only": 247,
+    "redirect_only_pct_of_replied": 41.1
    }
   },
   {
@@ -942,17 +942,17 @@
    "owner": "loans",
    "module": null,
    "count": 18,
-   "negative": 7,
-   "escalation": 0,
-   "repeat": 0,
-   "promise_break_mentions": 2,
-   "share_negative": 71.4,
+   "negative": 9,
+   "escalation": 2,
+   "repeat": 1,
+   "promise_break_mentions": 1,
+   "share_negative": 70.0,
    "trend_change_pct": null,
    "trend_basis": {
-    "first_half": 6,
-    "second_half": 4,
-    "first_share": 0.85,
-    "second_share": 0.37
+    "first_half": 4,
+    "second_half": 1,
+    "first_share": 0.52,
+    "second_share": 0.12
    },
    "top_issue": {
     "id": "app_usability",
@@ -968,11 +968,32 @@
      "escalation": 0
     },
     {
+     "id": "closure_requests",
+     "label": "Account and card closure",
+     "count": 2,
+     "negative": 1,
+     "escalation": 1
+    },
+    {
      "id": "app_speed_crash",
      "label": "App outages, speed and crashes",
-     "count": 2,
-     "negative": 2,
+     "count": 1,
+     "negative": 1,
      "escalation": 0
+    },
+    {
+     "id": "statements_documents",
+     "label": "Statements and documents",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 1,
+     "negative": 1,
+     "escalation": 1
     },
     {
      "id": "care_unreachable",
@@ -982,15 +1003,15 @@
      "escalation": 0
     },
     {
-     "id": "loan_processing",
-     "label": "Loan and mortgage applications",
+     "id": "branch_service",
+     "label": "Branch service",
      "count": 1,
      "negative": 0,
      "escalation": 0
     },
     {
-     "id": "branch_service",
-     "label": "Branch service",
+     "id": "loan_processing",
+     "label": "Loan and mortgage applications",
      "count": 1,
      "negative": 0,
      "escalation": 0
@@ -1004,25 +1025,25 @@
     }
    ],
    "by_source": {
-    "appstore": 2,
-    "playstore": 3,
-    "x": 7,
-    "reddit": 4,
-    "trustpilot": 2
+    "appstore": 3,
+    "playstore": 4,
+    "x": 1,
+    "reddit": 7,
+    "trustpilot": 3
    },
    "replies": {
-    "reviews": 3,
-    "responded": 3,
+    "reviews": 4,
+    "responded": 4,
     "responded_pct": 100.0,
     "open": 0,
     "open_pct": 0.0,
     "open_too_long": 0,
     "open_too_long_pct_of_open": null,
     "open_too_long_pct_of_reviews": 0.0,
-    "median_reply_minutes": 1367,
-    "median_reply_hours": 22.79,
-    "replied_within_48h": 3,
-    "redirect_only": 3,
+    "median_reply_minutes": 1415,
+    "median_reply_hours": 23.58,
+    "replied_within_48h": 4,
+    "redirect_only": 4,
     "redirect_only_pct_of_replied": 100.0
    }
   }

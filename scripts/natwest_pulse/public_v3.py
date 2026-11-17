@@ -52,11 +52,23 @@ ROUTE = [
                                   r"direct debit|standing order|open banking|\bpayee\b", re.I),
      {"faster_payments_failures", "failed_txn_reversal", "refund_delay", "fraud_scam", "unauthorised_txn", "phishing",
       "app_reimbursement", "account_freeze", "merchant_pos"}),
-    ("cards", re.compile(r"credit card|credit limit|\bcard limit|reward|cashback|balance transfer|\bapr\b|annual fee", re.I),
+    # NW-D98: borrowing words go to Personal loans, checked before cards (APR and a declined application are loans).
+    ("personal_loans", re.compile(r"personal loan|\bapr\b|"
+                                  r"(loan|application|credit|borrowing|overdraft)\w*\s+(was\s+|been\s+|got\s+)?declin|"
+                                  r"declin\w*\s+(for|my)\s+(a\s+)?(loan|credit|overdraft)|"
+                                  r"credit score.{0,40}(loan|borrow|appl)|(loan|borrow|appl\w*).{0,40}credit score|"
+                                  r"\brepayment|settle (it |the loan )?early|early settlement|overdraft (decision|application|limit)",
+                                  re.I),
+     {"loan_processing", "loan_servicing"}),
+    ("cards", re.compile(r"credit card|credit limit|\bcard limit|reward|cashback|balance transfer|annual fee", re.I),
      {"card_fees_charges", "card_limit", "rewards_value", "reward_redemption", "card_application", "card_eligibility_upgrade",
       "card_dispatch", "dispute_chargeback"}),
-    ("personal_loans", re.compile(r"personal loan|\bloan\b(?! to value)", re.I), {"loan_processing", "loan_servicing"}),
 ]
+
+
+# NW-D98: the loose borrowing words route to Personal loans in reviews and Reddit only. On X they are mostly football
+# loans, bank-sector news and corporate lending, so X needs one of the specific phrases in ROUTE.
+LOOSE_LOAN = re.compile(r"\bloans?\b(?! to value)|\bborrow|\blending\b|affordab", re.I)
 
 
 def product_of(r) -> str | None:
@@ -69,6 +81,8 @@ def product_of(r) -> str | None:
         if theme in themes:
             return pid
     for pid, rx, _themes in ROUTE:
+        if pid == "personal_loans" and r.get("source") != "x" and LOOSE_LOAN.search(text):
+            return pid
         if rx.search(text):
             return pid
     return "current_accounts"  # accounts, overdrafts, the app and everyday banking

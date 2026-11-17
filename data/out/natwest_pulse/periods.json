@@ -1051,7 +1051,7 @@
       "negative": 2,
       "neutral": 2,
       "positive_share": 0.0,
-      "negative_share": null,
+      "negative_share": 50.0,
       "share_method": "source_weighted",
       "change_pct": 33.3,
       "trend_basis": {
@@ -1097,7 +1097,7 @@
        "x": 50.0
       },
       "review_items": 2,
-      "negative_share_note": null
+      "negative_share_note": "indicative"
      },
      "top_issue": {
       "id": "card_eligibility_upgrade",
@@ -1520,9 +1520,9 @@
       "negative_share_note": null
      },
      "top_issue": {
-      "id": "fees_charges_bank",
-      "label": "Account charges and fees",
-      "count": 586,
+      "id": "loan_processing",
+      "label": "Loan and mortgage applications",
+      "count": 276,
       "source": "internal"
      },
      "anecdote": null
@@ -7389,10 +7389,10 @@
       "positive_share": 66.4,
       "negative_share": 30.6,
       "share_method": "source_weighted",
-      "change_pct": 55.8,
+      "change_pct": 55.1,
       "trend_basis": {
        "current": 321,
-       "previous": 206,
+       "previous": 207,
        "sources": [
         "appstore",
         "playstore",
@@ -7705,8 +7705,8 @@
       "negative_share_note": "indicative"
      },
      "top_issue": {
-      "id": "app_usability",
-      "label": "App features and usability",
+      "id": "branch_service",
+      "label": "Branch service",
       "count": 1,
       "source": "public"
      },
@@ -7745,10 +7745,10 @@
       "positive_share": null,
       "negative_share": null,
       "share_method": "source_weighted",
-      "change_pct": -100.0,
+      "change_pct": null,
       "trend_basis": {
        "current": 0,
-       "previous": 1,
+       "previous": 0,
        "sources": [
         "appstore",
         "playstore",
@@ -9741,7 +9741,7 @@
        {
         "end": "2026-10-09T07:45:00+00:00",
         "internal": 1032,
-        "external": 1
+        "external": 0
        },
        {
         "end": "2026-10-16T07:45:00+00:00",
@@ -9830,7 +9830,7 @@
          {
           "end": "2026-10-09T07:45:00+00:00",
           "internal": 1032,
-          "external": 1
+          "external": 0
          },
          {
           "end": "2026-10-16T07:45:00+00:00",
@@ -10740,8 +10740,8 @@
       },
       {
        "end": "2026-10-09T07:45:00+00:00",
-       "items": 22,
-       "net": 6.0
+       "items": 21,
+       "net": -10.2
       },
       {
        "end": "2026-10-16T07:45:00+00:00",
@@ -11056,7 +11056,7 @@
         {
          "end": "2026-10-09T07:45:00+00:00",
          "count": 2,
-         "share": 24.2
+         "share": 29.5
         },
         {
          "end": "2026-10-16T07:45:00+00:00",
@@ -15842,10 +15842,10 @@
       "positive_share": 37.2,
       "negative_share": 53.1,
       "share_method": "source_weighted",
-      "change_pct": -33.9,
+      "change_pct": -32.8,
       "trend_basis": {
        "current": 39,
-       "previous": 59,
+       "previous": 58,
        "sources": [
         "appstore",
         "playstore",
@@ -15905,7 +15905,7 @@
     {
      "id": "current_accounts",
      "label": "Current accounts and app",
-     "overall_volume": 718855,
+     "overall_volume": 718856,
      "internal": {
       "volume": 717875,
       "prev_volume": 689608,
@@ -15924,17 +15924,17 @@
       "negative_share_basis": null
      },
      "external": {
-      "volume": 980,
+      "volume": 981,
       "positive": 469,
       "negative": 246,
-      "neutral": 265,
-      "positive_share": 64.6,
-      "negative_share": 33.1,
+      "neutral": 266,
+      "positive_share": 64.7,
+      "negative_share": 33.0,
       "share_method": "source_weighted",
-      "change_pct": 19.4,
+      "change_pct": 19.3,
       "trend_basis": {
-       "current": 980,
-       "previous": 821,
+       "current": 981,
+       "previous": 822,
        "sources": [
         "appstore",
         "playstore",
@@ -15946,12 +15946,12 @@
       "escalation": 0,
       "repeat_contact": 20,
       "responded": {
-       "reviews": 248,
-       "responded": 177,
+       "reviews": 247,
+       "responded": 176,
        "positive_reviews": 162,
        "positive_responded": 102,
-       "negative_reviews": 79,
-       "negative_responded": 69
+       "negative_reviews": 78,
+       "negative_responded": 68
       },
       "high_impact": {
        "volume": 11,
@@ -15972,12 +15972,12 @@
       },
       "source_mix": {
        "appstore": 37.0,
-       "playstore": 25.3,
-       "x": 24.0,
+       "playstore": 25.2,
+       "x": 24.2,
        "reddit": 8.5,
        "trustpilot": 5.2
       },
-      "review_items": 662
+      "review_items": 661
      },
      "top_issue": {
       "id": "app_usability",
@@ -16159,15 +16159,15 @@
       "negative_share_note": "indicative"
      },
      "top_issue": {
-      "id": "app_usability",
-      "label": "App features and usability",
-      "count": 2,
+      "id": "branch_service",
+      "label": "Branch service",
+      "count": 1,
       "source": "public"
      },
      "anecdote": {
-      "summary": "Bank needs to innovate and off higher interest rates.",
-      "source_label": "Google Play",
-      "date": "2026-10-17"
+      "summary": "I only have a savings account with NatWest I have to go into a branch to withdraw cash and they…",
+      "source_label": "X",
+      "date": "2026-10-15"
      }
     },
     {
@@ -16249,21 +16249,21 @@
       "negative_share_note": "indicative"
      },
      "top_issue": {
-      "id": "app_usability",
-      "label": "App features and usability",
-      "count": 4,
+      "id": "branch_service",
+      "label": "Branch service",
+      "count": 2,
       "source": "public"
      },
      "anecdote": {
-      "summary": "I don't understand how this app is praised to the heavens while my experience as only a mortgage account user…",
-      "source_label": "Google Play",
-      "date": "2026-11-04"
+      "summary": "Been with NatWest for 24 years or more and I’ve had frequent issues with accessing my money or being blocked…",
+      "source_label": "Trustpilot",
+      "date": "2026-10-15"
      }
     },
     {
      "id": "personal_loans",
      "label": "Personal loans",
-     "overall_volume": 100664,
+     "overall_volume": 100663,
      "internal": {
       "volume": 100660,
       "prev_volume": 107701,
@@ -16282,16 +16282,16 @@
       "negative_share_basis": null
      },
      "external": {
-      "volume": 4,
+      "volume": 3,
       "positive": 1,
       "negative": 2,
-      "neutral": 1,
-      "positive_share": 50.0,
-      "negative_share": null,
+      "neutral": 0,
+      "positive_share": 33.3,
+      "negative_share": 66.7,
       "share_method": "source_weighted",
-      "change_pct": -42.9,
+      "change_pct": -57.1,
       "trend_basis": {
-       "current": 4,
+       "current": 3,
        "previous": 7,
        "sources": [
         "appstore",
@@ -16304,12 +16304,12 @@
       "escalation": 0,
       "repeat_contact": 0,
       "responded": {
-       "reviews": 0,
-       "responded": 0,
+       "reviews": 1,
+       "responded": 1,
        "positive_reviews": 0,
        "positive_responded": 0,
-       "negative_reviews": 0,
-       "negative_responded": 0
+       "negative_reviews": 1,
+       "negative_responded": 1
       },
       "high_impact": {
        "volume": 0,
@@ -16329,18 +16329,18 @@
        }
       },
       "source_mix": {
-       "x": 50.0,
-       "appstore": 25.0,
-       "trustpilot": 25.0
+       "appstore": 33.3,
+       "playstore": 33.3,
+       "trustpilot": 33.3
       },
-      "review_items": 2,
-      "negative_share_note": null
+      "review_items": 3,
+      "negative_share_note": "indicative"
      },
      "top_issue": {
-      "id": "app_speed_crash",
-      "label": "App outages, speed and crashes",
-      "count": 1,
-      "source": "public"
+      "id": "loan_processing",
+      "label": "Loan and mortgage applications",
+      "count": 3770,
+      "source": "internal"
      },
      "anecdote": {
       "summary": "Terrible communication trying to apply for a personal loan.",
@@ -16367,7 +16367,7 @@
      {
       "business": "personal_loans",
       "business_label": "Personal loans",
-      "issue": "App outages, speed and crashes",
+      "issue": "Loan and mortgage applications",
       "text": "0 posts with escalation language; 6,900 internal cases open over 48 hours."
      }
     ],
@@ -16376,7 +16376,7 @@
       "business": "current_accounts",
       "business_label": "Current accounts and app",
       "issue": "App outages, speed and crashes",
-      "text": "34 public items; share of voice up 76% vs previous period, source-weighted."
+      "text": "35 public items; share of voice up 82% vs previous period, source-weighted."
      },
      {
       "business": "savings",
@@ -16398,7 +16398,7 @@
       "business": "cards",
       "business_label": "Credit cards",
       "status": "stable",
-      "text": "Negative share steady at 53% (57% before)."
+      "text": "Negative share steady at 53% (58% before)."
      },
      {
       "business": "savings",
@@ -16474,10 +16474,10 @@
      "positive_share": 37.2,
      "negative_share": 53.1,
      "share_method": "source_weighted",
-     "change_pct": -33.9,
+     "change_pct": -32.8,
      "trend_basis": {
       "current": 39,
-      "previous": 59,
+      "previous": 58,
       "sources": [
        "appstore",
        "playstore",
@@ -17879,7 +17879,7 @@
          "negative_responded": 0
         }
        },
-       "change_pct": -100.0
+       "change_pct": null
       },
       "trend": [
        {
@@ -17890,7 +17890,7 @@
        {
         "end": "2026-10-14T07:45:00+00:00",
         "internal": 1032,
-        "external": 1
+        "external": 0
        },
        {
         "end": "2026-11-13T07:45:00+00:00",
@@ -17943,7 +17943,7 @@
            "negative_responded": 0
           }
          },
-         "change_pct": -100.0
+         "change_pct": null
         },
         "trend": [
          {
@@ -17954,7 +17954,7 @@
          {
           "end": "2026-10-14T07:45:00+00:00",
           "internal": 1032,
-          "external": 1
+          "external": 0
          },
          {
           "end": "2026-11-13T07:45:00+00:00",
@@ -18297,7 +18297,7 @@
     "mood": {
      "net": -15.9,
      "net_trend_current": -15.9,
-     "net_trend_previous": -13.9,
+     "net_trend_previous": -17.5,
      "items": 39
     },
     "market": [
@@ -18313,7 +18313,7 @@
       "label": "App features and usability",
       "count": 4,
       "negative": 4,
-      "share_change_pct": 28.3
+      "share_change_pct": 25.7
      },
      {
       "id": "dispute_chargeback",
@@ -18334,7 +18334,7 @@
       "label": "Where customers praise us: quick, easy app journeys",
       "count": 2,
       "negative": 0,
-      "share_change_pct": -3.2
+      "share_change_pct": -9.6
      },
      {
       "id": "app_speed_crash",
@@ -18737,8 +18737,8 @@
       },
       {
        "end": "2026-10-14T07:45:00+00:00",
-       "items": 59,
-       "net": -13.9
+       "items": 58,
+       "net": -17.5
       },
       {
        "end": "2026-11-13T07:45:00+00:00",
@@ -18942,7 +18942,7 @@
        "negative": 4,
        "negative_share": 100.0,
        "escalation": 0,
-       "share_change_pct": 28.3,
+       "share_change_pct": 25.7,
        "weekly": [
         {
          "end": "2026-09-14T07:45:00+00:00",
@@ -18952,7 +18952,7 @@
         {
          "end": "2026-10-14T07:45:00+00:00",
          "count": 4,
-         "share": 14.5
+         "share": 14.8
         },
         {
          "end": "2026-11-13T07:45:00+00:00",
@@ -19020,7 +19020,7 @@
        "negative": 0,
        "negative_share": 0.0,
        "escalation": 0,
-       "share_change_pct": -3.2,
+       "share_change_pct": -9.6,
        "weekly": [
         {
          "end": "2026-09-14T07:45:00+00:00",
@@ -19030,7 +19030,7 @@
         {
          "end": "2026-10-14T07:45:00+00:00",
          "count": 4,
-         "share": 12.6
+         "share": 13.5
         },
         {
          "end": "2026-11-13T07:45:00+00:00",
@@ -19102,7 +19102,7 @@
        "negative": 0,
        "negative_share": 0.0,
        "escalation": 0,
-       "share_change_pct": 10.3,
+       "share_change_pct": 0.0,
        "weekly": []
       },
       {
@@ -19142,7 +19142,7 @@
        "negative": 1,
        "negative_share": 100.0,
        "escalation": 0,
-       "share_change_pct": -94.3,
+       "share_change_pct": -94.6,
        "weekly": []
       },
       {
@@ -19162,7 +19162,7 @@
        "negative": 1,
        "negative_share": 100.0,
        "escalation": 0,
-       "share_change_pct": -79.3,
+       "share_change_pct": -81.2,
        "weekly": []
       },
       {
@@ -24952,7 +24952,7 @@
     {
      "id": "cards",
      "label": "Credit cards",
-     "overall_volume": 1160306,
+     "overall_volume": 1160305,
      "internal": {
       "volume": 1160157,
       "prev_volume": null,
@@ -24971,12 +24971,12 @@
       "negative_share_basis": null
      },
      "external": {
-      "volume": 149,
-      "positive": 32,
+      "volume": 148,
+      "positive": 31,
       "negative": 76,
       "neutral": 41,
-      "positive_share": 36.7,
-      "negative_share": 57.0,
+      "positive_share": 36.0,
+      "negative_share": 57.5,
       "share_method": "source_weighted",
       "change_pct": 24.3,
       "trend_basis": {
@@ -25016,30 +25016,30 @@
        }
       },
       "source_mix": {
-       "reddit": 30.9,
-       "appstore": 24.8,
-       "trustpilot": 19.5,
-       "playstore": 13.4,
-       "x": 11.4
+       "reddit": 31.1,
+       "appstore": 24.3,
+       "trustpilot": 19.6,
+       "playstore": 13.5,
+       "x": 11.5
       },
-      "review_items": 86
+      "review_items": 85
      },
      "top_issue": {
-      "id": "app_usability",
-      "label": "App features and usability",
-      "count": 14,
+      "id": "card_eligibility_upgrade",
+      "label": "Credit card eligibility and card changes",
+      "count": 12,
       "source": "public"
      },
      "anecdote": {
-      "summary": "I also switched for the offer, I didn't get a text to confirm I met their conditions, the sign up…",
+      "summary": "Increasing MBNA credit limit after exchange but before completion?",
       "source_label": "Reddit",
-      "date": "2026-08-14"
+      "date": "2026-10-17"
      }
     },
     {
      "id": "current_accounts",
      "label": "Current accounts and app",
-     "overall_volume": 2323555,
+     "overall_volume": 2323556,
      "internal": {
       "volume": 2320806,
       "prev_volume": null,
@@ -25058,16 +25058,16 @@
       "negative_share_basis": null
      },
      "external": {
-      "volume": 2749,
+      "volume": 2750,
       "positive": 1359,
-      "negative": 660,
-      "neutral": 730,
+      "negative": 658,
+      "neutral": 733,
       "positive_share": 66.3,
-      "negative_share": 30.8,
+      "negative_share": 30.7,
       "share_method": "source_weighted",
-      "change_pct": 25.5,
+      "change_pct": 25.7,
       "trend_basis": {
-       "current": 941,
+       "current": 943,
        "previous": 750,
        "sources": [
         "playstore",
@@ -25075,15 +25075,15 @@
         "x"
        ]
       },
-      "escalation": 9,
-      "repeat_contact": 58,
+      "escalation": 7,
+      "repeat_contact": 57,
       "responded": {
-       "reviews": 826,
-       "responded": 602,
+       "reviews": 825,
+       "responded": 601,
        "positive_reviews": 546,
        "positive_responded": 361,
-       "negative_reviews": 250,
-       "negative_responded": 216
+       "negative_reviews": 249,
+       "negative_responded": 215
       },
       "high_impact": {
        "volume": 45,
@@ -25105,11 +25105,11 @@
       "source_mix": {
        "appstore": 33.6,
        "playstore": 30.0,
-       "x": 22.2,
-       "reddit": 9.2,
+       "x": 22.4,
+       "reddit": 9.1,
        "trustpilot": 4.9
       },
-      "review_items": 1884
+      "review_items": 1882
      },
      "top_issue": {
       "id": "app_usability",
@@ -25199,15 +25199,15 @@
       "review_items": 181
      },
      "top_issue": {
-      "id": "app_usability",
-      "label": "App features and usability",
-      "count": 38,
+      "id": "branch_service",
+      "label": "Branch service",
+      "count": 23,
       "source": "public"
      },
      "anecdote": {
-      "summary": "Payit fast payment service unlawful or just completely lacking integrity?",
+      "summary": "NatWest biometric approval stuck loading while I’m abroad in China",
       "source_label": "Reddit",
-      "date": "2026-10-08"
+      "date": "2026-11-09"
      }
     },
     {
@@ -25286,15 +25286,15 @@
       "review_items": 34
      },
      "top_issue": {
-      "id": "app_usability",
-      "label": "App features and usability",
-      "count": 6,
+      "id": "general_dissatisfaction",
+      "label": "General dissatisfaction",
+      "count": 3,
       "source": "public"
      },
      "anecdote": {
-      "summary": "I can't see where to deposit cash into my isa",
-      "source_label": "Google Play",
-      "date": "2026-09-17"
+      "summary": "NatWest alternative, after having poor experience with them",
+      "source_label": "Reddit",
+      "date": "2026-10-22"
      }
     },
     {
@@ -25373,15 +25373,15 @@
       "review_items": 29
      },
      "top_issue": {
-      "id": "app_usability",
-      "label": "App features and usability",
-      "count": 6,
+      "id": "statements_documents",
+      "label": "Statements and documents",
+      "count": 5,
       "source": "public"
      },
      "anecdote": {
-      "summary": "I don't understand how this app is praised to the heavens while my experience as only a mortgage account user…",
+      "summary": "As banking apps go, it's really poor.",
       "source_label": "Google Play",
-      "date": "2026-11-04"
+      "date": "2026-09-02"
      }
     },
     {
@@ -25407,15 +25407,15 @@
      },
      "external": {
       "volume": 18,
-      "positive": 3,
-      "negative": 7,
-      "neutral": 8,
-      "positive_share": 0.0,
-      "negative_share": 38.9,
+      "positive": 4,
+      "negative": 9,
+      "neutral": 5,
+      "positive_share": 48.6,
+      "negative_share": 50.0,
       "share_method": "source_weighted",
-      "change_pct": 0.0,
+      "change_pct": -28.6,
       "trend_basis": {
-       "current": 7,
+       "current": 5,
        "previous": 7,
        "sources": [
         "playstore",
@@ -25423,15 +25423,15 @@
         "x"
        ]
       },
-      "escalation": 0,
-      "repeat_contact": 0,
+      "escalation": 2,
+      "repeat_contact": 1,
       "responded": {
-       "reviews": 3,
-       "responded": 3,
+       "reviews": 4,
+       "responded": 4,
        "positive_reviews": 0,
        "positive_responded": 0,
-       "negative_reviews": 3,
-       "negative_responded": 3
+       "negative_reviews": 4,
+       "negative_responded": 4
       },
       "high_impact": {
        "volume": 0,
@@ -25451,25 +25451,25 @@
        }
       },
       "source_mix": {
-       "x": 38.9,
-       "reddit": 22.2,
-       "playstore": 16.7,
-       "appstore": 11.1,
-       "trustpilot": 11.1
+       "reddit": 38.9,
+       "playstore": 22.2,
+       "appstore": 16.7,
+       "trustpilot": 16.7,
+       "x": 5.6
       },
-      "review_items": 7,
+      "review_items": 10,
       "negative_share_note": "indicative"
      },
      "top_issue": {
-      "id": "app_usability",
-      "label": "App features and usability",
-      "count": 2,
-      "source": "public"
+      "id": "loan_processing",
+      "label": "Loan and mortgage applications",
+      "count": 15409,
+      "source": "internal"
      },
      "anecdote": {
-      "summary": "'Faults' integral to design.",
-      "source_label": "Google Play",
-      "date": "2026-09-19"
+      "summary": "NatWest personal loan declined now asked for ID check",
+      "source_label": "Reddit",
+      "date": "2026-10-11"
      }
     }
    ],
@@ -25485,14 +25485,14 @@
      {
       "business": "cards",
       "business_label": "Credit cards",
-      "issue": "App features and usability",
+      "issue": "Credit card eligibility and card changes",
       "text": "3 posts with escalation language; 15,887 internal cases open over 48 hours."
      },
      {
       "business": "personal_loans",
       "business_label": "Personal loans",
-      "issue": "App features and usability",
-      "text": "0 posts with escalation language; 7,398 internal cases open over 48 hours."
+      "issue": "Loan and mortgage applications",
+      "text": "2 posts with escalation language; 7,398 internal cases open over 48 hours."
      }
     ],
     "building": [
@@ -25500,7 +25500,7 @@
       "business": "current_accounts",
       "business_label": "Current accounts and app",
       "issue": "App outages, speed and crashes",
-      "text": "46 public items; share of voice up 39% no earlier period, source-weighted."
+      "text": "47 public items; share of voice up 39% no earlier period, source-weighted."
      },
      {
       "business": "savings",
@@ -25519,22 +25519,22 @@
     ],
     "improving": [
      {
-      "business": "cards",
-      "business_label": "Credit cards",
-      "status": "improving",
-      "text": "Negative share down from 60% to 50% no earlier period."
-     },
-     {
       "business": "payments_fraud",
       "business_label": "Payments and fraud",
       "status": "stable",
       "text": "Negative share steady at 48% (50% before)."
      },
      {
-      "business": "current_accounts",
-      "business_label": "Current accounts and app",
+      "business": "personal_loans",
+      "business_label": "Personal loans",
       "status": "watch",
-      "text": "Negative share up from 28% to 33% no earlier period; outside the improving and stable bands."
+      "text": "Negative share down from 51% to 51% no earlier period; outside the improving and stable bands."
+     },
+     {
+      "business": "cards",
+      "business_label": "Credit cards",
+      "status": "watch",
+      "text": "Negative share down from 60% to 52% no earlier period; outside the improving and stable bands."
      }
     ],
     "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more no earlier period (at least 30 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". A Financial Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline limit, or more complaints are already eligible than at the previous period end."
@@ -25591,12 +25591,12 @@
      "escalations": 10472
     },
     "external": {
-     "volume": 149,
-     "positive": 32,
+     "volume": 148,
+     "positive": 31,
      "negative": 76,
      "neutral": 41,
-     "positive_share": 36.7,
-     "negative_share": 57.0,
+     "positive_share": 36.0,
+     "negative_share": 57.5,
      "share_method": "source_weighted",
      "change_pct": 24.3,
      "trend_basis": {
@@ -25636,11 +25636,11 @@
       }
      },
      "source_mix": {
-      "reddit": 30.9,
-      "appstore": 24.8,
-      "trustpilot": 19.5,
-      "playstore": 13.4,
-      "x": 11.4
+      "reddit": 31.1,
+      "appstore": 24.3,
+      "trustpilot": 19.6,
+      "playstore": 13.5,
+      "x": 11.5
      }
     },
     "categories": [
@@ -28309,8 +28309,8 @@
        "change_pct": null
       },
       "external": {
-       "volume": 2,
-       "positive": 2,
+       "volume": 1,
+       "positive": 1,
        "negative": 0,
        "negative_share": 0.0,
        "escalation": 0,
@@ -28385,7 +28385,7 @@
        {
         "end": "2026-10-09T07:45:00+00:00",
         "internal": 1032,
-        "external": 1
+        "external": 0
        },
        {
         "end": "2026-10-16T07:45:00+00:00",
@@ -28428,8 +28428,8 @@
          "change_pct": null
         },
         "external": {
-         "volume": 2,
-         "positive": 2,
+         "volume": 1,
+         "positive": 1,
          "negative": 0,
          "negative_share": 0.0,
          "escalation": 0,
@@ -28504,7 +28504,7 @@
          {
           "end": "2026-10-09T07:45:00+00:00",
           "internal": 1032,
-          "external": 1
+          "external": 0
          },
          {
           "end": "2026-10-16T07:45:00+00:00",
@@ -29497,10 +29497,10 @@
      }
     ],
     "mood": {
-     "net": -20.3,
-     "net_trend_current": -6.9,
+     "net": -21.5,
+     "net_trend_current": -9.7,
      "net_trend_previous": -25.0,
-     "items": 149
+     "items": 148
     },
     "market": [
      {
@@ -29508,7 +29508,7 @@
       "label": "Credit card eligibility and card changes",
       "count": 26,
       "negative": 12,
-      "share_change_pct": -32.0
+      "share_change_pct": -30.0
      },
      {
       "id": "other",
@@ -29522,14 +29522,14 @@
       "label": "App features and usability",
       "count": 14,
       "negative": 14,
-      "share_change_pct": 113.1
+      "share_change_pct": 117.2
      },
      {
       "id": "app_praise",
       "label": "Where customers praise us: quick, easy app journeys",
       "count": 13,
       "negative": 0,
-      "share_change_pct": 14.4
+      "share_change_pct": 18.4
      },
      {
       "id": "dispute_chargeback",
@@ -29543,7 +29543,7 @@
       "label": "Card applications and identity checks",
       "count": 8,
       "negative": 5,
-      "share_change_pct": -44.0
+      "share_change_pct": -42.0
      }
     ],
     "service": {
@@ -29716,8 +29716,8 @@
      {
       "id": "support",
       "label": "Consumer support",
-      "count": 50,
-      "net": 16.3,
+      "count": 49,
+      "net": 8.9,
       "top": [
        {
         "id": "other",
@@ -29816,10 +29816,10 @@
      {
       "store": "appstore",
       "label": "App Store",
-      "reviews": 37,
-      "avg_rating": 3.14,
-      "share_positive": 48.6,
-      "share_negative": 43.2,
+      "reviews": 36,
+      "avg_rating": 3.08,
+      "share_positive": 47.2,
+      "share_negative": 44.4,
       "complaints": [
        {
         "label": "App features and usability",
@@ -29841,11 +29841,11 @@
         "count": 9
        },
        {
-        "label": "Account and card closure",
+        "label": "Card applications and identity checks",
         "count": 2
        },
        {
-        "label": "Card applications and identity checks",
+        "label": "Praise for service",
         "count": 2
        }
       ]
@@ -29862,7 +29862,7 @@
      },
      "external": {
       "Reddit": 46,
-      "App Store": 37,
+      "App Store": 36,
       "Trustpilot": 29,
       "Google Play": 20,
       "X": 17
@@ -29910,11 +29910,11 @@
       {
        "source": "appstore",
        "label": "App Store",
-       "items": 37,
-       "positive": 18,
+       "items": 36,
+       "positive": 17,
        "neutral": 3,
        "negative": 16,
-       "net": 5.4,
+       "net": 2.8,
        "weight_pct": 32.0,
        "indicative": false
       },
@@ -30006,8 +30006,8 @@
       },
       {
        "end": "2026-10-09T07:45:00+00:00",
-       "items": 22,
-       "net": 6.0
+       "items": 21,
+       "net": -10.2
       },
       {
        "end": "2026-10-16T07:45:00+00:00",
@@ -30205,7 +30205,7 @@
        "negative": 12,
        "negative_share": 58.6,
        "escalation": 0,
-       "share_change_pct": -32.0,
+       "share_change_pct": -30.0,
        "weekly": [
         {
          "end": "2026-08-14T07:45:00+00:00",
@@ -30367,7 +30367,7 @@
        "negative": 14,
        "negative_share": 100.0,
        "escalation": 0,
-       "share_change_pct": 113.1,
+       "share_change_pct": 117.2,
        "weekly": [
         {
          "end": "2026-08-14T07:45:00+00:00",
@@ -30412,7 +30412,7 @@
         {
          "end": "2026-10-09T07:45:00+00:00",
          "count": 2,
-         "share": 24.2
+         "share": 29.5
         },
         {
          "end": "2026-10-16T07:45:00+00:00",
@@ -30448,7 +30448,7 @@
        "negative": 0,
        "negative_share": 0.0,
        "escalation": 0,
-       "share_change_pct": 14.4,
+       "share_change_pct": 18.4,
        "weekly": [
         {
          "end": "2026-08-14T07:45:00+00:00",
@@ -30493,7 +30493,7 @@
         {
          "end": "2026-10-09T07:45:00+00:00",
          "count": 1,
-         "share": 10.7
+         "share": 16.0
         },
         {
          "end": "2026-10-16T07:45:00+00:00",
@@ -30610,7 +30610,7 @@
        "negative": 5,
        "negative_share": 51.4,
        "escalation": 0,
-       "share_change_pct": -44.0,
+       "share_change_pct": -42.0,
        "weekly": [
         {
          "end": "2026-08-14T07:45:00+00:00",
@@ -30711,7 +30711,7 @@
        "negative": 4,
        "negative_share": 79.4,
        "escalation": 0,
-       "share_change_pct": -56.9,
+       "share_change_pct": -54.9,
        "weekly": []
       },
       {
@@ -30775,16 +30775,6 @@
        "weekly": []
       },
       {
-       "id": "closure_requests",
-       "label": "Account and card closure",
-       "count": 2,
-       "negative": 0,
-       "negative_share": 0.0,
-       "escalation": 0,
-       "share_change_pct": 18.7,
-       "weekly": []
-      },
-      {
        "id": "atm_debit_card",
        "label": "Debit card and cash machines",
        "count": 2,
@@ -30832,6 +30822,16 @@
        "negative_share": null,
        "escalation": 0,
        "share_change_pct": -33.3,
+       "weekly": []
+      },
+      {
+       "id": "closure_requests",
+       "label": "Account and card closure",
+       "count": 1,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": -100.0,
        "weekly": []
       },
       {
@@ -31639,7 +31639,7 @@
    "v4": {
     "cards": {
      "hierarchy": {
-      "total": 1160306,
+      "total": 1160305,
       "inside": {
        "volume": 1160157,
        "kinds": {
@@ -31674,12 +31674,12 @@
        "open_too_long": 17576
       },
       "public": {
-       "volume": 149,
+       "volume": 148,
        "sentiments": {
         "positive": {
-         "volume": 32,
+         "volume": 31,
          "responded": 2,
-         "not_responded": 30
+         "not_responded": 29
         },
         "neutral": {
          "volume": 41,
@@ -31693,7 +31693,7 @@
         }
        },
        "responded": 14,
-       "not_responded": 135,
+       "not_responded": 134,
        "responded_live_only": "Replies are counted only where the source carries them; none are simulated."
       }
      },
@@ -32330,7 +32330,7 @@
       "matrix": {
        "positive": {
         "responded": 2,
-        "not_responded": 30
+        "not_responded": 29
        },
        "neutral": {
         "responded": 1,
