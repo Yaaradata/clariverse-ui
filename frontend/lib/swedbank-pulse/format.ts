@@ -21,6 +21,38 @@ export function fmtPct(n: number | null | undefined, digits = 0): string {
   return `${n.toFixed(digits)}%`;
 }
 
+/** "1 post", "3 posts": a count with its noun (SW-D18). */
+export function plural(n: number, one: string, many = `${one}s`): string {
+  return `${fmt(n)} ${n === 1 ? one : many}`;
+}
+
+/**
+ * SW-D18 n-rule on a share: n ≥ 20 the share; 3 ≤ n < 20 the share, marked indicative; n < 3 "—" with the count.
+ * Never 0% or 100% from fewer than 3 items.
+ */
+export function nShare(
+  share: number | null | undefined,
+  n: number | null | undefined,
+  one = "public item",
+): { value: number | null; text: string; note: string | null } {
+  const k = n ?? 0;
+  if (k < 3 || share === null || share === undefined)
+    return { value: null, text: "—", note: `(${plural(k, one)})` };
+  return {
+    value: share,
+    text: fmtPct(share),
+    note: k < 20 ? "indicative" : null,
+  };
+}
+
+/** SW-D18 "Responded": "n of m"; with no public items, "0 public items". */
+export function respondedOf(
+  responded: number | null | undefined,
+  m: number | null | undefined,
+): string {
+  return m ? `${fmt(responded ?? 0)} of ${fmt(m)}` : "0 public items";
+}
+
 /** A plain number with a typographic minus, e.g. −54. */
 export function fmtNum(n: number | null | undefined, digits = 0): string {
   if (n === null || n === undefined || Number.isNaN(n)) return "—";

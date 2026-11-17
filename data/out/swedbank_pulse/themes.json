@@ -228,7 +228,7 @@
    "definition": "Positive app reviews: easy, fast, useful, smooth.",
    "count": 9,
    "count_group_companies": 0,
-   "primary_count": 9,
+   "primary_count": 8,
    "by_source": {
     "playstore": 9
    },
@@ -323,27 +323,27 @@
    "owner_label": "Digital and Nina",
    "business": "retail_banking",
    "definition": "Reactions to a new app version: changes, missing features, old app better.",
-   "count": 8,
+   "count": 9,
    "count_group_companies": 0,
-   "primary_count": 8,
+   "primary_count": 9,
    "by_source": {
     "appstore": 1,
-    "playstore": 7
+    "playstore": 8
    },
    "by_business": {
-    "retail_banking": 7,
+    "retail_banking": 8,
     "wealth": 1
    },
    "by_product": {
-    "everyday_accounts_app": 7,
+    "everyday_accounts_app": 8,
     "savings_funds": 1
    },
    "sentiment": {
-    "positive": 0,
+    "positive": 1,
     "neutral": 1,
     "negative": 7
    },
-   "share_negative": 87.5,
+   "share_negative": 77.8,
    "escalation_count": 0,
    "share_escalation": 0.0,
    "repeat_count": 0,
@@ -368,8 +368,8 @@
     },
     {
      "week": "2026-11-09",
-     "count": 0,
-     "share": 0.0
+     "count": 1,
+     "share": 5.3
     }
    ],
    "weekly_all": [
@@ -387,26 +387,26 @@
     },
     {
      "week": "2026-11-09",
-     "count": 0
+     "count": 1
     }
    ],
    "trend": {
     "mode": "trend_within_window",
     "method": "source_weighted",
     "first_half": 6,
-    "second_half": 1,
+    "second_half": 2,
     "first_share": 18.55,
-    "second_share": 3.37,
-    "change_pct": -81.8,
+    "second_share": 6.74,
+    "change_pct": -63.6,
     "first_half_dates": "2026-10-22 to 2026-11-03",
     "second_half_dates": "2026-11-04 to 2026-11-17"
    },
    "vs_baseline": null,
    "trend_mode": "insufficient",
-   "basis_share": 87.5,
+   "basis_share": 88.9,
    "rise_pct": null,
    "first_seen": "2026-10-23T12:55:05+00:00",
-   "latest": "2026-11-06T10:28:05+00:00",
+   "latest": "2026-11-11T00:52:38+00:00",
    "rung": "Voice",
    "exemplars": [
     "playstore:a1c9ba7b-a97d-477f-a027-09a78e3f1375",
@@ -625,6 +625,109 @@
    "action": "Route with evidence"
   },
   {
+   "id": "branch_service",
+   "label": "Branch (kontor) service",
+   "group": "Service",
+   "pillar": "support",
+   "owner": "retail",
+   "owner_label": "Everyday banking product owner",
+   "business": "retail_banking",
+   "definition": "Branch (kontor) visits, staff behaviour, being sent elsewhere.",
+   "count": 5,
+   "count_group_companies": 0,
+   "primary_count": 5,
+   "by_source": {
+    "x": 1,
+    "trustpilot": 4
+   },
+   "by_business": {
+    "retail_banking": 4,
+    "loans": 1
+   },
+   "by_product": {
+    "everyday_accounts_app": 4,
+    "mortgages": 1
+   },
+   "sentiment": {
+    "positive": 1,
+    "neutral": 0,
+    "negative": 4
+   },
+   "share_negative": 75.0,
+   "escalation_count": 1,
+   "share_escalation": 20.0,
+   "repeat_count": 0,
+   "status_seeking_count": 0,
+   "promise_break_count": 0,
+   "closure_intent_count": 1,
+   "weekly": [
+    {
+     "week": "2026-10-19",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-10-26",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-11-02",
+     "count": 1,
+     "share": 4.15
+    },
+    {
+     "week": "2026-11-09",
+     "count": 0,
+     "share": 0.0
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-10-19",
+     "count": 0
+    },
+    {
+     "week": "2026-10-26",
+     "count": 2
+    },
+    {
+     "week": "2026-11-02",
+     "count": 2
+    },
+    {
+     "week": "2026-11-09",
+     "count": 1
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 1,
+    "second_half": 0,
+    "first_share": 4.84,
+    "second_share": 0.0,
+    "change_pct": -100.0,
+    "first_half_dates": "2026-10-22 to 2026-11-03",
+    "second_half_dates": "2026-11-04 to 2026-11-17"
+   },
+   "vs_baseline": null,
+   "trend_mode": "insufficient",
+   "basis_share": 20.0,
+   "rise_pct": null,
+   "first_seen": "2026-10-27T14:24:23+00:00",
+   "latest": "2026-11-13T15:40:42+00:00",
+   "rung": "Repeat",
+   "exemplars": [
+    "trustpilot:6af7135a6909161723c94198",
+    "trustpilot:6ae8628764798e7618c38727"
+   ],
+   "last_day_count": 0,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
    "id": "app_speed_crash",
    "label": "App outages, speed and crashes",
    "group": "App and digital",
@@ -829,109 +932,6 @@
    "action": "Route with evidence"
   },
   {
-   "id": "branch_service",
-   "label": "Branch (kontor) service",
-   "group": "Service",
-   "pillar": "support",
-   "owner": "retail",
-   "owner_label": "Everyday banking product owner",
-   "business": "retail_banking",
-   "definition": "Branch (kontor) visits, staff behaviour, being sent elsewhere.",
-   "count": 4,
-   "count_group_companies": 0,
-   "primary_count": 4,
-   "by_source": {
-    "x": 1,
-    "trustpilot": 3
-   },
-   "by_business": {
-    "retail_banking": 3,
-    "loans": 1
-   },
-   "by_product": {
-    "everyday_accounts_app": 3,
-    "mortgages": 1
-   },
-   "sentiment": {
-    "positive": 0,
-    "neutral": 0,
-    "negative": 4
-   },
-   "share_negative": 100.0,
-   "escalation_count": 1,
-   "share_escalation": 25.0,
-   "repeat_count": 0,
-   "status_seeking_count": 0,
-   "promise_break_count": 0,
-   "closure_intent_count": 1,
-   "weekly": [
-    {
-     "week": "2026-10-19",
-     "count": 0,
-     "share": 0.0
-    },
-    {
-     "week": "2026-10-26",
-     "count": 0,
-     "share": 0.0
-    },
-    {
-     "week": "2026-11-02",
-     "count": 1,
-     "share": 4.15
-    },
-    {
-     "week": "2026-11-09",
-     "count": 0,
-     "share": 0.0
-    }
-   ],
-   "weekly_all": [
-    {
-     "week": "2026-10-19",
-     "count": 0
-    },
-    {
-     "week": "2026-10-26",
-     "count": 1
-    },
-    {
-     "week": "2026-11-02",
-     "count": 2
-    },
-    {
-     "week": "2026-11-09",
-     "count": 1
-    }
-   ],
-   "trend": {
-    "mode": "trend_within_window",
-    "method": "source_weighted",
-    "first_half": 1,
-    "second_half": 0,
-    "first_share": 4.84,
-    "second_share": 0.0,
-    "change_pct": -100.0,
-    "first_half_dates": "2026-10-22 to 2026-11-03",
-    "second_half_dates": "2026-11-04 to 2026-11-17"
-   },
-   "vs_baseline": null,
-   "trend_mode": "insufficient",
-   "basis_share": 25.0,
-   "rise_pct": null,
-   "first_seen": "2026-10-29T15:02:44+00:00",
-   "latest": "2026-11-13T15:40:42+00:00",
-   "rung": "Repeat",
-   "exemplars": [
-    "trustpilot:6af7135a6909161723c94198",
-    "trustpilot:6ae8628764798e7618c38727"
-   ],
-   "last_day_count": 0,
-   "score": 0,
-   "status": "watching",
-   "action": "Route with evidence"
-  },
-  {
    "id": "fair_treatment",
    "label": "Clear information and fair treatment (FI focus area)",
    "group": "Service",
@@ -942,7 +942,7 @@
    "definition": "Unclear information, unfair treatment, customers in a vulnerable situation, access to a payment account.",
    "count": 4,
    "count_group_companies": 0,
-   "primary_count": 1,
+   "primary_count": 0,
    "by_source": {
     "x": 2,
     "trustpilot": 2
@@ -1035,6 +1035,107 @@
    "score": 0,
    "status": "watching",
    "action": "Route with evidence"
+  },
+  {
+   "id": "account_opening",
+   "label": "Account opening and switching bank (byta bank)",
+   "group": "Service",
+   "pillar": "products_services",
+   "owner": "retail",
+   "owner_label": "Everyday banking product owner",
+   "business": "retail_banking",
+   "definition": "Opening an account, moving to the bank from another bank, BankID for newcomers.",
+   "count": 3,
+   "count_group_companies": 0,
+   "primary_count": 2,
+   "by_source": {
+    "x": 1,
+    "reddit": 1,
+    "trustpilot": 1
+   },
+   "by_business": {
+    "retail_banking": 3
+   },
+   "by_product": {
+    "everyday_accounts_app": 3
+   },
+   "sentiment": {
+    "positive": 0,
+    "neutral": 1,
+    "negative": 2
+   },
+   "share_negative": 100.0,
+   "escalation_count": 1,
+   "share_escalation": 33.3,
+   "repeat_count": 0,
+   "status_seeking_count": 0,
+   "promise_break_count": 0,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-10-19",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-10-26",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-11-02",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-11-09",
+     "count": 2,
+     "share": 8.87
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-10-19",
+     "count": 0
+    },
+    {
+     "week": "2026-10-26",
+     "count": 0
+    },
+    {
+     "week": "2026-11-02",
+     "count": 1
+    },
+    {
+     "week": "2026-11-09",
+     "count": 2
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 0,
+    "second_half": 2,
+    "first_share": 0.0,
+    "second_share": 7.26,
+    "change_pct": null,
+    "first_half_dates": "2026-10-22 to 2026-11-03",
+    "second_half_dates": "2026-11-04 to 2026-11-17"
+   },
+   "vs_baseline": null,
+   "trend_mode": "insufficient",
+   "basis_share": 66.7,
+   "rise_pct": null,
+   "first_seen": "2026-11-02T12:14:31+00:00",
+   "latest": "2026-11-14T16:18:44+00:00",
+   "rung": "Voice",
+   "exemplars": [
+    "trustpilot:6ae8628764798e7618c38727"
+   ],
+   "last_day_count": 0,
+   "score": 0,
+   "status": "watching",
+   "action": "Set a new date"
   },
   {
    "id": "general_dissatisfaction",
@@ -1538,106 +1639,6 @@
    "action": "Monitor"
   },
   {
-   "id": "account_opening",
-   "label": "Account opening and switching bank (byta bank)",
-   "group": "Service",
-   "pillar": "products_services",
-   "owner": "retail",
-   "owner_label": "Everyday banking product owner",
-   "business": "retail_banking",
-   "definition": "Opening an account, moving to the bank from another bank, BankID for newcomers.",
-   "count": 2,
-   "count_group_companies": 0,
-   "primary_count": 1,
-   "by_source": {
-    "reddit": 1,
-    "trustpilot": 1
-   },
-   "by_business": {
-    "retail_banking": 2
-   },
-   "by_product": {
-    "everyday_accounts_app": 2
-   },
-   "sentiment": {
-    "positive": 0,
-    "neutral": 1,
-    "negative": 1
-   },
-   "share_negative": 100.0,
-   "escalation_count": 0,
-   "share_escalation": 0.0,
-   "repeat_count": 0,
-   "status_seeking_count": 0,
-   "promise_break_count": 0,
-   "closure_intent_count": 0,
-   "weekly": [
-    {
-     "week": "2026-10-19",
-     "count": 0,
-     "share": 0.0
-    },
-    {
-     "week": "2026-10-26",
-     "count": 0,
-     "share": 0.0
-    },
-    {
-     "week": "2026-11-02",
-     "count": 0,
-     "share": 0.0
-    },
-    {
-     "week": "2026-11-09",
-     "count": 1,
-     "share": 5.65
-    }
-   ],
-   "weekly_all": [
-    {
-     "week": "2026-10-19",
-     "count": 0
-    },
-    {
-     "week": "2026-10-26",
-     "count": 0
-    },
-    {
-     "week": "2026-11-02",
-     "count": 1
-    },
-    {
-     "week": "2026-11-09",
-     "count": 1
-    }
-   ],
-   "trend": {
-    "mode": "trend_within_window",
-    "method": "source_weighted",
-    "first_half": 0,
-    "second_half": 1,
-    "first_share": 0.0,
-    "second_share": 4.84,
-    "change_pct": null,
-    "first_half_dates": "2026-10-22 to 2026-11-03",
-    "second_half_dates": "2026-11-04 to 2026-11-17"
-   },
-   "vs_baseline": null,
-   "trend_mode": "insufficient",
-   "basis_share": 50.0,
-   "rise_pct": null,
-   "first_seen": "2026-11-02T12:14:31+00:00",
-   "latest": "2026-11-10T11:39:32+00:00",
-   "rung": "Voice",
-   "exemplars": [
-    "trustpilot:6ae8628764798e7618c38727"
-   ],
-   "last_day_count": 0,
-   "score": 0,
-   "status": "watching",
-   "action": "Set a new date"
-  },
-  {
    "id": "identity_checks",
    "label": "Know-your-customer questions and identity checks",
    "group": "Service",
@@ -1952,7 +1953,7 @@
    "definition": "Customers praising staff, resolution or the bank overall.",
    "count": 2,
    "count_group_companies": 0,
-   "primary_count": 2,
+   "primary_count": 1,
    "by_source": {
     "x": 1,
     "trustpilot": 1
@@ -2819,11 +2820,11 @@
   {
    "id": "products_services",
    "label": "Products and services",
-   "count": 40,
+   "count": 41,
    "sentiment": {
     "positive": 10,
     "neutral": 15,
-    "negative": 15
+    "negative": 16
    },
    "net_sentiment": -16.7,
    "net_first_half": -23.1,
@@ -2836,13 +2837,13 @@
      "count": 11
     },
     {
-     "id": "app_praise",
-     "label": "Where customers praise us: quick, easy app journeys",
+     "id": "new_app_release",
+     "label": "New app and update experience",
      "count": 9
     },
     {
-     "id": "new_app_release",
-     "label": "New app and update experience",
+     "id": "app_praise",
+     "label": "Where customers praise us: quick, easy app journeys",
      "count": 8
     }
    ]
@@ -2850,11 +2851,11 @@
   {
    "id": "price_value",
    "label": "Price and value",
-   "count": 18,
+   "count": 17,
    "sentiment": {
     "positive": 3,
     "neutral": 9,
-    "negative": 6
+    "negative": 5
    },
    "net_sentiment": null,
    "net_first_half": null,
@@ -2916,7 +2917,7 @@
     {
      "id": "branch_service",
      "label": "Branch (kontor) service",
-     "count": 4
+     "count": 5
     },
     {
      "id": "care_unreachable",

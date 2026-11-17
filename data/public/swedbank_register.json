@@ -34,7 +34,7 @@
   {
    "id": "REG-KUNDOMBUDSMAN",
    "label": "Kundombudsman appeal",
-   "value": "Written appeal to the bank's Kundombudsman (Customer Ombudsman) after the final decision",
+   "value": "Written appeal to the bank's Kundombudsman (the bank's internal appeal) after the final decision",
    "basis": "Second-line complaints appeal inside the bank, the stage before ARN",
    "source_title": "Swedbank, handling of complaints (research pack §1, §3)",
    "url": "https://www.swedbank.se/en/contact-us/handling-of-complaints.html",

@@ -17,7 +17,7 @@ const OTHER = /\b(HDFC|IndusInd|Sterling|Openbank|NatWest|RBS|Ulster|Coutts|Mett
 const LABELS = /\b(illustrative|Illustrative|synthetic|Synthetic|seeded|mock|Mock|dummy|TODO|lorem|ANCHOR|DERIVED|ASSUMPTION)\b/;
 // SW-D15 point 3: a card never shows a blank figure.
 // SW-D17: no screen may say a figure is missing.
-const EMPTY = /\bundefined\b|\bNaN\b|\bnull\b|(?<![\d,])0 of 0\b|\bInfinity\b|no reply data|\bno data\b|not available|(?<![\w/])n\/a(?![\w/])|\bunavailable\b|not fetched|no replies found/i;
+const EMPTY = /\bundefined\b|\bNaN\b|\bnull\b|(?<![\d,])0 of 0\b|\bInfinity\b|no reply data|\bno data\b|not available|(?<![\w/])n\/a(?![\w/])|\bunavailable\b|not fetched|no replies found|no earlier period|\bassum(?:ption|ed)s?\b|\bestimate[ds]?\b/i;
 const PERIODS = ["brief", "7d", "14d", "all"];
 
 // FAST=1: each Swedbank route once, 5 sampled signal pages, windows on the home route only, no link following.

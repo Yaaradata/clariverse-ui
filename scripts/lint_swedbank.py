@@ -99,6 +99,7 @@ UK_TERMS: list[tuple[str, str]] = [
     ("GMT", r"\bGMT\b|\bBST\b"),
     ("Ombudsman (not Kundombudsman)", r"(?<![Kk]und)(?<![Kk]und-)\b[Oo]mbudsman\b"),
     ("PSRs 2017", r"Payment Services Regulations"),
+    ("MoneySavingExpert", r"MoneySavingExpert|MSE"),
 ]
 UK_RX = [(t, re.compile(p)) for t, p in UK_TERMS]
 
@@ -125,6 +126,10 @@ NODATA_TERMS: list[tuple[str, str]] = [
     ("unavailable", r"(?i)\bunavailable\b"),
     ("not fetched", r"(?i)\bnot fetched\b"),
     ("no replies found", r"(?i)\bno replies found\b"),
+    # SW-D18 (Usha): every window has a comparison; provenance words belong in the validation file only.
+    ("no earlier period", r"(?i)\bno earlier period\b"),
+    ("assumption", r"(?i)\bassum(?:ption|ed)s?\b"),
+    ("estimate", r"(?i)\bestimate[ds]?\b"),
 ]
 NODATA_RX = [(t, re.compile(p)) for t, p in NODATA_TERMS]
 
@@ -216,8 +221,14 @@ SKIP_KEYS = {"redacted_text", "summary_raw", "text", "gloss", "keywords", "build
 PEER_KEY = "peers"
 
 
+# Ids, anchors and keys (md-ombudsman, cards-ombudsman-save, ombudsman-watch): code, never shown as words.
+CODE_ID = re.compile(r"^[a-z0-9]+(?:[-_][a-z0-9]+)*$")
+
+
 def text_rules(s: str, where: str, allow_peer_names: bool = False) -> list[str]:
     hits = []
+    if CODE_ID.match(s.strip()):
+        return hits
     for t, rx in INDIA_RX:
         if rx.search(s):
             hits.append(f"NW-INDIA {where}: India term '{t}' in: {s[:90]}")

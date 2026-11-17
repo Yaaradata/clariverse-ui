@@ -13,11 +13,11 @@
     "journey",
     "score"
    ],
-   "answer": "Since 22 Oct: the most negative contacts are in Everyday accounts and app (20,332 of 125,117 contacts; top issue New app and update experience). By journey, Switch or close leads switching intent (146 contacts), then Everyday banking (92). NKI target: At least 65; SKI 2026: Swedbank 60.3 of 100 · Sparbankerna 75.2 · industry 66.0.",
+   "answer": "Since 22 Oct: the most negative contacts are in Everyday accounts and app (20,306 of 125,139 contacts; top issue New app and update experience). By journey, Switch or close leads switching intent (193 contacts), then Everyday banking (136). NKI target: At least 65; SKI 2026: Swedbank 60.3 of 100 · Sparbankerna 75.2 · industry 66.0.",
    "evidence": [],
    "figures": {
-    "negative": 20332,
-    "volume": 125117
+    "negative": 20306,
+    "volume": 125139
    },
    "period": "all",
    "bound": [
@@ -48,7 +48,7 @@
     "google play",
     "app store"
    ],
-   "answer": "Since 22 Oct the stores hold 25 reviews of the app, 13 negative (52%); 12 of the negative ones are about the update, crashes or BankID sign-in. Google Play: 23 reviews, average 3.0 stars; App Store: 2 reviews, average 1.0 stars. Inside the bank, the app update and crash categories carry 28,489 contacts in the window.",
+   "answer": "Since 22 Oct the stores hold 25 reviews of the app, 13 negative (52%); 12 of the negative ones are about the update, crashes or BankID sign-in. Google Play: 23 reviews, average 3.0 stars; App Store: 2 reviews, average 1.0 stars. Inside the bank, the app update and crash categories carry 31,790 contacts in the window.",
    "evidence": [
     "appstore:14788878201",
     "playstore:f7ad4a7d-ab7f-4629-be88-5e18f5a63419",
@@ -58,7 +58,7 @@
     "store_reviews": 25,
     "store_negative": 13,
     "update_negative": 12,
-    "app_contacts": 28489
+    "app_contacts": 31790
    },
    "period": "all",
    "bound": [
@@ -86,14 +86,14 @@
     "week",
     "risk"
    ],
-   "answer": "As of 17 Nov: 2,044 complaints are unhappy with the bank's final decision (ARN eligible), 5,357 have a first reply overdue, and 140 have been filed with ARN. Most at risk: Everyday accounts and app (2,619), then Payments and Swish (2,484). ARN: The customer files in writing after the bank's final decision; 150 kr fee; recommendations are not binding but banks follow them. Eligibility and risk only; LisN does not predict who will file.",
+   "answer": "As of 17 Nov: 1,368 complaints are unhappy with the bank's final decision (ARN eligible), 5,450 have a first reply overdue, and 180 have been filed with ARN. Most at risk: Payments and Swish (2,595), then Everyday accounts and app (2,408). ARN: The customer files in writing after the bank's final decision; 150 kr fee; recommendations are not binding but banks follow them. Eligibility and risk only; LisN does not predict who will file.",
    "evidence": [],
    "figures": {
-    "brink": 1138,
-    "eligible": 5357,
-    "unhappy": 2044,
-    "awaiting_io": 140,
-    "at_risk": 8539
+    "brink": 1303,
+    "eligible": 5450,
+    "unhappy": 1368,
+    "awaiting_io": 180,
+    "at_risk": 8121
    },
    "period": "7d",
    "bound": [
@@ -122,12 +122,12 @@
     "aml",
     "blocked"
    ],
-   "answer": "Last 7 days: 1,042 of the 1,410 account-measure customers due an owner have no owner alerted yet (368 alerted). The cohort raised 8,271 contacts; 2,135 are open. Account-measure review: bank standard, confirm with the bank. FI focus areas: Payment-account access · fraud handling · vulnerable customers · clear information.",
+   "answer": "Last 7 days: 1,013 of the 1,389 account-measure customers due an owner have no owner alerted yet (376 alerted). The cohort raised 8,342 contacts; 2,159 are open. Account-measure review: bank standard, confirm with the bank. FI focus areas: Payment-account access · fraud handling · vulnerable customers · clear information.",
    "evidence": [],
    "figures": {
-    "no_owner": 1042,
-    "of": 1410,
-    "alerted": 368
+    "no_owner": 1013,
+    "of": 1389,
+    "alerted": 376
    },
    "period": "7d",
    "bound": [
@@ -154,12 +154,12 @@
     "lose",
     "leakage"
    ],
-   "answer": "Since 22 Oct the largest Nina failure is Nina unresolved, had to call (7,807 contacts), then Nina hand-off lost context (5,730). 36,289 of 87,090 Nina conversations closed by 10 Nov (42%) came back as a call or a complaint within 7 days. This week Nina took 34,794 contacts; 4,115 are open.",
+   "answer": "Since 22 Oct the largest Nina failure is Nina unresolved, had to call (6,315 contacts), then Nina gave a wrong answer (4,826). 36,643 of 85,305 Nina conversations closed by 10 Nov (43%) came back as a call or a complaint within 7 days. This week Nina took 36,019 contacts; 4,349 are open.",
    "evidence": [],
    "figures": {
-    "nina_week": 34794,
-    "back_7d": 36289,
-    "resolved": 87090
+    "nina_week": 36019,
+    "back_7d": 36643,
+    "resolved": 85305
    },
    "period": "all",
    "bound": [

@@ -41,7 +41,7 @@
     {
      "id": "new_app_release",
      "label": "New app and update experience",
-     "count": 7,
+     "count": 8,
      "negative": 6,
      "escalation": 0
     },
@@ -69,8 +69,15 @@
     {
      "id": "branch_service",
      "label": "Branch (kontor) service",
-     "count": 3,
+     "count": 4,
      "negative": 3,
+     "escalation": 1
+    },
+    {
+     "id": "account_opening",
+     "label": "Account opening and switching bank (byta bank)",
+     "count": 3,
+     "negative": 2,
      "escalation": 1
     },
     {
@@ -85,13 +92,6 @@
      "label": "Mis-selling and add-on products",
      "count": 2,
      "negative": 2,
-     "escalation": 0
-    },
-    {
-     "id": "account_opening",
-     "label": "Account opening and switching bank (byta bank)",
-     "count": 2,
-     "negative": 1,
      "escalation": 0
     },
     {

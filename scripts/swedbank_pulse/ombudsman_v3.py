@@ -50,9 +50,9 @@ def lists_at(c: dict, T: dt.datetime) -> list[str]:
 IO_OWNER = "Complaints lead"
 RULES = (
     "The bank replies to a complaint within 15 business days (bank standard, confirm with the bank). After a decision "
-    "that rejects the complaint in whole or in part, the customer can appeal to the Kundombudsman, the bank's Customer "
-    "Ombudsman, and can file with ARN (Allmänna reklamationsnämnden) in writing within one year of the complaint. ARN "
-    "decides within 90 days. ARN filing pace is assumed, about 10 a week (confirm with the bank). Eligibility and risk "
+    "that rejects the complaint in whole or in part, the customer can appeal to the bank's Kundombudsman "
+    "and can file with ARN (Allmänna reklamationsnämnden) in writing within one year of the complaint. ARN "
+    "decides within 90 days. ARN filing pace about 10 a week (confirm with the bank). Eligibility and risk "
     "only: LisN never predicts that a customer will file."
 )
 
@@ -120,10 +120,12 @@ def score(c: dict, st: dict, T: dt.datetime) -> tuple[int, list[str]]:
         why.append(f"no reply for {days} days, past the 15 business days")
     elif st["eligible"]:
         pts += 30
-        why.append("final decision issued, Kundombudsman appeal open")
+        ago = int((T - c["_final_reply_at"]) / DAY)
+        why.append(f"rejecting decision {ago} day{'' if ago == 1 else 's'} ago, Kundombudsman appeal open")
     if st["unhappy"]:
         pts += 40
-        why.append("unhappy with the final decision (" + ", ".join(st["unhappy_how"]) + "): ARN eligible")
+        back = int((T - c["_unhappy_at"]) / DAY)
+        why.append("unhappy with the final decision (" + ", ".join(st["unhappy_how"]) + f" {back} day{'' if back == 1 else 's'} ago): ARN eligible")
     seen = [x for x in c["contacts"] if x["_at"] <= T]
     repeats = sum(1 for x in seen if x["same_issue"])
     if repeats:
@@ -166,8 +168,6 @@ def block(cs: list[dict], w: dict, products: list[tuple[str, str]]) -> dict:
     """The ARN watch for one scope and period: dials now and at the previous period end, countdown, flow,
     list overlap and the split by business."""
     T, P, start = w["end"], w["prev"][1], w["start"]
-    if w["period_id"] == "all":  # the full window's baseline is its first morning: "since 22 Oct, 07:45" (05:45 UTC)
-        P = start + dt.timedelta(hours=7, minutes=45)
     now, prev = snap(cs, T), snap(cs, P)
     cn, cp = counts(now), counts(prev)
     risky = [(c, s) for c, s in now if s["at_risk"]]
@@ -202,8 +202,12 @@ def category_of(theme: str) -> dict:
     return next((k for k in CARDS_CATEGORIES if theme in k["themes"]), CARDS_OTHER)
 
 
+SAVE_CAP = 4  # at most 4 of the 10 save-list rows from one category
+SAVE_COVER = ("measures", "bankid", "app_reliability", "service", "fees")  # categories the save list always covers
+
+
 def cards_extra(cs: list[dict], w: dict, labels: dict) -> dict:
-    """The deep-dive product only (Payments and Swish): risk by category and subcategory (theme), and the save list of
+    """The deep-dive product only (common.DEEP_DIVE_PRODUCT): risk by category and subcategory (theme), and the save list of
     the top 10 to call today."""
     T = w["end"]
     now = [(c, s) for c, s in snap(cs, T) if c["product"] == DEEP_DIVE_PRODUCT]
@@ -233,20 +237,36 @@ def cards_extra(cs: list[dict], w: dict, labels: dict) -> dict:
             "state": "brink" if s["brink"] else "eligible",
             "days_left": s["days_left"], "score": pts, "reason": (lambda t: t[:1].upper() + t[1:])("; ".join(why)) + ".",
             "owner": IO_OWNER if s["awaiting_io"] else k["owner"], "lists": [LIST_LABEL[x] for x in lists_at(c, T)],
-            "premium": "uhni" in c["lists"],
+            "premium": "uhni" in c["lists"], "cat_id": k["id"],
         }))
-    # Premium and Private Banking in proportion: their rows on the save list follow their share of at-risk complaints.
+    # Selection (SW-D18): the best row of each must-cover category first, then the rest by score, with at most
+    # SAVE_CAP rows from one category, no repeated reason sentence, and Premium and Private Banking rows in proportion
+    # to their share of at-risk complaints. The picked rows are shown highest score first.
     risk_w = sum(c["w"] for c, s in now if s["at_risk"])
     prem_w = sum(c["w"] for c, s in now if s["at_risk"] and "uhni" in c["lists"])
     quota = max(1, round(10 * prem_w / max(risk_w, 1)))
-    save, n_prem = [], 0
-    for *_, r in sorted(ranked, key=lambda z: (z[0], z[1])):
-        if r["premium"] and n_prem >= quota:
-            continue
-        n_prem += r["premium"]
+    order = [r for *_, r in sorted(ranked, key=lambda z: (z[0], z[1]))]
+    save, per_cat, reasons, n_prem = [], {}, set(), 0
+
+    def take(r) -> bool:
+        nonlocal n_prem
+        if (r["premium"] and n_prem >= quota) or per_cat.get(r["cat_id"], 0) >= SAVE_CAP or r["reason"] in reasons                 or r in save:
+            return False
         save.append(r)
-        if len(save) == 10:
+        per_cat[r["cat_id"]] = per_cat.get(r["cat_id"], 0) + 1
+        reasons.add(r["reason"])
+        n_prem += r["premium"]
+        return True
+
+    for cat in SAVE_COVER:
+        next((r for r in order if r["cat_id"] == cat and take(r)), None)
+    for r in order:
+        if len(save) >= 10:
             break
+        take(r)
+    save = sorted(save[:10], key=lambda r: (-r["score"], r["id"]))
+    for r in save:
+        r.pop("cat_id", None)
     return {"categories": cats, "save_list": save}
 
 

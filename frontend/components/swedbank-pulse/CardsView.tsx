@@ -28,6 +28,9 @@ import {
   fmtDate,
   fmtPct,
   fmtSigned,
+  nShare,
+  plural,
+  respondedOf,
 } from "@/lib/swedbank-pulse/format";
 import type {
   Category,
@@ -73,6 +76,25 @@ const pct = (a: number | null | undefined, b: number) =>
   a === null || a === undefined || !b ? null : (100 * a) / b;
 
 const CARDS = "/swedbank-pulse/v1/business/everyday_accounts_app";
+
+/** SW-D18: a gauge's sub line under the n-rule: "indicative" for 3–19 items, the count with "—" below 3. */
+function shareSub(
+  r: { value: number | null; note: string | null },
+  base: string,
+): string {
+  if (r.value === null) return r.note ?? base;
+  return r.note ? `${base} · ${r.note}` : base;
+}
+
+function storeSub(
+  share: number | null | undefined,
+  reviews: number | null | undefined,
+): string {
+  const r = nShare(share, reviews, "review");
+  return r.value === null
+    ? `4–5★ share ${r.note}`
+    : `4–5★ share · ${plural(reviews ?? 0, "review")}${r.note ? ` · ${r.note}` : ""}`;
+}
 
 /** A short quote, or a matching-height placeholder so tiles in a row end at the same line. */
 function QuoteLine({ q, n }: { q: Quote | null; n?: number }) {
@@ -128,6 +150,8 @@ function IssuePulse({ p }: { p: Period }) {
   const i = p.cards.internal;
   const e = p.cards.external;
   const hi = e.high_impact;
+  const posN = nShare(e.positive_share, e.public_items ?? e.volume);
+  const negN = nShare(e.negative_share, e.public_items ?? e.volume);
   const na = i.not_responded_48h === null;
   const box = {
     background: C.cardAlt,
@@ -227,20 +251,16 @@ function IssuePulse({ p }: { p: Period }) {
               sub={<TrendChip pct={e.change_pct} label="stores and forums" />}
             />
             <Dial
-              value={e.positive_share}
+              value={posN.value}
               color={C.green}
               big={`${fmt(e.positive)} / ${fmt(e.negative)}`}
               label="Positive / negative"
-              sub={`${fmtPct(e.negative_share)} negative`}
+              sub={`${negN.text} negative${negN.note ? ` ${negN.note}` : ""}`}
             />
             <Dial
-              value={pct(e.responded.responded, e.responded.reviews)}
+              value={pct(e.responded.responded, e.volume)}
               color={C.violet}
-              big={
-                e.responded.reviews
-                  ? `${fmt(e.responded.responded)} of ${fmt(e.responded.reviews)}`
-                  : "—"
-              }
+              big={respondedOf(e.responded.responded, e.volume)}
               label="Responded"
             />
           </div>
@@ -316,9 +336,7 @@ function FigureCells({ f, span }: { f: CategoryFigures; span: string }) {
         {fmt(e.positive)} / {fmt(e.negative)}
       </span>
       <span style={cell(EX)}>
-        {e.responded.reviews
-          ? `${fmt(e.responded.responded)}/${fmt(e.responded.reviews)}`
-          : "—"}
+        {respondedOf(e.responded.responded, e.volume)}
       </span>
       <span style={cell(EX)}>{fmt(e.high_impact.volume)}</span>
       <span style={cell(EX)}>{fmt(e.escalation)}</span>
@@ -802,6 +820,8 @@ function QuestionCards({ p }: { p: Period }) {
       : m.net_trend_current - m.net_trend_previous;
   const topPain = mk.themes.slice().sort((a, b) => b.negative - a.negative)[0];
   const riser = mk.rising[0];
+  // SW-D18: with no theme past the rising rule, the card shows the largest theme instead of "—".
+  const largest = [...mk.themes].sort((a, z) => z.count - a.count)[0];
   const play = c.stores.find((s) => s.store === "playstore");
   const ios = c.stores.find((s) => s.store === "appstore");
   // The market card never repeats the quote on the first card.
@@ -842,10 +862,11 @@ function QuestionCards({ p }: { p: Period }) {
         gauges={[
           {
             label: "Positive share",
-            value: c.external.volume ? (c.external.positive_share ?? 0) : null,
-            sub: c.external.volume
-              ? "of Everyday accounts and app public voice"
-              : "public voice not yet loaded",
+            value: nShare(c.external.positive_share, c.external.volume).value,
+            sub: shareSub(
+              nShare(c.external.positive_share, c.external.volume),
+              "of Everyday accounts and app public voice",
+            ),
             tone: "green",
           },
           {
@@ -859,12 +880,12 @@ function QuestionCards({ p }: { p: Period }) {
           {
             label: "Top pain",
             value: topPain?.label ?? "—",
-            sub: `${fmt(topPain?.negative)} negative items`,
+            sub: plural(topPain?.negative ?? 0, "negative item"),
             color: C.red,
           },
           {
             label: "Switching intent",
-            value: `${fmt(sv.closure.public_intent)} posts`,
+            value: plural(sv.closure.public_intent, "post"),
             sub: "customers saying they will close or leave",
           },
         ]}
@@ -881,38 +902,34 @@ function QuestionCards({ p }: { p: Period }) {
         icon={<Shield size={18} />}
         title="What is the market saying about us?"
         micro="Themes · Rising · App pulse"
-        answer={`${riser ? `${riser.label} is rising fastest (share of voice ${fmtSigned(riser.share_change_pct)} ${p.compare}).` : "No Everyday accounts and app theme is rising by the 30% rule in this period."} ${mk.reach.volume ? `${fmt(mk.reach.volume)} posts with reach.` : "No posts with reach."}`}
+        answer={`${riser ? `${riser.label} is rising fastest (share of voice ${fmtSigned(riser.share_change_pct)} ${p.compare}).` : largest ? `No theme passes the rising rule; ${largest.label} is the largest (${plural(largest.count, "item")}).` : "No theme passes the rising rule."} ${mk.reach.volume ? `${plural(mk.reach.volume, "post")} with reach.` : "No posts with reach."}`}
         headlineLabel="Public posts and reviews"
         headline={fmt(c.external.volume)}
         caption={`About Everyday accounts and app, in the period: X, Reddit, Trustpilot, Google Play, App Store. ${fmt(c.external.escalation)} use escalation language.`}
         gauges={[
           {
             label: "Google Play",
-            value: play?.reviews ? (play.share_positive ?? 0) : null,
-            sub: play?.reviews
-              ? `4–5★ share · ${fmt(play.reviews)} reviews`
-              : "4–5★ share · not yet loaded",
+            value: nShare(play?.share_positive, play?.reviews).value,
+            sub: storeSub(play?.share_positive, play?.reviews),
             tone: "amber",
           },
           {
             label: "App Store",
-            value: ios?.reviews ? (ios.share_positive ?? 0) : null,
-            sub: ios?.reviews
-              ? `4–5★ share · ${fmt(ios.reviews)} reviews`
-              : "4–5★ share · not yet loaded",
+            value: nShare(ios?.share_positive, ios?.reviews).value,
+            sub: storeSub(ios?.share_positive, ios?.reviews),
             tone: "amber",
           },
         ]}
         stats={[
           {
-            label: "Rising theme",
-            value: riser?.label ?? "—",
-            sub: riser ? `${fmt(riser.count)} items` : "none by the rule",
+            label: riser ? "Rising theme" : "Largest theme",
+            value: (riser ?? largest)?.label ?? "—",
+            sub: plural((riser ?? largest)?.count ?? 0, "item"),
             color: C.amber,
           },
           {
             label: "High impact",
-            value: `${fmt(mk.reach.volume)} posts`,
+            value: plural(mk.reach.volume, "post"),
             sub: `${fmt(mk.reach.negative)} negative · ${fmt(mk.reach.escalation)} escalation language`,
             color: C.red,
           },
@@ -931,9 +948,9 @@ function QuestionCards({ p }: { p: Period }) {
         title="Are we meeting our service standards?"
         micro="Missed service standards · Status-seeking · Escalation"
         answer={`${fmt(sv.missed_timelines.total)} public Everyday accounts and app posts describe a missed service standard; ${fmt(sv.transparency.count)} ask where something is; ${fmt(sv.public_escalation)} use escalation language.`}
-        headlineLabel="Missed service standards heard"
-        headline={fmt(sv.missed_timelines.total)}
-        caption={`Public posts in the period, by request type on the drill-down. Inside the bank: ${late === null ? "the 48-hour figure needs 48 hours" : `${fmt(late)} Everyday accounts and app contacts not responded to in 48h+`}.`}
+        headlineLabel="Contacts not responded in 48h+"
+        headline={late === null ? "—" : fmt(late)}
+        caption={`${late === null ? "The 48-hour figure needs 48 hours of data." : `${plural(late, "contact")} not responded in 48h+, inside the bank.`} In public: ${plural(sv.missed_timelines.total, "post")} describe a missed service standard.`}
         gauges={[
           {
             label: "Repeat contact",
@@ -943,22 +960,23 @@ function QuestionCards({ p }: { p: Period }) {
           },
           {
             label: "Asking status",
-            value: sv.transparency.share ?? null,
-            sub:
-              sv.transparency.share === null ||
-              sv.transparency.share === undefined
-                ? "public voice not yet loaded"
-                : "of Everyday accounts and app public posts",
+            value: nShare(sv.transparency.share, c.external.volume).value,
+            sub: shareSub(
+              nShare(sv.transparency.share, c.external.volume),
+              "of Everyday accounts and app public posts",
+            ),
             tone: "amber",
           },
         ]}
         stats={[
           {
             label: "Escalation language",
-            value: `${fmt(sv.public_escalation)} posts`,
-            sub: sv.targets[0]
-              ? `most name ${sv.targets[0].label}`
-              : "public voice",
+            value: plural(sv.public_escalation, "post"),
+            sub: !sv.targets[0]
+              ? "public voice"
+              : /not named/i.test(sv.targets[0].label)
+                ? "target not named in most posts"
+                : `most name ${sv.targets[0].label}`,
             color: C.red,
           },
           {

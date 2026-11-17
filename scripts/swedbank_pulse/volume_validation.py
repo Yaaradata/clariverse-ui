@@ -105,12 +105,13 @@ def main() -> int:
         add(sec, f"{lab}: contacts", W(xs), N(W(xs)), "DERIVED",
             f"{N(S.CONTACTS_PER_YEAR)} a year × the window's days; weighted sample (scale_v3)",
             S.TOTAL_CONTACTS * share * 0.75, S.TOTAL_CONTACTS * share * 1.25)
+        one_day = "a single weekday (16 Nov, a Monday): weekday volume runs above the daily average, weekends below"             if p["id"] == "brief" else ""
         add(sec, f"{lab}: complaints received", W(cmp), N(W(cmp)), "DERIVED", "7,500 × 40 a year × the window's days",
-            S.COMPLAINTS * share * 0.7, S.COMPLAINTS * share * 1.3)
+            S.COMPLAINTS * share * 0.7, S.COMPLAINTS * share * 1.3, one_day)
         add(sec, f"{lab}: Nina conversations", W(nina), N(W(nina)), "DERIVED", "contacts × 35% Nina share",
             0.30 * W(xs), 0.40 * W(xs))
         add(sec, f"{lab}: negative contacts", W(neg), f"{N(W(neg))} ({100 * W(neg) / max(W(xs), 1):.1f}%)", "ASSUMPTION",
-            "about 13% of contacts negative (scale_v3.NEGATIVE_SHARE)", 0.10 * W(xs), 0.16 * W(xs))
+            "about 13% of contacts negative (scale_v3.NEGATIVE_SHARE)", 0.10 * W(xs), 0.16 * W(xs), one_day)
         if p["id"] == "all":
             full = {"contacts": W(xs), "complaints": W(cmp), "nina": W(nina)}
     add(sec, "Full window: contacts against the target", full["contacts"], N(full["contacts"]), "DERIVED",

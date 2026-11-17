@@ -39,6 +39,9 @@ const nextConfig = {
       // NatWest Group demo (docs/natwest/brief.md Step 1.1): same protection.
       { source: '/natwest-pulse', headers: noindex },
       { source: '/natwest-pulse/:path*', headers: noindex },
+      // Swedbank pulse (SW-D01): never indexed, like NatWest.
+      { source: '/swedbank-pulse', headers: noindex },
+      { source: '/swedbank-pulse/:path*', headers: noindex },
       { source: '/role-based/natwest_bank', headers: noindex },
       { source: '/role-based/natwest_bank/:path*', headers: noindex },
     ];

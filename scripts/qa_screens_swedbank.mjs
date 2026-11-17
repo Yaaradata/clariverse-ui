@@ -12,10 +12,12 @@ const SIZES = {
   m390: { width: 390, height: 844, dpr: 2 },
   laptop125: { width: 1536, height: 730, dpr: 1.25 },
 };
-const SCREENS = ["head-of-cx", "satisfaction", "market", "priority", "action-queue", "deliverables", "service-promise",
+// SW_SCREENS="head-of-cx,business/everyday_accounts_app" limits the run (SW-D18).
+const ALL_SCREENS = ["head-of-cx", "satisfaction", "market", "priority", "action-queue", "deliverables", "service-promise",
   "business/payments_swish", "business/everyday_accounts_app", "business/cards", "business/mortgages", "business/savings_funds",
   "business/consumer_loans", "business/everyday_accounts_app/happy", "business/everyday_accounts_app/market",
   "business/everyday_accounts_app/service", "module/nina_digital", "module/everyday_accounts_app", "my-view"];
+const SCREENS = process.env.SW_SCREENS ? process.env.SW_SCREENS.split(",") : ALL_SCREENS;
 // No brand filter: the oct13 layout has none and the layout rule bars adding one (NW-D27). Periods instead.
 const BRANDED = SCREENS; // SW-D15 points 3 and 12: every screen in every window
 const FONT_DIR = `${process.env.FONTSOURCE_DIR}/`;

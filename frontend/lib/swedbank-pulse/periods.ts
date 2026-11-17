@@ -58,6 +58,8 @@ export type PublicFigures = {
   /** NW-D93: set when the product has fewer than 20 review items in the period. */
   negative_share_note?: string;
   review_items?: number;
+  /** SW-D18: public items behind the share (the n of the n-rule). */
+  public_items?: number;
   share_method: "source_weighted";
   change_pct: number | null;
   trend_basis: { current: number; previous: number; sources: string[] };

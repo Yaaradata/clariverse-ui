@@ -102,14 +102,15 @@ def windows(p: dict) -> dict:
     if p["days"]:
         start = END - dt.timedelta(days=p["days"])
         prev = (start - dt.timedelta(days=p["days"]), start)
-        detail = f"vs the previous {p['days']} days" if p["days"] > 1 else "vs the day before"
+        # SW-D18: Morning brief vs the day before (15 Nov for public items), 7 and 14 days vs the previous 7 and 14.
+        detail = f"vs the previous {p['days']} days" if p["days"] > 1 else f"vs {(END - dt.timedelta(days=2)).day} {(END - dt.timedelta(days=2)).strftime('%b')}"
         n = min(8, int((END - START) / dt.timedelta(days=p["days"])))
         series = [(END - dt.timedelta(days=p["days"] * (k + 1)), END - dt.timedelta(days=p["days"] * k)) for k in range(n)][::-1]
     else:
         start = START
         mid = START + (END - START) / 2
         prev = (START, mid)  # full window: trends compare the second half with the first
-        detail = "no earlier period: the data starts on 22 October"
+        detail = "vs first half: the second half of the window against the first"  # SW-D18
         series, w = [], END
         while w - dt.timedelta(days=7) >= START:
             series.append((w - dt.timedelta(days=7), w))
@@ -118,7 +119,8 @@ def windows(p: dict) -> dict:
     cur_for_trend = (START + (END - START) / 2, END) if not p["days"] else (start, END)
     return {"period_id": p["id"], "start": start, "end": END, "prev": prev, "trend_cur": cur_for_trend,
             # One label on screen for every period, matching the period filter; the detail says exactly what is compared.
-            "compare": "vs previous period" if p["days"] else "no earlier period", "compare_detail": detail, "series": series}
+            "compare": ("vs previous period" if p["days"] > 1 else detail) if p["days"] else "vs first half",
+            "compare_detail": detail, "series": series}
 
 
 # ------------------------------------------------------------------ internal
@@ -231,12 +233,12 @@ def internal_block(rs, w, with_backlog: bool = False) -> dict:
     open_change = change(backlog(rs, b, w), backlog(rs, pb, w)) if with_backlog else None
     open_delta = None
     late_delta = sum(r["w"] for r in cur_rs if no_resp_48(r, b)) - sum(r["w"] for r in prev_rs if no_resp_48(r, pb))
-    if w["period_id"] == "all":  # no data before 22 October: the full window has no previous period (NW-D67)
-        open_change = late_delta = None
+    # SW-D18: the full window compares its second half (trend_cur) with its first half (prev); no window is left without
+    # a comparison.
     return {
         "volume": wn(vol),
-        "prev_volume": prev if w["period_id"] != "all" else None,
-        "change_pct": change(cur_t, prev) if w["period_id"] != "all" else None,
+        "prev_volume": prev,
+        "change_pct": change(cur_t, prev),
         "resolved": sum(r["w"] for r in vol if not open_at(r, b)),
         "open": sum(r["w"] for r in vol if is_open(r, b)),
         "waiting_on_customer": sum(r["w"] for r in vol if waiting_at(r, b)),
@@ -445,7 +447,9 @@ def response_by_source(rs) -> list[dict]:
 
 
 def replies(rs) -> dict:
-    ps = [r for r in rs if r["source"] in ("appstore", "playstore")]  # SW-D17: store reviews, internal seed
+    # SW-D18: every public item of the scope, every source, from the internal social-inbox seed (SW-D17); "reviews" is
+    # the scope's public item count (m in "n of m").
+    ps = list(rs)
     pos = [r for r in ps if r["sentiment"] == "positive"]
     neg = [r for r in ps if r["sentiment"] == "negative"]
     rep = lambda xs: sum(1 for r in xs if responded(r))  # noqa: E731  (SW-D17: the internal seed)
@@ -721,13 +725,16 @@ def businesses(inter, pub, w, W, labels) -> list[dict]:
         if n_rev < MIN_REVIEWS:
             # NW-D95: fewer than 20 reviews -> all on-topic public items for the product, labelled indicative; fewer than
             # 5 public items of any kind -> no figure.
-            # SW-D19 (Usha, 17 Nov): every product card shows a number in every window. Below 20 reviews the share is
-            # of all on-topic public items, marked indicative; with no public item in the window it reads 0% and the
-            # card says "0 public items". Never a made-up item (HL-15).
+            # SW-D18 n-rule (Usha, supersedes SW-D19): n >= 20 reviews -> share; 3 <= n < 20 public items -> share,
+            # "indicative"; n < 3 -> no share ("—") with the count beside it. Never 0% or 100% from n < 3.
             n_all = len(prs)
-            pb["negative_share"] = pct(sum(1 for r in prs if r["sentiment"] == "negative"), n_all) if n_all else 0.0
-            pb["negative_share_note"] = "indicative" if n_all else "no_items"
-            pb["public_items"] = n_all
+            if n_all >= MIN_PUBLIC:
+                pb["negative_share"] = pct(sum(1 for r in prs if r["sentiment"] == "negative"), n_all)
+                pb["negative_share_note"] = "indicative"
+            else:
+                pb["negative_share"] = None
+                pb["negative_share_note"] = None
+        pb["public_items"] = len(prs)
         neg_t = collections.Counter(r["themes"][0] for r in prs if r["sentiment"] == "negative" and fits_product(r["themes"][0], pid))
         top = neg_t.most_common(1)[0] if neg_t else None
         if not top:  # thin public voice: fall back to the internal top issue, and say so
@@ -765,7 +772,8 @@ def brief(biz: list[dict], pub, w, W, labels, p) -> dict:
         if sev and x["top_issue"]:
             needs.append((sev, {
                 "business": x["id"], "business_label": x["label"], "issue": x["top_issue"]["label"],
-                "text": f"{inr(x['external']['escalation'])} posts with escalation language; {inr(backlog)} {what}.",
+                # SW-D18: the internal figure leads, then the public count.
+                "text": f"{inr(backlog)} {what}; {inr(x['external']['escalation'])} public posts with escalation language.",
             }))
     needs = [v for _, v in sorted(needs, key=lambda z: -z[0])][:3]
     taken = {(n["business"], n["issue"]) for n in needs}
@@ -838,13 +846,21 @@ def brief(biz: list[dict], pub, w, W, labels, p) -> dict:
             prv = [r for r in pub if r["_product"] == x["id"] and pa <= r["_c"] < pb]
             n_now = weighted_share(reviews(cur), lambda r: r["sentiment"] == "negative", W, 1) if cur else None
             n_prev = weighted_share(reviews(prv), lambda r: r["sentiment"] == "negative", W, 1) if prv else None
+            n_win = sum(1 for r in pub if r["_product"] == x["id"] and a <= r["_c"] < b)
             if n_now is None or not n_prev:
+                # SW-D18: a thin product is a count, never a comparison.
                 extra.append((9, {"business": x["id"], "business_label": x["label"], "status": "watch",
-                                  "text": f"Too few public items to compare ({len(cur)} now, {len(prv)} before); negative share {n_now:.0f}%." if n_now is not None else f"Too few public items to compare ({len(cur)} now, {len(prv)} before)."}))
+                                  "text": f"{n_win} public {'item' if n_win == 1 else 'items'} in the window."}))
                 continue
             d = (n_now - n_prev) / n_prev
+            if d > 0:
+                # SW-D18: a rising negative share is a building signal, never "improving or stable".
+                if len(building) < 3 and (x["id"], None) not in {(v["business"], v.get("issue")) for v in building}:
+                    building.append({"business": x["id"], "business_label": x["label"], "issue": None, "status": "watch",
+                                     "text": f"Negative share up from {n_prev:.0f}% to {n_now:.0f}% {w['compare']}."})
+                continue
             extra.append((abs(d), {"business": x["id"], "business_label": x["label"], "status": "watch",
-                                   "text": f"Negative share {'up' if d > 0 else 'down'} from {n_prev:.0f}% to {n_now:.0f}% {w['compare']}; outside the improving and stable bands."}))
+                                   "text": f"Negative share down from {n_prev:.0f}% to {n_now:.0f}% {w['compare']}, below the 15% rule."}))
         for _, v in sorted(extra, key=lambda z: z[0]):
             if len(improving) >= 3:
                 break

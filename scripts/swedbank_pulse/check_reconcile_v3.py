@@ -332,9 +332,9 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
         stores = [x for x in sp["by_source"] if x["source"] in ("appstore", "playstore")]
         ok(sp["mentions"] == ext_blk["volume"] and sp["high_impact"] == ext_blk["high_impact"]["volume"],
            f"[{pid}] External block = CX pulse external (mentions, high impact)")
-        ok(sum(x["responded"] for x in stores) == ext_blk["responded"]["responded"]
-           and sum(x["mentions"] for x in stores) == ext_blk["responded"]["reviews"],
-           f"[{pid}] External block: store responses = CX pulse responded (the internal social inbox, SW-D17)")
+        ok(sum(x["responded"] for x in sp["by_source"]) == ext_blk["responded"]["responded"]
+           and sum(x["mentions"] for x in sp["by_source"]) == ext_blk["responded"]["reviews"],
+           f"[{pid}] External block: every source's responses = CX pulse responded (the internal social inbox, SW-D17/D18)")
         ok(sum(x["mentions"] for x in sp["by_source"]) == sp["mentions"] and sum(x["responded"] or 0 for x in sp["by_source"]) == sp["responded"],
            f"[{pid}] External block: sources sum to the combined response figure")
         # SW-D17 (Usha): every source reads the internal social-inbox seed: a figure for every source, never null, n <= m,
@@ -510,9 +510,10 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
     wk = per["periods"]["7d"]["cx_pulse"]["internal"].get("open_change_pct")
     ok(wk is not None and abs(wk) <= 15, f"open backlog: weekly change within ±15% ({wk}%)")
     fw = per["periods"]["all"]
-    ok(fw["cx_pulse"]["internal"].get("change_pct") is None and fw["cx_pulse"]["internal"].get("open_change_pct") is None
-       and all(x.get("open_change_pct") is None and x.get("change_pct") is None for x in fw["customer_pulse"]["lists"]),
-       "full window: no change against a previous period (no data before 22 October)")
+    # SW-D18: the full window compares its second half with its first ("vs first half"); every window has a comparison.
+    ok(fw["compare"] == "vs first half" and fw["cx_pulse"]["internal"].get("change_pct") is not None
+       and all(p_["compare"] != "no earlier period" for p_ in per["periods"].values()),
+       "full window: compared vs first half; no window without a comparison")
     # Product negative share (NW-D67): no product card shows more than 45% of its internal contacts negative.
     hi = [(pid, x["id"], x["internal"].get("negative_share")) for pid, p in per["periods"].items() for x in p["businesses"]
           if (x["internal"].get("negative_share") or 0) > 45]

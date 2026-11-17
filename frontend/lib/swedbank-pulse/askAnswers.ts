@@ -34,7 +34,7 @@ const withPeriod = (href: string, p: Period) => `${href}?period=${p.id}`;
 const signed = (n: number) =>
   n > 0 ? `up ${fmt(n)}` : n < 0 ? `down ${fmt(-n)}` : "no change";
 const IO_NOTE =
-  "First reply within 15 business days (bank standard), then the bank's final decision and a Kundombudsman appeal; ARN pace: assumption.";
+  "First reply within 15 business days (bank standard), then the bank's final decision and a Kundombudsman appeal.";
 /** The four ARN watch tiles, in screen order (SW-D06). */
 const TILE = {
   brink: "First reply overdue",

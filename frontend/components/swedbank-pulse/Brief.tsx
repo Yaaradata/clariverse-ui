@@ -9,16 +9,18 @@
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-import { fmt, fmtDate, fmtPct } from "@/lib/swedbank-pulse/format";
+import {
+  fmt,
+  fmtDate,
+  fmtPct,
+  nShare,
+  respondedOf,
+} from "@/lib/swedbank-pulse/format";
 import type { BriefItem, Business, Period } from "@/lib/swedbank-pulse/periods";
 import { SmallRing, TrendChip, titled, withPeriod } from "./Pulse";
 import { C, Gloss, MONO, Tile, tint } from "./primitives";
 
 /** SW-D19: "no_items" reads "0 public items" (the card still shows 0%); any other note as written. */
-function noteLabel(note: string | undefined): string | undefined {
-  return note === "no_items" ? "0 public items" : note;
-}
-
 const CARDS_VIEW = "/swedbank-pulse/v1/business/everyday_accounts_app";
 /** SW-D16: the six products in order; Everyday accounts and app carries the deep dive. */
 const DEEP_DIVE = "everyday_accounts_app";
@@ -115,6 +117,7 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
   const i = x.internal;
   const e = x.external;
   const r = e.responded;
+  const neg = nShare(e.negative_share, e.public_items ?? e.volume);
   const body = (
     <>
       <div
@@ -158,11 +161,11 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
         }}
       >
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <SmallRing value={e.negative_share} color={C.red} size={58} />
+          <SmallRing value={neg.value} color={C.red} size={58} />
           <span style={{ fontSize: 12, color: C.textMut, lineHeight: 1.3 }}>
             negative
             <br />
-            {noteLabel(e.negative_share_note) ?? "public"}
+            {neg.note ?? "public"}
           </span>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -215,17 +218,13 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
         <span>
           Responded:{" "}
           <strong style={{ color: C.text }}>
-            {r.reviews ? `${fmt(r.responded)} of ${fmt(r.reviews)}` : "—"}
+            {respondedOf(r.responded, e.volume)}
           </strong>
         </span>
         <span>
-          Negative public:{" "}
-          <strong style={{ color: C.text }}>{fmtPct(e.negative_share)}</strong>
-          {e.negative_share_note ? (
-            <span style={{ color: C.textMut }}>
-              {" "}
-              {noteLabel(e.negative_share_note)}
-            </span>
+          Negative public: <strong style={{ color: C.text }}>{neg.text}</strong>
+          {neg.note ? (
+            <span style={{ color: C.textMut }}> {neg.note}</span>
           ) : null}
         </span>
         <span>

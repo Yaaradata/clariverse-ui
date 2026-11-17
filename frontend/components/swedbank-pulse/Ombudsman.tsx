@@ -255,7 +255,7 @@ export function OmbudsmanWatch({
               label="Filed with ARN"
               sub={
                 <>
-                  ARN pace: assumption
+                  filed in writing
                   <br />
                   <Delta n={o.delta.awaiting_io} label={since} goodDown />
                 </>
@@ -276,7 +276,7 @@ export function OmbudsmanWatch({
             title={
               scope === "bank" ? "At risk, by product" : "At risk, by category"
             }
-            info={`First reply overdue: no first reply within 15 business days (bank standard, confirm with the bank). Final decision issued, Kundombudsman appeal open: the bank has decided and the customer can still appeal to the Kundombudsman. Unhappy with the final decision (ARN eligible): after the decision the customer reopened the complaint or contacted the bank again about the issue. Filed with ARN: ARN pace is an assumption. At risk counts each complaint once. Rings show the share of all complaints received in the window; open complaints are only those with no final decision yet and not referred. ${o.rules}`}
+            info={`First reply overdue: no first reply within 15 business days (bank standard, confirm with the bank). Final decision issued, Kundombudsman appeal open: the bank has decided and the customer can still appeal to the Kundombudsman. Unhappy with the final decision (ARN eligible): after the decision the customer reopened the complaint or contacted the bank again about the issue. Filed with ARN: complaints the customer has filed with ARN in writing. At risk counts each complaint once. Rings show the share of all complaints received in the window; open complaints are only those with no final decision yet and not referred. ${o.rules}`}
             rows={split}
           />
         </div>

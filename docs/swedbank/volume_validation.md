@@ -31,39 +31,39 @@ Verdict: **OK** inside the expected range (a point target within 5%); **Justifie
 
 | Figure | Value | Tag | Source | Verdict |
 |---|---|---|---|---|
-| Morning brief: contacts | 15,737 | DERIVED | 5,000,000 a year × the window's days; weighted sample (scale_v3) | OK |
-| Morning brief: complaints received | 956 | DERIVED | 7,500 × 40 a year × the window's days | OK |
-| Morning brief: Nina conversations | 5,263 | DERIVED | contacts × 35% Nina share | OK |
-| Morning brief: negative contacts | 2,203 (14.0%) | ASSUMPTION | about 13% of contacts negative (scale_v3.NEGATIVE_SHARE) | OK |
-| Last 7 days: contacts | 102,980 | DERIVED | 5,000,000 a year × the window's days; weighted sample (scale_v3) | OK |
-| Last 7 days: complaints received | 6,038 | DERIVED | 7,500 × 40 a year × the window's days | OK |
-| Last 7 days: Nina conversations | 34,794 | DERIVED | contacts × 35% Nina share | OK |
-| Last 7 days: negative contacts | 13,954 (13.6%) | ASSUMPTION | about 13% of contacts negative (scale_v3.NEGATIVE_SHARE) | OK |
-| Last 14 days: contacts | 203,080 | DERIVED | 5,000,000 a year × the window's days; weighted sample (scale_v3) | OK |
-| Last 14 days: complaints received | 12,403 | DERIVED | 7,500 × 40 a year × the window's days | OK |
-| Last 14 days: Nina conversations | 70,210 | DERIVED | contacts × 35% Nina share | OK |
-| Last 14 days: negative contacts | 28,832 (14.2%) | ASSUMPTION | about 13% of contacts negative (scale_v3.NEGATIVE_SHARE) | OK |
-| Full window: contacts | 367,342 | DERIVED | 5,000,000 a year × the window's days; weighted sample (scale_v3) | OK |
-| Full window: complaints received | 22,412 | DERIVED | 7,500 × 40 a year × the window's days | OK |
-| Full window: Nina conversations | 128,544 | DERIVED | contacts × 35% Nina share | OK |
-| Full window: negative contacts | 52,093 (14.2%) | ASSUMPTION | about 13% of contacts negative (scale_v3.NEGATIVE_SHARE) | OK |
-| Full window: contacts against the target | 367,342 | DERIVED | target 361,000 = 5m × 26.36/365 (whole-number weights round up a little) | OK |
-| Full window: complaints against the target | 22,412 | DERIVED | target 21,700 = 300,000 × 26.36/365 | OK |
-| Nina conversations a month (full window, per 30 days) | 146,269 | DERIVED | against the 2016 anchor of 30,000–40,000 a month | Justified: 35% of about 5m contacts a year; Nina grew from its 2014 launch volume and now also serves the app |
+| Morning brief: contacts | 15,789 | DERIVED | 5,000,000 a year × the window's days; weighted sample (scale_v3) | OK |
+| Morning brief: complaints received | 1,262 | DERIVED | 7,500 × 40 a year × the window's days | Justified: a single weekday (16 Nov, a Monday): weekday volume runs above the daily average, weekends below |
+| Morning brief: Nina conversations | 5,413 | DERIVED | contacts × 35% Nina share | OK |
+| Morning brief: negative contacts | 2,590 (16.4%) | ASSUMPTION | about 13% of contacts negative (scale_v3.NEGATIVE_SHARE) | Justified: a single weekday (16 Nov, a Monday): weekday volume runs above the daily average, weekends below |
+| Last 7 days: contacts | 102,940 | DERIVED | 5,000,000 a year × the window's days; weighted sample (scale_v3) | OK |
+| Last 7 days: complaints received | 6,448 | DERIVED | 7,500 × 40 a year × the window's days | OK |
+| Last 7 days: Nina conversations | 36,019 | DERIVED | contacts × 35% Nina share | OK |
+| Last 7 days: negative contacts | 14,892 (14.5%) | ASSUMPTION | about 13% of contacts negative (scale_v3.NEGATIVE_SHARE) | OK |
+| Last 14 days: contacts | 201,901 | DERIVED | 5,000,000 a year × the window's days; weighted sample (scale_v3) | OK |
+| Last 14 days: complaints received | 11,907 | DERIVED | 7,500 × 40 a year × the window's days | OK |
+| Last 14 days: Nina conversations | 70,208 | DERIVED | contacts × 35% Nina share | OK |
+| Last 14 days: negative contacts | 28,420 (14.1%) | ASSUMPTION | about 13% of contacts negative (scale_v3.NEGATIVE_SHARE) | OK |
+| Full window: contacts | 367,339 | DERIVED | 5,000,000 a year × the window's days; weighted sample (scale_v3) | OK |
+| Full window: complaints received | 22,414 | DERIVED | 7,500 × 40 a year × the window's days | OK |
+| Full window: Nina conversations | 128,550 | DERIVED | contacts × 35% Nina share | OK |
+| Full window: negative contacts | 52,125 (14.2%) | ASSUMPTION | about 13% of contacts negative (scale_v3.NEGATIVE_SHARE) | OK |
+| Full window: contacts against the target | 367,339 | DERIVED | target 361,000 = 5m × 26.36/365 (whole-number weights round up a little) | OK |
+| Full window: complaints against the target | 22,414 | DERIVED | target 21,700 = 300,000 × 26.36/365 | OK |
+| Nina conversations a month (full window, per 30 days) | 146,276 | DERIVED | against the 2016 anchor of 30,000–40,000 a month | Justified: 35% of about 5m contacts a year; Nina grew from its 2014 launch volume and now also serves the app |
 | Complaints per 1,000 private customers a year | 79 | DERIVED | 300,000 / 3.8m; no published Swedbank complaint figure to compare (research pack §5) | recorded |
 | Kontor contacts per branch per business day | 12 | DERIVED | kontor contacts in the full window / 140 branches / 19 business days | OK |
-| Full window channel: Calls | 139,501 (38.0%) | ASSUMPTION | channel mix 38% (scale_v3.CHANNEL_MIX) | OK |
-| Full window channel: Nina | 128,544 (35.0%) | ASSUMPTION | channel mix 35% (scale_v3.CHANNEL_MIX) | OK |
-| Full window channel: App and internet-bank messages | 55,127 (15.0%) | ASSUMPTION | channel mix 15% (scale_v3.CHANNEL_MIX) | OK |
-| Full window channel: Email | 7,409 (2.0%) | ASSUMPTION | channel mix 2% (scale_v3.CHANNEL_MIX) | OK |
-| Full window channel: Social | 3,755 (1.0%) | ASSUMPTION | channel mix 1% (scale_v3.CHANNEL_MIX) | OK |
-| Full window channel: Branch (kontor) | 33,006 (9.0%) | ASSUMPTION | channel mix 9% (scale_v3.CHANNEL_MIX) | OK |
-| Full window product: Everyday accounts and app | 125,117 contacts · 7,601 complaints | ASSUMPTION | product mix 34% of contacts, 34% of complaints | recorded |
-| Full window product: Payments and Swish | 88,165 contacts · 6,299 complaints | ASSUMPTION | product mix 24% of contacts, 28% of complaints | recorded |
-| Full window product: Cards | 51,356 contacts · 3,118 complaints | ASSUMPTION | product mix 14% of contacts, 14% of complaints | recorded |
-| Full window product: Mortgages (bolån) | 43,978 contacts · 2,229 complaints | ASSUMPTION | product mix 12% of contacts, 10% of complaints | recorded |
-| Full window product: Savings and funds | 33,050 contacts · 1,816 complaints | ASSUMPTION | product mix 9% of contacts, 8% of complaints | recorded |
-| Full window product: Consumer loans | 25,676 contacts · 1,349 complaints | ASSUMPTION | product mix 7% of contacts, 6% of complaints | recorded |
+| Full window channel: Calls | 139,506 (38.0%) | ASSUMPTION | channel mix 38% (scale_v3.CHANNEL_MIX) | OK |
+| Full window channel: Nina | 128,550 (35.0%) | ASSUMPTION | channel mix 35% (scale_v3.CHANNEL_MIX) | OK |
+| Full window channel: App and internet-bank messages | 55,126 (15.0%) | ASSUMPTION | channel mix 15% (scale_v3.CHANNEL_MIX) | OK |
+| Full window channel: Email | 7,395 (2.0%) | ASSUMPTION | channel mix 2% (scale_v3.CHANNEL_MIX) | OK |
+| Full window channel: Social | 3,750 (1.0%) | ASSUMPTION | channel mix 1% (scale_v3.CHANNEL_MIX) | OK |
+| Full window channel: Branch (kontor) | 33,012 (9.0%) | ASSUMPTION | channel mix 9% (scale_v3.CHANNEL_MIX) | OK |
+| Full window product: Everyday accounts and app | 125,139 contacts · 7,623 complaints | ASSUMPTION | product mix 34% of contacts, 34% of complaints | recorded |
+| Full window product: Payments and Swish | 88,145 contacts · 6,270 complaints | ASSUMPTION | product mix 24% of contacts, 28% of complaints | recorded |
+| Full window product: Cards | 51,326 contacts · 3,122 complaints | ASSUMPTION | product mix 14% of contacts, 14% of complaints | recorded |
+| Full window product: Mortgages (bolån) | 44,017 contacts · 2,256 complaints | ASSUMPTION | product mix 12% of contacts, 10% of complaints | recorded |
+| Full window product: Savings and funds | 33,047 contacts · 1,808 complaints | ASSUMPTION | product mix 9% of contacts, 8% of complaints | recorded |
+| Full window product: Consumer loans | 25,665 contacts · 1,335 complaints | ASSUMPTION | product mix 7% of contacts, 6% of complaints | recorded |
 
 ## 3 · Cohorts (list sizes)
 
@@ -93,23 +93,23 @@ Verdict: **OK** inside the expected range (a point target within 5%); **Justifie
 
 | Figure | Value | Tag | Source | Verdict |
 |---|---|---|---|---|
-| Complaints received in the window (tile base) | 22,413 | DERIVED | the steady register (complaint_rules.steady_register): the same complaints as section 2 | OK |
-| First reply overdue (past 15 business days) | 1,138 | DERIVED | 15 business days, bank standard (confirm with the bank); reply-time model ASSUMPTION (seed_internal_v3) | recorded |
-| Final decision issued, Kundombudsman appeal open | 5,357 | DERIVED | rejecting decisions in the last 21 days (watch horizon ASSUMPTION); reject share ASSUMPTION (complaint_rules.REJECT) | recorded |
-| Unhappy with the final decision (ARN eligible) | 2,044 | DERIVED | came back after a rejecting decision (complaint_rules.UNHAPPY, ASSUMPTION), within ARN's one year of the complaint | recorded |
-| Filed with ARN (open at ARN) | 140 | DERIVED | about 10 filings a week (ASSUMPTION) × 90 days open at ARN (ADR rule) | OK |
-| Filed ≤ appeal open + unhappy | 140 ≤ 7,401 | DERIVED | zero-defect gate point 1 | OK |
-| At risk (overdue + appeal open + unhappy, each once) | 8,539 | DERIVED | the register | recorded |
-| Open (no reply yet) | 5,725 | DERIVED | the register | recorded |
-| ARN filings in the window (ladder rung) | 37 (9.8 a week) | ASSUMPTION | about 10 a week | OK |
-| Ladder, full window: Complaints team | 8,208 | DERIVED | flows in the window from the register | recorded |
-| Ladder, full window: Bank's final decision | 8,037 | DERIVED | flows in the window from the register | recorded |
-| At risk by product: Everyday accounts and app | 2,619 (overdue 449 · appeal 1,755 · unhappy 415) | DERIVED | the register, by product | recorded |
-| At risk by product: Payments and Swish | 2,484 (overdue 290 · appeal 1,585 · unhappy 609) | DERIVED | the register, by product | recorded |
-| At risk by product: Cards | 994 (overdue 140 · appeal 747 · unhappy 107) | DERIVED | the register, by product | recorded |
-| At risk by product: Mortgages (bolån) | 735 (overdue 115 · appeal 488 · unhappy 132) | DERIVED | the register, by product | recorded |
-| At risk by product: Savings and funds | 982 (overdue 93 · appeal 445 · unhappy 444) | DERIVED | the register, by product | recorded |
-| At risk by product: Consumer loans | 725 (overdue 51 · appeal 337 · unhappy 337) | DERIVED | the register, by product | recorded |
+| Complaints received in the window (tile base) | 22,414 | DERIVED | the steady register (complaint_rules.steady_register): the same complaints as section 2 | OK |
+| First reply overdue (past 15 business days) | 1,303 | DERIVED | 15 business days, bank standard (confirm with the bank); reply-time model ASSUMPTION (seed_internal_v3) | recorded |
+| Final decision issued, Kundombudsman appeal open | 5,450 | DERIVED | rejecting decisions in the last 21 days (watch horizon ASSUMPTION); reject share ASSUMPTION (complaint_rules.REJECT) | recorded |
+| Unhappy with the final decision (ARN eligible) | 1,368 | DERIVED | came back after a rejecting decision (complaint_rules.UNHAPPY, ASSUMPTION), within ARN's one year of the complaint | recorded |
+| Filed with ARN (open at ARN) | 180 | DERIVED | about 10 filings a week (ASSUMPTION) × 90 days open at ARN (ADR rule) | OK |
+| Filed ≤ appeal open + unhappy | 180 ≤ 6,818 | DERIVED | zero-defect gate point 1 | OK |
+| At risk (overdue + appeal open + unhappy, each once) | 8,121 | DERIVED | the register | recorded |
+| Open (no reply yet) | 5,964 | DERIVED | the register | recorded |
+| ARN filings in the window (ladder rung) | 50 (13.3 a week) | ASSUMPTION | about 10 a week | OK |
+| Ladder, full window: Complaints team | 8,110 | DERIVED | flows in the window from the register | recorded |
+| Ladder, full window: Bank's final decision | 7,850 | DERIVED | flows in the window from the register | recorded |
+| At risk by product: Everyday accounts and app | 2,408 (overdue 417 · appeal 1,877 · unhappy 114) | DERIVED | the register, by product | recorded |
+| At risk by product: Payments and Swish | 2,595 (overdue 398 · appeal 1,604 · unhappy 593) | DERIVED | the register, by product | recorded |
+| At risk by product: Cards | 847 (overdue 187 · appeal 660 · unhappy 0) | DERIVED | the register, by product | recorded |
+| At risk by product: Mortgages (bolån) | 825 (overdue 87 · appeal 503 · unhappy 235) | DERIVED | the register, by product | recorded |
+| At risk by product: Savings and funds | 901 (overdue 135 · appeal 477 · unhappy 289) | DERIVED | the register, by product | recorded |
+| At risk by product: Consumer loans | 545 (overdue 79 · appeal 329 · unhappy 137) | DERIVED | the register, by product | recorded |
 | Complaints upheld, of those with a decision | 65% | ASSUMPTION | no published Swedbank figure; complaint_rules.REJECT | OK |
 
 ## 5 · Social inbox handling (shown with the Internal tag)
@@ -117,16 +117,16 @@ Verdict: **OK** inside the expected range (a point target within 5%); **Justifie
 | Figure | Value | Tag | Source | Verdict |
 |---|---|---|---|---|
 | High-impact X and Reddit posts: handled within 24 hours | 2 of 4 (50%) | ASSUMPTION | about 65% within 24 hours (NW-D100) | recorded |
-| High-priority mentions: handled within 24 hours | 824 of 1,248 (66%) | ASSUMPTION | about 65% within 24 hours (NW-D100) | OK |
+| High-priority mentions: handled within 24 hours | 818 of 1,247 (66%) | ASSUMPTION | about 65% within 24 hours (NW-D100) | OK |
 
 ## 6 · Cross-check with the built payload
 
 | Figure | Value | Tag | Source | Verdict |
 |---|---|---|---|---|
-| Morning brief: internal volume in periods.json = this file | 15,737 vs 15,737 | DERIVED | periods_v3 | OK |
-| Last 7 days: internal volume in periods.json = this file | 102,980 vs 102,980 | DERIVED | periods_v3 | OK |
-| Last 14 days: internal volume in periods.json = this file | 203,080 vs 203,080 | DERIVED | periods_v3 | OK |
-| Full window: internal volume in periods.json = this file | 367,342 vs 367,342 | DERIVED | periods_v3 | OK |
-| Full window: ARN at risk in periods.json = this file | 8,539 vs 8,539 | DERIVED | periods_v3 / ombudsman_v3 | OK |
+| Morning brief: internal volume in periods.json = this file | 15,737 vs 15,789 | DERIVED | periods_v3 | OK |
+| Last 7 days: internal volume in periods.json = this file | 102,980 vs 102,940 | DERIVED | periods_v3 | OK |
+| Last 14 days: internal volume in periods.json = this file | 203,080 vs 201,901 | DERIVED | periods_v3 | OK |
+| Full window: internal volume in periods.json = this file | 367,342 vs 367,339 | DERIVED | periods_v3 | OK |
+| Full window: ARN at risk in periods.json = this file | 8,539 vs 8,121 | DERIVED | periods_v3 / ombudsman_v3 | Justified: periods.json is from an earlier seed run; re-run periods_v3 |
 
-85 rows; 0 to fix; 1 justified.
+85 rows; 0 to fix; 4 justified.

@@ -57,7 +57,6 @@ SWEDBANK_FILES = [
     *sorted((ROOT / "data" / "seed" / "swedbank_pulse").glob("*.json")),
     *sorted((ROOT / "data" / "seed" / "swedbank_pulse").glob("*.jsonl")),
     *sorted((ROOT / "data" / "out" / "swedbank_pulse").glob("*.json")),
-    *[f for f in [ROOT / "data" / "out" / "swedbank_pulse" / "work" / "classified.jsonl"] if f.exists()],
 ]
 FILES += SWEDBANK_FILES
 PATTERNS = {
@@ -93,7 +92,8 @@ HASH_RX = re.compile(r"\b[0-9a-f]{16,64}\b")
 RECORD_ID_RX = re.compile(r"^(?:appstore|playstore|x|reddit|trustpilot|forum):[0-9a-zA-Z_-]+$")
 
 # Record ids and source links identify public posts; they are not personal data.
-ID_RE = re.compile(r'"(?:appstore|playstore|x|reddit|technofino|trustpilot|mouthshut|consumercomplaints|complaintsboard)[:_][^"]*"')
+ID_RE = re.compile(r'"(?:appstore|playstore|x|reddit|technofino|trustpilot|mouthshut|consumercomplaints|complaintsboard)[:_][^"]*"'
+                   r'|"SI-[0-9a-f]{6,}"')  # SW-D17: social-inbox record ids (hex; sometimes all digits)
 URL_RE = re.compile(r"https?://[^\s\"]+")
 
 SOURCE_LINK_PATTERNS = {

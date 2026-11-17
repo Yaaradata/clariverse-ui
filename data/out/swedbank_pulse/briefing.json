@@ -30,7 +30,7 @@
     {
      "id": "new_app_release",
      "label": "New app and update experience",
-     "count": 8,
+     "count": 9,
      "status": "watching"
     },
     {
@@ -46,7 +46,7 @@
      "status": "watching"
     }
    ],
-   "total": 26
+   "total": 27
   },
   {
    "owner": "cards",
@@ -144,13 +144,13 @@
     {
      "id": "branch_service",
      "label": "Branch (kontor) service",
-     "count": 4,
+     "count": 5,
      "status": "watching"
     },
     {
      "id": "account_opening",
      "label": "Account opening and switching bank (byta bank)",
-     "count": 2,
+     "count": 3,
      "status": "watching"
     },
     {
@@ -160,7 +160,7 @@
      "status": "watching"
     }
    ],
-   "total": 9
+   "total": 11
   },
   {
    "owner": "compliance",

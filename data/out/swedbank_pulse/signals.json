@@ -45,8 +45,8 @@
      "count": 1
     },
     {
-     "id": "fair_treatment",
-     "label": "Clear information and fair treatment (FI focus area)",
+     "id": "account_opening",
+     "label": "Account opening and switching bank (byta bank)",
      "count": 1
     }
    ],
@@ -354,8 +354,8 @@
     "count": 1
    },
    {
-    "id": "fair_treatment",
-    "label": "Clear information and fair treatment (FI focus area)",
+    "id": "account_opening",
+    "label": "Account opening and switching bank (byta bank)",
     "count": 1
    }
   ]

@@ -10,7 +10,7 @@
   "body": "I ordered a new BankID on 10 November and it still cannot be activated in the app. I cannot pay my bills.",
   "backend_status": "BankID re-issued 14 Nov; activation code sent by letter, due 16 Nov.",
   "bucket": "reply_status",
-  "draft_reply": "Thank you for writing to us. Your new BankID was issued on 14 November and the activation code is on its way by letter, due on 16 November. Until then you can pay bills at any kontor or through the Kundcenter. We are sorry for the wait. We will send you our decision once this is done. If you are not satisfied with it, you can ask our Kundombudsman (Customer Ombudsman) to review it, and after that apply to ARN."
+  "draft_reply": "Thank you for writing to us. Your new BankID was issued on 14 November and the activation code is on its way by letter, due on 16 November. Until then you can pay bills at any kontor or through the Kundcenter. We are sorry for the wait. We will send you our decision once this is done. If you are not satisfied with it, you can ask our Kundombudsman to review it, and after that apply to ARN."
  },
  {
   "id": "L2-02",
@@ -23,7 +23,7 @@
   "body": "A Swish payment failed on 11 November but the money was still taken from my account. It has not come back. I have already complained once.",
   "backend_status": "Payment returned 13 Nov, 17:05, two days after the debit. Any redress for the delay: confirm with the bank.",
   "bucket": "reply_status",
-  "draft_reply": "Thank you for writing to us. The Swish payment that failed on 11 November was returned to your account on 13 November at 17:05. We are sorry it took longer than it should have. If the delay cost you a fee, please reply to this message and we will look into it. If you are not satisfied with this decision, you can ask our Kundombudsman (Customer Ombudsman) to review it, and after that apply to ARN (Allmänna reklamationsnämnden, the National Board for Consumer Disputes)."
+  "draft_reply": "Thank you for writing to us. The Swish payment that failed on 11 November was returned to your account on 13 November at 17:05. We are sorry it took longer than it should have. If the delay cost you a fee, please reply to this message and we will look into it. If you are not satisfied with this decision, you can ask our Kundombudsman to review it, and after that apply to ARN (Allmänna reklamationsnämnden, the National Board for Consumer Disputes)."
  },
  {
   "id": "L2-03",
@@ -36,7 +36,7 @@
   "body": "Writing as the account holder's legal guardian (god man). The customer questions were answered at the kontor on 6 November. The account is still restricted. Please advise.",
   "backend_status": "Account-measure review completed 13 Nov; restriction lifted 13 Nov, 16:30.",
   "bucket": "reply_status",
-  "draft_reply": "Thank you for writing to us. The review of the account was completed on 13 November and the restriction was lifted the same day at 16:30. Payments and Swish work again. We will also write to the account holder in the internet bank. If you are not satisfied with this decision, you can ask our Kundombudsman (Customer Ombudsman) to review it, and after that apply to ARN (Allmänna reklamationsnämnden, the National Board for Consumer Disputes)."
+  "draft_reply": "Thank you for writing to us. The review of the account was completed on 13 November and the restriction was lifted the same day at 16:30. Payments and Swish work again. We will also write to the account holder in the internet bank. If you are not satisfied with this decision, you can ask our Kundombudsman to review it, and after that apply to ARN (Allmänna reklamationsnämnden, the National Board for Consumer Disputes)."
  },
  {
   "id": "L2-04",
@@ -49,7 +49,7 @@
   "body": "My loan promise (lånelöfte) expires on 21 November and access day has moved to December. Can it be extended?",
   "backend_status": "Extension approved 14 Nov; new loan promise to be issued 17 Nov.",
   "bucket": "reply_status",
-  "draft_reply": "Thank you for writing to us. Your loan promise has been extended to cover the new access day, and the new promise will be issued on 17 November. You will find it in the internet bank and the app. We will send you our decision once this is done. If you are not satisfied with it, you can ask our Kundombudsman (Customer Ombudsman) to review it, and after that apply to ARN."
+  "draft_reply": "Thank you for writing to us. Your loan promise has been extended to cover the new access day, and the new promise will be issued on 17 November. You will find it in the internet bank and the app. We will send you our decision once this is done. If you are not satisfied with it, you can ask our Kundombudsman to review it, and after that apply to ARN."
  },
  {
   "id": "L2-05",
@@ -62,7 +62,7 @@
   "body": "I moved my ISK from another bank on 3 November. The holdings have left there but nothing shows in my ISK here.",
   "backend_status": "Transfer received 14 Nov; holdings booked 15 Nov.",
   "bucket": "reply_status",
-  "draft_reply": "Thank you for writing to us. The transfer of your ISK was received on 14 November and the holdings were booked on 15 November. You can see them in the app now. We are sorry for the wait. If you are not satisfied with this decision, you can ask our Kundombudsman (Customer Ombudsman) to review it, and after that apply to ARN (Allmänna reklamationsnämnden, the National Board for Consumer Disputes)."
+  "draft_reply": "Thank you for writing to us. The transfer of your ISK was received on 14 November and the holdings were booked on 15 November. You can see them in the app now. We are sorry for the wait. If you are not satisfied with this decision, you can ask our Kundombudsman to review it, and after that apply to ARN (Allmänna reklamationsnämnden, the National Board for Consumer Disputes)."
  },
  {
   "id": "L2-06",

@@ -39,7 +39,8 @@ LABEL_SEEDED = {"illustrative": "Internal figures illustrative", "synthetic": "s
                 "ANCHOR": "ANCHOR figure", "DERIVED": "DERIVED from", "ASSUMPTION": "ASSUMPTION: 35%"}
 NODATA_SEEDED = {"no reply data": "Google Play · no reply data", "no data": "X · no data", "not available": "Reddit not available",
                  "n/a": "Trustpilot n/a", "unavailable": "App Store unavailable", "not fetched": "Replies not fetched",
-                 "no replies found": "no replies found"}
+                 "no replies found": "no replies found", "no earlier period": "Last 7 days · no earlier period",
+                 "assumption": "ARN pace: assumption", "estimate": "An estimate of 40 a week"}
 INDIA_SEEDED = {"RBI": "Escalate to the RBI", "UPI": "UPI failed", "NEFT": "NEFT late", "IMPS": "IMPS stuck", "₹": "₹500",
                 "lakh": "Two lakh", "crore": "40 crore"}
 CLEAN = [

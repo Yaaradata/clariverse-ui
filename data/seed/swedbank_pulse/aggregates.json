@@ -14,56 +14,56 @@
  },
  "dials": {
   "total": 32000,
-  "closed": 25218,
-  "waiting_on_customer": 2650,
-  "closed_or_responded": 31844,
+  "closed": 25174,
+  "waiting_on_customer": 2694,
+  "closed_or_responded": 31843,
   "open": 4132,
-  "open_too_long": 177,
+  "open_too_long": 136,
   "closed_or_responded_pct": 99.5,
   "open_pct": 12.9,
-  "open_too_long_pct_of_open": 4.3
+  "open_too_long_pct_of_open": 3.3
  },
  "products": [
   {
    "id": "everyday_accounts_app",
    "label": "Everyday accounts and app",
    "total": 12233,
-   "closed": 9484,
-   "waiting_on_customer": 1049,
-   "closed_or_responded": 12168,
-   "open": 1700,
-   "open_too_long": 69,
+   "closed": 9398,
+   "waiting_on_customer": 1123,
+   "closed_or_responded": 12167,
+   "open": 1712,
+   "open_too_long": 47,
    "closed_or_responded_pct": 99.5,
-   "open_pct": 13.9,
-   "open_too_long_pct_of_open": 4.1,
-   "negative": 3814,
-   "high_impact": 28,
+   "open_pct": 14.0,
+   "open_too_long_pct_of_open": 2.7,
+   "negative": 3760,
+   "high_impact": 34,
    "deliverables": {
-    "measured": 11657,
-    "met": 11141,
-    "outside": 516,
-    "met_pct": 95.6,
-    "open_within": 1631
+    "measured": 11637,
+    "met": 11198,
+    "outside": 439,
+    "met_pct": 96.2,
+    "open_within": 1665
    },
    "negative_weekly": [
     {
      "week": "2026-10-26",
-     "count": 997
+     "count": 1019
     },
     {
      "week": "2026-11-02",
-     "count": 1036
+     "count": 965
     },
     {
      "week": "2026-11-09",
-     "count": 1045
+     "count": 1040
     }
    ],
-   "negative_change_pct": 0.9,
+   "negative_change_pct": 7.8,
    "top_issue": {
     "id": "account_freeze",
     "label": "Account measures: frozen or restricted accounts",
-    "negative": 528
+    "negative": 557
    },
    "by_channel": {
     "whatsapp": 3980,
@@ -80,42 +80,42 @@
    "id": "payments_swish",
    "label": "Payments and Swish",
    "total": 8086,
-   "closed": 6749,
-   "waiting_on_customer": 529,
-   "closed_or_responded": 8060,
-   "open": 808,
-   "open_too_long": 81,
-   "closed_or_responded_pct": 99.7,
-   "open_pct": 10.0,
-   "open_too_long_pct_of_open": 10.0,
-   "negative": 2453,
-   "high_impact": 17,
+   "closed": 6826,
+   "waiting_on_customer": 491,
+   "closed_or_responded": 8050,
+   "open": 769,
+   "open_too_long": 63,
+   "closed_or_responded_pct": 99.6,
+   "open_pct": 9.5,
+   "open_too_long_pct_of_open": 8.2,
+   "negative": 2605,
+   "high_impact": 27,
    "deliverables": {
-    "measured": 7102,
-    "met": 6507,
-    "outside": 595,
-    "met_pct": 91.6,
-    "open_within": 727
+    "measured": 7146,
+    "met": 6607,
+    "outside": 539,
+    "met_pct": 92.5,
+    "open_within": 706
    },
    "negative_weekly": [
     {
      "week": "2026-10-26",
-     "count": 649
+     "count": 656
     },
     {
      "week": "2026-11-02",
-     "count": 654
+     "count": 709
     },
     {
      "week": "2026-11-09",
-     "count": 707
+     "count": 726
     }
    ],
-   "negative_change_pct": 8.1,
+   "negative_change_pct": 2.4,
    "top_issue": {
     "id": "swish_payment_failures",
     "label": "Swish, Bankgiro and payment failures",
-    "negative": 568
+    "negative": 652
    },
    "by_channel": {
     "inbound_voice": 2431,
@@ -132,42 +132,42 @@
    "id": "cards",
    "label": "Cards",
    "total": 4294,
-   "closed": 3154,
-   "waiting_on_customer": 448,
-   "closed_or_responded": 4271,
-   "open": 692,
-   "open_too_long": 7,
-   "closed_or_responded_pct": 99.5,
+   "closed": 3186,
+   "waiting_on_customer": 415,
+   "closed_or_responded": 4270,
+   "open": 693,
+   "open_too_long": 8,
+   "closed_or_responded_pct": 99.4,
    "open_pct": 16.1,
-   "open_too_long_pct_of_open": 1.0,
-   "negative": 1337,
-   "high_impact": 9,
+   "open_too_long_pct_of_open": 1.2,
+   "negative": 1323,
+   "high_impact": 14,
    "deliverables": {
-    "measured": 3747,
-    "met": 3618,
-    "outside": 129,
-    "met_pct": 96.6,
+    "measured": 3766,
+    "met": 3625,
+    "outside": 141,
+    "met_pct": 96.3,
     "open_within": 685
    },
    "negative_weekly": [
     {
      "week": "2026-10-26",
-     "count": 343
+     "count": 345
     },
     {
      "week": "2026-11-02",
-     "count": 384
+     "count": 335
     },
     {
      "week": "2026-11-09",
-     "count": 356
+     "count": 391
     }
    ],
-   "negative_change_pct": -7.3,
+   "negative_change_pct": 16.7,
    "top_issue": {
-    "id": "dispute_chargeback",
-    "label": "Card disputes and chargebacks",
-    "negative": 219
+    "id": "unauthorised_txn",
+    "label": "Unauthorised transactions",
+    "negative": 210
    },
    "by_channel": {
     "outbound_voice": 177,
@@ -184,42 +184,42 @@
    "id": "mortgages",
    "label": "Mortgages (bolån)",
    "total": 2975,
-   "closed": 2476,
-   "waiting_on_customer": 196,
-   "closed_or_responded": 2956,
-   "open": 303,
-   "open_too_long": 14,
-   "closed_or_responded_pct": 99.4,
-   "open_pct": 10.2,
-   "open_too_long_pct_of_open": 4.6,
-   "negative": 910,
-   "high_impact": 7,
+   "closed": 2435,
+   "waiting_on_customer": 234,
+   "closed_or_responded": 2960,
+   "open": 306,
+   "open_too_long": 10,
+   "closed_or_responded_pct": 99.5,
+   "open_pct": 10.3,
+   "open_too_long_pct_of_open": 3.3,
+   "negative": 922,
+   "high_impact": 9,
    "deliverables": {
-    "measured": 2756,
-    "met": 2610,
-    "outside": 146,
-    "met_pct": 94.7,
-    "open_within": 289
+    "measured": 2740,
+    "met": 2580,
+    "outside": 160,
+    "met_pct": 94.2,
+    "open_within": 296
    },
    "negative_weekly": [
     {
      "week": "2026-10-26",
-     "count": 232
+     "count": 248
     },
     {
      "week": "2026-11-02",
-     "count": 249
+     "count": 252
     },
     {
      "week": "2026-11-09",
-     "count": 253
+     "count": 256
     }
    ],
    "negative_change_pct": 1.6,
    "top_issue": {
     "id": "mortgage_rate",
     "label": "Mortgage rate and amortisation",
-    "negative": 250
+    "negative": 258
    },
    "by_channel": {
     "whatsapp": 988,
@@ -236,42 +236,42 @@
    "id": "savings_funds",
    "label": "Savings and funds",
    "total": 2954,
-   "closed": 2184,
-   "waiting_on_customer": 308,
-   "closed_or_responded": 2936,
-   "open": 462,
+   "closed": 2172,
+   "waiting_on_customer": 307,
+   "closed_or_responded": 2940,
+   "open": 475,
    "open_too_long": 3,
-   "closed_or_responded_pct": 99.4,
-   "open_pct": 15.6,
+   "closed_or_responded_pct": 99.5,
+   "open_pct": 16.1,
    "open_too_long_pct_of_open": 0.6,
-   "negative": 966,
-   "high_impact": 9,
+   "negative": 947,
+   "high_impact": 10,
    "deliverables": {
-    "measured": 2847,
-    "met": 2791,
-    "outside": 56,
-    "met_pct": 98.0,
-    "open_within": 459
+    "measured": 2859,
+    "met": 2808,
+    "outside": 51,
+    "met_pct": 98.2,
+    "open_within": 472
    },
    "negative_weekly": [
     {
      "week": "2026-10-26",
-     "count": 258
+     "count": 222
     },
     {
      "week": "2026-11-02",
-     "count": 280
+     "count": 256
     },
     {
      "week": "2026-11-09",
-     "count": 264
+     "count": 300
     }
    ],
-   "negative_change_pct": -5.7,
+   "negative_change_pct": 17.2,
    "top_issue": {
     "id": "deposits_rates",
     "label": "Savings rates and fixed-term savings",
-    "negative": 249
+    "negative": 259
    },
    "by_channel": {
     "branch": 227,
@@ -288,42 +288,42 @@
    "id": "consumer_loans",
    "label": "Consumer loans",
    "total": 1458,
-   "closed": 1171,
-   "waiting_on_customer": 120,
-   "closed_or_responded": 1453,
-   "open": 167,
-   "open_too_long": 3,
-   "closed_or_responded_pct": 99.7,
-   "open_pct": 11.5,
-   "open_too_long_pct_of_open": 1.8,
-   "negative": 443,
-   "high_impact": 11,
+   "closed": 1157,
+   "waiting_on_customer": 124,
+   "closed_or_responded": 1456,
+   "open": 177,
+   "open_too_long": 5,
+   "closed_or_responded_pct": 99.9,
+   "open_pct": 12.1,
+   "open_too_long_pct_of_open": 2.8,
+   "negative": 474,
+   "high_impact": 4,
    "deliverables": {
-    "measured": 1384,
-    "met": 1320,
-    "outside": 64,
-    "met_pct": 95.4,
-    "open_within": 164
+    "measured": 1389,
+    "met": 1331,
+    "outside": 58,
+    "met_pct": 95.8,
+    "open_within": 172
    },
    "negative_weekly": [
     {
      "week": "2026-10-26",
-     "count": 118
+     "count": 126
     },
     {
      "week": "2026-11-02",
-     "count": 112
+     "count": 130
     },
     {
      "week": "2026-11-09",
-     "count": 125
+     "count": 124
     }
    ],
-   "negative_change_pct": 11.6,
+   "negative_change_pct": -4.6,
    "top_issue": {
     "id": "loan_processing",
     "label": "Loan and mortgage applications",
-    "negative": 129
+    "negative": 131
    },
    "by_channel": {
     "inbound_voice": 449,
@@ -342,182 +342,182 @@
    "channel": "inbound_voice",
    "label": "Inbound calls",
    "total": 9591,
-   "closed": 6724,
-   "waiting_on_customer": 1124,
+   "closed": 6769,
+   "waiting_on_customer": 1111,
    "closed_or_responded": 9591,
-   "open": 1743,
-   "open_too_long": 83,
+   "open": 1711,
+   "open_too_long": 52,
    "closed_or_responded_pct": 100.0,
-   "open_pct": 18.2,
-   "open_too_long_pct_of_open": 4.8,
-   "negative": 2998
+   "open_pct": 17.8,
+   "open_too_long_pct_of_open": 3.0,
+   "negative": 3030
   },
   {
    "channel": "outbound_voice",
    "label": "Outbound calls",
    "total": 1333,
-   "closed": 935,
-   "waiting_on_customer": 168,
+   "closed": 936,
+   "waiting_on_customer": 172,
    "closed_or_responded": 1333,
-   "open": 230,
-   "open_too_long": 9,
+   "open": 225,
+   "open_too_long": 8,
    "closed_or_responded_pct": 100.0,
-   "open_pct": 17.3,
-   "open_too_long_pct_of_open": 3.9,
-   "negative": 408
+   "open_pct": 16.9,
+   "open_too_long_pct_of_open": 3.6,
+   "negative": 417
   },
   {
    "channel": "chat",
    "label": "App and internet-bank messages",
    "total": 4532,
-   "closed": 3396,
-   "waiting_on_customer": 461,
+   "closed": 3353,
+   "waiting_on_customer": 475,
    "closed_or_responded": 4532,
-   "open": 675,
-   "open_too_long": 32,
+   "open": 704,
+   "open_too_long": 24,
    "closed_or_responded_pct": 100.0,
-   "open_pct": 14.9,
-   "open_too_long_pct_of_open": 4.7,
-   "negative": 1416
+   "open_pct": 15.5,
+   "open_too_long_pct_of_open": 3.4,
+   "negative": 1391
   },
   {
    "channel": "email",
    "label": "Email",
    "total": 971,
-   "closed": 716,
-   "waiting_on_customer": 89,
-   "closed_or_responded": 950,
-   "open": 166,
-   "open_too_long": 7,
-   "closed_or_responded_pct": 97.8,
-   "open_pct": 17.1,
-   "open_too_long_pct_of_open": 4.2,
-   "negative": 308
+   "closed": 690,
+   "waiting_on_customer": 103,
+   "closed_or_responded": 949,
+   "open": 178,
+   "open_too_long": 8,
+   "closed_or_responded_pct": 97.7,
+   "open_pct": 18.3,
+   "open_too_long_pct_of_open": 4.5,
+   "negative": 313
   },
   {
    "channel": "social_inbox",
    "label": "Social inbox",
    "total": 624,
-   "closed": 465,
-   "waiting_on_customer": 66,
-   "closed_or_responded": 609,
-   "open": 93,
+   "closed": 456,
+   "waiting_on_customer": 64,
+   "closed_or_responded": 602,
+   "open": 104,
    "open_too_long": 5,
-   "closed_or_responded_pct": 97.6,
-   "open_pct": 14.9,
-   "open_too_long_pct_of_open": 5.4,
-   "negative": 202
+   "closed_or_responded_pct": 96.5,
+   "open_pct": 16.7,
+   "open_too_long_pct_of_open": 4.8,
+   "negative": 199
   },
   {
    "channel": "ivr_bot",
    "label": "Phone menu",
    "total": 1944,
-   "closed": 1438,
-   "waiting_on_customer": 189,
+   "closed": 1413,
+   "waiting_on_customer": 215,
    "closed_or_responded": 1944,
-   "open": 317,
-   "open_too_long": 14,
+   "open": 316,
+   "open_too_long": 11,
    "closed_or_responded_pct": 100.0,
    "open_pct": 16.3,
-   "open_too_long_pct_of_open": 4.4,
-   "negative": 590
+   "open_too_long_pct_of_open": 3.5,
+   "negative": 603
   },
   {
    "channel": "branch",
    "label": "Branch (kontor)",
    "total": 2588,
-   "closed": 1765,
-   "waiting_on_customer": 328,
+   "closed": 1782,
+   "waiting_on_customer": 330,
    "closed_or_responded": 2588,
-   "open": 495,
-   "open_too_long": 23,
+   "open": 476,
+   "open_too_long": 17,
    "closed_or_responded_pct": 100.0,
-   "open_pct": 19.1,
-   "open_too_long_pct_of_open": 4.6,
-   "negative": 764
+   "open_pct": 18.4,
+   "open_too_long_pct_of_open": 3.6,
+   "negative": 818
   },
   {
    "channel": "whatsapp",
    "label": "Nina",
    "total": 10417,
-   "closed": 9779,
-   "waiting_on_customer": 225,
-   "closed_or_responded": 10297,
-   "open": 413,
-   "open_too_long": 4,
-   "closed_or_responded_pct": 98.8,
+   "closed": 9775,
+   "waiting_on_customer": 224,
+   "closed_or_responded": 10304,
+   "open": 418,
+   "open_too_long": 11,
+   "closed_or_responded_pct": 98.9,
    "open_pct": 4.0,
-   "open_too_long_pct_of_open": 1.0,
-   "negative": 3237
+   "open_too_long_pct_of_open": 2.6,
+   "negative": 3260
   }
  ],
  "cora": {
   "dials": {
-   "total": 1767,
-   "closed": 1627,
-   "waiting_on_customer": 44,
-   "closed_or_responded": 1760,
-   "open": 96,
-   "open_too_long": 20,
-   "closed_or_responded_pct": 99.6,
-   "open_pct": 5.4,
-   "open_too_long_pct_of_open": 20.8
+   "total": 1414,
+   "closed": 1301,
+   "waiting_on_customer": 40,
+   "closed_or_responded": 1403,
+   "open": 73,
+   "open_too_long": 12,
+   "closed_or_responded_pct": 99.2,
+   "open_pct": 5.2,
+   "open_too_long_pct_of_open": 16.4
   },
   "rows": [
    {
     "id": "nina_unresolved",
     "label": "Nina unresolved, had to call",
-    "total": 611,
-    "closed": 554,
-    "waiting_on_customer": 18,
-    "closed_or_responded": 609,
-    "open": 39,
-    "open_too_long": 8,
-    "closed_or_responded_pct": 99.7,
-    "open_pct": 6.4,
-    "open_too_long_pct_of_open": 20.5
+    "total": 458,
+    "closed": 417,
+    "waiting_on_customer": 12,
+    "closed_or_responded": 455,
+    "open": 29,
+    "open_too_long": 5,
+    "closed_or_responded_pct": 99.3,
+    "open_pct": 6.3,
+    "open_too_long_pct_of_open": 17.2
    },
    {
     "id": "nina_wrong_answer",
     "label": "Nina gave a wrong answer",
-    "total": 392,
-    "closed": 370,
-    "waiting_on_customer": 11,
-    "closed_or_responded": 392,
-    "open": 11,
-    "open_too_long": 5,
-    "closed_or_responded_pct": 100.0,
-    "open_pct": 2.8,
-    "open_too_long_pct_of_open": 45.5
+    "total": 343,
+    "closed": 316,
+    "waiting_on_customer": 7,
+    "closed_or_responded": 338,
+    "open": 20,
+    "open_too_long": 4,
+    "closed_or_responded_pct": 98.5,
+    "open_pct": 5.8,
+    "open_too_long_pct_of_open": 20.0
    },
    {
     "id": "nina_handoff_lost",
     "label": "Nina hand-off lost context",
-    "total": 459,
-    "closed": 419,
-    "waiting_on_customer": 10,
-    "closed_or_responded": 456,
-    "open": 30,
-    "open_too_long": 6,
-    "closed_or_responded_pct": 99.3,
-    "open_pct": 6.5,
-    "open_too_long_pct_of_open": 20.0
+    "total": 358,
+    "closed": 334,
+    "waiting_on_customer": 11,
+    "closed_or_responded": 355,
+    "open": 13,
+    "open_too_long": 1,
+    "closed_or_responded_pct": 99.2,
+    "open_pct": 3.6,
+    "open_too_long_pct_of_open": 7.7
    },
    {
     "id": "nina_no_person",
     "label": "Could not reach a person",
-    "total": 305,
-    "closed": 284,
-    "waiting_on_customer": 5,
-    "closed_or_responded": 303,
-    "open": 16,
-    "open_too_long": 1,
-    "closed_or_responded_pct": 99.3,
-    "open_pct": 5.2,
-    "open_too_long_pct_of_open": 6.2
+    "total": 255,
+    "closed": 234,
+    "waiting_on_customer": 10,
+    "closed_or_responded": 255,
+    "open": 11,
+    "open_too_long": 2,
+    "closed_or_responded_pct": 100.0,
+    "open_pct": 4.3,
+    "open_too_long_pct_of_open": 18.2
    }
   ],
-  "via_cora": 575,
+  "via_cora": 457,
   "rule": "Contacts tagged to a Nina theme, on any channel and for any product."
  },
  "cohorts": [
@@ -528,33 +528,33 @@
    "customers": 504,
    "without_owner": 387,
    "interactions": 9304,
-   "customers_with_open_issue": 452,
-   "open": 1159,
-   "waiting_on_customer": 722,
-   "open_over_5h": 1141,
-   "open_over_24h": 935,
-   "open_too_long": 30,
-   "negative": 2874,
+   "customers_with_open_issue": 443,
+   "open": 1153,
+   "waiting_on_customer": 761,
+   "open_over_5h": 1135,
+   "open_over_24h": 939,
+   "open_too_long": 23,
+   "negative": 2949,
    "negative_by_channel": {
-    "inbound_voice": 884,
-    "outbound_voice": 115,
-    "chat": 401,
-    "email": 91,
-    "social_inbox": 52,
-    "ivr_bot": 167,
-    "branch": 216,
-    "whatsapp": 948
+    "inbound_voice": 914,
+    "outbound_voice": 129,
+    "chat": 382,
+    "email": 84,
+    "social_inbox": 56,
+    "ivr_bot": 161,
+    "branch": 255,
+    "whatsapp": 968
    },
    "products_affected": {
-    "payments_swish": 238,
-    "everyday_accounts_app": 463,
-    "savings_funds": 134,
-    "cards": 178,
-    "consumer_loans": 45,
-    "mortgages": 101
+    "everyday_accounts_app": 453,
+    "savings_funds": 144,
+    "cards": 176,
+    "payments_swish": 239,
+    "mortgages": 95,
+    "consumer_loans": 46
    },
-   "rm_should_know": 109,
-   "rm_notified_today": 25,
+   "rm_should_know": 112,
+   "rm_notified_today": 27,
    "added_this_week": 25,
    "added_this_week_by_lisn": 9
   },
@@ -565,33 +565,33 @@
    "customers": 123,
    "without_owner": 0,
    "interactions": 1396,
-   "customers_with_open_issue": 93,
-   "open": 181,
-   "waiting_on_customer": 117,
-   "open_over_5h": 179,
-   "open_over_24h": 143,
-   "open_too_long": 4,
-   "negative": 449,
+   "customers_with_open_issue": 91,
+   "open": 182,
+   "waiting_on_customer": 115,
+   "open_over_5h": 180,
+   "open_over_24h": 138,
+   "open_too_long": 5,
+   "negative": 435,
    "negative_by_channel": {
-    "inbound_voice": 138,
-    "outbound_voice": 23,
-    "chat": 53,
-    "email": 12,
-    "social_inbox": 6,
-    "ivr_bot": 22,
-    "branch": 39,
-    "whatsapp": 156
+    "inbound_voice": 116,
+    "outbound_voice": 11,
+    "chat": 66,
+    "email": 16,
+    "social_inbox": 7,
+    "ivr_bot": 24,
+    "branch": 36,
+    "whatsapp": 159
    },
    "products_affected": {
-    "savings_funds": 26,
-    "payments_swish": 33,
-    "cards": 37,
-    "everyday_accounts_app": 71,
-    "mortgages": 9,
-    "consumer_loans": 5
+    "payments_swish": 35,
+    "savings_funds": 17,
+    "cards": 32,
+    "everyday_accounts_app": 78,
+    "mortgages": 14,
+    "consumer_loans": 6
    },
-   "rm_should_know": 93,
-   "rm_notified_today": 12,
+   "rm_should_know": 90,
+   "rm_notified_today": 27,
    "added_this_week": 11,
    "added_this_week_by_lisn": 5
   },
@@ -602,33 +602,33 @@
    "customers": 1007,
    "without_owner": 0,
    "interactions": 8504,
-   "customers_with_open_issue": 543,
-   "open": 1011,
-   "waiting_on_customer": 666,
-   "open_over_5h": 998,
-   "open_over_24h": 805,
-   "open_too_long": 27,
-   "negative": 2601,
+   "customers_with_open_issue": 576,
+   "open": 1026,
+   "waiting_on_customer": 713,
+   "open_over_5h": 1011,
+   "open_over_24h": 830,
+   "open_too_long": 25,
+   "negative": 2729,
    "negative_by_channel": {
-    "inbound_voice": 801,
-    "outbound_voice": 104,
-    "chat": 334,
+    "inbound_voice": 844,
+    "outbound_voice": 117,
+    "chat": 364,
     "email": 67,
-    "social_inbox": 59,
-    "ivr_bot": 140,
-    "branch": 215,
-    "whatsapp": 881
+    "social_inbox": 61,
+    "ivr_bot": 153,
+    "branch": 216,
+    "whatsapp": 907
    },
    "products_affected": {
-    "payments_swish": 170,
-    "everyday_accounts_app": 438,
-    "savings_funds": 109,
-    "cards": 166,
-    "consumer_loans": 47,
-    "mortgages": 81
+    "everyday_accounts_app": 458,
+    "cards": 162,
+    "savings_funds": 113,
+    "payments_swish": 165,
+    "consumer_loans": 48,
+    "mortgages": 80
    },
-   "rm_should_know": 544,
-   "rm_notified_today": 116,
+   "rm_should_know": 575,
+   "rm_notified_today": 111,
    "added_this_week": 7,
    "added_this_week_by_lisn": 2
   },
@@ -639,47 +639,47 @@
    "customers": 223,
    "without_owner": 73,
    "interactions": 6184,
-   "customers_with_open_issue": 216,
-   "open": 732,
-   "waiting_on_customer": 433,
-   "open_over_5h": 716,
-   "open_over_24h": 578,
-   "open_too_long": 78,
-   "negative": 1929,
+   "customers_with_open_issue": 215,
+   "open": 705,
+   "waiting_on_customer": 462,
+   "open_over_5h": 690,
+   "open_over_24h": 551,
+   "open_too_long": 52,
+   "negative": 1884,
    "negative_by_channel": {
-    "inbound_voice": 570,
-    "outbound_voice": 81,
-    "chat": 299,
-    "email": 63,
-    "social_inbox": 42,
-    "ivr_bot": 106,
-    "branch": 145,
-    "whatsapp": 623
+    "inbound_voice": 567,
+    "outbound_voice": 82,
+    "chat": 254,
+    "email": 64,
+    "social_inbox": 39,
+    "ivr_bot": 129,
+    "branch": 167,
+    "whatsapp": 582
    },
    "products_affected": {
-    "everyday_accounts_app": 298,
-    "payments_swish": 150,
-    "cards": 119,
-    "savings_funds": 88,
-    "mortgages": 55,
-    "consumer_loans": 22
+    "savings_funds": 93,
+    "payments_swish": 142,
+    "everyday_accounts_app": 288,
+    "mortgages": 50,
+    "cards": 111,
+    "consumer_loans": 21
    },
-   "rm_should_know": 144,
-   "rm_notified_today": 32,
+   "rm_should_know": 143,
+   "rm_notified_today": 33,
    "added_this_week": 16,
    "added_this_week_by_lisn": 4
   }
  ],
  "high_impact": {
-  "total": 81,
-  "open": 11,
-  "waiting_on_customer": 4,
+  "total": 98,
+  "open": 14,
+  "waiting_on_customer": 7,
   "open_too_long": 0,
   "reasons": [
    {
     "id": "third_contact",
     "label": "Third contact on the same issue",
-    "count": 77
+    "count": 94
    },
    {
     "id": "official_domain",
@@ -698,41 +698,41 @@
    }
   ],
   "by_product": {
-   "consumer_loans": 11,
-   "everyday_accounts_app": 28,
-   "mortgages": 7,
-   "cards": 9,
-   "payments_swish": 17,
-   "savings_funds": 9
+   "consumer_loans": 4,
+   "everyday_accounts_app": 34,
+   "cards": 14,
+   "mortgages": 9,
+   "savings_funds": 10,
+   "payments_swish": 27
   }
  },
  "customer_memory": {
   "customers_with_signals": 4853,
   "multi_product": 3905,
-  "negative_in_two_or_more_products": 1727,
-  "with_open_issue": 1190,
-  "with_open_too_long": 128,
-  "priority_among_them": 1119,
+  "negative_in_two_or_more_products": 1761,
+  "with_open_issue": 1233,
+  "with_open_too_long": 92,
+  "priority_among_them": 1135,
   "pairs": [
    {
     "pair": "Everyday accounts and app + Payments and Swish",
-    "customers": 895
+    "customers": 913
    },
    {
     "pair": "Everyday accounts and app + Cards",
-    "customers": 236
+    "customers": 197
    },
    {
     "pair": "Everyday accounts and app + Savings and funds",
-    "customers": 105
+    "customers": 130
    },
    {
     "pair": "Payments and Swish + Cards",
-    "customers": 96
+    "customers": 117
    },
    {
     "pair": "Everyday accounts and app + Mortgages (bolån)",
-    "customers": 89
+    "customers": 101
    }
   ]
  },
@@ -745,12 +745,12 @@
    "source_note": "Swish rule: a payment reaches the payee within seconds; a failed one is not debited",
    "redress": "—",
    "total": 2593,
-   "measured": 2554,
-   "met": 2295,
-   "outside": 259,
-   "met_pct": 89.9,
-   "open_within": 32,
-   "open_too_long": 4,
+   "measured": 2564,
+   "met": 2322,
+   "outside": 242,
+   "met_pct": 90.6,
+   "open_within": 22,
+   "open_too_long": 3,
    "themes": [
     "failed_txn_reversal",
     "swish_payment_failures"
@@ -760,12 +760,12 @@
      "product": "payments_swish",
      "label": "Payments and Swish",
      "total": 2593,
-     "measured": 2554,
-     "met": 2295,
-     "outside": 259,
-     "met_pct": 89.9,
-     "open_within": 32,
-     "open_too_long": 4
+     "measured": 2564,
+     "met": 2322,
+     "outside": 242,
+     "met_pct": 90.6,
+     "open_within": 22,
+     "open_too_long": 3
     }
    ]
   },
@@ -776,79 +776,79 @@
    "source": "bank_indicative",
    "source_note": null,
    "redress": "—",
-   "total": 14034,
-   "measured": 13952,
-   "met": 13952,
+   "total": 14283,
+   "measured": 14205,
+   "met": 14205,
    "outside": 0,
    "met_pct": 100.0,
-   "open_within": 2450,
+   "open_within": 2562,
    "open_too_long": 0,
    "themes": [],
    "products": [
     {
      "product": "everyday_accounts_app",
      "label": "Everyday accounts and app",
-     "total": 7286,
-     "measured": 7242,
-     "met": 7242,
+     "total": 7535,
+     "measured": 7489,
+     "met": 7489,
      "outside": 0,
      "met_pct": 100.0,
-     "open_within": 1290,
+     "open_within": 1340,
      "open_too_long": 0
     },
     {
      "product": "payments_swish",
      "label": "Payments and Swish",
      "total": 865,
-     "measured": 862,
-     "met": 862,
+     "measured": 864,
+     "met": 864,
      "outside": 0,
      "met_pct": 100.0,
-     "open_within": 122,
+     "open_within": 137,
      "open_too_long": 0
     },
     {
      "product": "cards",
      "label": "Cards",
      "total": 1997,
-     "measured": 1987,
-     "met": 1987,
+     "measured": 1985,
+     "met": 1985,
      "outside": 0,
      "met_pct": 100.0,
-     "open_within": 359,
+     "open_within": 362,
      "open_too_long": 0
     },
     {
      "product": "mortgages",
      "label": "Mortgages (bolån)",
      "total": 919,
-     "measured": 911,
-     "met": 911,
+     "measured": 914,
+     "met": 914,
      "outside": 0,
      "met_pct": 100.0,
-     "open_within": 158,
+     "open_within": 172,
      "open_too_long": 0
     },
     {
      "product": "savings_funds",
      "label": "Savings and funds",
      "total": 2263,
-     "measured": 2248,
-     "met": 2248,
+     "measured": 2250,
+     "met": 2250,
      "outside": 0,
      "met_pct": 100.0,
-     "open_within": 401,
+     "open_within": 415,
      "open_too_long": 0
     },
     {
      "product": "consumer_loans",
      "label": "Consumer loans",
      "total": 704,
-     "measured": 702,
-     "met": 702,
+     "measured": 703,
+     "met": 703,
      "outside": 0,
      "met_pct": 100.0,
-     "open_within": 120,
+     "open_within": 136,
      "open_too_long": 0
     }
    ]
@@ -860,13 +860,13 @@
    "source": "bank",
    "source_note": null,
    "redress": "ARN recommendation (confirm with the bank)",
-   "total": 2718,
-   "measured": 2061,
-   "met": 2020,
-   "outside": 41,
-   "met_pct": 98.0,
-   "open_within": 389,
-   "open_too_long": 16,
+   "total": 2758,
+   "measured": 2121,
+   "met": 2077,
+   "outside": 44,
+   "met_pct": 97.9,
+   "open_within": 398,
+   "open_too_long": 25,
    "themes": [
     "complaint_handling"
    ],
@@ -874,68 +874,68 @@
     {
      "product": "everyday_accounts_app",
      "label": "Everyday accounts and app",
-     "total": 833,
-     "measured": 635,
-     "met": 620,
-     "outside": 15,
-     "met_pct": 97.6,
-     "open_within": 122,
-     "open_too_long": 7
+     "total": 873,
+     "measured": 652,
+     "met": 633,
+     "outside": 19,
+     "met_pct": 97.1,
+     "open_within": 127,
+     "open_too_long": 9
     },
     {
      "product": "payments_swish",
      "label": "Payments and Swish",
      "total": 779,
-     "measured": 593,
-     "met": 586,
-     "outside": 7,
-     "met_pct": 98.8,
-     "open_within": 105,
-     "open_too_long": 4
+     "measured": 609,
+     "met": 600,
+     "outside": 9,
+     "met_pct": 98.5,
+     "open_within": 110,
+     "open_too_long": 7
     },
     {
      "product": "cards",
      "label": "Cards",
      "total": 379,
-     "measured": 281,
-     "met": 274,
+     "measured": 297,
+     "met": 290,
      "outside": 7,
-     "met_pct": 97.5,
-     "open_within": 55,
-     "open_too_long": 2
+     "met_pct": 97.6,
+     "open_within": 57,
+     "open_too_long": 3
     },
     {
      "product": "mortgages",
      "label": "Mortgages (bolån)",
      "total": 287,
-     "measured": 215,
-     "met": 210,
-     "outside": 5,
-     "met_pct": 97.7,
-     "open_within": 47,
+     "measured": 222,
+     "met": 219,
+     "outside": 3,
+     "met_pct": 98.6,
+     "open_within": 38,
      "open_too_long": 1
     },
     {
      "product": "savings_funds",
      "label": "Savings and funds",
      "total": 294,
-     "measured": 223,
-     "met": 217,
-     "outside": 6,
-     "met_pct": 97.3,
-     "open_within": 41,
+     "measured": 228,
+     "met": 226,
+     "outside": 2,
+     "met_pct": 99.1,
+     "open_within": 48,
      "open_too_long": 2
     },
     {
      "product": "consumer_loans",
      "label": "Consumer loans",
      "total": 146,
-     "measured": 114,
-     "met": 113,
-     "outside": 1,
-     "met_pct": 99.1,
-     "open_within": 19,
-     "open_too_long": 0
+     "measured": 113,
+     "met": 109,
+     "outside": 4,
+     "met_pct": 96.5,
+     "open_within": 18,
+     "open_too_long": 3
     }
    ]
   },
@@ -947,12 +947,12 @@
    "source_note": "Payment Services Act (betaltjänstlagen): refund an unauthorised transaction by the next business day; manipulated transfers are investigated",
    "redress": "ARN recommendation (confirm with the bank)",
    "total": 1193,
-   "measured": 1171,
-   "met": 1028,
-   "outside": 143,
-   "met_pct": 87.8,
-   "open_within": 14,
-   "open_too_long": 5,
+   "measured": 1163,
+   "met": 1023,
+   "outside": 140,
+   "met_pct": 88.0,
+   "open_within": 19,
+   "open_too_long": 4,
    "themes": [
     "unauthorised_txn"
    ],
@@ -961,23 +961,23 @@
      "product": "payments_swish",
      "label": "Payments and Swish",
      "total": 518,
-     "measured": 513,
-     "met": 454,
-     "outside": 59,
-     "met_pct": 88.5,
-     "open_within": 3,
+     "measured": 507,
+     "met": 453,
+     "outside": 54,
+     "met_pct": 89.3,
+     "open_within": 6,
      "open_too_long": 1
     },
     {
      "product": "cards",
      "label": "Cards",
      "total": 675,
-     "measured": 658,
-     "met": 574,
-     "outside": 84,
-     "met_pct": 87.2,
-     "open_within": 11,
-     "open_too_long": 4
+     "measured": 656,
+     "met": 570,
+     "outside": 86,
+     "met_pct": 86.9,
+     "open_within": 13,
+     "open_too_long": 3
     }
    ]
   },
@@ -989,12 +989,12 @@
    "source_note": null,
    "redress": "ARN recommendation (confirm with the bank)",
    "total": 2075,
-   "measured": 1434,
-   "met": 1348,
-   "outside": 86,
-   "met_pct": 94.0,
-   "open_within": 392,
-   "open_too_long": 48,
+   "measured": 1468,
+   "met": 1407,
+   "outside": 61,
+   "met_pct": 95.8,
+   "open_within": 356,
+   "open_too_long": 27,
    "themes": [
     "manipulated_transfer",
     "fraud_scam"
@@ -1004,12 +1004,12 @@
      "product": "payments_swish",
      "label": "Payments and Swish",
      "total": 2075,
-     "measured": 1434,
-     "met": 1348,
-     "outside": 86,
-     "met_pct": 94.0,
-     "open_within": 392,
-     "open_too_long": 48
+     "measured": 1468,
+     "met": 1407,
+     "outside": 61,
+     "met_pct": 95.8,
+     "open_within": 356,
+     "open_too_long": 27
     }
    ]
   },
@@ -1020,13 +1020,13 @@
    "source": "bank",
    "source_note": null,
    "redress": "ARN recommendation (confirm with the bank)",
-   "total": 2359,
-   "measured": 2071,
-   "met": 1768,
-   "outside": 303,
-   "met_pct": 85.4,
+   "total": 2441,
+   "measured": 2126,
+   "met": 1818,
+   "outside": 308,
+   "met_pct": 85.5,
    "open_within": 196,
-   "open_too_long": 67,
+   "open_too_long": 47,
    "themes": [
     "account_freeze"
    ],
@@ -1034,23 +1034,23 @@
     {
      "product": "everyday_accounts_app",
      "label": "Everyday accounts and app",
-     "total": 1666,
-     "measured": 1450,
-     "met": 1237,
-     "outside": 213,
-     "met_pct": 85.3,
-     "open_within": 145,
-     "open_too_long": 50
+     "total": 1748,
+     "measured": 1515,
+     "met": 1289,
+     "outside": 226,
+     "met_pct": 85.1,
+     "open_within": 149,
+     "open_too_long": 30
     },
     {
      "product": "payments_swish",
      "label": "Payments and Swish",
      "total": 693,
-     "measured": 621,
-     "met": 531,
-     "outside": 90,
-     "met_pct": 85.5,
-     "open_within": 51,
+     "measured": 611,
+     "met": 529,
+     "outside": 82,
+     "met_pct": 86.6,
+     "open_within": 47,
      "open_too_long": 17
     }
    ]
@@ -1063,8 +1063,8 @@
    "source_note": null,
    "redress": "ARN recommendation (confirm with the bank)",
    "total": 1012,
-   "measured": 609,
-   "met": 609,
+   "measured": 607,
+   "met": 607,
    "outside": 0,
    "met_pct": 100.0,
    "open_within": 246,
@@ -1078,8 +1078,8 @@
      "product": "cards",
      "label": "Cards",
      "total": 1012,
-     "measured": 609,
-     "met": 609,
+     "measured": 607,
+     "met": 607,
      "outside": 0,
      "met_pct": 100.0,
      "open_within": 246,
@@ -1095,12 +1095,12 @@
    "source_note": null,
    "redress": "—",
    "total": 1093,
-   "measured": 993,
-   "met": 918,
-   "outside": 75,
-   "met_pct": 92.4,
-   "open_within": 62,
-   "open_too_long": 9,
+   "measured": 973,
+   "met": 888,
+   "outside": 85,
+   "met_pct": 91.3,
+   "open_within": 61,
+   "open_too_long": 6,
    "themes": [
     "loan_closure_documents",
     "mortgage_rate"
@@ -1110,12 +1110,12 @@
      "product": "mortgages",
      "label": "Mortgages (bolån)",
      "total": 1093,
-     "measured": 993,
-     "met": 918,
-     "outside": 75,
-     "met_pct": 92.4,
-     "open_within": 62,
-     "open_too_long": 9
+     "measured": 973,
+     "met": 888,
+     "outside": 85,
+     "met_pct": 91.3,
+     "open_within": 61,
+     "open_too_long": 6
     }
    ]
   },
@@ -1126,13 +1126,13 @@
    "source": "bank",
    "source_note": null,
    "redress": "—",
-   "total": 3996,
-   "measured": 3778,
-   "met": 3260,
-   "outside": 518,
-   "met_pct": 86.3,
-   "open_within": 139,
-   "open_too_long": 24,
+   "total": 3625,
+   "measured": 3441,
+   "met": 3015,
+   "outside": 426,
+   "met_pct": 87.6,
+   "open_within": 104,
+   "open_too_long": 21,
    "themes": [
     "identity_checks",
     "app_login_biometrics",
@@ -1145,68 +1145,68 @@
     {
      "product": "everyday_accounts_app",
      "label": "Everyday accounts and app",
-     "total": 2448,
-     "measured": 2330,
-     "met": 2042,
-     "outside": 288,
-     "met_pct": 87.6,
-     "open_within": 74,
-     "open_too_long": 12
+     "total": 2077,
+     "measured": 1981,
+     "met": 1787,
+     "outside": 194,
+     "met_pct": 90.2,
+     "open_within": 49,
+     "open_too_long": 8
     },
     {
      "product": "payments_swish",
      "label": "Payments and Swish",
      "total": 563,
-     "measured": 525,
-     "met": 431,
-     "outside": 94,
-     "met_pct": 82.1,
-     "open_within": 22,
-     "open_too_long": 7
+     "measured": 523,
+     "met": 432,
+     "outside": 91,
+     "met_pct": 82.6,
+     "open_within": 28,
+     "open_too_long": 8
     },
     {
      "product": "cards",
      "label": "Cards",
      "total": 231,
-     "measured": 212,
-     "met": 174,
-     "outside": 38,
-     "met_pct": 82.1,
-     "open_within": 14,
-     "open_too_long": 1
+     "measured": 221,
+     "met": 173,
+     "outside": 48,
+     "met_pct": 78.3,
+     "open_within": 7,
+     "open_too_long": 2
     },
     {
      "product": "mortgages",
      "label": "Mortgages (bolån)",
      "total": 159,
-     "measured": 149,
-     "met": 125,
-     "outside": 24,
-     "met_pct": 83.9,
-     "open_within": 6,
-     "open_too_long": 3
+     "measured": 147,
+     "met": 120,
+     "outside": 27,
+     "met_pct": 81.6,
+     "open_within": 7,
+     "open_too_long": 1
     },
     {
      "product": "savings_funds",
      "label": "Savings and funds",
      "total": 397,
-     "measured": 376,
-     "met": 326,
-     "outside": 50,
-     "met_pct": 86.7,
-     "open_within": 17,
+     "measured": 381,
+     "met": 332,
+     "outside": 49,
+     "met_pct": 87.1,
+     "open_within": 9,
      "open_too_long": 1
     },
     {
      "product": "consumer_loans",
      "label": "Consumer loans",
      "total": 198,
-     "measured": 186,
-     "met": 162,
-     "outside": 24,
-     "met_pct": 87.1,
-     "open_within": 6,
-     "open_too_long": 0
+     "measured": 188,
+     "met": 171,
+     "outside": 17,
+     "met_pct": 91.0,
+     "open_within": 4,
+     "open_too_long": 1
     }
    ]
   },
@@ -1218,12 +1218,12 @@
    "source_note": null,
    "redress": "—",
    "total": 927,
-   "measured": 870,
-   "met": 789,
-   "outside": 81,
-   "met_pct": 90.7,
-   "open_within": 35,
-   "open_too_long": 4,
+   "measured": 869,
+   "met": 787,
+   "outside": 82,
+   "met_pct": 90.6,
+   "open_within": 32,
+   "open_too_long": 3,
    "themes": [
     "loan_processing"
    ],
@@ -1232,23 +1232,23 @@
      "product": "mortgages",
      "label": "Mortgages (bolån)",
      "total": 517,
-     "measured": 488,
-     "met": 446,
-     "outside": 42,
-     "met_pct": 91.4,
-     "open_within": 16,
-     "open_too_long": 1
+     "measured": 484,
+     "met": 439,
+     "outside": 45,
+     "met_pct": 90.7,
+     "open_within": 18,
+     "open_too_long": 2
     },
     {
      "product": "consumer_loans",
      "label": "Consumer loans",
      "total": 410,
-     "measured": 382,
-     "met": 343,
-     "outside": 39,
-     "met_pct": 89.8,
-     "open_within": 19,
-     "open_too_long": 3
+     "measured": 385,
+     "met": 348,
+     "outside": 37,
+     "met_pct": 90.4,
+     "open_within": 14,
+     "open_too_long": 1
     }
    ]
   }
@@ -1257,45 +1257,45 @@
   {
    "theme": "account_freeze",
    "label": "Account measures: frozen or restricted accounts",
-   "interactions": 1666,
-   "negative": 528,
-   "open": 195,
-   "open_too_long": 50,
+   "interactions": 1748,
+   "negative": 557,
+   "open": 179,
+   "open_too_long": 30,
    "deliverable": "account_unfreeze",
-   "deliv_met_pct": 85.3,
+   "deliv_met_pct": 85.1,
    "public_mentions": 1,
    "public_negative": 1
   },
   {
    "theme": "new_app_release",
    "label": "New app and update experience",
-   "interactions": 1249,
-   "negative": 379,
-   "open": 213,
+   "interactions": 1310,
+   "negative": 382,
+   "open": 224,
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 100.0,
-   "public_mentions": 7,
+   "public_mentions": 8,
    "public_negative": 6
   },
   {
    "theme": "app_login_biometrics",
    "label": "App login and BankID",
-   "interactions": 1042,
-   "negative": 346,
-   "open": 30,
-   "open_too_long": 3,
+   "interactions": 1093,
+   "negative": 319,
+   "open": 35,
+   "open_too_long": 5,
    "deliverable": "service_request",
-   "deliv_met_pct": 88.9,
+   "deliv_met_pct": 91.5,
    "public_mentions": 7,
    "public_negative": 7
   },
   {
    "theme": "app_speed_crash",
    "label": "App outages, speed and crashes",
-   "interactions": 937,
-   "negative": 279,
-   "open": 168,
+   "interactions": 1092,
+   "negative": 350,
+   "open": 196,
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 100.0,
@@ -1303,47 +1303,23 @@
    "public_negative": 3
   },
   {
-   "theme": "identity_checks",
-   "label": "Know-your-customer questions and identity checks",
-   "interactions": 834,
-   "negative": 252,
-   "open": 21,
-   "open_too_long": 1,
-   "deliverable": "service_request",
-   "deliv_met_pct": 89.8,
-   "public_mentions": 1,
-   "public_negative": 1
-  },
-  {
    "theme": "complaint_handling",
    "label": "Complaints closed without resolution",
-   "interactions": 833,
-   "negative": 249,
-   "open": 129,
-   "open_too_long": 7,
+   "interactions": 873,
+   "negative": 256,
+   "open": 136,
+   "open_too_long": 9,
    "deliverable": "complaint_resolution",
-   "deliv_met_pct": 97.6,
+   "deliv_met_pct": 97.1,
    "public_mentions": 0,
    "public_negative": 0
   },
   {
-   "theme": "care_unreachable",
-   "label": "Could not get through",
-   "interactions": 730,
-   "negative": 247,
-   "open": 162,
-   "open_too_long": 0,
-   "deliverable": "query_response",
-   "deliv_met_pct": 100.0,
-   "public_mentions": 4,
-   "public_negative": 4
-  },
-  {
    "theme": "fees_charges_bank",
    "label": "Account charges and fees",
-   "interactions": 625,
-   "negative": 169,
-   "open": 92,
+   "interactions": 873,
+   "negative": 263,
+   "open": 146,
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 100.0,
@@ -1351,35 +1327,35 @@
    "public_negative": 2
   },
   {
-   "theme": "statements_documents",
-   "label": "Statements and documents",
-   "interactions": 417,
-   "negative": 130,
-   "open": 74,
-   "open_too_long": 0,
-   "deliverable": "query_response",
-   "deliv_met_pct": 100.0,
-   "public_mentions": 0,
-   "public_negative": 0
-  },
-  {
-   "theme": "fair_treatment",
-   "label": "Clear information and fair treatment (FI focus area)",
-   "interactions": 416,
-   "negative": 127,
-   "open": 83,
-   "open_too_long": 0,
-   "deliverable": "query_response",
-   "deliv_met_pct": 100.0,
+   "theme": "identity_checks",
+   "label": "Know-your-customer questions and identity checks",
+   "interactions": 765,
+   "negative": 251,
+   "open": 14,
+   "open_too_long": 3,
+   "deliverable": "service_request",
+   "deliv_met_pct": 89.7,
    "public_mentions": 1,
    "public_negative": 1
   },
   {
+   "theme": "care_unreachable",
+   "label": "Could not get through",
+   "interactions": 656,
+   "negative": 206,
+   "open": 132,
+   "open_too_long": 0,
+   "deliverable": "query_response",
+   "deliv_met_pct": 100.0,
+   "public_mentions": 4,
+   "public_negative": 4
+  },
+  {
    "theme": "app_usability",
    "label": "App features and usability",
-   "interactions": 416,
-   "negative": 127,
-   "open": 67,
+   "interactions": 546,
+   "negative": 176,
+   "open": 100,
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 100.0,
@@ -1387,47 +1363,11 @@
    "public_negative": 5
   },
   {
-   "theme": "branch_service",
-   "label": "Branch (kontor) service",
-   "interactions": 416,
-   "negative": 115,
-   "open": 84,
-   "open_too_long": 0,
-   "deliverable": "query_response",
-   "deliv_met_pct": 100.0,
-   "public_mentions": 3,
-   "public_negative": 3
-  },
-  {
-   "theme": "account_opening",
-   "label": "Account opening and switching bank (byta bank)",
-   "interactions": 416,
-   "negative": 136,
-   "open": 70,
-   "open_too_long": 0,
-   "deliverable": "query_response",
-   "deliv_met_pct": 100.0,
-   "public_mentions": 2,
-   "public_negative": 1
-  },
-  {
-   "theme": "branch_closure",
-   "label": "Branch (kontor) closures and access",
-   "interactions": 312,
-   "negative": 98,
-   "open": 49,
-   "open_too_long": 0,
-   "deliverable": "query_response",
-   "deliv_met_pct": 100.0,
-   "public_mentions": 1,
-   "public_negative": 1
-  },
-  {
-   "theme": "device_security_block",
-   "label": "Device security blocks and false alerts",
-   "interactions": 312,
-   "negative": 102,
-   "open": 44,
+   "theme": "statements_documents",
+   "label": "Statements and documents",
+   "interactions": 438,
+   "negative": 122,
+   "open": 90,
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 100.0,
@@ -1437,9 +1377,9 @@
   {
    "theme": "online_banking",
    "label": "Internet bank",
-   "interactions": 312,
-   "negative": 115,
-   "open": 54,
+   "interactions": 437,
+   "negative": 148,
+   "open": 77,
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 100.0,
@@ -1447,11 +1387,71 @@
    "public_negative": 1
   },
   {
+   "theme": "branch_service",
+   "label": "Branch (kontor) service",
+   "interactions": 437,
+   "negative": 152,
+   "open": 76,
+   "open_too_long": 0,
+   "deliverable": "query_response",
+   "deliv_met_pct": 100.0,
+   "public_mentions": 4,
+   "public_negative": 3
+  },
+  {
+   "theme": "account_opening",
+   "label": "Account opening and switching bank (byta bank)",
+   "interactions": 437,
+   "negative": 134,
+   "open": 65,
+   "open_too_long": 0,
+   "deliverable": "query_response",
+   "deliv_met_pct": 100.0,
+   "public_mentions": 3,
+   "public_negative": 2
+  },
+  {
    "theme": "closure_requests",
    "label": "Account and card closure",
-   "interactions": 312,
-   "negative": 90,
-   "open": 59,
+   "interactions": 437,
+   "negative": 133,
+   "open": 77,
+   "open_too_long": 0,
+   "deliverable": "query_response",
+   "deliv_met_pct": 100.0,
+   "public_mentions": 0,
+   "public_negative": 0
+  },
+  {
+   "theme": "device_security_block",
+   "label": "Device security blocks and false alerts",
+   "interactions": 327,
+   "negative": 97,
+   "open": 68,
+   "open_too_long": 0,
+   "deliverable": "query_response",
+   "deliv_met_pct": 100.0,
+   "public_mentions": 0,
+   "public_negative": 0
+  },
+  {
+   "theme": "branch_closure",
+   "label": "Branch (kontor) closures and access",
+   "interactions": 327,
+   "negative": 93,
+   "open": 58,
+   "open_too_long": 0,
+   "deliverable": "query_response",
+   "deliv_met_pct": 100.0,
+   "public_mentions": 1,
+   "public_negative": 1
+  },
+  {
+   "theme": "premium_service",
+   "label": "Adviser service (Premium and Private Banking)",
+   "interactions": 218,
+   "negative": 59,
+   "open": 31,
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 100.0,
@@ -1461,72 +1461,48 @@
   {
    "theme": "nina_unresolved",
    "label": "Nina unresolved, had to call",
-   "interactions": 208,
-   "negative": 77,
-   "open": 15,
-   "open_too_long": 3,
-   "deliverable": "service_request",
-   "deliv_met_pct": 82.1,
-   "public_mentions": 0,
-   "public_negative": 0
-  },
-  {
-   "theme": "atm_debit_card",
-   "label": "Debit card and cash machines",
-   "interactions": 208,
-   "negative": 62,
-   "open": 33,
+   "interactions": 55,
+   "negative": 15,
+   "open": 2,
    "open_too_long": 0,
-   "deliverable": "query_response",
-   "deliv_met_pct": 100.0,
-   "public_mentions": 0,
-   "public_negative": 0
-  },
-  {
-   "theme": "premium_service",
-   "label": "Adviser service (Premium and Private Banking)",
-   "interactions": 208,
-   "negative": 69,
-   "open": 38,
-   "open_too_long": 0,
-   "deliverable": "query_response",
-   "deliv_met_pct": 100.0,
-   "public_mentions": 0,
-   "public_negative": 0
-  },
-  {
-   "theme": "nina_handoff_lost",
-   "label": "Nina hand-off lost context",
-   "interactions": 156,
-   "negative": 51,
-   "open": 11,
-   "open_too_long": 3,
    "deliverable": "service_request",
-   "deliv_met_pct": 82.1,
+   "deliv_met_pct": 88.5,
    "public_mentions": 0,
    "public_negative": 0
   },
   {
    "theme": "nina_wrong_answer",
    "label": "Nina gave a wrong answer",
-   "interactions": 104,
-   "negative": 38,
-   "open": 4,
-   "open_too_long": 2,
+   "interactions": 55,
+   "negative": 17,
+   "open": 3,
+   "open_too_long": 0,
    "deliverable": "service_request",
-   "deliv_met_pct": 82.0,
+   "deliv_met_pct": 80.8,
+   "public_mentions": 0,
+   "public_negative": 0
+  },
+  {
+   "theme": "nina_handoff_lost",
+   "label": "Nina hand-off lost context",
+   "interactions": 55,
+   "negative": 15,
+   "open": 1,
+   "open_too_long": 0,
+   "deliverable": "service_request",
+   "deliv_met_pct": 80.0,
    "public_mentions": 0,
    "public_negative": 0
   },
   {
    "theme": "nina_no_person",
    "label": "Could not reach a person",
-   "interactions": 104,
-   "negative": 28,
-   "open": 5,
+   "interactions": 54,
+   "negative": 15,
+   "open": 2,
    "open_too_long": 0,
    "deliverable": "service_request",
-   "deliv_met_pct": 82.8,
+   "deliv_met_pct": 92.0,
    "public_mentions": 0,
    "public_negative": 0
   }
@@ -2352,46 +2328,46 @@
  ],
  "bot_calls": {
   "total": 500,
-  "resolved": 304,
-  "unresolved": 196,
+  "resolved": 302,
+  "unresolved": 198,
   "follow_up_after_unresolved": 139,
-  "priority_unresolved": 78,
+  "priority_unresolved": 70,
   "by_reason": [
    {
     "reason": "Insufficient funds or limit",
-    "calls": 147,
-    "resolved": 114
+    "calls": 144,
+    "resolved": 110
    },
    {
     "reason": "International usage switched off",
-    "calls": 88,
-    "resolved": 51
+    "calls": 91,
+    "resolved": 53
    },
    {
     "reason": "Suspected fraud hold",
-    "calls": 86,
-    "resolved": 35
+    "calls": 89,
+    "resolved": 39
    },
    {
     "reason": "Incorrect expiry or CVV",
-    "calls": 69,
-    "resolved": 57
+    "calls": 71,
+    "resolved": 54
    },
    {
     "reason": "Card blocked (fraud or account measure)",
-    "calls": 50,
-    "resolved": 24
+    "calls": 52,
+    "resolved": 26
    },
    {
     "reason": "Merchant or network error",
-    "calls": 60,
-    "resolved": 23
+    "calls": 53,
+    "resolved": 20
    }
   ]
  },
  "rm": {
-  "should_know": 764,
-  "notified_today": 159,
+  "should_know": 790,
+  "notified_today": 166,
   "rule": "An owner alert is due when a customer on a priority list or in Premium and Private Banking has a negative signal, a high-impact complaint, an issue open over 5 hours, or an unresolved phone-menu call."
  },
  "triage": {
@@ -2445,7 +2421,7 @@
    "body": "I ordered a new BankID on 10 November and it still cannot be activated in the app. I cannot pay my bills.",
    "backend_status": "BankID re-issued 14 Nov; activation code sent by letter, due 16 Nov.",
    "bucket": "reply_status",
-   "draft_reply": "Thank you for writing to us. Your new BankID was issued on 14 November and the activation code is on its way by letter, due on 16 November. Until then you can pay bills at any kontor or through the Kundcenter. We are sorry for the wait. We will send you our decision once this is done. If you are not satisfied with it, you can ask our Kundombudsman (Customer Ombudsman) to review it, and after that apply to ARN.",
+   "draft_reply": "Thank you for writing to us. Your new BankID was issued on 14 November and the activation code is on its way by letter, due on 16 November. Until then you can pay bills at any kontor or through the Kundcenter. We are sorry for the wait. We will send you our decision once this is done. If you are not satisfied with it, you can ask our Kundombudsman to review it, and after that apply to ARN.",
    "bucket_label": "Reply with case status",
    "product_label": "Everyday accounts and app",
    "theme_label": "App login and BankID"
@@ -2461,7 +2437,7 @@
    "body": "A Swish payment failed on 11 November but the money was still taken from my account. It has not come back. I have already complained once.",
    "backend_status": "Payment returned 13 Nov, 17:05, two days after the debit. Any redress for the delay: confirm with the bank.",
    "bucket": "reply_status",
-   "draft_reply": "Thank you for writing to us. The Swish payment that failed on 11 November was returned to your account on 13 November at 17:05. We are sorry it took longer than it should have. If the delay cost you a fee, please reply to this message and we will look into it. If you are not satisfied with this decision, you can ask our Kundombudsman (Customer Ombudsman) to review it, and after that apply to ARN (Allmänna reklamationsnämnden, the National Board for Consumer Disputes).",
+   "draft_reply": "Thank you for writing to us. The Swish payment that failed on 11 November was returned to your account on 13 November at 17:05. We are sorry it took longer than it should have. If the delay cost you a fee, please reply to this message and we will look into it. If you are not satisfied with this decision, you can ask our Kundombudsman to review it, and after that apply to ARN (Allmänna reklamationsnämnden, the National Board for Consumer Disputes).",
    "bucket_label": "Reply with case status",
    "product_label": "Payments and Swish",
    "theme_label": "Swish, Bankgiro and payment failures"
@@ -2477,7 +2453,7 @@
    "body": "Writing as the account holder's legal guardian (god man). The customer questions were answered at the kontor on 6 November. The account is still restricted. Please advise.",
    "backend_status": "Account-measure review completed 13 Nov; restriction lifted 13 Nov, 16:30.",
    "bucket": "reply_status",
-   "draft_reply": "Thank you for writing to us. The review of the account was completed on 13 November and the restriction was lifted the same day at 16:30. Payments and Swish work again. We will also write to the account holder in the internet bank. If you are not satisfied with this decision, you can ask our Kundombudsman (Customer Ombudsman) to review it, and after that apply to ARN (Allmänna reklamationsnämnden, the National Board for Consumer Disputes).",
+   "draft_reply": "Thank you for writing to us. The review of the account was completed on 13 November and the restriction was lifted the same day at 16:30. Payments and Swish work again. We will also write to the account holder in the internet bank. If you are not satisfied with this decision, you can ask our Kundombudsman to review it, and after that apply to ARN (Allmänna reklamationsnämnden, the National Board for Consumer Disputes).",
    "bucket_label": "Reply with case status",
    "product_label": "Everyday accounts and app",
    "theme_label": "Account measures: frozen or restricted accounts"
@@ -2493,7 +2469,7 @@
    "body": "My loan promise (lånelöfte) expires on 21 November and access day has moved to December. Can it be extended?",
    "backend_status": "Extension approved 14 Nov; new loan promise to be issued 17 Nov.",
    "bucket": "reply_status",
-   "draft_reply": "Thank you for writing to us. Your loan promise has been extended to cover the new access day, and the new promise will be issued on 17 November. You will find it in the internet bank and the app. We will send you our decision once this is done. If you are not satisfied with it, you can ask our Kundombudsman (Customer Ombudsman) to review it, and after that apply to ARN.",
+   "draft_reply": "Thank you for writing to us. Your loan promise has been extended to cover the new access day, and the new promise will be issued on 17 November. You will find it in the internet bank and the app. We will send you our decision once this is done. If you are not satisfied with it, you can ask our Kundombudsman to review it, and after that apply to ARN.",
    "bucket_label": "Reply with case status",
    "product_label": "Mortgages (bolån)",
    "theme_label": "Loan and mortgage applications"
@@ -2509,7 +2485,7 @@
    "body": "I moved my ISK from another bank on 3 November. The holdings have left there but nothing shows in my ISK here.",
    "backend_status": "Transfer received 14 Nov; holdings booked 15 Nov.",
    "bucket": "reply_status",
-   "draft_reply": "Thank you for writing to us. The transfer of your ISK was received on 14 November and the holdings were booked on 15 November. You can see them in the app now. We are sorry for the wait. If you are not satisfied with this decision, you can ask our Kundombudsman (Customer Ombudsman) to review it, and after that apply to ARN (Allmänna reklamationsnämnden, the National Board for Consumer Disputes).",
+   "draft_reply": "Thank you for writing to us. The transfer of your ISK was received on 14 November and the holdings were booked on 15 November. You can see them in the app now. We are sorry for the wait. If you are not satisfied with this decision, you can ask our Kundombudsman to review it, and after that apply to ARN (Allmänna reklamationsnämnden, the National Board for Consumer Disputes).",
    "bucket_label": "Reply with case status",
    "product_label": "Savings and funds",
    "theme_label": "Statements and documents"
@@ -2805,33 +2781,33 @@
   }
  ],
  "md_mail": {
-  "total": 794,
-  "shown": 788,
+  "total": 817,
+  "shown": 814,
   "rows": [
    {
     "theme": "complaint_handling",
     "label": "Complaints closed without resolution",
     "owner": "cx",
-    "mails": 780,
-    "median_age_days": 5.0,
-    "resolved": 694,
-    "resolved_share": 89.0
+    "mails": 807,
+    "median_age_days": 4.4,
+    "resolved": 723,
+    "resolved_share": 89.6
    },
    {
     "theme": "account_freeze",
     "label": "Account measures: frozen or restricted accounts",
     "owner": "operations",
-    "mails": 4,
-    "median_age_days": 9.6,
+    "mails": 3,
+    "median_age_days": 3.2,
     "resolved": 3,
-    "resolved_share": 75.0
+    "resolved_share": 100.0
    },
    {
-    "theme": "loan_processing",
-    "label": "Loan and mortgage applications",
-    "owner": "loans",
+    "theme": "identity_checks",
+    "label": "Know-your-customer questions and identity checks",
+    "owner": "operations",
     "mails": 2,
-    "median_age_days": 13.2,
+    "median_age_days": 7.5,
     "resolved": 2,
     "resolved_share": 100.0
    },
@@ -2840,16 +2816,16 @@
     "label": "Card interest and charges",
     "owner": "cards",
     "mails": 1,
-    "median_age_days": 5.3,
+    "median_age_days": 6.3,
     "resolved": 1,
     "resolved_share": 100.0
    },
    {
-    "theme": "deposits_rates",
-    "label": "Savings rates and fixed-term savings",
-    "owner": "retail",
+    "theme": "care_unreachable",
+    "label": "Could not get through",
+    "owner": "cx",
     "mails": 1,
-    "median_age_days": 0.7,
+    "median_age_days": 6.2,
     "resolved": 1,
     "resolved_share": 100.0
    }
@@ -2862,32 +2838,32 @@
    {
     "tier": "Bas",
     "interactions": 23493,
-    "positive": 2865,
-    "neutral": 13309,
-    "negative": 7319,
-    "share_positive": 12.2,
-    "share_negative": 31.2,
-    "customers_affected": 2707
+    "positive": 3012,
+    "neutral": 13182,
+    "negative": 7299,
+    "share_positive": 12.8,
+    "share_negative": 31.1,
+    "customers_affected": 2727
    },
    {
     "tier": "Premium",
     "interactions": 5468,
-    "positive": 677,
-    "neutral": 3099,
-    "negative": 1692,
-    "share_positive": 12.4,
-    "share_negative": 30.9,
-    "customers_affected": 554
+    "positive": 669,
+    "neutral": 3063,
+    "negative": 1736,
+    "share_positive": 12.2,
+    "share_negative": 31.7,
+    "customers_affected": 552
    },
    {
     "tier": "Private Banking",
     "interactions": 3039,
-    "positive": 388,
-    "neutral": 1739,
-    "negative": 912,
-    "share_positive": 12.8,
-    "share_negative": 30.0,
-    "customers_affected": 302
+    "positive": 351,
+    "neutral": 1692,
+    "negative": 996,
+    "share_positive": 11.5,
+    "share_negative": 32.8,
+    "customers_affected": 304
    }
   ],
   "journey_stages": {
@@ -2895,70 +2871,70 @@
    "rows": [
     {
      "stage": "Open",
-     "interactions": 2835,
-     "negative_share": 30.8,
-     "repeat_contact_share": 20.6,
-     "closure_intent": 20
+     "interactions": 2787,
+     "negative_share": 31.3,
+     "repeat_contact_share": 19.5,
+     "closure_intent": 22
     },
     {
      "stage": "Activate",
-     "interactions": 1354,
-     "negative_share": 33.1,
-     "repeat_contact_share": 12.9,
-     "closure_intent": 10
+     "interactions": 1420,
+     "negative_share": 29.3,
+     "repeat_contact_share": 13.6,
+     "closure_intent": 17
     },
     {
      "stage": "Everyday banking",
-     "interactions": 14645,
-     "negative_share": 30.5,
-     "repeat_contact_share": 20.1,
-     "closure_intent": 92
+     "interactions": 14442,
+     "negative_share": 31.7,
+     "repeat_contact_share": 20.5,
+     "closure_intent": 136
     },
     {
      "stage": "Service requests",
-     "interactions": 6922,
-     "negative_share": 31.7,
-     "repeat_contact_share": 42.1,
-     "closure_intent": 46
+     "interactions": 6982,
+     "negative_share": 31.2,
+     "repeat_contact_share": 41.3,
+     "closure_intent": 60
     },
     {
      "stage": "Disputes and fraud",
      "interactions": 5490,
-     "negative_share": 31.2,
-     "repeat_contact_share": 16.4,
-     "closure_intent": 35
+     "negative_share": 31.1,
+     "repeat_contact_share": 17.9,
+     "closure_intent": 46
     },
     {
      "stage": "Switch or close",
-     "interactions": 754,
-     "negative_share": 29.4,
-     "repeat_contact_share": 13.5,
-     "closure_intent": 146
+     "interactions": 879,
+     "negative_share": 31.4,
+     "repeat_contact_share": 13.8,
+     "closure_intent": 193
     }
    ],
    "rule": "Switching intent: closure requests, placed at the stage of the customer's last negative contact before the request."
   },
   "retention_watchlist": {
-   "total": 325,
+   "total": 432,
    "rows": [
     {
      "tier": "Bas",
-     "customers_with_closure_intent": 230,
+     "customers_with_closure_intent": 310,
      "top_driver": "Account measures: frozen or restricted accounts",
      "owner": "rm",
      "action": "Route with evidence"
     },
     {
      "tier": "Premium",
-     "customers_with_closure_intent": 58,
+     "customers_with_closure_intent": 84,
      "top_driver": "Complaints closed without resolution",
      "owner": "rm",
      "action": "Route with evidence"
     },
     {
      "tier": "Private Banking",
-     "customers_with_closure_intent": 37,
-     "top_driver": "Complaints closed without resolution",
+     "customers_with_closure_intent": 38,
+     "top_driver": "Know-your-customer questions and identity checks",
      "owner": "rm",
      "action": "Route with evidence"
     }
@@ -2967,33 +2943,33 @@
   "tiers_bank": [
    {
     "tier": "Bas",
-    "interactions": 332677,
-    "positive": 52426,
-    "neutral": 233865,
-    "negative": 46386,
-    "share_positive": 15.8,
-    "share_negative": 13.9,
-    "customers_affected": 97051
+    "interactions": 333576,
+    "positive": 52053,
+    "neutral": 235631,
+    "negative": 45892,
+    "share_positive": 15.6,
+    "share_negative": 13.8,
+    "customers_affected": 97817
    },
    {
     "tier": "Premium",
-    "interactions": 21271,
-    "positive": 3233,
-    "neutral": 14411,
-    "negative": 3627,
-    "share_positive": 15.2,
-    "share_negative": 17.1,
-    "customers_affected": 6852
+    "interactions": 20830,
+    "positive": 3069,
+    "neutral": 13991,
+    "negative": 3770,
+    "share_positive": 14.7,
+    "share_negative": 18.1,
+    "customers_affected": 6804
    },
    {
     "tier": "Private Banking",
-    "interactions": 13394,
-    "positive": 2002,
-    "neutral": 9312,
-    "negative": 2080,
-    "share_positive": 14.9,
-    "share_negative": 15.5,
-    "customers_affected": 4136
+    "interactions": 12933,
+    "positive": 1339,
+    "neutral": 9131,
+    "negative": 2463,
+    "share_positive": 10.4,
+    "share_negative": 19.0,
+    "customers_affected": 4115
    }
   ]
  },
@@ -3001,45 +2977,45 @@
   "ageing": [
    {
     "request_type": "other",
-    "open_cases": 3694,
-    "beyond_tat": 163,
-    "beyond_tat_share": 4.4
+    "open_cases": 3706,
+    "beyond_tat": 123,
+    "beyond_tat_share": 3.3
    },
    {
     "request_type": "dispute",
-    "open_cases": 159,
+    "open_cases": 163,
     "beyond_tat": 0,
     "beyond_tat_share": 0.0
    },
    {
     "request_type": "refund",
-    "open_cases": 87,
+    "open_cases": 83,
     "beyond_tat": 0,
     "beyond_tat_share": 0.0
    },
    {
     "request_type": "closure",
-    "open_cases": 65,
+    "open_cases": 82,
     "beyond_tat": 0,
     "beyond_tat_share": 0.0
    },
    {
     "request_type": "reversal",
-    "open_cases": 55,
-    "beyond_tat": 9,
-    "beyond_tat_share": 16.4
+    "open_cases": 48,
+    "beyond_tat": 7,
+    "beyond_tat_share": 14.6
    },
    {
     "request_type": "loan_disbursal",
-    "open_cases": 39,
-    "beyond_tat": 4,
-    "beyond_tat_share": 10.3
+    "open_cases": 35,
+    "beyond_tat": 3,
+    "beyond_tat_share": 8.6
    },
    {
     "request_type": "kyc",
-    "open_cases": 33,
-    "beyond_tat": 1,
-    "beyond_tat_share": 3.0
+    "open_cases": 15,
+    "beyond_tat": 3,
+    "beyond_tat_share": 20.0
    }
   ],
   "ladder": [
@@ -3049,19 +3025,19 @@
    },
    {
     "rung": "Repeat",
-    "count": 7627
+    "count": 7682
    },
    {
     "rung": "Complaint",
-    "count": 1560
+    "count": 1594
    },
    {
     "rung": "Complaints team",
-    "count": 794
+    "count": 817
    },
    {
     "rung": "Bank's final decision",
-    "count": 780
+    "count": 806
    },
    {
     "rung": "ARN",
@@ -3070,10 +3046,10 @@
   ],
   "ladder_rule": "Voice and Repeat count the bank's own contacts in the window (Repeat: the same customer on the same theme within 30 days). Complaint and the rungs above are flows in the window from the complaint register the ARN watch reads: complaints received, passed to the complaints team when not settled within 3 business days, final decisions issued, filings with ARN.",
   "closure": {
-   "closure_requests": 349,
-   "closed": 250,
-   "saved": 79,
-   "save_rate": 31.6
+   "closure_requests": 474,
+   "closed": 340,
+   "saved": 94,
+   "save_rate": 27.6
   },
   "disputes": {
    "raised": 1012,
@@ -3087,46 +3063,46 @@
     },
     {
      "stage": "First response given",
-     "count": 1002
+     "count": 1004
     },
     {
      "stage": "Closed",
-     "count": 609
+     "count": 607
     },
     {
      "stage": "Customer credited",
-     "count": 357
+     "count": 358
     },
     {
      "stage": "Credited within the standard",
-     "count": 357
+     "count": 358
     }
    ]
   },
   "ladder_bank": [
    {
     "rung": "Voice",
-    "count": 367342
+    "count": 367339
    },
    {
     "rung": "Repeat",
-    "count": 56947
+    "count": 55570
    },
    {
     "rung": "Complaint",
-    "count": 22412
+    "count": 22414
    },
    {
     "rung": "Complaints team",
-    "count": 8208
+    "count": 8110
    },
    {
     "rung": "Bank's final decision",
-    "count": 8037
+    "count": 7850
    },
    {
     "rung": "ARN",
-    "count": 37
+    "count": 50
    }
   ]
  },
@@ -3135,57 +3111,57 @@
    {
     "product": "everyday_accounts_app",
     "theme": "account_freeze",
-    "public_share": 13.6,
-    "internal_share": 13.6,
-    "within_20pct": true
-   },
-   {
-    "product": "everyday_accounts_app",
-    "theme": "identity_checks",
-    "public_share": 6.8,
-    "internal_share": 6.8,
+    "public_share": 14.3,
+    "internal_share": 14.3,
     "within_20pct": true
    },
    {
     "product": "everyday_accounts_app",
     "theme": "app_login_biometrics",
-    "public_share": 8.5,
-    "internal_share": 8.5,
+    "public_share": 8.9,
+    "internal_share": 8.9,
     "within_20pct": true
    },
    {
     "product": "everyday_accounts_app",
-    "theme": "fees_charges_bank",
-    "public_share": 5.1,
-    "internal_share": 5.1,
-    "within_20pct": true
-   },
-   {
-    "product": "everyday_accounts_app",
-    "theme": "care_unreachable",
-    "public_share": 6.0,
-    "internal_share": 6.0,
-    "within_20pct": true
-   },
-   {
-    "product": "everyday_accounts_app",
-    "theme": "complaint_handling",
-    "public_share": 6.8,
-    "internal_share": 6.8,
+    "theme": "identity_checks",
+    "public_share": 6.2,
+    "internal_share": 6.2,
     "within_20pct": true
    },
    {
     "product": "everyday_accounts_app",
     "theme": "app_speed_crash",
-    "public_share": 7.7,
-    "internal_share": 7.7,
+    "public_share": 8.9,
+    "internal_share": 8.9,
     "within_20pct": true
    },
    {
     "product": "everyday_accounts_app",
     "theme": "new_app_release",
-    "public_share": 10.2,
-    "internal_share": 10.2,
+    "public_share": 10.7,
+    "internal_share": 10.7,
+    "within_20pct": true
+   },
+   {
+    "product": "everyday_accounts_app",
+    "theme": "fees_charges_bank",
+    "public_share": 7.1,
+    "internal_share": 7.1,
+    "within_20pct": true
+   },
+   {
+    "product": "everyday_accounts_app",
+    "theme": "complaint_handling",
+    "public_share": 7.1,
+    "internal_share": 7.1,
+    "within_20pct": true
+   },
+   {
+    "product": "everyday_accounts_app",
+    "theme": "care_unreachable",
+    "public_share": 5.4,
+    "internal_share": 5.4,
     "within_20pct": true
    },
    {

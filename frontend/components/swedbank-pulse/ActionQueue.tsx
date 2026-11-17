@@ -248,7 +248,7 @@ export function ActionQueue({ b }: { b: Bundle }) {
           </div>
         </div>
         <MutedNote>
-          Time and resolution figures are working estimates, to be replaced with
+          Time and resolution figures are working figures, to be replaced with
           the email team&apos;s own measures in discovery.
         </MutedNote>
       </Tile>

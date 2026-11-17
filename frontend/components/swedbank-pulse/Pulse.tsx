@@ -13,9 +13,10 @@ import {
   fmt,
   fmtCompact,
   fmtDate,
-  fmtPct,
   fmtSigned,
   fmtTime,
+  nShare,
+  respondedOf,
   ringPct,
 } from "@/lib/swedbank-pulse/format";
 import {
@@ -340,7 +341,9 @@ export function TrendChip({
 }) {
   if (pct === null)
     return (
-      <span style={{ fontSize: 12, color: C.textMut }}>no earlier period</span>
+      <span style={{ fontSize: 12, color: C.textMut }} title={label}>
+        —
+      </span>
     );
   const up = pct > 0;
   return (
@@ -463,7 +466,7 @@ export function Delta({
     return compact ? (
       // Inside a gauge the full sentence overflows (round 3 layout run); it stays as the tooltip.
       <span style={{ color: C.textMut }} title={label}>
-        no earlier period
+        —
       </span>
     ) : (
       <span style={{ color: C.textMut }}>{label}</span>
@@ -1208,8 +1211,12 @@ function HandledLine({ h, tip }: { h: Handled; tip: string }) {
       <span>
         Handled{" "}
         <strong style={{ color: C.text, fontFamily: MONO }}>
-          {fmt(h.handled)} of {fmt(h.total)}
+          {/* SW-D15 point 3: never "0 of 0"; with nothing to handle the figure reads — and says why. */}
+          {h.total ? `${fmt(h.handled)} of ${fmt(h.total)}` : "—"}
         </strong>
+        {h.total ? null : (
+          <span style={{ color: C.textMut }}> (0 posts in the period)</span>
+        )}
       </span>
       <ProvenanceTag kind="internal" short />
     </div>
@@ -1348,9 +1355,8 @@ export function PublicNotLoaded() {
         lineHeight: 1.5,
       }}
     >
-      Public data not yet loaded. Sources: App Store · Google Play · X · Reddit
-      · Trustpilot · Forums (MoneySavingExpert). No posts, counts, ratings or
-      reply rates are shown until the pull lands.
+      0 public items on this theme in the window. Sources read: App Store ·
+      Google Play · X · Reddit · Trustpilot.
     </div>
   );
 }
@@ -1466,18 +1472,27 @@ function ExternalBlock({ p }: { p: Period }) {
                 caption="public posts and reviews"
               />
               <div style={GAUGE_PAIR}>
-                <ArcGauge
-                  value={ext.positive_share}
-                  color={C.green}
-                  centre={fmtPct(ext.positive_share)}
-                  label="Positive"
-                />
-                <ArcGauge
-                  value={ext.negative_share}
-                  color={C.red}
-                  centre={fmtPct(ext.negative_share)}
-                  label="Negative"
-                />
+                {(
+                  [
+                    ["Positive", ext.positive_share, C.green],
+                    ["Negative", ext.negative_share, C.red],
+                  ] as const
+                ).map(([label, v, color]) => {
+                  const r = nShare(v, ext.public_items ?? ext.volume);
+                  return (
+                    <ArcGauge
+                      key={label}
+                      value={r.value}
+                      color={color}
+                      centre={r.text}
+                      label={label}
+                    >
+                      {r.note ? (
+                        <span style={{ color: C.textMut }}>{r.note}</span>
+                      ) : null}
+                    </ArcGauge>
+                  );
+                })}
               </div>
             </div>
             <div
@@ -1932,8 +1947,15 @@ function ExternalSet({
   const r = f.responded;
   // NW-D101: review-only shares leave the high-impact set (mostly X) empty in short windows, so it reads the share of
   // all its posts, marked indicative (sentiment on X and Reddit is not checked).
-  const pos = hi ? share(f.positive, f.volume) : f.positive_share;
-  const neg = hi ? share(f.negative, f.volume) : f.negative_share;
+  const posN = nShare(
+    hi ? share(f.positive, f.volume) : f.positive_share,
+    f.volume,
+  );
+  const negN = nShare(
+    hi ? share(f.negative, f.volume) : f.negative_share,
+    f.volume,
+  );
+  const pos = posN.value;
   return (
     <div
       style={{
@@ -1962,9 +1984,9 @@ function ExternalSet({
           big={`${fmt(f.positive)} / ${fmt(f.negative)}`}
           label="Positive / negative"
           sub={
-            hi
-              ? `${fmtPct(pos)} positive · ${fmtPct(neg)} negative, indicative`
-              : `${fmtPct(pos)} positive · ${fmtPct(neg)} negative, source-weighted`
+            posN.value === null
+              ? `— ${posN.note}`
+              : `${posN.text} positive · ${negN.text} negative, ${hi || posN.note ? "indicative" : "source-weighted"}`
           }
         />
         {handled ? (
@@ -1977,9 +1999,9 @@ function ExternalSet({
           />
         ) : (
           <Dial
-            value={share(r.responded, r.reviews)}
+            value={share(r.responded, f.volume)}
             color={C.violet}
-            big={`${fmt(r.responded)} of ${fmt(r.reviews)}`}
+            big={respondedOf(r.responded, f.volume)}
             label="Responded"
             sub={`positive ${fmt(r.positive_responded)} of ${fmt(r.positive_reviews)} · negative ${fmt(r.negative_responded)} of ${fmt(r.negative_reviews)}`}
           />
@@ -2061,11 +2083,9 @@ export function CxPulse({ p }: { p: Period }) {
             }}
           >
             <LegendDot color={C.violet} />
-            Internal {fmt(cx.overall.internal)} (
-            {fmtPct(cx.overall.internal_pct)}) ·
+            Internal {fmt(cx.overall.internal)} ·
             <LegendDot color={C.cyan} />
-            External {fmt(cx.overall.external)} (
-            {fmtPct(cx.overall.external_pct)})
+            External {fmt(cx.overall.external)}
           </span>
         </div>
         <div

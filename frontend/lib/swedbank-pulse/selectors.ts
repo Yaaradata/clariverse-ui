@@ -65,7 +65,7 @@ export function trendWords(t: Theme): string {
   if (r === null || r === undefined)
     return t.trend_mode === "insufficient"
       ? "no trend claimed (mostly from sources that start or change collection mid-window)"
-      : "no earlier period to compare";
+      : "no change measured";
   const dir = r >= 0 ? "up" : "down";
   if (t.trend_mode === "vs_baseline")
     return `${dir} ${Math.abs(Math.round(r))}% vs baseline`;

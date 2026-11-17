@@ -395,10 +395,10 @@ BUCKETS = {
 }
 
 # The closing lines of a decision letter: the bank's own appeal stage first, then ARN.
-_APPEAL = ("If you are not satisfied with this decision, you can ask our Kundombudsman (Customer Ombudsman) to review "
+_APPEAL = ("If you are not satisfied with this decision, you can ask our Kundombudsman to review "
            "it, and after that apply to ARN (Allmänna reklamationsnämnden, the National Board for Consumer Disputes).")
 _LATER = ("We will send you our decision once this is done. If you are not satisfied with it, you can ask our "
-          "Kundombudsman (Customer Ombudsman) to review it, and after that apply to ARN.")
+          "Kundombudsman to review it, and after that apply to ARN.")
 
 ESCALATION_EMAILS = [
     {
