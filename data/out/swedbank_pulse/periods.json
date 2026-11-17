@@ -3781,18 +3781,18 @@
          "negative_responded": 0
         }
        },
-       "change_pct": -100.0
+       "change_pct": null
       },
       "trend": [
        {
         "end": "2026-11-10T06:45:00+00:00",
         "internal": 185,
-        "external": 2
+        "external": 1
        },
        {
         "end": "2026-11-11T06:45:00+00:00",
         "internal": 130,
-        "external": 1
+        "external": 0
        },
        {
         "end": "2026-11-12T06:45:00+00:00",
@@ -3812,12 +3812,12 @@
        {
         "end": "2026-11-15T06:45:00+00:00",
         "internal": 138,
-        "external": 1
+        "external": 0
        },
        {
         "end": "2026-11-16T06:45:00+00:00",
         "internal": 43,
-        "external": 1
+        "external": 0
        },
        {
         "end": "2026-11-17T06:45:00+00:00",
@@ -4698,6 +4698,26 @@
          "at_risk": 46
         }
        ]
+      },
+      {
+       "id": "praise",
+       "label": "Praise and loyalty",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": []
+      },
+      {
+       "id": "dissatisfaction",
+       "label": "General dissatisfaction",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": []
       },
       {
        "id": "other",
@@ -11077,6 +11097,73 @@
        "change_pct": -13.7
       },
       "external": {
+       "volume": 0,
+       "positive": 0,
+       "negative": 0,
+       "negative_share": null,
+       "escalation": 0,
+       "responded": {
+        "reviews": 0,
+        "responded": 0,
+        "positive_reviews": 0,
+        "positive_responded": 0,
+        "negative_reviews": 0,
+        "negative_responded": 0
+       },
+       "high_impact": {
+        "volume": 0,
+        "positive": 0,
+        "negative": 0,
+        "escalation": 0,
+        "positive_share": null,
+        "negative_share": null,
+        "share_method": "source_weighted",
+        "responded": {
+         "reviews": 0,
+         "responded": 0,
+         "positive_reviews": 0,
+         "positive_responded": 0,
+         "negative_reviews": 0,
+         "negative_responded": 0
+        }
+       },
+       "change_pct": -100.0
+      },
+      "trend": [
+       {
+        "end": "2026-11-03T06:45:00+00:00",
+        "internal": 875,
+        "external": 0
+       },
+       {
+        "end": "2026-11-10T06:45:00+00:00",
+        "internal": 863,
+        "external": 2
+       },
+       {
+        "end": "2026-11-17T06:45:00+00:00",
+        "internal": 745,
+        "external": 0
+       }
+      ],
+      "subcategories": []
+     },
+     {
+      "id": "praise",
+      "label": "Praise and loyalty",
+      "owner": "Everyday banking · CX lead",
+      "tat_related": false,
+      "internal": {
+       "volume": 0,
+       "resolved": 0,
+       "open": 0,
+       "waiting_on_customer": 0,
+       "open_too_long": 0,
+       "not_responded_48h": 0,
+       "escalations": 0,
+       "change_pct": null
+      },
+      "external": {
        "volume": 3,
        "positive": 3,
        "negative": 0,
@@ -11107,26 +11194,155 @@
          "negative_responded": 0
         }
        },
-       "change_pct": -50.0
+       "change_pct": 50.0
       },
       "trend": [
        {
         "end": "2026-11-03T06:45:00+00:00",
-        "internal": 875,
+        "internal": 0,
         "external": 3
        },
        {
         "end": "2026-11-10T06:45:00+00:00",
-        "internal": 863,
-        "external": 6
+        "internal": 0,
+        "external": 2
        },
        {
         "end": "2026-11-17T06:45:00+00:00",
-        "internal": 745,
+        "internal": 0,
         "external": 3
        }
       ],
-      "subcategories": []
+      "subcategories": [
+       {
+        "id": "app_praise",
+        "label": "Where customers praise us: quick, easy app journeys",
+        "internal": {
+         "volume": 0,
+         "resolved": 0,
+         "open": 0,
+         "waiting_on_customer": 0,
+         "open_too_long": 0,
+         "not_responded_48h": 0,
+         "escalations": 0,
+         "change_pct": null
+        },
+        "external": {
+         "volume": 2,
+         "positive": 2,
+         "negative": 0,
+         "negative_share": 0.0,
+         "escalation": 0,
+         "responded": {
+          "reviews": 2,
+          "responded": 0,
+          "positive_reviews": 2,
+          "positive_responded": 0,
+          "negative_reviews": 0,
+          "negative_responded": 0
+         },
+         "high_impact": {
+          "volume": 0,
+          "positive": 0,
+          "negative": 0,
+          "escalation": 0,
+          "positive_share": null,
+          "negative_share": null,
+          "share_method": "source_weighted",
+          "responded": {
+           "reviews": 0,
+           "responded": 0,
+           "positive_reviews": 0,
+           "positive_responded": 0,
+           "negative_reviews": 0,
+           "negative_responded": 0
+          }
+         },
+         "change_pct": 0.0
+        },
+        "trend": [
+         {
+          "end": "2026-11-03T06:45:00+00:00",
+          "internal": 0,
+          "external": 3
+         },
+         {
+          "end": "2026-11-10T06:45:00+00:00",
+          "internal": 0,
+          "external": 2
+         },
+         {
+          "end": "2026-11-17T06:45:00+00:00",
+          "internal": 0,
+          "external": 2
+         }
+        ]
+       },
+       {
+        "id": "service_praise",
+        "label": "Praise for service",
+        "internal": {
+         "volume": 0,
+         "resolved": 0,
+         "open": 0,
+         "waiting_on_customer": 0,
+         "open_too_long": 0,
+         "not_responded_48h": 0,
+         "escalations": 0,
+         "change_pct": null
+        },
+        "external": {
+         "volume": 1,
+         "positive": 1,
+         "negative": 0,
+         "negative_share": null,
+         "escalation": 0,
+         "responded": {
+          "reviews": 1,
+          "responded": 1,
+          "positive_reviews": 1,
+          "positive_responded": 1,
+          "negative_reviews": 0,
+          "negative_responded": 0
+         },
+         "high_impact": {
+          "volume": 0,
+          "positive": 0,
+          "negative": 0,
+          "escalation": 0,
+          "positive_share": null,
+          "negative_share": null,
+          "share_method": "source_weighted",
+          "responded": {
+           "reviews": 0,
+           "responded": 0,
+           "positive_reviews": 0,
+           "positive_responded": 0,
+           "negative_reviews": 0,
+           "negative_responded": 0
+          }
+         },
+         "change_pct": null
+        },
+        "trend": [
+         {
+          "end": "2026-11-03T06:45:00+00:00",
+          "internal": 0,
+          "external": 0
+         },
+         {
+          "end": "2026-11-10T06:45:00+00:00",
+          "internal": 0,
+          "external": 0
+         },
+         {
+          "end": "2026-11-17T06:45:00+00:00",
+          "internal": 0,
+          "external": 1
+         }
+        ]
+       }
+      ]
      }
     ],
     "mood": {
@@ -11247,6 +11463,14 @@
       "id": "other",
       "label": "Other",
       "repeat_contact_internal": 1.6,
+      "escalation_internal": 0,
+      "escalation_external": 0,
+      "negative_share": null
+     },
+     {
+      "id": "praise",
+      "label": "Praise and loyalty",
+      "repeat_contact_internal": null,
       "escalation_internal": 0,
       "escalation_external": 0,
       "negative_share": 0.0
@@ -11632,6 +11856,13 @@
        "internal_repeat": 12,
        "public_repeat": 0,
        "contacts": 745
+      },
+      {
+       "id": "praise",
+       "label": "Praise and loyalty",
+       "internal_repeat": 0,
+       "public_repeat": 0,
+       "contacts": 0
       }
      ],
      "tiers": [
@@ -12345,6 +12576,26 @@
          "at_risk": 46
         }
        ]
+      },
+      {
+       "id": "praise",
+       "label": "Praise and loyalty",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": []
+      },
+      {
+       "id": "dissatisfaction",
+       "label": "General dissatisfaction",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": []
       },
       {
        "id": "other",
@@ -18600,17 +18851,17 @@
        "change_pct": 20.8
       },
       "external": {
-       "volume": 9,
-       "positive": 5,
-       "negative": 3,
+       "volume": 2,
+       "positive": 0,
+       "negative": 1,
        "negative_share": 0.0,
        "escalation": 0,
        "responded": {
-        "reviews": 9,
-        "responded": 4,
-        "positive_reviews": 5,
-        "positive_responded": 3,
-        "negative_reviews": 3,
+        "reviews": 2,
+        "responded": 1,
+        "positive_reviews": 0,
+        "positive_responded": 0,
+        "negative_reviews": 1,
         "negative_responded": 1
        },
        "high_impact": {
@@ -18636,10 +18887,288 @@
        {
         "end": "2026-11-17T06:45:00+00:00",
         "internal": 1608,
-        "external": 9
+        "external": 2
        }
       ],
       "subcategories": []
+     },
+     {
+      "id": "praise",
+      "label": "Praise and loyalty",
+      "owner": "Everyday banking · CX lead",
+      "tat_related": false,
+      "internal": {
+       "volume": 0,
+       "resolved": 0,
+       "open": 0,
+       "waiting_on_customer": 0,
+       "open_too_long": 0,
+       "not_responded_48h": 0,
+       "escalations": 0,
+       "change_pct": null
+      },
+      "external": {
+       "volume": 5,
+       "positive": 5,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "responded": {
+        "reviews": 5,
+        "responded": 3,
+        "positive_reviews": 5,
+        "positive_responded": 3,
+        "negative_reviews": 0,
+        "negative_responded": 0
+       },
+       "high_impact": {
+        "volume": 0,
+        "positive": 0,
+        "negative": 0,
+        "escalation": 0,
+        "positive_share": null,
+        "negative_share": null,
+        "share_method": "source_weighted",
+        "responded": {
+         "reviews": 0,
+         "responded": 0,
+         "positive_reviews": 0,
+         "positive_responded": 0,
+         "negative_reviews": 0,
+         "negative_responded": 0
+        }
+       },
+       "change_pct": null
+      },
+      "trend": [
+       {
+        "end": "2026-11-17T06:45:00+00:00",
+        "internal": 0,
+        "external": 5
+       }
+      ],
+      "subcategories": [
+       {
+        "id": "app_praise",
+        "label": "Where customers praise us: quick, easy app journeys",
+        "internal": {
+         "volume": 0,
+         "resolved": 0,
+         "open": 0,
+         "waiting_on_customer": 0,
+         "open_too_long": 0,
+         "not_responded_48h": 0,
+         "escalations": 0,
+         "change_pct": null
+        },
+        "external": {
+         "volume": 4,
+         "positive": 4,
+         "negative": 0,
+         "negative_share": 0.0,
+         "escalation": 0,
+         "responded": {
+          "reviews": 4,
+          "responded": 2,
+          "positive_reviews": 4,
+          "positive_responded": 2,
+          "negative_reviews": 0,
+          "negative_responded": 0
+         },
+         "high_impact": {
+          "volume": 0,
+          "positive": 0,
+          "negative": 0,
+          "escalation": 0,
+          "positive_share": null,
+          "negative_share": null,
+          "share_method": "source_weighted",
+          "responded": {
+           "reviews": 0,
+           "responded": 0,
+           "positive_reviews": 0,
+           "positive_responded": 0,
+           "negative_reviews": 0,
+           "negative_responded": 0
+          }
+         },
+         "change_pct": null
+        },
+        "trend": [
+         {
+          "end": "2026-11-17T06:45:00+00:00",
+          "internal": 0,
+          "external": 4
+         }
+        ]
+       },
+       {
+        "id": "service_praise",
+        "label": "Praise for service",
+        "internal": {
+         "volume": 0,
+         "resolved": 0,
+         "open": 0,
+         "waiting_on_customer": 0,
+         "open_too_long": 0,
+         "not_responded_48h": 0,
+         "escalations": 0,
+         "change_pct": null
+        },
+        "external": {
+         "volume": 1,
+         "positive": 1,
+         "negative": 0,
+         "negative_share": null,
+         "escalation": 0,
+         "responded": {
+          "reviews": 1,
+          "responded": 1,
+          "positive_reviews": 1,
+          "positive_responded": 1,
+          "negative_reviews": 0,
+          "negative_responded": 0
+         },
+         "high_impact": {
+          "volume": 0,
+          "positive": 0,
+          "negative": 0,
+          "escalation": 0,
+          "positive_share": null,
+          "negative_share": null,
+          "share_method": "source_weighted",
+          "responded": {
+           "reviews": 0,
+           "responded": 0,
+           "positive_reviews": 0,
+           "positive_responded": 0,
+           "negative_reviews": 0,
+           "negative_responded": 0
+          }
+         },
+         "change_pct": null
+        },
+        "trend": [
+         {
+          "end": "2026-11-17T06:45:00+00:00",
+          "internal": 0,
+          "external": 1
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "id": "dissatisfaction",
+      "label": "General dissatisfaction",
+      "owner": "Everyday banking · CX lead",
+      "tat_related": false,
+      "internal": {
+       "volume": 0,
+       "resolved": 0,
+       "open": 0,
+       "waiting_on_customer": 0,
+       "open_too_long": 0,
+       "not_responded_48h": 0,
+       "escalations": 0,
+       "change_pct": null
+      },
+      "external": {
+       "volume": 2,
+       "positive": 0,
+       "negative": 2,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "responded": {
+        "reviews": 2,
+        "responded": 0,
+        "positive_reviews": 0,
+        "positive_responded": 0,
+        "negative_reviews": 2,
+        "negative_responded": 0
+       },
+       "high_impact": {
+        "volume": 0,
+        "positive": 0,
+        "negative": 0,
+        "escalation": 0,
+        "positive_share": null,
+        "negative_share": null,
+        "share_method": "source_weighted",
+        "responded": {
+         "reviews": 0,
+         "responded": 0,
+         "positive_reviews": 0,
+         "positive_responded": 0,
+         "negative_reviews": 0,
+         "negative_responded": 0
+        }
+       },
+       "change_pct": null
+      },
+      "trend": [
+       {
+        "end": "2026-11-17T06:45:00+00:00",
+        "internal": 0,
+        "external": 2
+       }
+      ],
+      "subcategories": [
+       {
+        "id": "general_dissatisfaction",
+        "label": "General dissatisfaction",
+        "internal": {
+         "volume": 0,
+         "resolved": 0,
+         "open": 0,
+         "waiting_on_customer": 0,
+         "open_too_long": 0,
+         "not_responded_48h": 0,
+         "escalations": 0,
+         "change_pct": null
+        },
+        "external": {
+         "volume": 2,
+         "positive": 0,
+         "negative": 2,
+         "negative_share": 100.0,
+         "escalation": 0,
+         "responded": {
+          "reviews": 2,
+          "responded": 0,
+          "positive_reviews": 0,
+          "positive_responded": 0,
+          "negative_reviews": 2,
+          "negative_responded": 0
+         },
+         "high_impact": {
+          "volume": 0,
+          "positive": 0,
+          "negative": 0,
+          "escalation": 0,
+          "positive_share": null,
+          "negative_share": null,
+          "share_method": "source_weighted",
+          "responded": {
+           "reviews": 0,
+           "responded": 0,
+           "positive_reviews": 0,
+           "positive_responded": 0,
+           "negative_reviews": 0,
+           "negative_responded": 0
+          }
+         },
+         "change_pct": null
+        },
+        "trend": [
+         {
+          "end": "2026-11-17T06:45:00+00:00",
+          "internal": 0,
+          "external": 2
+         }
+        ]
+       }
+      ]
      }
     ],
     "mood": {
@@ -18763,6 +19292,22 @@
       "escalation_internal": 9,
       "escalation_external": 0,
       "negative_share": 0.0
+     },
+     {
+      "id": "praise",
+      "label": "Praise and loyalty",
+      "repeat_contact_internal": null,
+      "escalation_internal": 0,
+      "escalation_external": 0,
+      "negative_share": 0.0
+     },
+     {
+      "id": "dissatisfaction",
+      "label": "General dissatisfaction",
+      "repeat_contact_internal": null,
+      "escalation_internal": 0,
+      "escalation_external": 0,
+      "negative_share": 100.0
      }
     ],
     "pillars": [
@@ -19139,6 +19684,20 @@
        "internal_repeat": 25,
        "public_repeat": 0,
        "contacts": 1608
+      },
+      {
+       "id": "praise",
+       "label": "Praise and loyalty",
+       "internal_repeat": 0,
+       "public_repeat": 0,
+       "contacts": 0
+      },
+      {
+       "id": "dissatisfaction",
+       "label": "General dissatisfaction",
+       "internal_repeat": 0,
+       "public_repeat": 0,
+       "contacts": 0
       }
      ],
      "tiers": [
@@ -19827,6 +20386,26 @@
          "at_risk": 46
         }
        ]
+      },
+      {
+       "id": "praise",
+       "label": "Praise and loyalty",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": []
+      },
+      {
+       "id": "dissatisfaction",
+       "label": "General dissatisfaction",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": []
       },
       {
        "id": "other",
@@ -26624,17 +27203,17 @@
        "change_pct": -14.2
       },
       "external": {
-       "volume": 13,
-       "positive": 9,
-       "negative": 3,
+       "volume": 2,
+       "positive": 0,
+       "negative": 1,
        "negative_share": 0.0,
        "escalation": 0,
        "responded": {
-        "reviews": 13,
-        "responded": 5,
-        "positive_reviews": 9,
-        "positive_responded": 4,
-        "negative_reviews": 3,
+        "reviews": 2,
+        "responded": 1,
+        "positive_reviews": 0,
+        "positive_responded": 0,
+        "negative_reviews": 1,
         "negative_responded": 1
        },
        "high_impact": {
@@ -26660,20 +27239,348 @@
        {
         "end": "2026-11-03T06:45:00+00:00",
         "internal": 875,
-        "external": 3
+        "external": 0
        },
        {
         "end": "2026-11-10T06:45:00+00:00",
         "internal": 863,
-        "external": 6
+        "external": 2
        },
        {
         "end": "2026-11-17T06:45:00+00:00",
         "internal": 745,
-        "external": 3
+        "external": 0
        }
       ],
       "subcategories": []
+     },
+     {
+      "id": "praise",
+      "label": "Praise and loyalty",
+      "owner": "Everyday banking · CX lead",
+      "tat_related": false,
+      "internal": {
+       "volume": 0,
+       "resolved": 0,
+       "open": 0,
+       "waiting_on_customer": 0,
+       "open_too_long": 0,
+       "not_responded_48h": 0,
+       "escalations": 0,
+       "change_pct": null
+      },
+      "external": {
+       "volume": 9,
+       "positive": 9,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "responded": {
+        "reviews": 9,
+        "responded": 4,
+        "positive_reviews": 9,
+        "positive_responded": 4,
+        "negative_reviews": 0,
+        "negative_responded": 0
+       },
+       "high_impact": {
+        "volume": 0,
+        "positive": 0,
+        "negative": 0,
+        "escalation": 0,
+        "positive_share": null,
+        "negative_share": null,
+        "share_method": "source_weighted",
+        "responded": {
+         "reviews": 0,
+         "responded": 0,
+         "positive_reviews": 0,
+         "positive_responded": 0,
+         "negative_reviews": 0,
+         "negative_responded": 0
+        }
+       },
+       "change_pct": null
+      },
+      "trend": [
+       {
+        "end": "2026-11-03T06:45:00+00:00",
+        "internal": 0,
+        "external": 3
+       },
+       {
+        "end": "2026-11-10T06:45:00+00:00",
+        "internal": 0,
+        "external": 2
+       },
+       {
+        "end": "2026-11-17T06:45:00+00:00",
+        "internal": 0,
+        "external": 3
+       }
+      ],
+      "subcategories": [
+       {
+        "id": "app_praise",
+        "label": "Where customers praise us: quick, easy app journeys",
+        "internal": {
+         "volume": 0,
+         "resolved": 0,
+         "open": 0,
+         "waiting_on_customer": 0,
+         "open_too_long": 0,
+         "not_responded_48h": 0,
+         "escalations": 0,
+         "change_pct": null
+        },
+        "external": {
+         "volume": 8,
+         "positive": 8,
+         "negative": 0,
+         "negative_share": 0.0,
+         "escalation": 0,
+         "responded": {
+          "reviews": 8,
+          "responded": 3,
+          "positive_reviews": 8,
+          "positive_responded": 3,
+          "negative_reviews": 0,
+          "negative_responded": 0
+         },
+         "high_impact": {
+          "volume": 0,
+          "positive": 0,
+          "negative": 0,
+          "escalation": 0,
+          "positive_share": null,
+          "negative_share": null,
+          "share_method": "source_weighted",
+          "responded": {
+           "reviews": 0,
+           "responded": 0,
+           "positive_reviews": 0,
+           "positive_responded": 0,
+           "negative_reviews": 0,
+           "negative_responded": 0
+          }
+         },
+         "change_pct": null
+        },
+        "trend": [
+         {
+          "end": "2026-11-03T06:45:00+00:00",
+          "internal": 0,
+          "external": 3
+         },
+         {
+          "end": "2026-11-10T06:45:00+00:00",
+          "internal": 0,
+          "external": 2
+         },
+         {
+          "end": "2026-11-17T06:45:00+00:00",
+          "internal": 0,
+          "external": 2
+         }
+        ]
+       },
+       {
+        "id": "service_praise",
+        "label": "Praise for service",
+        "internal": {
+         "volume": 0,
+         "resolved": 0,
+         "open": 0,
+         "waiting_on_customer": 0,
+         "open_too_long": 0,
+         "not_responded_48h": 0,
+         "escalations": 0,
+         "change_pct": null
+        },
+        "external": {
+         "volume": 1,
+         "positive": 1,
+         "negative": 0,
+         "negative_share": null,
+         "escalation": 0,
+         "responded": {
+          "reviews": 1,
+          "responded": 1,
+          "positive_reviews": 1,
+          "positive_responded": 1,
+          "negative_reviews": 0,
+          "negative_responded": 0
+         },
+         "high_impact": {
+          "volume": 0,
+          "positive": 0,
+          "negative": 0,
+          "escalation": 0,
+          "positive_share": null,
+          "negative_share": null,
+          "share_method": "source_weighted",
+          "responded": {
+           "reviews": 0,
+           "responded": 0,
+           "positive_reviews": 0,
+           "positive_responded": 0,
+           "negative_reviews": 0,
+           "negative_responded": 0
+          }
+         },
+         "change_pct": null
+        },
+        "trend": [
+         {
+          "end": "2026-11-03T06:45:00+00:00",
+          "internal": 0,
+          "external": 0
+         },
+         {
+          "end": "2026-11-10T06:45:00+00:00",
+          "internal": 0,
+          "external": 0
+         },
+         {
+          "end": "2026-11-17T06:45:00+00:00",
+          "internal": 0,
+          "external": 1
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "id": "dissatisfaction",
+      "label": "General dissatisfaction",
+      "owner": "Everyday banking · CX lead",
+      "tat_related": false,
+      "internal": {
+       "volume": 0,
+       "resolved": 0,
+       "open": 0,
+       "waiting_on_customer": 0,
+       "open_too_long": 0,
+       "not_responded_48h": 0,
+       "escalations": 0,
+       "change_pct": null
+      },
+      "external": {
+       "volume": 2,
+       "positive": 0,
+       "negative": 2,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "responded": {
+        "reviews": 2,
+        "responded": 0,
+        "positive_reviews": 0,
+        "positive_responded": 0,
+        "negative_reviews": 2,
+        "negative_responded": 0
+       },
+       "high_impact": {
+        "volume": 0,
+        "positive": 0,
+        "negative": 0,
+        "escalation": 0,
+        "positive_share": null,
+        "negative_share": null,
+        "share_method": "source_weighted",
+        "responded": {
+         "reviews": 0,
+         "responded": 0,
+         "positive_reviews": 0,
+         "positive_responded": 0,
+         "negative_reviews": 0,
+         "negative_responded": 0
+        }
+       },
+       "change_pct": null
+      },
+      "trend": [
+       {
+        "end": "2026-11-03T06:45:00+00:00",
+        "internal": 0,
+        "external": 0
+       },
+       {
+        "end": "2026-11-10T06:45:00+00:00",
+        "internal": 0,
+        "external": 2
+       },
+       {
+        "end": "2026-11-17T06:45:00+00:00",
+        "internal": 0,
+        "external": 0
+       }
+      ],
+      "subcategories": [
+       {
+        "id": "general_dissatisfaction",
+        "label": "General dissatisfaction",
+        "internal": {
+         "volume": 0,
+         "resolved": 0,
+         "open": 0,
+         "waiting_on_customer": 0,
+         "open_too_long": 0,
+         "not_responded_48h": 0,
+         "escalations": 0,
+         "change_pct": null
+        },
+        "external": {
+         "volume": 2,
+         "positive": 0,
+         "negative": 2,
+         "negative_share": 100.0,
+         "escalation": 0,
+         "responded": {
+          "reviews": 2,
+          "responded": 0,
+          "positive_reviews": 0,
+          "positive_responded": 0,
+          "negative_reviews": 2,
+          "negative_responded": 0
+         },
+         "high_impact": {
+          "volume": 0,
+          "positive": 0,
+          "negative": 0,
+          "escalation": 0,
+          "positive_share": null,
+          "negative_share": null,
+          "share_method": "source_weighted",
+          "responded": {
+           "reviews": 0,
+           "responded": 0,
+           "positive_reviews": 0,
+           "positive_responded": 0,
+           "negative_reviews": 0,
+           "negative_responded": 0
+          }
+         },
+         "change_pct": null
+        },
+        "trend": [
+         {
+          "end": "2026-11-03T06:45:00+00:00",
+          "internal": 0,
+          "external": 0
+         },
+         {
+          "end": "2026-11-10T06:45:00+00:00",
+          "internal": 0,
+          "external": 2
+         },
+         {
+          "end": "2026-11-17T06:45:00+00:00",
+          "internal": 0,
+          "external": 0
+         }
+        ]
+       }
+      ]
      }
     ],
     "mood": {
@@ -26797,6 +27704,22 @@
       "escalation_internal": 11,
       "escalation_external": 0,
       "negative_share": 0.0
+     },
+     {
+      "id": "praise",
+      "label": "Praise and loyalty",
+      "repeat_contact_internal": null,
+      "escalation_internal": 0,
+      "escalation_external": 0,
+      "negative_share": 0.0
+     },
+     {
+      "id": "dissatisfaction",
+      "label": "General dissatisfaction",
+      "repeat_contact_internal": null,
+      "escalation_internal": 0,
+      "escalation_external": 0,
+      "negative_share": 100.0
      }
     ],
     "pillars": [
@@ -27187,6 +28110,20 @@
        "internal_repeat": 25,
        "public_repeat": 0,
        "contacts": 2939
+      },
+      {
+       "id": "praise",
+       "label": "Praise and loyalty",
+       "internal_repeat": 0,
+       "public_repeat": 0,
+       "contacts": 0
+      },
+      {
+       "id": "dissatisfaction",
+       "label": "General dissatisfaction",
+       "internal_repeat": 0,
+       "public_repeat": 0,
+       "contacts": 0
       }
      ],
      "tiers": [
@@ -27935,6 +28872,26 @@
          "at_risk": 46
         }
        ]
+      },
+      {
+       "id": "praise",
+       "label": "Praise and loyalty",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": []
+      },
+      {
+       "id": "dissatisfaction",
+       "label": "General dissatisfaction",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": []
       },
       {
        "id": "other",

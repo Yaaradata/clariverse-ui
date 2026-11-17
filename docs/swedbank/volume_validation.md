@@ -123,10 +123,10 @@ Verdict: **OK** inside the expected range (a point target within 5%); **Justifie
 
 | Figure | Value | Tag | Source | Verdict |
 |---|---|---|---|---|
-| Morning brief: internal volume in periods.json = this file | 15,737 vs 15,789 | DERIVED | periods_v3 | OK |
-| Last 7 days: internal volume in periods.json = this file | 102,980 vs 102,940 | DERIVED | periods_v3 | OK |
-| Last 14 days: internal volume in periods.json = this file | 203,080 vs 201,901 | DERIVED | periods_v3 | OK |
-| Full window: internal volume in periods.json = this file | 367,342 vs 367,339 | DERIVED | periods_v3 | OK |
-| Full window: ARN at risk in periods.json = this file | 8,539 vs 8,121 | DERIVED | periods_v3 / ombudsman_v3 | Justified: periods.json is from an earlier seed run; re-run periods_v3 |
+| Morning brief: internal volume in periods.json = this file | 15,789 vs 15,789 | DERIVED | periods_v3 | OK |
+| Last 7 days: internal volume in periods.json = this file | 102,940 vs 102,940 | DERIVED | periods_v3 | OK |
+| Last 14 days: internal volume in periods.json = this file | 201,901 vs 201,901 | DERIVED | periods_v3 | OK |
+| Full window: internal volume in periods.json = this file | 367,339 vs 367,339 | DERIVED | periods_v3 | OK |
+| Full window: ARN at risk in periods.json = this file | 8,121 vs 8,121 | DERIVED | periods_v3 / ombudsman_v3 | OK |
 
-85 rows; 0 to fix; 4 justified.
+85 rows; 0 to fix; 3 justified.

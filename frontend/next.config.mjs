@@ -2,11 +2,16 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// The repository root (the app lives in frontend/; the data it reads at build time is in ../data). Vercel traces
+// files from the repository root, so Turbopack's root must be the same folder: when the two differ, Next warns and
+// Turbopack's next/font/google loader fails ("next/font/google queries have exactly one entry").
+const repoRoot = path.resolve(__dirname, '..');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  outputFileTracingRoot: repoRoot,
   turbopack: {
-    root: __dirname,
+    root: repoRoot,
   },
   async redirects() {
     return [
