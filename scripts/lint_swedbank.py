@@ -216,7 +216,7 @@ OTHER_BANKS = ["HDFC", "IndusInd", "Sterling", "Starling", "Openbank", "NatWest"
 BANK_RX = re.compile(r"(?<![A-Za-z])(?:" + "|".join(OTHER_BANKS) + r")(?![A-Za-z])", re.I)
 
 # Customer voice is the customer's words; search keywords are never shown; build notes are for the team.
-SKIP_KEYS = {"redacted_text", "summary_raw", "text", "gloss", "keywords", "build_note", "about", "url", "source_note_internal"}
+SKIP_KEYS = {"redacted_text", "summary_raw", "text", "gloss", "keywords", "bound", "build_note", "about", "url", "source_note_internal"}
 # NW-D10: the register's peer list (key `peers`) may name the upper benchmarks. Nothing else may.
 PEER_KEY = "peers"
 

@@ -275,7 +275,7 @@ function IssuePulse({ p }: { p: Period }) {
               label="High impact"
             />
             <Dial
-              value={hi.positive_share}
+              value={nShare(hi.positive_share, hi.volume).value}
               color={C.green}
               big={
                 hi.volume ? `${fmt(hi.positive)} / ${fmt(hi.negative)}` : "—"
@@ -283,7 +283,8 @@ function IssuePulse({ p }: { p: Period }) {
               label="High impact + / −"
             />
             <Dial
-              value={pct(hi.escalation, hi.volume)}
+              // SW-D18 n-rule: no share from fewer than 3 posts (the count stays below the ring).
+              value={hi.volume >= 3 ? pct(hi.escalation, hi.volume) : null}
               color={C.red}
               big={
                 hi.volume ? `${fmt(hi.escalation)} of ${fmt(hi.volume)}` : "—"

@@ -1991,19 +1991,33 @@ function ExternalSet({
         />
         {handled ? (
           <Dial
-            value={share(handled.handled, handled.total)}
+            // SW-D18 n-rule: no share from fewer than 3 items; never "0 of 0".
+            value={
+              handled.total >= 3 ? share(handled.handled, handled.total) : null
+            }
             color={C.violet}
-            big={`${fmt(handled.handled)} of ${fmt(handled.total)}`}
+            big={respondedOf(handled.handled, handled.total)}
             label="Handled"
             sub={<ProvenanceTag kind="internal" short />}
           />
         ) : (
           <Dial
-            value={share(r.responded, f.volume)}
+            value={f.volume >= 3 ? share(r.responded, f.volume) : null}
             color={C.violet}
             big={respondedOf(r.responded, f.volume)}
             label="Responded"
-            sub={`positive ${fmt(r.positive_responded)} of ${fmt(r.positive_reviews)} · negative ${fmt(r.negative_responded)} of ${fmt(r.negative_reviews)}`}
+            sub={
+              [
+                r.positive_reviews
+                  ? `positive ${fmt(r.positive_responded)} of ${fmt(r.positive_reviews)}`
+                  : null,
+                r.negative_reviews
+                  ? `negative ${fmt(r.negative_responded)} of ${fmt(r.negative_reviews)}`
+                  : null,
+              ]
+                .filter(Boolean)
+                .join(" · ") || "0 public items"
+            }
           />
         )}
       </div>

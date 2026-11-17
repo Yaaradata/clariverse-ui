@@ -31,7 +31,11 @@ const base0 = FAST
 const windowed = base0
   .filter((r) => r.startsWith(`${ROOT}/v1/`) && !r.includes("?") && (!FAST || r.endsWith("/head-of-cx")))
   .flatMap((r) => PERIODS.map((x) => `${r}?period=${x}`));
-const seeds = [...new Set([...base0, ...windowed])];
+// SW_ROUTES="v1/head-of-cx,v1/business/everyday_accounts_app" limits the crawl to those pages in every window (SW-D18).
+const only = process.env.SW_ROUTES?.split(",").map((r) => `${ROOT}/${r}`);
+const seeds = only
+  ? only.flatMap((r) => PERIODS.map((x) => `${r}?period=${x}`))
+  : [...new Set([...base0, ...windowed])];
 const b = await chromium.launch();
 const p = await (await b.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
 const seen = new Set(seeds);
@@ -88,7 +92,7 @@ while (queue.length && pages.length < 900) {
       continue;
     }
     const key = l.pathname + l.search;
-    if (!FAST && !seen.has(key)) {
+    if (!FAST && !only && !seen.has(key)) {
       seen.add(key);
       queue.push(key);
     }
