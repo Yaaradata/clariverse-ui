@@ -447,19 +447,23 @@ export function Delta({
   label,
   goodDown,
   compact,
+  pct,
 }: {
-  n: number | null;
+  n: number | null | undefined;
   label: string;
   goodDown?: boolean;
   compact?: boolean;
+  /** Show n as a per-cent change (one decimal dropped) instead of a count. */
+  pct?: boolean;
 }) {
-  if (n === null) return <span style={{ color: C.textMut }}>{label}</span>;
+  if (n === null || n === undefined)
+    return <span style={{ color: C.textMut }}>{label}</span>;
   const color = n === 0 || !goodDown ? C.textSec : n > 0 ? C.red : C.green;
   return (
     <span data-testid="delta" title={label}>
       <strong style={{ color, whiteSpace: "nowrap" }}>
         {n > 0 ? "▲" : n < 0 ? "▼" : "■"} {n > 0 ? "+" : n < 0 ? "−" : ""}
-        {fmt(Math.abs(n))}
+        {pct ? `${Math.round(Math.abs(n))}%` : fmt(Math.abs(n))}
       </strong>
       {compact ? null : (
         <>
@@ -986,13 +990,14 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
           >
             <ArcGauge
               value={share(l.open, l.volume)}
-              color={deltaColor(l.open_delta)}
+              color={deltaColor(l.open_change_pct ?? 0)}
               centre={fmtCompact(l.open)}
               label="Open"
             >
               <Delta
-                n={l.open_delta}
-                label={p.compare_detail}
+                n={l.open_change_pct}
+                pct
+                label={`open backlog, ${p.compare_detail}`}
                 goodDown
                 compact
               />
@@ -2101,7 +2106,19 @@ export function CxPulse({ p }: { p: Period }) {
               color={C.amber}
               big={fmt(i.open)}
               label="Open"
-              sub={<Delta n={i.open_delta} label={p.compare} goodDown />}
+              sub={
+                <Delta
+                  n={i.open_change_pct}
+                  pct
+                  label={
+                    i.open_change_pct === null ||
+                    i.open_change_pct === undefined
+                      ? p.compare
+                      : "open backlog vs previous period"
+                  }
+                  goodDown
+                />
+              }
             />
             <Dial
               value={share(i.waiting_on_customer, i.volume)}

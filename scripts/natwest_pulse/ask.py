@@ -22,12 +22,19 @@ def fmt(n) -> str:
     return "—" if n is None else f"{round(n):,}"
 
 
+def as_of(iso: str) -> str:
+    """12 Nov, 07:45: the date form every other screen uses."""
+    t = dt.datetime.fromisoformat(iso)
+    return f"{t.day} {t.strftime('%b')}, {t.strftime('%H:%M')}"
+
+
 def pct(a, b) -> str:
     return "—" if not b else f"{100 * a / b:.0f}%"
 
 
 def main():
-    per = json.loads((OUT_APP / "periods.json").read_text(encoding="utf-8"))["periods"]["7d"]
+    pers = json.loads((OUT_APP / "periods.json").read_text(encoding="utf-8"))["periods"]
+    per, full = pers["7d"], pers["all"]
     reg = {e["id"]: e for e in json.loads((ROOT / "data" / "public" / "natwest_register.json").read_text(encoding="utf-8"))["entries"]}
     meta = json.loads((OUT_APP / "meta.json").read_text(encoding="utf-8"))
     public_loaded = bool(meta.get("public_loaded"))
@@ -37,26 +44,17 @@ def main():
     cora = ch.get("whatsapp", {})
     calls = ch.get("calls", {})
     om = per["ombudsman"]
+    ret = full["cora"].get("returns", {})
     now = om["now"]
     lists = {x["id"]: x for x in per["customer_pulse"]["lists"]}
     vul = lists["priority_a"]
-    # Journey leak (Pass 3): switching-intent contacts in the last 7 days, at bank scale, placed at the journey stage of
-    # the customer's last contact before them.
-    a, b = dt.datetime.fromisoformat(per["start"]), dt.datetime.fromisoformat(per["end"])
-    inter = [json.loads(x) for x in open(SEED_V3 / "interactions.jsonl", encoding="utf-8")]
-    inter.sort(key=lambda r: r["created_at"])
-    last_seen: dict[str, str] = {}
-    leak_by = collections.Counter()
-    for r in inter:
-        t = dt.datetime.fromisoformat(r["created_at"])
-        if r["theme"] == "closure_requests":
-            if a <= t < b:
-                leak_by[last_seen.get(r["masked_id"], "none")] += r["w"]
-        else:
-            last_seen[r["masked_id"]] = JOURNEY_STAGE.get(r["theme"], "Everyday banking")
+    # Journey leak (Pass 3; review round 3, NW-D67): the answer reads the /satisfaction journey-stages table (the demo
+    # sample since 1 August), so the answer and the table it links to always agree.
+    agg = json.loads((SEED_V3 / "aggregates.json").read_text(encoding="utf-8"))
+    jt = agg["satisfaction"]["journey_stages"]
+    leak_by = collections.Counter({x["stage"]: x["closure_intent"] for x in jt["rows"]})
     leak_total = sum(leak_by.values())
     leak_rank = sorted(JOURNEY_ORDER, key=lambda st: -leak_by[st])
-    no_prior = leak_by["none"]
     prompts = [
         {
             "id": "cross_channel",
@@ -70,7 +68,7 @@ def main():
             ),
             "evidence": [],
             "bound": ["L3:cx_pulse.internal.by_channel"] + ([] if public_loaded else ["L2:sources"]),
-            "links": [{"label": "Open the CX pulse", "href": f"{BASE}/mds-office?period=7d"}],
+            "links": [{"label": "Open the CX pulse", "href": f"{BASE}/mds-office?period=7d#cx-pulse"}],
         },
         {
             "id": "cora_leakage",
@@ -79,7 +77,9 @@ def main():
             "answer": (
                 f"Last 7 days: Cora took {fmt(cora.get('volume'))} contacts and resolved {fmt(cora.get('resolved'))}; "
                 f"{fmt(cora.get('open'))} are still open. Calls: {fmt(calls.get('volume'))}. "
-                "The 7-day return to a call or complaint needs Cora logs joined to call records inside the bank."
+                + (f"Since 1 August, {fmt(ret['back_7d'])} of {fmt(ret['resolved'])} Cora conversations resolved by "
+                   f"{as_of(ret['until'])[:-7]} ({pct(ret['back_7d'], ret['resolved'])}) came back as a call or a complaint within 7 "
+                   "days. Internal, illustrative." if ret.get("resolved") else "")
             ),
             "evidence": [],
             "bound": ["L3:cx_pulse.internal.by_channel.whatsapp", "L3:cx_pulse.internal.by_channel.calls"],
@@ -90,7 +90,7 @@ def main():
             "prompt": "How many complaints could go to the Financial Ombudsman Service?",
             "keywords": ["ombudsman", "fos", "final", "response", "eligible", "risk", "refer"],
             "answer": (
-                f"As at {om['as_of'][:10]}: {fmt(now['brink'])} complaints are within 10 days of the final-response "
+                f"As of {as_of(om['as_of'])}: {fmt(now['brink'])} complaints are within 10 days of the final-response "
                 f"deadline, {fmt(now['eligible'])} are past it with no final response, {fmt(now['unhappy'])} are unhappy "
                 f"with the final response, and {fmt(now['awaiting_io'])} have been referred. Rules: "
                 f"{reg['REG-DISP-8W']['value']}; payment services {reg['REG-PSD-15']['value']}. "
@@ -98,7 +98,7 @@ def main():
             ),
             "evidence": [],
             "bound": ["L3:ombudsman.now", "REG-DISP-8W", "REG-PSD-15", "REG-FOS-6M"],
-            "links": [{"label": "Open the Ombudsman watch", "href": f"{BASE}/mds-office#ombudsman"}],
+            "links": [{"label": "Open the Financial Ombudsman watch", "href": f"{BASE}/mds-office#ombudsman-watch"}],
         },
         {
             "id": "journey_leak",
@@ -106,12 +106,12 @@ def main():
             "keywords": ["journey", "leak", "leaking", "switch", "close", "stage", "customers", "week"],
             "answer": (
                 f"{leak_rank[0]}: {fmt(leak_by[leak_rank[0]])} of the {fmt(leak_total)} switching-intent contacts in "
-                f"the last 7 days followed a contact at that stage. Next: {leak_rank[1]} "
-                f"({fmt(leak_by[leak_rank[1]])}) and {leak_rank[2]} ({fmt(leak_by[leak_rank[2]])}); {fmt(no_prior)} had no "
-                "earlier contact in the window. Internal, illustrative."
+                f"the journey-stages table (sample of {fmt(jt['total'])} contacts since 1 August) followed a contact at "
+                f"that stage. Next: {leak_rank[1]} ({fmt(leak_by[leak_rank[1]])}) and {leak_rank[2]} "
+                f"({fmt(leak_by[leak_rank[2]])}). One week of the sample is too thin to rank stages. Internal, illustrative."
             ),
             "evidence": [],
-            "bound": ["L3:interactions.closure_requests", "L3:satisfaction.journey_stages"],
+            "bound": ["L3:satisfaction.journey_stages"],
             "links": [{"label": "Open the journey stages", "href": f"{BASE}/satisfaction#journey"}],
         },
         {

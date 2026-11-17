@@ -46,7 +46,7 @@ function brinkQA(
   return {
     id,
     q,
-    answer: `As of ${fmtDateTime(o.as_of)}, ${fmt(n.brink)} ${scope} complaints have no reply and 10 days or fewer to the final-response deadline (${fmt(n.buckets["0-3"])} with 3 days or fewer). ${fmt(n.eligible)} are already eligible to approach the Financial Ombudsman Service with no reply, and ${fmt(n.unhappy)} more because the customer is unhappy with the reply. That is ${fmt(n.at_risk)} at risk of ${fmt(n.open)} open complaints, ${signed(o.delta.at_risk)} since ${fmtDateTime(o.prev_as_of)}. Eligibility only; LisN does not predict who will file.`,
+    answer: `As of ${fmtDateTime(o.as_of)}, ${fmt(n.brink)} ${scope} complaints have no reply and 10 days or fewer to the final-response deadline (${fmt(n.buckets["0-3"])} with 3 days or fewer). ${fmt(n.eligible)} are already eligible to approach the Financial Ombudsman Service with no reply, and ${fmt(n.unhappy)} more because the customer is unhappy with the reply. That is ${fmt(n.at_risk)} at risk (${signed(o.delta.at_risk)} since ${fmtDateTime(o.prev_as_of)}), of ${fmt(n.received)} complaints received in the window; ${fmt(n.open)} are open, with no final response yet. Eligibility only; LisN does not predict who will refer.`,
     table: {
       head: ["Measure", "Now", "Change"],
       rows: [

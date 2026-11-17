@@ -100,7 +100,8 @@ export function PriorityView({ b }: { b: Bundle }) {
   const from = useFrom();
   const v = b.v3;
   const all = v.cohorts;
-  const lists = all.filter((c) => c.id.startsWith("priority"));
+  // The headline reads the four cohort tiles below (review round 3): every list, not only the first two.
+  const lists = all;
   const openCustomers = lists.reduce(
     (s, c) => s + c.customers_with_open_issue,
     0,
@@ -625,6 +626,9 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
   const openSteps = p.trail.filter((s) => s.status === "open");
   const oldest = openSteps[0];
   const events = p.trail.filter((s) => s.event).length;
+  // The customer's owner (review round 3): Premier banking managers for Premier customers, otherwise the complaints lead.
+  const ownerKey =
+    p.rm_id === "Premier banking manager" ? "rm" : (p.rm_id ?? "cx");
   // Callback owner: the product owner of the oldest open item (review finding #36).
   const callbackOwner = oldest
     ? (b.products.rows.find((r) => r.id === oldest.product)?.owner ?? "cx")
@@ -774,7 +778,7 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
             icon={<BellRing size={16} />}
             title="Alert the owner"
             body={`CRM task for the ${p.rm_id?.toLowerCase()}: ${openSteps.length} open ${openSteps.length === 1 ? "item" : "items"} across ${[...new Set(openSteps.map((s) => s.team))].join(" and ") || "no team"}. Call the customer today with the full history.`}
-            owner="rm"
+            owner={ownerKey}
           />
           <ActionBox
             icon={<PhoneCall size={16} />}
@@ -789,8 +793,8 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
           <ActionBox
             icon={<Route size={16} />}
             title="Route to the account owner"
-            body={`One owner for the customer across ${teams.size} ${teams.size === 1 ? "team" : "teams"}: the relationship manager holds it; the others see the history and hand off, rather than start again.`}
-            owner="rm"
+            body={`One owner for the customer across ${teams.size} ${teams.size === 1 ? "team" : "teams"}: the ${(p.rm_id ?? "owner").toLowerCase()} holds it; the others see the history and hand off, rather than start again.`}
+            owner={ownerKey}
           />
         </div>
         {p.rm_id ? (

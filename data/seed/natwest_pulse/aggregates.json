@@ -14,14 +14,14 @@
  },
  "dials": {
   "total": 32000,
-  "closed": 31304,
-  "waiting_on_customer": 290,
+  "closed": 31309,
+  "waiting_on_customer": 288,
   "closed_or_responded": 31978,
-  "open": 406,
+  "open": 403,
   "open_too_long": 43,
   "closed_or_responded_pct": 99.9,
   "open_pct": 1.3,
-  "open_too_long_pct_of_open": 10.6
+  "open_too_long_pct_of_open": 10.7
  },
  "products": [
   {
@@ -37,7 +37,7 @@
    "open_pct": 0.8,
    "open_too_long_pct_of_open": 8.7,
    "negative": 4650,
-   "high_impact": 64,
+   "high_impact": 46,
    "deliverables": {
     "measured": 14820,
     "met": 14426,
@@ -133,7 +133,7 @@
    "open_pct": 1.1,
    "open_too_long_pct_of_open": 12.7,
    "negative": 1789,
-   "high_impact": 19,
+   "high_impact": 11,
    "deliverables": {
     "measured": 5506,
     "met": 5014,
@@ -229,7 +229,7 @@
    "open_pct": 2.5,
    "open_too_long_pct_of_open": 13.1,
    "negative": 1631,
-   "high_impact": 21,
+   "high_impact": 14,
    "deliverables": {
     "measured": 4935,
     "met": 4619,
@@ -325,7 +325,7 @@
    "open_pct": 1.2,
    "open_too_long_pct_of_open": 7.4,
    "negative": 679,
-   "high_impact": 13,
+   "high_impact": 9,
    "deliverables": {
     "measured": 2302,
     "met": 2224,
@@ -421,7 +421,7 @@
    "open_pct": 1.2,
    "open_too_long_pct_of_open": 6.2,
    "negative": 813,
-   "high_impact": 15,
+   "high_impact": 10,
    "deliverables": {
     "measured": 2541,
     "met": 2476,
@@ -508,22 +508,22 @@
    "id": "personal_loans",
    "label": "Personal loans",
    "total": 1378,
-   "closed": 1325,
-   "waiting_on_customer": 25,
+   "closed": 1330,
+   "waiting_on_customer": 23,
    "closed_or_responded": 1377,
-   "open": 28,
+   "open": 25,
    "open_too_long": 3,
    "closed_or_responded_pct": 99.9,
-   "open_pct": 2.0,
-   "open_too_long_pct_of_open": 10.7,
+   "open_pct": 1.8,
+   "open_too_long_pct_of_open": 12.0,
    "negative": 444,
-   "high_impact": 5,
+   "high_impact": 4,
    "deliverables": {
-    "measured": 1329,
-    "met": 1285,
-    "outside": 44,
-    "met_pct": 96.7,
-    "open_within": 25
+    "measured": 1333,
+    "met": 1283,
+    "outside": 50,
+    "met_pct": 96.2,
+    "open_within": 22
    },
    "negative_weekly": [
     {
@@ -606,14 +606,14 @@
    "channel": "inbound_voice",
    "label": "Inbound calls",
    "total": 10968,
-   "closed": 10702,
+   "closed": 10704,
    "waiting_on_customer": 115,
    "closed_or_responded": 10968,
-   "open": 151,
+   "open": 149,
    "open_too_long": 16,
    "closed_or_responded_pct": 100.0,
    "open_pct": 1.4,
-   "open_too_long_pct_of_open": 10.6,
+   "open_too_long_pct_of_open": 10.7,
    "negative": 3409
   },
   {
@@ -634,22 +634,22 @@
    "channel": "chat",
    "label": "Secure message",
    "total": 3861,
-   "closed": 3761,
+   "closed": 3762,
    "waiting_on_customer": 45,
    "closed_or_responded": 3861,
-   "open": 55,
+   "open": 54,
    "open_too_long": 5,
    "closed_or_responded_pct": 100.0,
    "open_pct": 1.4,
-   "open_too_long_pct_of_open": 9.1,
+   "open_too_long_pct_of_open": 9.3,
    "negative": 1248
   },
   {
    "channel": "email",
    "label": "Email",
    "total": 2515,
-   "closed": 2440,
-   "waiting_on_customer": 25,
+   "closed": 2441,
+   "waiting_on_customer": 24,
    "closed_or_responded": 2504,
    "open": 50,
    "open_too_long": 3,
@@ -676,8 +676,8 @@
    "channel": "ivr_bot",
    "label": "Phone menu",
    "total": 2245,
-   "closed": 2198,
-   "waiting_on_customer": 24,
+   "closed": 2199,
+   "waiting_on_customer": 23,
    "closed_or_responded": 2245,
    "open": 23,
    "open_too_long": 4,
@@ -793,7 +793,7 @@
    "interactions": 4978,
    "customers_with_open_issue": 54,
    "open": 64,
-   "waiting_on_customer": 60,
+   "waiting_on_customer": 59,
    "open_over_5h": 63,
    "open_over_24h": 51,
    "open_too_long": 5,
@@ -817,7 +817,7 @@
     "savings": 1
    },
    "rm_should_know": 24,
-   "rm_notified_today": 7,
+   "rm_notified_today": 8,
    "added_this_week": 28,
    "added_this_week_by_lisn": 11
   },
@@ -851,7 +851,7 @@
     "mortgages": 1
    },
    "rm_should_know": 9,
-   "rm_notified_today": 2,
+   "rm_notified_today": 0,
    "added_this_week": 4,
    "added_this_week_by_lisn": 2
   },
@@ -861,11 +861,11 @@
    "source": "Premier relationship, from core banking",
    "customers": 836,
    "interactions": 21667,
-   "customers_with_open_issue": 220,
-   "open": 273,
-   "waiting_on_customer": 181,
-   "open_over_5h": 261,
-   "open_over_24h": 195,
+   "customers_with_open_issue": 218,
+   "open": 270,
+   "waiting_on_customer": 180,
+   "open_over_5h": 258,
+   "open_over_24h": 192,
    "open_too_long": 24,
    "negative": 6722,
    "negative_by_channel": {
@@ -884,10 +884,10 @@
     "payments_fraud": 43,
     "mortgages": 21,
     "savings": 15,
-    "personal_loans": 18
+    "personal_loans": 15
    },
-   "rm_should_know": 217,
-   "rm_notified_today": 43,
+   "rm_should_know": 215,
+   "rm_notified_today": 47,
    "added_this_week": 4,
    "added_this_week_by_lisn": 2
   },
@@ -897,11 +897,11 @@
    "source": "Customers holding four or more products, from the bank's records",
    "customers": 483,
    "interactions": 9177,
-   "customers_with_open_issue": 117,
-   "open": 145,
-   "waiting_on_customer": 92,
-   "open_over_5h": 143,
-   "open_over_24h": 107,
+   "customers_with_open_issue": 116,
+   "open": 143,
+   "waiting_on_customer": 90,
+   "open_over_5h": 141,
+   "open_over_24h": 105,
    "open_too_long": 12,
    "negative": 2828,
    "negative_by_channel": {
@@ -919,30 +919,25 @@
     "cards": 62,
     "mortgages": 20,
     "savings": 8,
-    "personal_loans": 18,
+    "personal_loans": 16,
     "current_accounts": 23
    },
-   "rm_should_know": 103,
-   "rm_notified_today": 21,
+   "rm_should_know": 102,
+   "rm_notified_today": 26,
    "added_this_week": 12,
    "added_this_week_by_lisn": 5
   }
  ],
  "high_impact": {
-  "total": 137,
-  "open": 7,
-  "waiting_on_customer": 2,
-  "open_too_long": 1,
+  "total": 94,
+  "open": 5,
+  "waiting_on_customer": 1,
+  "open_too_long": 0,
   "reasons": [
    {
     "id": "third_contact",
     "label": "Third contact on the same issue",
     "count": 90
-   },
-   {
-    "id": "public_reach",
-    "label": "Public post with reach",
-    "count": 43
    },
    {
     "id": "official_domain",
@@ -961,19 +956,19 @@
    }
   ],
   "by_product": {
-   "current_accounts": 64,
-   "cards": 21,
-   "savings": 13,
-   "payments_fraud": 19,
-   "mortgages": 15,
-   "personal_loans": 5
+   "current_accounts": 46,
+   "cards": 14,
+   "mortgages": 10,
+   "payments_fraud": 11,
+   "personal_loans": 4,
+   "savings": 9
   }
  },
  "customer_memory": {
   "customers_with_signals": 4326,
   "multi_product": 2610,
   "negative_in_two_or_more_products": 1279,
-  "with_open_issue": 241,
+  "with_open_issue": 239,
   "with_open_too_long": 27,
   "priority_among_them": 1047,
   "pairs": [
@@ -1165,12 +1160,12 @@
    "source": "bank_indicative",
    "source_note": null,
    "redress": "—",
-   "total": 378,
-   "measured": 361,
-   "met": 342,
-   "outside": 19,
-   "met_pct": 94.7,
-   "open_within": 9,
+   "total": 247,
+   "measured": 237,
+   "met": 225,
+   "outside": 12,
+   "met_pct": 94.9,
+   "open_within": 6,
    "open_too_long": 0,
    "themes": [
     "loan_closure_documents"
@@ -1185,17 +1180,6 @@
      "outside": 12,
      "met_pct": 94.9,
      "open_within": 6,
-     "open_too_long": 0
-    },
-    {
-     "product": "personal_loans",
-     "label": "Personal loans",
-     "total": 131,
-     "measured": 124,
-     "met": 117,
-     "outside": 7,
-     "met_pct": 94.4,
-     "open_within": 3,
      "open_too_long": 0
     }
    ]
@@ -1386,10 +1370,10 @@
    "source": "bank",
    "source_note": null,
    "redress": "—",
-   "total": 6417,
-   "measured": 6324,
-   "met": 5687,
-   "outside": 637,
+   "total": 6548,
+   "measured": 6452,
+   "met": 5802,
+   "outside": 650,
    "met_pct": 89.9,
    "open_within": 52,
    "open_too_long": 18,
@@ -1465,11 +1449,11 @@
     {
      "product": "personal_loans",
      "label": "Personal loans",
-     "total": 65,
-     "measured": 64,
-     "met": 57,
-     "outside": 7,
-     "met_pct": 89.1,
+     "total": 196,
+     "measured": 192,
+     "met": 172,
+     "outside": 20,
+     "met_pct": 89.6,
      "open_within": 0,
      "open_too_long": 2
     }
@@ -1807,7 +1791,7 @@
   {
    "masked_id": "XXXX4821",
    "persona": "Persona 1",
-   "descriptor": "Premier relationship, 14 years, London",
+   "descriptor": "Customer for 14 years, London",
    "segment": "Premier Reward",
    "cohorts": [
     "priority_a"
@@ -1817,7 +1801,7 @@
     "current_accounts",
     "mortgages"
    ],
-   "rm_id": "Premier banking manager",
+   "rm_id": "Complaints lead",
    "proxy_contacts": 1,
    "rm_notified": false,
    "story": true,
@@ -1945,9 +1929,7 @@
      "first_response_at": null,
      "deliverable_due": "2027-01-06T13:05+00:00",
      "breached": false,
-     "high_impact": [
-      "Public post with reach"
-     ]
+     "high_impact": []
     },
     {
      "at": "2026-11-11T18:20+00:00",
@@ -1978,7 +1960,7 @@
   {
    "masked_id": "XXXX2317",
    "persona": "Persona 2",
-   "descriptor": "Premier relationship, 9 years, Manchester",
+   "descriptor": "Customer for 9 years, Manchester",
    "segment": "Premier Reward",
    "cohorts": [
     "priority_a"
@@ -1987,14 +1969,14 @@
     "cards",
     "current_accounts"
    ],
-   "rm_id": "Premier banking manager",
+   "rm_id": "Complaints lead",
    "proxy_contacts": 1,
    "rm_notified": true,
    "latest": {
     "at": "2026-11-10T09:30+00:00",
     "channel": "outbound_voice",
     "product": "current_accounts",
-    "summary": "The relationship manager (Premier) called back and logged a fresh request; resolution committed within two working days."
+    "summary": "The complaints lead called back and logged a fresh request; resolution committed within two working days."
    },
    "open": 2,
    "oldest_open_hours": 68.7,
@@ -2034,7 +2016,7 @@
      "outcome": null,
      "theme": "complaint_handling",
      "theme_label": "Complaints closed without resolution",
-     "summary": "The relationship manager (Premier) called back and logged a fresh request; resolution committed within two working days.",
+     "summary": "The complaints lead called back and logged a fresh request; resolution committed within two working days.",
      "flag_set": false,
      "flag_follows": false,
      "event": false,
@@ -2055,7 +2037,7 @@
   {
    "masked_id": "XXXX3390",
    "persona": "Persona 3",
-   "descriptor": "Premier relationship, 6 years, Edinburgh",
+   "descriptor": "Customer for 6 years, York",
    "segment": "Premier Select",
    "cohorts": [
     "priority_b"
@@ -2065,7 +2047,7 @@
     "current_accounts",
     "payments_fraud"
    ],
-   "rm_id": "Premier banking manager",
+   "rm_id": "Complaints lead",
    "proxy_contacts": 0,
    "rm_notified": false,
    "cohort_added_at": "2026-11-08T15:10+00:00",
@@ -2133,7 +2115,7 @@
   {
    "masked_id": "XXXX1576",
    "persona": "Persona 4",
-   "descriptor": "Premier relationship, 21 years, Glasgow",
+   "descriptor": "Customer for 21 years, Newcastle",
    "segment": "Premier Reward",
    "cohorts": [
     "priority_a",
@@ -2145,7 +2127,7 @@
     "mortgages",
     "savings"
    ],
-   "rm_id": "Premier banking manager",
+   "rm_id": "Complaints lead",
    "proxy_contacts": 1,
    "rm_notified": true,
    "latest": {
@@ -2238,7 +2220,7 @@
   {
    "masked_id": "XXXX2688",
    "persona": "Persona 6",
-   "descriptor": "Premier relationship, 11 years, Belfast",
+   "descriptor": "Customer for 11 years, Nottingham",
    "segment": "Premier Select",
    "cohorts": [
     "priority_b"
@@ -2247,7 +2229,7 @@
     "cards",
     "current_accounts"
    ],
-   "rm_id": "Premier banking manager",
+   "rm_id": "Complaints lead",
    "proxy_contacts": 0,
    "rm_notified": false,
    "latest": {
@@ -2313,7 +2295,7 @@
   {
    "masked_id": "XXXX4077",
    "persona": "Persona 7",
-   "descriptor": "Premier relationship, 17 years, Leeds",
+   "descriptor": "Customer for 17 years, Leeds",
    "segment": "Premier Reward",
    "cohorts": [
     "priority_a"
@@ -2322,7 +2304,7 @@
     "cards",
     "current_accounts"
    ],
-   "rm_id": "Premier banking manager",
+   "rm_id": "Complaints lead",
    "proxy_contacts": 1,
    "rm_notified": true,
    "latest": {
@@ -2364,7 +2346,7 @@
   {
    "masked_id": "XXXX1942",
    "persona": "Persona 8",
-   "descriptor": "Premier relationship, 8 years, Birmingham",
+   "descriptor": "Customer for 8 years, Birmingham",
    "segment": "Premier Select",
    "cohorts": [
     "multi"
@@ -2376,7 +2358,7 @@
     "personal_loans",
     "savings"
    ],
-   "rm_id": "Premier banking manager",
+   "rm_id": "Complaints lead",
    "proxy_contacts": 0,
    "rm_notified": false,
    "latest": {
@@ -2418,7 +2400,7 @@
   {
    "masked_id": "XXXX3815",
    "persona": "Persona 9",
-   "descriptor": "Premier relationship, 12 years, London",
+   "descriptor": "Customer for 12 years, London",
    "segment": "Premier Reward",
    "cohorts": [
     "priority_b"
@@ -2428,14 +2410,14 @@
     "current_accounts",
     "savings"
    ],
-   "rm_id": "Premier banking manager",
+   "rm_id": "Complaints lead",
    "proxy_contacts": 1,
    "rm_notified": false,
    "latest": {
     "at": "2026-11-08T11:45+00:00",
     "channel": "email",
     "product": "savings",
-    "summary": "Email from the customer's attorney: the account was moved to a packaged account with a fee, without a clear explanation."
+    "summary": "Email from the customer's solicitor: the account was moved to a packaged account with a fee, without a clear explanation."
    },
    "open": 1,
    "oldest_open_hours": 92.0,
@@ -2449,7 +2431,7 @@
      "outcome": null,
      "theme": "mis_selling",
      "theme_label": "Mis-selling and add-on products",
-     "summary": "Email from the customer's attorney: the account was moved to a packaged account with a fee, without a clear explanation.",
+     "summary": "Email from the customer's solicitor: the account was moved to a packaged account with a fee, without a clear explanation.",
      "flag_set": false,
      "flag_follows": false,
      "event": false,
@@ -2524,7 +2506,7 @@
   {
    "masked_id": "XXXX5566",
    "persona": "Persona 11",
-   "descriptor": "Premier relationship, 19 years, Aberdeen",
+   "descriptor": "Premier relationship, 19 years, Norwich",
    "segment": "Premier Reward",
    "cohorts": [
     "uhni"
@@ -2575,7 +2557,7 @@
   {
    "masked_id": "XXXX1318",
    "persona": "Persona 12",
-   "descriptor": "Premier relationship, 7 years, Brighton",
+   "descriptor": "Customer for 7 years, Brighton",
    "segment": "Premier Select",
    "cohorts": [
     "multi"
@@ -2586,7 +2568,7 @@
     "mortgages",
     "savings"
    ],
-   "rm_id": "Premier banking manager",
+   "rm_id": "Complaints lead",
    "proxy_contacts": 0,
    "rm_notified": false,
    "latest": {
@@ -2666,8 +2648,8 @@
   ]
  },
  "rm": {
-  "should_know": 230,
-  "notified_today": 48,
+  "should_know": 228,
+  "notified_today": 50,
   "rule": "An owner alert is due when a customer on a priority list or in Premier has a negative signal, a high-impact complaint, an issue open over 5 hours, or an unresolved bot call."
  },
  "triage": {
@@ -3081,17 +3063,26 @@
   }
  ],
  "md_mail": {
-  "total": 1130,
-  "shown": 1116,
+  "total": 1144,
+  "shown": 1122,
   "rows": [
    {
     "theme": "complaint_handling",
     "label": "Complaints closed without resolution",
     "owner": "cx",
-    "mails": 1109,
+    "mails": 1112,
     "median_age_days": 10.4,
-    "resolved": 1068,
+    "resolved": 1071,
     "resolved_share": 96.3
+   },
+   {
+    "theme": "care_unreachable",
+    "label": "Could not get through",
+    "owner": "cx",
+    "mails": 3,
+    "median_age_days": 0.3,
+    "resolved": 3,
+    "resolved_share": 100.0
    },
    {
     "theme": "fees_charges_bank",
@@ -3103,30 +3094,21 @@
     "resolved_share": 100.0
    },
    {
-    "theme": "mis_selling",
-    "label": "Mis-selling and add-on products",
-    "owner": "compliance",
+    "theme": "account_freeze",
+    "label": "Fraud block or account freeze",
+    "owner": "operations",
     "mails": 2,
-    "median_age_days": 3.8,
-    "resolved": 1,
-    "resolved_share": 50.0
-   },
-   {
-    "theme": "account_opening",
-    "label": "Account opening and switching",
-    "owner": "retail",
-    "mails": 1,
-    "median_age_days": 5.8,
-    "resolved": 1,
+    "median_age_days": 4.5,
+    "resolved": 2,
     "resolved_share": 100.0
    },
    {
     "theme": "app_login_biometrics",
     "label": "App login and biometrics",
     "owner": "digital",
-    "mails": 1,
-    "median_age_days": 0.6,
-    "resolved": 1,
+    "mails": 2,
+    "median_age_days": 0.4,
+    "resolved": 2,
     "resolved_share": 100.0
    }
   ],
@@ -3253,42 +3235,42 @@
   "tiers_bank": [
    {
     "tier": "Select",
-    "interactions": 3530118,
-    "positive": 567860,
-    "neutral": 2515681,
-    "negative": 446577,
-    "share_positive": 16.1,
-    "share_negative": 12.7,
-    "customers_affected": 842039
+    "interactions": 3439889,
+    "positive": 557328,
+    "neutral": 2465935,
+    "negative": 416626,
+    "share_positive": 16.2,
+    "share_negative": 12.1,
+    "customers_affected": 812892
    },
    {
     "tier": "Reward",
-    "interactions": 1831684,
-    "positive": 301365,
-    "neutral": 1299306,
-    "negative": 231013,
-    "share_positive": 16.5,
-    "share_negative": 12.6,
-    "customers_affected": 432847
+    "interactions": 1789552,
+    "positive": 296882,
+    "neutral": 1275339,
+    "negative": 217331,
+    "share_positive": 16.6,
+    "share_negative": 12.1,
+    "customers_affected": 426899
    },
    {
     "tier": "Premier Select",
-    "interactions": 449630,
-    "positive": 69852,
-    "neutral": 295967,
-    "negative": 83811,
-    "share_positive": 15.5,
-    "share_negative": 18.6,
-    "customers_affected": 117102
+    "interactions": 294712,
+    "positive": 51714,
+    "neutral": 205284,
+    "negative": 37714,
+    "share_positive": 17.5,
+    "share_negative": 12.8,
+    "customers_affected": 116431
    },
    {
     "tier": "Premier Reward",
-    "interactions": 427882,
-    "positive": 65007,
-    "neutral": 281809,
-    "negative": 81066,
-    "share_positive": 15.2,
-    "share_negative": 18.9,
+    "interactions": 277382,
+    "positive": 45503,
+    "neutral": 198757,
+    "negative": 33122,
+    "share_positive": 16.4,
+    "share_negative": 11.9,
     "customers_affected": 103669
    }
   ]
@@ -3297,9 +3279,9 @@
   "ageing": [
    {
     "request_type": "other",
-    "open_cases": 292,
+    "open_cases": 289,
     "beyond_tat": 26,
-    "beyond_tat_share": 8.9
+    "beyond_tat_share": 9.0
    },
    {
     "request_type": "dispute",
@@ -3355,27 +3337,27 @@
    },
    {
     "rung": "Complaint",
-    "count": 1804
+    "count": 1744
    },
    {
     "rung": "Complaints team",
-    "count": 1130
+    "count": 1144
    },
    {
     "rung": "Final response",
-    "count": 1108
+    "count": 1109
    },
    {
     "rung": "Financial Ombudsman Service",
-    "count": 56
+    "count": 66
    }
   ],
-  "ladder_rule": "Each rung counts every contact that reached at least that rung. Repeat: the same customer on the same theme within 30 days.",
+  "ladder_rule": "Voice and Repeat count the bank's own contacts in the window (Repeat: the same customer on the same theme within 30 days). Complaint and the rungs above are flows in the window from the complaint register the Financial Ombudsman watch reads: complaints received, passed to the complaints team after summary resolution (3 business days), final responses issued, referrals made.",
   "closure": {
    "closure_requests": 79,
    "closed": 76,
-   "saved": 16,
-   "save_rate": 21.1
+   "saved": 21,
+   "save_rate": 27.6
   },
   "disputes": {
    "raised": 825,
@@ -3387,19 +3369,19 @@
     },
     {
      "driver": "Chargeback evidence incomplete",
-     "cases": 13
+     "cases": 6
     },
     {
      "driver": "Network time limit",
-     "cases": 9
+     "cases": 10
     },
     {
      "driver": "Manual re-work after reopen",
-     "cases": 7
+     "cases": 12
     },
     {
      "driver": "Customer not updated",
-     "cases": 5
+     "cases": 6
     }
    ],
    "aged_cases": [
@@ -3431,38 +3413,38 @@
     },
     {
      "stage": "Customer credited",
-     "count": 398
+     "count": 428
     },
     {
      "stage": "Credited within the standard",
-     "count": 376
+     "count": 407
     }
    ]
   },
   "ladder_bank": [
    {
     "rung": "Voice",
-    "count": 6239314
+    "count": 5801535
    },
    {
     "rung": "Repeat",
-    "count": 346855
+    "count": 267101
    },
    {
     "rung": "Complaint",
-    "count": 61219
+    "count": 44873
    },
    {
     "rung": "Complaints team",
-    "count": 30050
+    "count": 21898
    },
    {
     "rung": "Final response",
-    "count": 27051
+    "count": 22447
    },
    {
     "rung": "Financial Ombudsman Service",
-    "count": 1985
+    "count": 1889
    }
   ]
  },

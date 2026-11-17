@@ -504,8 +504,42 @@ def _flip_rm_nw(seed: Path):
     _rw_json(seed / "rm_notifications.json", fn)
 
 
+def _nw_period(o: Path, fn):
+    _rw_json(o / "periods.json", fn)
+
+
+def _nw_agg(s: Path, fn):
+    _rw_json(s / "aggregates.json", fn)
+
+
+def _ladder_rung(rungs, name, value):
+    next(r for r in rungs if r["rung"] == name)["count"] = value
+
+
 NW_FIXTURES = [
     ("Cora open too long drifts", "Cora open too long within 25% of Cora open", lambda s, o: _cora_drift(o)),
+    # Review round 3 (NW-D66): one complaint register.
+    ("unhappy counted as open", "open complaints are only those with no final response and not referred",
+     lambda s, o: _nw_period(o, lambda p: p["periods"]["7d"]["ombudsman"]["now"].update(
+         open=p["periods"]["7d"]["ombudsman"]["now"]["open"] + p["periods"]["7d"]["ombudsman"]["now"]["unhappy"]))),
+    ("tile share of open, not of the window", "tile shares are of complaints received in the window",
+     lambda s, o: _nw_period(o, lambda p: p["periods"]["7d"]["ombudsman"]["now"].update(
+         received=p["periods"]["7d"]["ombudsman"]["now"]["open"]))),
+    ("credit-card ladder off the register", "the credit-card ladder's complaint rungs",
+     lambda s, o: _nw_period(o, lambda p: _ladder_rung(p["periods"]["7d"]["cards"]["service_full"]["ladder"], "Financial Ombudsman Service", 0))),
+    ("bank ladder off the register", "the bank ladder's complaint rungs",
+     lambda s, o: _nw_agg(s, lambda a: _ladder_rung(a["deliverables_detail"]["ladder_bank"], "Complaint", 61219))),
+    ("owners alerted stuck across periods", "owners alerted grows with the period",
+     lambda s, o: _nw_period(o, lambda p: p["periods"]["all"]["customer_pulse"]["lists"][0]["rm"].update(
+         alerted=p["periods"]["7d"]["customer_pulse"]["lists"][0]["rm"]["alerted"]))),
+    ("open backlog halves in a week", "open backlog: weekly change within",
+     lambda s, o: _nw_period(o, lambda p: p["periods"]["7d"]["cx_pulse"]["internal"].update(open_change_pct=-49.9))),
+    ("full window compared with a period before 1 August", "full window: no change against a previous period",
+     lambda s, o: _nw_period(o, lambda p: p["periods"]["all"]["cx_pulse"]["internal"].update(change_pct=10.0))),
+    ("one heavy row carries a product's negative share", "internal negative share at most 45%",
+     lambda s, o: _nw_period(o, lambda p: next(x for x in p["periods"]["brief"]["businesses"] if x["id"] == "personal_loans")["internal"].update(negative_share=94.0))),
+    ("tier table on another volume", "one volume",
+     lambda s, o: _nw_agg(s, lambda a: a["satisfaction"]["tiers_bank"][0].update(interactions=a["satisfaction"]["tiers_bank"][0]["interactions"] + 438000))),
     ("cohort owner alerts (NatWest cohorts)", "RM alerts recomputed", lambda s, o: _flip_rm_nw(s)),
 ]
 NW_SKIPPED: list[str] = []

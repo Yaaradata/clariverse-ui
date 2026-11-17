@@ -1656,7 +1656,11 @@ export function Service({ p }: { p: Period }) {
               />
             ))}
             <div style={{ fontSize: 12.5, color: C.textMut }}>
-              Each rung counts every contact that reached at least that rung.
+              Contacts and Repeat count the bank's own contacts. Complaint and
+              the rungs above are flows in the period from the complaint
+              register the Financial Ombudsman watch reads: complaints received,
+              passed to the complaints team after summary resolution (3 business
+              days), final responses issued, referrals made.
             </div>
           </div>
           <div>

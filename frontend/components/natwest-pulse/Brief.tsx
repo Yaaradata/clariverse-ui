@@ -211,8 +211,20 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
         <span>
           Negative internal:{" "}
           <strong style={{ color: C.text }}>
-            {fmtPct(i.volume ? (100 * i.negative) / i.volume : null)}
+            {fmtPct(
+              i.negative_share !== undefined
+                ? i.negative_share
+                : i.volume
+                  ? (100 * i.negative) / i.volume
+                  : null,
+            )}
           </strong>
+          {i.negative_share_basis ? (
+            <span style={{ color: C.textMut }}>
+              {" "}
+              ({i.negative_share_basis}: too few contacts this morning)
+            </span>
+          ) : null}
         </span>
       </div>
       <div style={{ fontSize: 13.5 }}>

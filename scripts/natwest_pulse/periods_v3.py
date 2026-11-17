@@ -59,6 +59,7 @@ from aggregate import quotable  # noqa: E402  (a quote naming a person is never 
 from pii_names import ALLEGATION  # noqa: E402  (nor, as an anecdote, one that makes an allegation)
 from public_v3 import PRODUCTS as PUB_PRODUCTS  # noqa: E402
 from public_v3 import product_of  # noqa: E402
+import complaint_rules  # noqa: E402
 import ombudsman_v3 as omb  # noqa: E402  (Ombudsman watch: snapshots of the complaint register)
 import v4_blocks as v4  # noqa: E402  (B11: V4 additions, from the same records)
 from taxonomy import OUTCOMES  # noqa: E402  (Consumer Duty outcomes, Pass 2)
@@ -104,7 +105,7 @@ def windows(p: dict) -> dict:
         start = START
         mid = START + (END - START) / 2
         prev = (START, mid)  # full window: trends compare the second half with the first
-        detail = "second half vs first half of the window (no earlier data to compare the full window with)"
+        detail = "no earlier period: the data starts on 1 August"
         series, w = [], END
         while w - dt.timedelta(days=7) >= START:
             series.append((w - dt.timedelta(days=7), w))
@@ -113,10 +114,22 @@ def windows(p: dict) -> dict:
     cur_for_trend = (START + (END - START) / 2, END) if not p["days"] else (start, END)
     return {"period_id": p["id"], "start": start, "end": END, "prev": prev, "trend_cur": cur_for_trend,
             # One label on screen for every period, matching the period filter; the detail says exactly what is compared.
-            "compare": "vs previous period", "compare_detail": detail, "series": series}
+            "compare": "vs previous period" if p["days"] else "no earlier period", "compare_detail": detail, "series": series}
 
 
 # ------------------------------------------------------------------ internal
+
+def earlier_wait(r):
+    """Waiting on the customer before the thread closed (review round 3, NW-D67). The seed marks a thread as waiting
+    only when it is still waiting at the freeze, so at earlier period ends every thread later closed counted as open,
+    and the open backlog seemed to halve each week. A closed thread waited from its first response by the same rule
+    the seed uses for open threads (40% of threads, drawn from the record id); scripted trails never wait."""
+    if r["status"] != "closed" or not r.get("first_response_at") or r.get("scripted"):
+        return None
+    if int(hashlib.sha1(r["id"].encode()).hexdigest(), 16) % 100 < 40:
+        return ts(r["first_response_at"])
+    return None
+
 
 def load_internal():
     inter = [json.loads(line) for line in open(SEED_V3 / "interactions.jsonl", encoding="utf-8")]
@@ -125,7 +138,7 @@ def load_internal():
         r["_c"] = ts(r["created_at"])
         r["_closed"] = ts(r["closed_at"])
         r["_resp"] = ts(r["first_response_at"])
-        r["_wait"] = ts(r.get("resolution_sent_at"))
+        r["_wait"] = ts(r.get("resolution_sent_at")) or earlier_wait(r)
         r["_ch"] = CHANNEL_GROUP[r["channel"]]
     customers = {c["masked_id"]: c for c in load(SEED_V3 / "customers.json")}
     SCALE.update(load(SEED_V3 / "scale.json"))
@@ -188,7 +201,15 @@ def in_win(r, a, b):
     return a <= r["_c"] < b
 
 
-def internal_block(rs, w) -> dict:
+def backlog(rs, t, w) -> float:
+    """Average open backlog over the period ending at t: one snapshot a day (at most 30), each counting every contact
+    received before it and still open with the bank then."""
+    days = max(1, min(30, round((w["end"] - w["start"]) / dt.timedelta(days=1))))
+    pts = [t - dt.timedelta(days=d) for d in range(days)]
+    return sum(sum(r["w"] for r in rs if r["_c"] < x and is_open(r, x)) for x in pts) / len(pts)
+
+
+def internal_block(rs, w, with_backlog: bool = False) -> dict:
     a, b = w["start"], w["end"]
     vol = [r for r in rs if in_win(r, a, b)]
     pa, pb = w["prev"]
@@ -199,16 +220,24 @@ def internal_block(rs, w) -> dict:
     # Like for like: the comparison window as it stood at its own end.
     cur_rs = [r for r in rs if in_win(r, ta, tb)]
     prev_rs = [r for r in rs if in_win(r, pa, pb)]
-    open_delta = sum(r["w"] for r in cur_rs if is_open(r, b)) - sum(r["w"] for r in prev_rs if is_open(r, pb))
+    # Open: the change in the average open backlog (every contact open with the bank, one snapshot a day at the freeze
+    # time) over the period against the previous period, in per cent (review round 3, NW-D67). Counting only each
+    # period's own contacts at one moment made the backlog seem to halve in a week: a few heavy sample rows move in and
+    # out of a 7-day slice.
+    open_change = change(backlog(rs, b, w), backlog(rs, pb, w)) if with_backlog else None
+    open_delta = None
     late_delta = sum(r["w"] for r in cur_rs if no_resp_48(r, b)) - sum(r["w"] for r in prev_rs if no_resp_48(r, pb))
+    if w["period_id"] == "all":  # no data before 1 August: the full window has no previous period (NW-D67)
+        open_change = late_delta = None
     return {
         "volume": wn(vol),
-        "prev_volume": prev,
-        "change_pct": change(cur_t, prev),
+        "prev_volume": prev if w["period_id"] != "all" else None,
+        "change_pct": change(cur_t, prev) if w["period_id"] != "all" else None,
         "resolved": sum(r["w"] for r in vol if not open_at(r, b)),
         "open": sum(r["w"] for r in vol if is_open(r, b)),
         "waiting_on_customer": sum(r["w"] for r in vol if waiting_at(r, b)),
         "open_delta": open_delta,
+        "open_change_pct": open_change,
         "not_responded_delta": late_delta if measurable else None,
         "open_too_long": sum(r["w"] for r in vol if open_48(r, b)) if measurable else None,
         "not_responded_48h": sum(r["w"] for r in vol if no_resp_48(r, b)) if measurable else None,
@@ -250,7 +279,19 @@ def rm_alerts(rs, customers, told, w) -> dict:
                 r["sentiment"] == "negative" or r["high_impact"] or b - r["_c"] > H5):
             due[r["masked_id"]] += r["w"]
     each = {m: min(customers[m]["cw"], n) for m, n in due.items()}
-    return {"alerted": sum(v for m, v in each.items() if m in told), "of": sum(each.values())}
+    return {"alerted": sum(v for m, v in each.items() if alerted_in(m, told, w)), "of": sum(each.values())}
+
+
+EARLIER_ALERT_PCT = 10  # ASSUMPTION (review round 3, NW-D67): owners alerted earlier in a longer period, per customer
+
+
+def alerted_in(m: str, told_today: set, w: dict) -> bool:
+    """Owner alerted for this customer in the period. Today's alerts come from rm_notifications.json; a period longer
+    than the morning also holds alerts sent on earlier days (a fixed share of customers, drawn from the masked id), so
+    "owners alerted" grows with the period instead of repeating today's figure (review round 3, NW-D67)."""
+    if m in told_today:
+        return True
+    return w["period_id"] != "brief" and int(hashlib.sha1(f"alert:{m}".encode()).hexdigest(), 16) % 100 < EARLIER_ALERT_PCT
 
 
 def customer_pulse(inter, customers, notes, w) -> dict:
@@ -259,7 +300,7 @@ def customer_pulse(inter, customers, notes, w) -> dict:
     for lid in PULSE_LISTS:
         members = {m for m, c in customers.items() if lid in c["cohorts"]}
         rs = [r for r in inter if r["masked_id"] in members]
-        blk = internal_block(rs, w)
+        blk = internal_block(rs, w, with_backlog=True)
         lists.append({
             "id": lid,
             "label": LIST_LABEL[lid],
@@ -273,6 +314,7 @@ def customer_pulse(inter, customers, notes, w) -> dict:
             "waiting_on_customer": blk["waiting_on_customer"],
             "not_responded_48h": blk["not_responded_48h"],
             "open_delta": blk["open_delta"],
+            "open_change_pct": blk["open_change_pct"],
             "not_responded_delta": blk["not_responded_delta"],
             "rm": rm_alerts(rs, customers, told_all, w),
             # Trend line: the same measure for each earlier window of the period's length, all as of 29 Sep 08:30.
@@ -543,12 +585,24 @@ def theme_labels():
 
 # ------------------------------------------------------------------ businesses, brief
 
+THIN_ROWS = 30
+
+
 def businesses(inter, pub, w, W, labels) -> list[dict]:
     out = []
     a, b = w["start"], w["end"]
     for pid in PRODUCT_ORDER:
         irs = [r for r in inter if r["product"] == pid]
         ib = internal_block(irs, w)
+        # Negative share on the product card (review round 3, NW-D67): with fewer than THIN_ROWS sample contacts in the
+        # period (the morning brief), one heavy sample row can carry the share (Personal loans read 94%), so the card
+        # shows the last 7 days instead and says so.
+        rows = [r for r in irs if in_win(r, a, b)]
+        basis = rows
+        if len(rows) < THIN_ROWS:
+            basis = [r for r in irs if in_win(r, b - dt.timedelta(days=7), b)]
+        ib["negative_share"] = pct(sum(r["w"] for r in basis if r["sentiment"] == "negative"), wn(basis))
+        ib["negative_share_basis"] = "last 7 days" if basis is not rows else None
         pb = public_block(pub, w, W, keep=lambda r, pid=pid: r["_product"] == pid)
         prs = [r for r in pub if r["_product"] == pid and a <= r["_c"] < b]
         neg_t = collections.Counter(r["themes"][0] for r in prs if r["sentiment"] == "negative")
@@ -1047,8 +1101,25 @@ def v4_period(inter, customers, pub, cards_complaints, w, labels) -> dict:
     }
 
 
+def cora_returns(inter, by_cust, w) -> dict:
+    """Brief Step 5.11 (review round 3, NW-D68): Cora conversations resolved in the period, and how many came back as a
+    call or a complaint within 7 days. Only conversations resolved at least 7 days before the freeze count, so every
+    one has its full 7 days of follow-up."""
+    until = min(w["end"], END - dt.timedelta(days=7))
+    done = [r for r in inter if r["channel"] == "whatsapp" and r["status"] == "closed" and r["_closed"]
+            and w["start"] <= r["_closed"] < until]
+    week = dt.timedelta(days=7)
+    back = [r for r in done if any(x is not r and r["_closed"] < x["_c"] <= r["_closed"] + week
+                                   and (x["channel"] == "inbound_voice" or x["deliverable"] == "complaint_resolution")
+                                   for x in by_cust[r["masked_id"]])]
+    return {"resolved": wn(done), "back_7d": wn(back), "from": w["start"].isoformat(), "until": until.isoformat()}
+
+
 def main():
     inter, customers, notes = load_internal()
+    by_cust = collections.defaultdict(list)
+    for r in inter:
+        by_cust[r["masked_id"]].append(r)
     pub = load_public()
     W = source_weights(pub)
     labels = theme_labels()
@@ -1064,7 +1135,7 @@ def main():
         w = windows(p)
         biz = businesses(inter, pub, w, W, labels)
         external = public_block(pub, w, W)
-        internal = internal_block(inter, w)
+        internal = internal_block(inter, w, with_backlog=True)
         internal["by_channel"] = by_channel(inter, w)
         total = internal["volume"] + external["volume"]
         out["periods"][p["id"]] = {
@@ -1095,6 +1166,12 @@ def main():
         # category and the save list. A material risk leads the brief's "What needs you" (at most three items).
         cp["cards"]["ombudsman"] = {**omb.block(cards_complaints, w, [("cards", PRODUCT_LABEL["cards"])]),
                                     **omb.cards_extra(complaints, w, labels)}
+        # One register (review round 3, NW-D66): the credit-card ladder's complaint rungs are the credit-card slice of
+        # the steady register the credit-card Financial Ombudsman tile reads, as flows in the period.
+        flows = complaint_rules.ladder_flows(cards_complaints, w["start"], w["end"])
+        for rung in cp["cards"]["service_full"]["ladder"]:
+            if rung["rung"] in flows:
+                rung["count"] = flows[rung["rung"]]
         cp["v4"] = v4_period(inter, customers, pub, cards_complaints, w, labels)
         # Cora module (Pass 2 section 12): Cora themes inside the bank at bank scale, any channel, any product.
         cora_rs = [r for r in inter if r["theme"] in CORA_THEMES]
@@ -1102,6 +1179,7 @@ def main():
             "internal": internal_block(cora_rs, w),
             "rows": [{"id": t, "label": labels.get(t, t), "internal": internal_block([r for r in cora_rs if r["theme"] == t], w)}
                      for t in CORA_THEMES],
+            "returns": cora_returns(inter, by_cust, w),
         }
         item = omb.brief_item(cp["ombudsman"])
         if item:

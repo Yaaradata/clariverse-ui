@@ -31,11 +31,11 @@ import json
 import random
 
 import complaint_rules
-from common import PERIOD_END, SEED, SEED_V3, dump, load
+from common import DATA_START, PERIOD_END, SEED, SEED_V3, dump, load
 from complaint_rules import decide
 
 END = dt.datetime.fromisoformat(PERIOD_END)
-LISTS = ("priority_a", "priority_b", "uhni")  # the bank's own lists (the derived "multi" cohort is not a list)
+LISTS = ("priority_a", "priority_b", "uhni", "multi")  # the four Customer pulse lists (review round 3: multi-product too)
 # Escalation language on a contact: an RBI or Ombudsman named, or legal / consumer-court language.
 ESC_IMPACT = {"regulator_named": "FCA or Financial Ombudsman named", "legal_language": "Legal language or a solicitor named"}
 ESC_RUNG = {"rbi_ombudsman": "FCA or Financial Ombudsman named", "io": "FCA or Financial Ombudsman named"}
@@ -128,16 +128,17 @@ def main():
     with open(SEED_V3 / "complaints.jsonl", "w", encoding="utf-8") as f:
         for c in out:
             f.write(json.dumps(c, ensure_ascii=False) + "\n")
-    # One referral series (review round 2, NW-D62): the escalation ladder's Financial Ombudsman Service rung counts the
-    # same referrals the Ombudsman watch reads, from the steady register: referrals made in the window.
+    # One register (review round 3, NW-D66): every complaint rung of the bank ladder (complaints received, passed to the
+    # complaints team, final responses, referrals to the Financial Ombudsman Service) is a flow in the window read from
+    # the same steady register the Financial Ombudsman watch reads (complaint_rules.ladder_flows).
     agg_path = SEED_V3 / "aggregates.json"
     agg = load(agg_path)
-    start, end = complaint_rules.START_OF_WINDOW, dt.datetime.fromisoformat(PERIOD_END)
-    window_refs = sum(c["w"] for c in complaint_rules.steady_register(out)
-                      if c.get("referred_at") and start <= dt.datetime.fromisoformat(c["referred_at"]) <= end)
+    start, end = dt.datetime.fromisoformat(DATA_START), dt.datetime.fromisoformat(PERIOD_END)
+    flows = complaint_rules.ladder_flows(complaint_rules.steady_register(out), start, end)
     for rung in agg["deliverables_detail"].get("ladder_bank", []):
-        if rung["rung"] == "Financial Ombudsman Service":
-            rung["count"] = window_refs
+        if rung["rung"] in flows:
+            rung["count"] = flows[rung["rung"]]
+    window_refs = flows["Financial Ombudsman Service"]
     dump(agg, agg_path)
     replied = [c for c in out if c["final_reply_at"]]
     print("referrals in the window (steady register)", window_refs)

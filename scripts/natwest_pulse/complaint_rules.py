@@ -91,6 +91,12 @@ def deadline(received: dt.datetime, product: str) -> dt.datetime:
     return received + dt.timedelta(days=56)
 
 
+# Referral rates (review round 3, NW-D67; were 52% / 25% in NW-D62): with Premier complaints in proportion, these keep the
+# "Referred" tile at about 150 a week, the brief's 5,935 in 9 months.
+UNHAPPY_REFER = 0.62
+LATE_REFER = 0.30
+
+
 def filed_with_ombudsman(r: dict, d: dict) -> bool:
     """Whether this complaint was referred to the Financial Ombudsman Service. Only complaints at risk can be: the
     customer came back unhappy with the final response, or had none by the deadline."""
@@ -99,7 +105,8 @@ def filed_with_ombudsman(r: dict, d: dict) -> bool:
 
 def referred_at(r: dict, d: dict):
     """When the customer referred the complaint to the Financial Ombudsman Service, or None. ASSUMPTION (Pass 2 section 4, about 150 referrals a week; NW-D56, NW-D62): 52% of those
-    unhappy with the final response, 25% of those past the deadline with no final response; referral 3-30 days later."""
+    unhappy with the final response, 25% of those past the deadline with no final response; referral 3-30 days later.
+    Rates now UNHAPPY_REFER and LATE_REFER (NW-D67)."""
     t = referral_due(r, d)
     return t if t and t <= END else None
 
@@ -109,9 +116,9 @@ def referral_due(r: dict, d: dict):
     register's earlier copies use it (NW-D56), since for them that moment is in the past."""
     h = int(hashlib.sha1(f"fos:{r['id']}".encode()).hexdigest(), 16) % 10_000 / 10_000
     lag = dt.timedelta(days=3 + 27 * (int(hashlib.sha1(f"lag:{r['id']}".encode()).hexdigest(), 16) % 1000 / 1000))
-    if d["unhappy_at"] and h < 0.52:
+    if d["unhappy_at"] and h < UNHAPPY_REFER:
         t = d["unhappy_at"] + lag
-    elif d["reply"] is None and h < 0.25:
+    elif d["reply"] is None and h < LATE_REFER:
         t = deadline(ts(r["created_at"]), r["product"]) + lag
     else:
         return None
@@ -129,6 +136,7 @@ def referral_due(r: dict, d: dict):
 #     received in the window.
 # A referral stays on the "referred" tile for REFERRAL_OPEN (8 weeks) after the referral.
 CLONE_OFFSETS = (-20, -16, -12, -8, -4, 0, 4, 8, 12, 16, 20)
+PREMIER_SHARE = 750_000 / 13_000_000  # Premier customers' share of the 13 million base (NW-D49), about 5.8%
 PRIOR_SHIFT = 105
 REFERRAL_OPEN = dt.timedelta(weeks=8)
 _TIME_KEYS = ("received_at", "final_reply_at", "decision_at", "io_reviewed_at", "unhappy_at", "referred_at")
@@ -152,10 +160,17 @@ def steady_register(raw: list[dict]) -> list[dict]:
     out = []
     for p, cs in by_p.items():
         total = sum(c["w"] for c in cs)
-        copies = [(c, k) for c in cs for k in range(len(CLONE_OFFSETS))]
-        base, rem = divmod(total, len(copies))
-        for i, (c, k) in enumerate(copies):
-            w = base + (1 if i < rem else 0)
+        # Premier in proportion (review round 3, NW-D67): the sample over-represents Premier customers (two thirds of its
+        # complaints), so Premier complaints carry PREMIER_SHARE of the product's complaints, the rest the remainder.
+        prem = [c for c in cs if "uhni" in c.get("lists", [])]
+        rest = [c for c in cs if "uhni" not in c.get("lists", [])]
+        groups = [(prem, round(total * PREMIER_SHARE)), (rest, total - round(total * PREMIER_SHARE))] if prem and rest else [(cs, total)]
+        weighted = []
+        for grp, gtotal in groups:
+            copies = [(c, k) for c in grp for k in range(len(CLONE_OFFSETS))]
+            base, rem = divmod(gtotal, len(copies))
+            weighted += [(c, k, base + (1 if i < rem else 0)) for i, (c, k) in enumerate(copies)]
+        for c, k, w in weighted:
             for prior in (0, 1, 2):
                 src = c
                 if prior and c.get("referral_due_at"):
@@ -181,3 +196,43 @@ def referral_open(ref: dt.datetime | None, T: dt.datetime) -> bool:
 
 
 START_OF_WINDOW = dt.datetime(2026, 8, 1, tzinfo=dt.timezone.utc)
+
+
+# ---------------------------------------------------------------- one register for the ladders (review round 3, NW-D66)
+# The escalation ladders (bank-wide on the service standards view, per product on the product view) read the complaint
+# rungs from the same steady register the Financial Ombudsman watch reads, as flows in the period:
+#   Complaint             complaints received in the period
+#   Complaints team       complaints passed to the complaints team in the period: not settled by the close of the third
+#                         business day (summary resolution)
+#   Final response        final responses issued in the period to complaints that went past summary resolution
+#   Financial Ombudsman   referrals to the Financial Ombudsman Service made in the period
+SUMMARY_DAYS = 3
+
+
+def summary_close(received: dt.datetime) -> dt.datetime:
+    """Close of the third business day after the complaint was received (summary resolution, FCA DISP)."""
+    d, n = received, 0
+    while n < SUMMARY_DAYS:
+        d += dt.timedelta(days=1)
+        if is_business_day(d):
+            n += 1
+    return d.replace(hour=23, minute=59)
+
+
+def ladder_flows(steady: list[dict], a: dt.datetime, b: dt.datetime) -> dict:
+    """Complaint rungs for one scope (pass a product's slice) and one period [a, b)."""
+    t = lambda c, k: dt.datetime.fromisoformat(c[k]) if c.get(k) else None  # noqa: E731
+    out = {"Complaint": 0, "Complaints team": 0, "Final response": 0, "Financial Ombudsman Service": 0}
+    for c in steady:
+        rec, reply, ref = t(c, "received_at"), t(c, "final_reply_at"), t(c, "referred_at")
+        past_summary = reply is None or reply > summary_close(rec)
+        if a <= rec < b and not c.get("prior"):
+            out["Complaint"] += c["w"]
+        sc = summary_close(rec)
+        if past_summary and a <= sc < b and sc <= END:
+            out["Complaints team"] += c["w"]
+        if reply and a <= reply < b and reply <= END and past_summary:
+            out["Final response"] += c["w"]
+        if ref and a <= ref < b and ref <= END:
+            out["Financial Ombudsman Service"] += c["w"]
+    return out

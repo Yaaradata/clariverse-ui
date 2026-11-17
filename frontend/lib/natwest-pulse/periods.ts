@@ -25,7 +25,12 @@ export type InternalFigures = {
   /** The bank has sent a resolution or proposed one; the thread is with the customer. */
   waiting_on_customer: number;
   /** Change against the comparison window as it stood at its own end. */
-  open_delta: number;
+  open_delta: number | null;
+  /** Change in the average open backlog against the previous period, per cent; null for the full window. */
+  open_change_pct?: number | null;
+  /** Product cards: internal negative share shown (per cent), and its basis when the period is too thin. */
+  negative_share?: number | null;
+  negative_share_basis?: string | null;
   not_responded_delta: number | null;
   /** Null for the Morning brief: nothing in a 24-hour window can be 48 hours old. */
   open_too_long: number | null;
@@ -82,7 +87,12 @@ export type PulseList = {
   open: number;
   waiting_on_customer: number;
   not_responded_48h: number | null;
-  open_delta: number;
+  open_delta: number | null;
+  /** Change in the average open backlog against the previous period, per cent; null for the full window. */
+  open_change_pct?: number | null;
+  /** Product cards: internal negative share shown (per cent), and its basis when the period is too thin. */
+  negative_share?: number | null;
+  negative_share_basis?: string | null;
   not_responded_delta: number | null;
   /** Owners alerted this morning, of the list's customers due an alert. */
   rm: { alerted: number; of: number };
@@ -451,6 +461,13 @@ export type Period = {
   cora?: {
     internal: InternalFigures;
     rows: { id: string; label: string; internal: InternalFigures }[];
+    /** Cora conversations resolved in the period (with 7 days of follow-up) and those back as a call or complaint. */
+    returns?: {
+      resolved: number;
+      back_7d: number;
+      from: string;
+      until: string;
+    };
   };
   /** One label for every period: "vs previous period". */
   compare: string;

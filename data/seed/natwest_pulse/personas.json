@@ -2,7 +2,7 @@
  {
   "masked_id": "XXXX4821",
   "persona": "Persona 1",
-  "descriptor": "Premier relationship, 14 years, London",
+  "descriptor": "Customer for 14 years, London",
   "segment": "Premier Reward",
   "cohorts": [
    "priority_a"
@@ -12,7 +12,7 @@
    "current_accounts",
    "mortgages"
   ],
-  "rm_id": "Premier banking manager",
+  "rm_id": "Complaints lead",
   "proxy_contacts": 1,
   "rm_notified": false,
   "story": true,
@@ -69,9 +69,7 @@
     "sentiment": "negative",
     "status": "open",
     "first_response_at": null,
-    "high_impact": [
-     "public_reach"
-    ]
+    "high_impact": []
    },
    {
     "at": "2026-11-11T18:20+00:00",
@@ -88,7 +86,7 @@
  {
   "masked_id": "XXXX2317",
   "persona": "Persona 2",
-  "descriptor": "Premier relationship, 9 years, Manchester",
+  "descriptor": "Customer for 9 years, Manchester",
   "segment": "Premier Reward",
   "cohorts": [
    "priority_a"
@@ -97,7 +95,7 @@
    "cards",
    "current_accounts"
   ],
-  "rm_id": "Premier banking manager",
+  "rm_id": "Complaints lead",
   "proxy_contacts": 1,
   "rm_notified": true,
   "trail": [
@@ -119,7 +117,7 @@
     "channel": "outbound_voice",
     "product": "current_accounts",
     "theme": "complaint_handling",
-    "summary": "The relationship manager (Premier) called back and logged a fresh request; resolution committed within two working days.",
+    "summary": "The complaints lead called back and logged a fresh request; resolution committed within two working days.",
     "sentiment": "neutral",
     "status": "open",
     "first_response_at": "2026-11-10T09:30+00:00"
@@ -129,7 +127,7 @@
  {
   "masked_id": "XXXX3390",
   "persona": "Persona 3",
-  "descriptor": "Premier relationship, 6 years, Edinburgh",
+  "descriptor": "Customer for 6 years, York",
   "segment": "Premier Select",
   "cohorts": [
    "priority_b"
@@ -139,7 +137,7 @@
    "current_accounts",
    "payments_fraud"
   ],
-  "rm_id": "Premier banking manager",
+  "rm_id": "Complaints lead",
   "proxy_contacts": 0,
   "rm_notified": false,
   "cohort_added_at": "2026-11-08T15:10+00:00",
@@ -170,7 +168,7 @@
  {
   "masked_id": "XXXX1576",
   "persona": "Persona 4",
-  "descriptor": "Premier relationship, 21 years, Glasgow",
+  "descriptor": "Customer for 21 years, Newcastle",
   "segment": "Premier Reward",
   "cohorts": [
    "priority_a"
@@ -181,7 +179,7 @@
    "mortgages",
    "savings"
   ],
-  "rm_id": "Premier banking manager",
+  "rm_id": "Complaints lead",
   "proxy_contacts": 1,
   "rm_notified": true,
   "trail": [
@@ -229,7 +227,7 @@
  {
   "masked_id": "XXXX2688",
   "persona": "Persona 6",
-  "descriptor": "Premier relationship, 11 years, Belfast",
+  "descriptor": "Customer for 11 years, Nottingham",
   "segment": "Premier Select",
   "cohorts": [
    "priority_b"
@@ -238,7 +236,7 @@
    "cards",
    "current_accounts"
   ],
-  "rm_id": "Premier banking manager",
+  "rm_id": "Complaints lead",
   "proxy_contacts": 0,
   "rm_notified": false,
   "trail": [
@@ -268,7 +266,7 @@
  {
   "masked_id": "XXXX4077",
   "persona": "Persona 7",
-  "descriptor": "Premier relationship, 17 years, Leeds",
+  "descriptor": "Customer for 17 years, Leeds",
   "segment": "Premier Reward",
   "cohorts": [
    "priority_a"
@@ -277,7 +275,7 @@
    "cards",
    "current_accounts"
   ],
-  "rm_id": "Premier banking manager",
+  "rm_id": "Complaints lead",
   "proxy_contacts": 1,
   "rm_notified": true,
   "trail": [
@@ -297,7 +295,7 @@
  {
   "masked_id": "XXXX1942",
   "persona": "Persona 8",
-  "descriptor": "Premier relationship, 8 years, Birmingham",
+  "descriptor": "Customer for 8 years, Birmingham",
   "segment": "Premier Select",
   "cohorts": [
    "multi"
@@ -309,7 +307,7 @@
    "personal_loans",
    "savings"
   ],
-  "rm_id": "Premier banking manager",
+  "rm_id": "Complaints lead",
   "proxy_contacts": 0,
   "rm_notified": false,
   "trail": [
@@ -328,7 +326,7 @@
  {
   "masked_id": "XXXX3815",
   "persona": "Persona 9",
-  "descriptor": "Premier relationship, 12 years, London",
+  "descriptor": "Customer for 12 years, London",
   "segment": "Premier Reward",
   "cohorts": [
    "priority_b"
@@ -338,7 +336,7 @@
    "current_accounts",
    "savings"
   ],
-  "rm_id": "Premier banking manager",
+  "rm_id": "Complaints lead",
   "proxy_contacts": 1,
   "rm_notified": false,
   "trail": [
@@ -348,7 +346,7 @@
     "sender": "proxy",
     "product": "savings",
     "theme": "mis_selling",
-    "summary": "Email from the customer's attorney: the account was moved to a packaged account with a fee, without a clear explanation.",
+    "summary": "Email from the customer's solicitor: the account was moved to a packaged account with a fee, without a clear explanation.",
     "sentiment": "negative",
     "status": "open",
     "first_response_at": "2026-11-09T10:00+00:00",
@@ -391,7 +389,7 @@
  {
   "masked_id": "XXXX5566",
   "persona": "Persona 11",
-  "descriptor": "Premier relationship, 19 years, Aberdeen",
+  "descriptor": "Premier relationship, 19 years, Norwich",
   "segment": "Premier Reward",
   "cohorts": [
    "uhni"
@@ -419,7 +417,7 @@
  {
   "masked_id": "XXXX1318",
   "persona": "Persona 12",
-  "descriptor": "Premier relationship, 7 years, Brighton",
+  "descriptor": "Customer for 7 years, Brighton",
   "segment": "Premier Select",
   "cohorts": [
    "multi"
@@ -430,7 +428,7 @@
    "mortgages",
    "savings"
   ],
-  "rm_id": "Premier banking manager",
+  "rm_id": "Complaints lead",
   "proxy_contacts": 0,
   "rm_notified": true,
   "trail": [

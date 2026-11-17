@@ -1135,3 +1135,49 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
   (illustrative)".
 - **NW-D65 · Item 6.** "Rewards" in the at-risk bar list. Accepted: the inherited "Repeat contact by category" scroll box
   on the credit-card happy page, which cuts a row mid-line at the box edge (oct13 layout; the box scrolls).
+
+### Review round 3 (17 Nov): fixes A and B as decided by Usha
+
+- **NW-D66 · One complaint register (fix A).** Every complaint figure reads the steady register (NW-D56) with one state
+  per complaint: open within 8 weeks → open past 8 weeks → final response issued → unhappy with the final response →
+  referred to the Financial Ombudsman Service → closed. "Open complaints" are the first two states only (unhappy and
+  referred are no longer counted open). The four tile rings show a share of all complaints received in the window, not
+  of open complaints. Both escalation ladders (bank-wide on the service standards view, credit cards on the product
+  view) take their complaint rungs from the same register as flows in the period: complaints received; passed to the
+  complaints team (not settled by the close of the third business day, summary resolution); final responses issued after
+  summary resolution; referrals made. Voice / Contacts and Repeat still count contacts. The full-window contact volume
+  is one figure: the ladder's first rung and the account-tier table now read the contacts the full-window period reads
+  (six channel groups, IVR bot excluded, 1 August to the freeze), 5,801,535. Reconcile: open = unsettled and unreferred,
+  tile base = complaints received, both ladders = register flows (own recomputation), one volume; a failing fixture each.
+  Known edge: the steady register thins in the last 20 days of the window (copies past the freeze are dropped), so the
+  last week's received count is lower than mid-window; the referral pace stays about 145 a week.
+- **NW-D67 · Data fixes (fix B).**
+  - Recent complainants: a complaint received in the last 90 days puts its customer on the list by definition, so
+    recent-complainant at-risk complaints are at least the on-the-brink tile. The fourth list (multi-product) is carried
+    on complaints too.
+  - Premier in proportion: Premier complaints carry 750,000 / 13 million (5.8%) of each product's complaints in the
+    steady register (the sample holds two thirds Premier); the save list holds Premier rows in proportion to Premier's
+    share of at-risk complaints (at least one).
+  - Referral rates re-set to 62% of those unhappy with the final response and 30% of those past the deadline
+    (ASSUMPTION; supersedes the NW-D62 rates), which keeps the Referred tile at about 145 a week against the brief's
+    5,935 in 9 months.
+  - /priority headline reads the four cohort tiles (was the first two only).
+  - Owners alerted varies by period: today's alerts from rm_notifications.json, plus, in a period longer than the
+    morning, alerts sent on earlier days for 10% of due customers (ASSUMPTION, drawn from the masked id).
+  - Open change: the change in the average open backlog (one snapshot a day) against the previous period, in per cent;
+    the full window shows "no earlier period" (no data before 1 August). The seed only marks waiting-on-customer for
+    threads still waiting at the freeze, so closed threads now waited from their first response by the same 40% rule
+    at earlier period ends. Weekly bank change −0.1%. The Premier cohort's backlog has grown 15-23% a week through
+    October and November in the seed; that trend is shown, not smoothed away.
+  - Product-card negative share: with fewer than 30 sample contacts in the period (the morning brief), the card shows
+    the last 7 days and says so; reconcile holds every card at 45% or less.
+  - Personas: owner by cohort (Premier banking manager for Premier, Complaints lead otherwise), "Customer for N years"
+    for non-Premier customers, and places in England and Wales only (York, Newcastle, Nottingham, Norwich replace
+    Edinburgh, Glasgow, Belfast, Aberdeen).
+  - "Public post with reach" is never set (no public data, HL-15); the random draw is kept.
+  - The redemption-statement standard applies to mortgages only; a personal-loan redemption request is a service request.
+  - Ask "Which journey is leaking most customers this week?" reads the /satisfaction journey-stages table (sample since
+    1 August) and says one week is too thin to rank; question text kept as Pass 3 wrote it.
+- **NW-D68 · Cora back within 7 days (brief Step 5.11).** The Cora module and the Cora Ask answer show the Cora
+  conversations resolved in the window with 7 days of follow-up, and how many came back as a call or a complaint within 7
+  days (about 10%, internal, illustrative).

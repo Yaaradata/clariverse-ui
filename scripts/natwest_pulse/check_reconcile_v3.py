@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import collections
 import datetime as dt
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -300,7 +301,11 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
                         and (r["sentiment"] == "negative" or r["high_impact"] or b - c > dt.timedelta(hours=5))):
                     due[r["masked_id"]] += r["w"]
             each = {m: min(customers[m]["cw"], n) for m, n in due.items()}
-            got = (sum(v for m, v in each.items() if m in notes and notes[m]["notified_today"]), sum(each.values()))
+            def told(m, pid=pid):  # today's alerts, plus earlier alerts in a longer period (NW-D67), own code
+                if m in notes and notes[m]["notified_today"]:
+                    return True
+                return pid != "brief" and int(hashlib.sha1(f"alert:{m}".encode()).hexdigest(), 16) % 100 < 10
+            got = (sum(v for m, v in each.items() if told(m)), sum(each.values()))
             ok(got == (lst["rm"]["alerted"], lst["rm"]["of"]), f"[{pid}] {lst['label']}: RMs alerted recomputed {got}")
             ok(lst["rm"]["of"] <= lst["open"], f"[{pid}] {lst['label']}: customers due an RM alert never exceed the open contacts ({lst['rm']['of']} <= {lst['open']})")
             for k in ("volume", "open", "waiting_on_customer", "not_responded_48h"):
@@ -432,7 +437,38 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
     tile_pace = full["ombudsman"]["now"]["awaiting_io"] / 8
     ok(ladder_pace > 0 and abs(tile_pace - ladder_pace) <= 0.15 * ladder_pace,
        f"one referral series: Referred tile {tile_pace:.0f} a week = ladder {ladder_pace:.0f} a week, within 15%")
+    # Owners alerted grows with the period (NW-D67): a longer period never shows fewer alerts, and the full window
+    # shows more than the morning brief whenever more customers are due.
+    for lid in [x["id"] for x in per["periods"]["7d"]["customer_pulse"]["lists"]]:
+        rm = {pid: next(x for x in p["customer_pulse"]["lists"] if x["id"] == lid)["rm"] for pid, p in per["periods"].items()}
+        order = [k for k in ("brief", "7d", "30d", "all") if k in rm]
+        ok(all(rm[x]["alerted"] <= rm[y]["alerted"] for x, y in zip(order, order[1:]))
+           and (rm["all"]["alerted"] > rm["brief"]["alerted"] or rm["all"]["of"] == rm["brief"]["of"]),
+           f"owners alerted grows with the period for {lid} ({[rm[k]['alerted'] for k in order]})")
+    # Open backlog (NW-D67): the weekly change in the average open backlog stays within ±15%, and the full window shows no
+    # change against a previous period (there is no data before 1 August).
+    wk = per["periods"]["7d"]["cx_pulse"]["internal"].get("open_change_pct")
+    ok(wk is not None and abs(wk) <= 15, f"open backlog: weekly change within ±15% ({wk}%)")
+    fw = per["periods"]["all"]
+    ok(fw["cx_pulse"]["internal"].get("change_pct") is None and fw["cx_pulse"]["internal"].get("open_change_pct") is None
+       and all(x.get("open_change_pct") is None and x.get("change_pct") is None for x in fw["customer_pulse"]["lists"]),
+       "full window: no change against a previous period (no data before 1 August)")
+    # Product negative share (NW-D67): no product card shows more than 45% of its internal contacts negative.
+    hi = [(pid, x["id"], x["internal"].get("negative_share")) for pid, p in per["periods"].items() for x in p["businesses"]
+          if (x["internal"].get("negative_share") or 0) > 45]
+    ok(not hi, f"product cards: internal negative share at most 45% ({hi[:3]})")
+    # One volume (NW-D66): the full-window contact volume on home, the /satisfaction tier table and the /deliverables
+    # ladder's first rung are the same figure.
+    tiers = sum(x["interactions"] for x in agg["satisfaction"].get("tiers_bank", []))
+    vol = full["cx_pulse"]["internal"]["volume"]
+    ok(lb.get("Voice") == vol == tiers,
+       f"one volume: full-window contacts {vol} = ladder first rung {lb.get('Voice')} = account tiers {tiers}")
     ombudsman_checks(seed_dir, per, inter, ok)
+    # One register (NW-D66): the bank ladder's complaint rungs are flows in the window from the steady register.
+    from complaint_rules import steady_register  # noqa: PLC0415
+    reg = [json.loads(line) for line in open(seed_dir / "complaints.jsonl", encoding="utf-8")]
+    want = _ladder_flows(steady_register(reg), dt.datetime(2026, 8, 1, tzinfo=dt.timezone.utc), dt.datetime.fromisoformat(full["end"]))
+    ok(all(lb.get(k) == v for k, v in want.items()), f"One register: the bank ladder's complaint rungs = the register's flows in the window {want}")
     v4_checks(per, ok)
 
 
@@ -498,13 +534,36 @@ def _omb_state(c, T):
     else:
         back = t("unhappy_at")
         unhappy = bool(back and reply < back <= T and T < reply + dt.timedelta(days=183))
-        st = {"open": unhappy, "eligible": False, "brink": False, "unhappy": unhappy, "awaiting_io": False, "left": None}
+        # A final response has been issued: never an open complaint, unhappy or not (NW-D66).
+        st = {"open": False, "eligible": False, "brink": False, "unhappy": unhappy, "awaiting_io": False, "left": None}
     ref = t("referred_at")
-    if ref and ref <= T:  # on the referred tile for 8 weeks after the referral (NW-D56)
+    if ref and ref <= T:  # on the referred tile for 8 weeks after the referral (NW-D56); referred is not open (NW-D66)
         st.update(awaiting_io=T < ref + dt.timedelta(weeks=8), brink=False, eligible=False, unhappy=False, left=None,
-                  open=reply is None or reply > T)
+                  open=False)
     st["at_risk"] = st["brink"] or st["eligible"] or st["unhappy"]
     return st
+
+
+def _ladder_flows(steady, a, b):
+    """Independent recomputation of the ladder's complaint rungs (NW-D66): received in [a, b); passed to the complaints
+    team (not settled by the close of the third business day) in [a, b); final responses issued in [a, b) after summary
+    resolution; referrals made in [a, b). Nothing after the freeze."""
+    end = dt.datetime.fromisoformat(NOW)
+    t = lambda c, k: dt.datetime.fromisoformat(c[k]) if c.get(k) else None  # noqa: E731
+    out = dict.fromkeys(("Complaint", "Complaints team", "Final response", "Financial Ombudsman Service"), 0)
+    for c in steady:
+        rec, reply, ref = t(c, "received_at"), t(c, "final_reply_at"), t(c, "referred_at")
+        d, n = rec, 0
+        while n < 3:
+            d += dt.timedelta(days=1)
+            n += is_business_day(d)
+        sc = d.replace(hour=23, minute=59)
+        handed = reply is None or reply > sc
+        out["Complaint"] += c["w"] if a <= rec < b and not c.get("prior") else 0
+        out["Complaints team"] += c["w"] if handed and a <= sc < b and sc <= end else 0
+        out["Final response"] += c["w"] if handed and reply and a <= reply < b and reply <= end else 0
+        out["Financial Ombudsman Service"] += c["w"] if ref and a <= ref < b and ref <= end else 0
+    return out
 
 
 def ombudsman_checks(seed_dir, per, inter, ok):
@@ -573,13 +632,21 @@ def ombudsman_checks(seed_dir, per, inter, ok):
                 sts = [s for _, s in pairs]
                 got = {k: sum(c["w"] for c, s in pairs if s[k]) for k in keys}
                 ok(all(got[k] == blk[when][k] for k in keys), f"[{pid}] Ombudsman {label} {when} recomputed {got}")
-                ok(all(s["open"] for s in sts if s["at_risk"]) and got["at_risk"] <= got["open"],
-                   f"[{pid}] Ombudsman {label} {when}: at risk is a subset of open complaints")
+                unsettled = sum(c["w"] for c in scope if dt.datetime.fromisoformat(c["received_at"]) <= T
+                                and not (c["final_reply_at"] and dt.datetime.fromisoformat(c["final_reply_at"]) <= T)
+                                and not (c.get("referred_at") and dt.datetime.fromisoformat(c["referred_at"]) <= T))
+                ok(blk[when]["open"] == unsettled and all(s["open"] for s in sts if s["brink"] or s["eligible"])
+                   and not any(s["open"] for s in sts if s["unhappy"] or s["awaiting_io"]),
+                   f"[{pid}] Ombudsman {label} {when}: open complaints are only those with no final response and not referred")
+                base = sum(c["w"] for c in scope if not c.get("prior") and dt.datetime.fromisoformat(c["received_at"]) <= T)
+                ok(blk[when]["received"] == base,
+                   f"[{pid}] Ombudsman {label} {when}: tile shares are of complaints received in the window ({blk[when]['received']} = {base})")
                 ok(not any(s["at_risk"] for s in sts if s["awaiting_io"]), f"[{pid}] Ombudsman {label} {when}: referred complaints are never counted at risk")
             ok(sum(blk["now"]["buckets"].values()) == blk["now"]["brink"], f"[{pid}] Ombudsman {label}: countdown buckets = on the brink")
             T = dt.datetime.fromisoformat(blk["as_of"])
             pending = sum(c["w"] for c in scope if dt.datetime.fromisoformat(c["received_at"]) <= T
-                          and not (c["final_reply_at"] and dt.datetime.fromisoformat(c["final_reply_at"]) <= T))
+                          and not (c["final_reply_at"] and dt.datetime.fromisoformat(c["final_reply_at"]) <= T)
+                          and not (c.get("referred_at") and dt.datetime.fromisoformat(c["referred_at"]) <= T))
             near = blk["now"]["brink"] + blk["now"]["eligible"]
             ok(pending == blk["pending"] and near <= pending,
                f"[{pid}] Ombudsman {label}: on the brink + already eligible ({near}) is within pending complaints ({pending})")
@@ -592,16 +659,12 @@ def ombudsman_checks(seed_dir, per, inter, ok):
             ok(got_io == (io["decided"], io["reviewed"]) and referred == blk["now"]["awaiting_io"],
                f"[{pid}] Ombudsman {label}: referred to the Financial Ombudsman Service {blk['now']['awaiting_io']} = the register's referrals {referred}")
             if label == "Cards":
+                # One register (NW-D66): the credit-card ladder's complaint rungs are flows in the period from the same
+                # credit-card slice the credit-card Financial Ombudsman tile reads, recomputed here with its own code.
                 rungs = {x["rung"]: x["count"] for x in p["cards"]["service_full"]["ladder"]}
-                a_, b_ = dt.datetime.fromisoformat(p["start"]), dt.datetime.fromisoformat(p["end"])
-                in_win = [r for r in inter if r["product"] == "cards" and r["channel"] != "ivr_bot"
-                          and a_ <= dt.datetime.fromisoformat(r["created_at"]) < b_]
-                raw_scope = [c for c in raw_cs if c["product"] == "cards"]  # the ladder counts contacts, not the steady view
-                reg = sum(c["w"] for c in raw_scope if a_ <= dt.datetime.fromisoformat(c["received_at"]) < b_ and c["decision_at"])
-                rbi_only = sum(r["w"] for r in in_win if r.get("escalation") == "rbi_ombudsman" and not (
-                    r["id"] in {c["source_id"] for c in raw_scope if c["decision_at"]}))
-                ok(rungs["Final response"] == reg + rbi_only,
-                   f"[{pid}] Internal Ombudsman: the Cards ladder's IO rung ({rungs['Final response']}) = the register's complaints sent for review ({reg}) plus RBI-rung contacts outside it ({rbi_only})")
+                want = _ladder_flows(scope, dt.datetime.fromisoformat(p["start"]), dt.datetime.fromisoformat(p["end"]))
+                ok(all(rungs.get(k) == v for k, v in want.items()),
+                   f"[{pid}] One register: the credit-card ladder's complaint rungs = the credit-card register's flows {want}")
             if label == "bank":
                 # 8-week limit (NatWest): the last 10 days are a smaller slice of pending than under a 30-day rule.
                 ok(0.05 <= near / max(pending, 1) <= 0.75, f"[{pid}] Ombudsman: brink + eligible is a plausible share of pending ({100 * near / max(pending, 1):.0f}%)")

@@ -23,6 +23,9 @@ import math
 import random
 
 from common import (
+    CHANNEL_GROUP,
+    DATA_START,
+    PERIOD_END,
     is_business_day,
     JOURNEY_ORDER,
     JOURNEY_STAGE,
@@ -299,7 +302,9 @@ def high_impact_reasons(theme_row: dict, channel: str, sender: str) -> list[str]
     if rng.random() < esc * 0.12:
         reasons.append("legal_language")
     if channel == "social_inbox" and rng.random() < 0.18:
-        reasons.append("public_reach")
+        # "Public post with reach" is a public-data fact; no public source is loaded (HL-15), so it is never set (review
+        # round 3, NW-D67). The draw stays so the seed's random sequence does not change.
+        pass
     if channel == "email" and rng.random() < 0.004:
         reasons.append("official_domain")
     if rng.random() < 0.008:
@@ -321,6 +326,10 @@ def is_breached(rec) -> bool:
 def make_interaction(idx, cust, product, theme, created, channel, sender, themes, forced=None):
     t = themes.get(theme, {})
     deliv = THEME_DELIVERABLE.get(theme, "query_response")
+    # Review round 3 (NW-D67): the redemption-statement standard is a mortgage standard; a personal-loan redemption or
+    # settlement request is an ordinary service request.
+    if deliv == "loan_documents" and product != "mortgages":
+        deliv = "service_request"
     is_cohort = any(k in cust["cohorts"] for k in ("priority_a", "priority_b", "uhni", "hni"))
     p_neg = min(0.9, 0.62 * (t.get("share_negative") or 50) / 100)
     sentiment = "negative" if rng.random() < p_neg else ("positive" if rng.random() < 0.18 else "neutral")
@@ -1170,7 +1179,7 @@ def screen_blocks(customers, inter, themes):
         "deliverables_detail": {
             "ageing": ageing_rows,
             "ladder": ladder,
-            "ladder_rule": "Each rung counts every contact that reached at least that rung. Repeat: the same customer on the same theme within 30 days.",
+            "ladder_rule": "Voice and Repeat count the bank's own contacts in the window (Repeat: the same customer on the same theme within 30 days). Complaint and the rungs above are flows in the window from the complaint register the Financial Ombudsman watch reads: complaints received, passed to the complaints team after summary resolution (3 business days), final responses issued, referrals made.",
             "closure": closure,
             "disputes": dispute_block,
         },
@@ -1257,11 +1266,16 @@ def main():
     )
     # The escalation ladder at bank scale (review round 1): complaints are about 1% of contacts at the bank, while the
     # sample over-represents them. The sample ladder stays for the reconcile; the screen shows this one.
-    lb = [{"rung": "Voice", "count": sum(r["w"] for r in inter)},
-          {"rung": "Repeat", "count": sum(r["w"] for r in inter if r["repeat"])}]
+    # One volume (review round 3, NW-D66): the ladder and the tier table read the contacts the full-window period reads
+    # (periods_v3: the six channel groups, IVR bot excluded, received from 1 August to the freeze), so home,
+    # /satisfaction and /deliverables show one window volume. The complaint rungs are written by seed_complaints_v3.py.
+    win_a, win_b = dt.datetime.fromisoformat(DATA_START), dt.datetime.fromisoformat(PERIOD_END)
+    win = [r for r in inter if r["channel"] in CHANNEL_GROUP and win_a <= dt.datetime.fromisoformat(r["created_at"]) < win_b]
+    lb = [{"rung": "Voice", "count": sum(r["w"] for r in win)},
+          {"rung": "Repeat", "count": sum(r["w"] for r in win if r["repeat"])}]
     for rung_id, rung in (("grievance", "Complaint"), ("md_office", "Complaints team"), ("io", "Final response"),
                           ("rbi_ombudsman", "Financial Ombudsman Service")):
-        lb.append({"rung": rung, "count": sum(r["w"] for r in inter if reached(r, rung_id))})
+        lb.append({"rung": rung, "count": sum(r["w"] for r in win if reached(r, rung_id))})
     agg["deliverables_detail"]["ladder_bank"] = lb
     # Account tiers at bank scale (review round 1): the sample over-represents Premier customers, so the table reads
     # the weighted contacts, in the bank's tier mix.
@@ -1269,7 +1283,7 @@ def main():
     cw_of = {c["masked_id"]: c.get("cw", 1) for c in customers}
     tb = []
     for sg in ("Select", "Reward", "Premier Select", "Premier Reward"):
-        rs = [r for r in inter if seg_of[r["masked_id"]] == sg]
+        rs = [r for r in win if seg_of[r["masked_id"]] == sg]
         n = sum(r["w"] for r in rs)
         pos = sum(r["w"] for r in rs if r["sentiment"] == "positive")
         neg_ = sum(r["w"] for r in rs if r["sentiment"] == "negative")

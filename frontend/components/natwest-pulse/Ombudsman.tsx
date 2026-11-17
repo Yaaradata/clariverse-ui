@@ -213,7 +213,7 @@ export function OmbudsmanWatch({
             }}
           >
             <Dial
-              value={pct(n.brink, n.open)}
+              value={pct(n.brink, n.received)}
               color={C.amber}
               big={fmt(n.brink)}
               label="Within 8 weeks, 10 days or fewer left"
@@ -226,7 +226,7 @@ export function OmbudsmanWatch({
               }
             />
             <Dial
-              value={pct(n.eligible, n.open)}
+              value={pct(n.eligible, n.received)}
               color={C.red}
               big={fmt(n.eligible)}
               label="Past 8 weeks, no final response"
@@ -239,7 +239,7 @@ export function OmbudsmanWatch({
               }
             />
             <Dial
-              value={pct(n.unhappy, n.open)}
+              value={pct(n.unhappy, n.received)}
               color={C.violet}
               big={fmt(n.unhappy)}
               label="Unhappy with the final response"
@@ -252,7 +252,7 @@ export function OmbudsmanWatch({
               }
             />
             <Dial
-              value={pct(n.awaiting_io, n.open)}
+              value={pct(n.awaiting_io, n.received)}
               color={C.cyan}
               big={fmt(n.awaiting_io)}
               label="Referred to the Ombudsman"
@@ -279,7 +279,7 @@ export function OmbudsmanWatch({
             title={
               scope === "bank" ? "At risk, by product" : "At risk, by category"
             }
-            info={`Within 8 weeks, 10 days or fewer left: no final response yet and 10 days or fewer to the deadline (8 weeks; 15 business days for payment services). Past 8 weeks: no final response by the deadline. Unhappy with the reply: after the reply the customer reopened the complaint or contacted the bank again about the issue. At risk counts each complaint once; rings show the share of open complaints. ${o.rules}`}
+            info={`Within 8 weeks, 10 days or fewer left: no final response yet and 10 days or fewer to the deadline (8 weeks; 15 business days for payment services). Past 8 weeks: no final response by the deadline. Unhappy with the reply: after the reply the customer reopened the complaint or contacted the bank again about the issue. At risk counts each complaint once. Rings show the share of all complaints received in the window; open complaints are only those with no final response yet and not referred. ${o.rules}`}
             rows={split}
           />
         </div>

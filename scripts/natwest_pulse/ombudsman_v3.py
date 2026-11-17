@@ -18,7 +18,18 @@ from complaint_rules import deadline, referral_open, steady_register
 D6M = dt.timedelta(days=183)  # 6 months from the final response (or the deadline) to refer (register REG-FOS-6M)
 DAY = dt.timedelta(days=1)
 BUCKETS = [("8-10", 8, 10), ("4-7", 4, 7), ("0-3", 0, 3)]  # days left before the final-response deadline
-LIST_LABEL = {"priority_a": "Financially vulnerable (Consumer Duty)", "priority_b": "Recent complainants (90 days)", "uhni": "Premier"}
+LIST_LABEL = {"priority_a": "Financially vulnerable (Consumer Duty)", "priority_b": "Recent complainants (90 days)", "uhni": "Premier",
+              "multi": "Multi-product customers (four or more products)"}
+D90 = dt.timedelta(days=90)
+
+
+def lists_at(c: dict, T: dt.datetime) -> list[str]:
+    """The Customer pulse lists the complaint's customer is on as of T (review round 3, NW-D67). A complaint received in
+    the last 90 days puts its customer on Recent complainants by definition."""
+    out = list(c["lists"])
+    if "priority_b" not in out and T - c["_received_at"] <= D90:
+        out.append("priority_b")
+    return [k for k in LIST_LABEL if k in out]
 IO_OWNER = "Final-response team"
 RULES = (
     "Financial Ombudsman Service rules only (FCA DISP). The bank has 8 weeks to "
@@ -71,8 +82,7 @@ def status(c: dict, T: dt.datetime) -> dict | None:
         # or contacted again on the issue, within the 90 days they have to approach the Ombudsman.
         back = c["_unhappy_at"]
         if back and reply < back <= T and T < reply + D6M:
-            st["unhappy"] = True
-            st["open"] = True  # contested: open again
+            st["unhappy"] = True  # not open: the final response has been issued (review round 3, NW-D66)
             st["unhappy_how"] = [c["unhappy_how"]]
             st["eligible_from"] = back
         if reply > due:  # it was eligible on the no-response route before the late final response
@@ -82,8 +92,8 @@ def status(c: dict, T: dt.datetime) -> dict | None:
     # A referral stays on the tile for 8 weeks (complaint_rules.REFERRAL_OPEN); after that it has left the bank's watch.
     ref = c.get("_referred_at")
     if ref and ref <= T:
-        st.update(awaiting_io=referral_open(ref, T), brink=False, bucket=None, eligible=False, unhappy=False,
-                  open=not replied)
+        # One state per complaint (NW-D66): a referred complaint is not an open complaint.
+        st.update(awaiting_io=referral_open(ref, T), brink=False, bucket=None, eligible=False, unhappy=False, open=False)
     st["at_risk"] = st["brink"] or st["eligible"] or st["unhappy"]
     return st
 
@@ -151,7 +161,7 @@ def block(cs: list[dict], w: dict, products: list[tuple[str, str]]) -> dict:
     now, prev = snap(cs, T), snap(cs, P)
     cn, cp = counts(now), counts(prev)
     risky = [(c, s) for c, s in now if s["at_risk"]]
-    by_list = {k: sum(c["w"] for c, _ in risky if k in c["lists"]) for k in LIST_LABEL}
+    by_list = {k: sum(c["w"] for c, _ in risky if k in lists_at(c, T)) for k in LIST_LABEL}
     return {
         "provenance": "internal",
         "as_of": T.isoformat(),
@@ -160,14 +170,14 @@ def block(cs: list[dict], w: dict, products: list[tuple[str, str]]) -> dict:
         "prev": cp,
         "delta": {k: cn[k] - cp[k] for k in COUNT_KEYS},
         # Pending: received, no final reply yet. "On the brink" and "already eligible" are both pending complaints.
-        "pending": sum(c["w"] for c, s in now if s["open"] and not s["unhappy"]),
+        "pending": sum(c["w"] for c, s in now if s["open"]),
         # Final responses not upholding the complaint (the oct13 "io" block, kept for its fields).
         "io": {
             "decided": sum(c["w"] for c, _ in now if c["_decision_at"] and c["_decision_at"] <= T),
             "reviewed": sum(c["w"] for c, _ in now if c["_io_reviewed_at"] and c["_io_reviewed_at"] <= T),
         },
         "became_eligible": sum(c["w"] for c, s in now if s["eligible_from"] and start < s["eligible_from"] <= T),
-        "on_lists": {"at_risk": sum(c["w"] for c, _ in risky if c["lists"]), "by_list": by_list,
+        "on_lists": {"at_risk": sum(c["w"] for c, _ in risky if lists_at(c, T)), "by_list": by_list,
                      "labels": LIST_LABEL},
         "by_business": [
             {"id": pid, "label": label, **{k: v for k, v in counts([(c, s) for c, s in now if c["product"] == pid]).items()
@@ -211,9 +221,21 @@ def cards_extra(cs: list[dict], w: dict, labels: dict) -> dict:
             "id": c["id"], "customer": c["masked_id"], "category": k["label"], "issue": labels.get(c["theme"], c["theme"]),
             "state": "eligible" if s["eligible"] or s["unhappy"] else "brink",
             "days_left": s["days_left"], "score": pts, "reason": (lambda t: t[:1].upper() + t[1:])("; ".join(why)) + ".",
-            "owner": IO_OWNER if s["awaiting_io"] else k["owner"], "lists": [LIST_LABEL[x] for x in c["lists"]],
+            "owner": IO_OWNER if s["awaiting_io"] else k["owner"], "lists": [LIST_LABEL[x] for x in lists_at(c, T)],
+            "premier": "uhni" in c["lists"],
         }))
-    save = [r for *_, r in sorted(ranked, key=lambda z: (z[0], z[1]))[:10]]
+    # Premier in proportion (NW-D67): Premier rows on the save list follow Premier's share of the at-risk complaints.
+    risk_w = sum(c["w"] for c, s in now if s["at_risk"])
+    prem_w = sum(c["w"] for c, s in now if s["at_risk"] and "uhni" in c["lists"])
+    quota = max(1, round(10 * prem_w / max(risk_w, 1)))
+    save, n_prem = [], 0
+    for *_, r in sorted(ranked, key=lambda z: (z[0], z[1])):
+        if r["premier"] and n_prem >= quota:
+            continue
+        n_prem += r["premier"]
+        save.append(r)
+        if len(save) == 10:
+            break
     return {"categories": cats, "save_list": save}
 
 

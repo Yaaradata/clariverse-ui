@@ -206,6 +206,18 @@ export function DigitalModule({ b }: { b: Bundle }) {
             Inside the bank: {fmt(i.volume)} contacts in the window,{" "}
             {fmtSigned(i.change_pct, "%")} on the comparison period;{" "}
             {fmt(i.escalations)} carried escalation language.
+            {cora.returns?.resolved ? (
+              <>
+                {" "}
+                Of {fmt(cora.returns.resolved)} Cora conversations resolved{" "}
+                {fmtDate(cora.returns.from)} to {fmtDate(cora.returns.until)},{" "}
+                {fmt(cora.returns.back_7d)} (
+                {Math.round(
+                  (100 * cora.returns.back_7d) / cora.returns.resolved,
+                )}
+                %) came back as a call or a complaint within 7 days.
+              </>
+            ) : null}
           </div>
           {publicLoaded && play && ios ? (
             <>
