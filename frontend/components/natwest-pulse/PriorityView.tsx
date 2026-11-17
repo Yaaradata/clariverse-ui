@@ -215,6 +215,8 @@ export function PriorityView({ b }: { b: Bundle }) {
                     ? ` (${fmt(c.added_this_week_by_lisn)} suggested by LisN, confirmed by the bank)`
                     : ""}
                 </>
+              ) : c.id === "multi" ? (
+                "Four or more products held, from the bank's records. LisN reads it; it never adds anyone to the list."
               ) : (
                 "A Premier relationship from core banking. LisN reads it; it never adds anyone to Premier."
               )}
@@ -277,8 +279,11 @@ export function PriorityView({ b }: { b: Bundle }) {
                   </div>
                 </Link>,
                 <CohortChips key="k" cohorts={p.cohorts} />,
-                p.products.map((x) => PRODUCT_LABEL[x] ?? x).join(", "),
-                <span key="l">
+                // At 390px the column must not shrink to one word a line: it keeps room for a comma list (review round 3).
+                <span key="p" style={{ display: "block", minWidth: 170 }}>
+                  {p.products.map((x) => PRODUCT_LABEL[x] ?? x).join(", ")}
+                </span>,
+                <span key="l" style={{ display: "block", minWidth: 220 }}>
                   <span style={{ color: C.textMut }}>
                     {fmtDateTime(p.latest.at)} · {latestStep.channel_label}
                     {latestStep.sender === "proxy" ? " · assistant" : ""}
@@ -386,7 +391,7 @@ export function PriorityView({ b }: { b: Bundle }) {
             </li>
             <li>
               <strong style={{ color: C.text }}>Linked contacts</strong>: a
-              carer or attorney writing on the customer&apos;s behalf is linked
+              carer or solicitor writing on the customer&apos;s behalf is linked
               only through contact details the bank already holds.
             </li>
             <li>

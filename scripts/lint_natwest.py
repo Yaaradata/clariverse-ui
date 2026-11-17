@@ -94,6 +94,13 @@ P2_TERMS: list[tuple[str, str]] = [
     ("car finance dealer", r"\b[Cc]ar finance\b|\bdealer\b"),
     ("card variant", r"\b[Vv]ariants?\b"),
     ("card card", r"\bcredit card card\b"),
+    # Independent review, round 3 (fix C): Indian or US English, HDFC collection history, removed stories.
+    ("under process", r"\b[Uu]nder process\b"),
+    ("attorney (not power of attorney)", r"(?<!power of )\b[Aa]ttorneys?\b"),
+    ("collector history", r"\bcollector changed\b|\bcapped (?:late-September )?X run\b|\bcapped collection run\b"),
+    ("reply-collection claim", r"Google Play replies are collected|exports carry no reply field|bank replies were not collected|exports hold no history"),
+    ("eligibility and upgrades", r"\b[Ee]ligibility and upgrades?\b"),
+    ("cards (bare, lower case)", r"(?<![Cc]redit )(?<![Dd]ebit )\bcards (?:items?|team|themes?|view|business)\b"),
 ]
 P2_RX = [(t, re.compile(p)) for t, p in P2_TERMS]
 # Screen-only words (NW-D59): checked on rendered pages and crawled text, where ids, routes and code are not visible.
@@ -102,6 +109,8 @@ SCREEN_TERMS: list[tuple[str, str]] = [
     ("MD's", r"\bMD(?:'|&apos;|’)?s\b"),
     ("undefined", r"\bundefined\b"),
     ("raw standard code", r"(?:^|·\s*)(?:fca|psr)\s*$"),
+    # Review round 3 (fix C): "Ombudsman" alone is ambiguous in the UK (Pass 2 section 4); say Financial Ombudsman.
+    ("Ombudsman (bare)", r"(?i)(?<!financial )\bombudsman\b"),
 ]
 SCREEN_RX = [(t, re.compile(p, re.M)) for t, p in SCREEN_TERMS]
 

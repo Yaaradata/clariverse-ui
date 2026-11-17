@@ -1409,7 +1409,7 @@
       "text": "Too few public items to compare (0 now, 0 before)."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs previous period (at least 3 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline limit, or more complaints are already eligible than at the previous period end."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs previous period (at least 3 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". A Financial Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline limit, or more complaints are already eligible than at the previous period end."
    },
    "md_mail": {
     "total": 0,
@@ -6968,7 +6968,7 @@
       "text": "Too few public items to compare (0 now, 0 before)."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs previous period (at least 8 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline limit, or more complaints are already eligible than at the previous period end."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs previous period (at least 8 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". A Financial Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline limit, or more complaints are already eligible than at the previous period end."
    },
    "md_mail": {
     "total": 640,
@@ -13677,7 +13677,7 @@
       "text": "Too few public items to compare (0 now, 0 before)."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs previous period (at least 20 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline limit, or more complaints are already eligible than at the previous period end."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs previous period (at least 20 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". A Financial Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline limit, or more complaints are already eligible than at the previous period end."
    },
    "md_mail": {
     "total": 7513,
@@ -20755,7 +20755,7 @@
       "text": "Too few public items to compare (0 now, 0 before)."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more no earlier period (at least 30 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline limit, or more complaints are already eligible than at the previous period end."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more no earlier period (at least 30 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". A Financial Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline limit, or more complaints are already eligible than at the previous period end."
    },
    "md_mail": {
     "total": 29994,
@@ -27242,7 +27242,7 @@
   ],
   "queries": {
    "ombudsman_cards_week": {
-    "q": "Complaints at risk of reaching the ombudsman in cards this week",
+    "q": "Complaints at risk of reaching the Financial Ombudsman in credit cards this week",
     "count": 661,
     "as_of": "2026-11-12T07:45:00+00:00",
     "since": "2026-11-05T07:45:00+00:00",

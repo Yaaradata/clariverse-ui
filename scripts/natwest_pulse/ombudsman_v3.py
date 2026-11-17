@@ -133,7 +133,7 @@ def score(c: dict, st: dict, T: dt.datetime) -> tuple[int, list[str]]:
         pts += 10
         why.append("public post via the social inbox")
     if st["awaiting_io"]:
-        why.append("referred to the Ombudsman")
+        why.append("referred to the Financial Ombudsman")
     return pts, why
 
 

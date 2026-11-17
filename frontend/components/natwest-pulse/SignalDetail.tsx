@@ -261,7 +261,7 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
               ? `vs baseline: ${t.vs_baseline.window_share}% of store reviews in the window against ${t.vs_baseline.baseline_share}% in the 26 weeks before the window.`
               : t.trend_mode === "insufficient"
                 ? "Most items come from sources that start or change collection mid-window (store exports from late July, Reddit from 1 Sep), so no trend is claimed."
-                : `Trend within window: ${t.trend.second_half} items (${halfLabel(t.trend.second_half_dates)}) vs ${t.trend.first_half} (${halfLabel(t.trend.first_half_dates)}), compared as a source-weighted share of trend-basis posts in each half (each source by its share of the window; Reddit, whose collector changed on 1 Sep, is left out).`}{" "}
+                : `Trend within window: ${t.trend.second_half} items (${halfLabel(t.trend.second_half_dates)}) vs ${t.trend.first_half} (${halfLabel(t.trend.first_half_dates)}), compared as a source-weighted share of trend-basis posts in each half (each source by its share of the window).`}{" "}
             Seasonal check: in discovery, using your history.
           </BaselineCaption>
           <MutedNote>
@@ -301,8 +301,8 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
             Highest rung heard: <strong>{t.rung}</strong>.{" "}
             {fmt(t.escalation_count)} items ({fmtPct(t.share_escalation)})
-            mention the FCA, the ombudsman, a court or a complaint number;{" "}
-            {fmt(t.repeat_count)} say they have raised it before.
+            mention the FCA, the Financial Ombudsman, a court or a complaint
+            number; {fmt(t.repeat_count)} say they have raised it before.
           </div>
         </Section>
         <Section n={5} title="Who and what next">

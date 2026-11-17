@@ -374,6 +374,28 @@ def natwest_lint_fixtures(fails: list[str]) -> int:
         print(("PASS " if ok else "FAIL ") + f"NatWest lint round-1 rule flags {text!r}")
         if not ok:
             fails.append(f"NatWest lint round-1 rule missed {text!r} ({h})")
+    # Review round 3 (fix C): everywhere-rules, then the bare Ombudsman screen rule; clean UK copy passes.
+    for text in ("The status page says under process.", "Email from the customer's attorney", "Reddit (collector changed 1 Sep)",
+                 "so the capped late-September X run cannot swing it", "Google Play replies are collected",
+                 "App Store exports carry no reply field", "Eligibility and upgrades leads.", "public cards items",
+                 "roles in the cards team"):
+        h = ln.text_rules(text, "fixture")
+        n += 1
+        ok = any(x.startswith("NW-P2") for x in h)
+        print(("PASS " if ok else "FAIL ") + f"NatWest lint round-3 rule flags {text!r}")
+        if not ok:
+            fails.append(f"NatWest lint round-3 rule missed {text!r} ({h})")
+    for text in ("going to the Ombudsman?", "REFERRED TO THE OMBUDSMAN", "Open the Ombudsman watch"):
+        n += 1
+        ok = bool(ln.screen_rules(text, "fixture"))
+        print(("PASS " if ok else "FAIL ") + f"NatWest lint screen rule flags {text!r}")
+        if not ok:
+            fails.append(f"NatWest lint screen rule missed {text!r}")
+    for text in ("Referred to the Financial Ombudsman", "REFERRED TO THE FINANCIAL OMBUDSMAN", "Financial Ombudsman Service",
+                 "someone with power of attorney", "the credit cards team", "Eligibility and card changes"):
+        n += 1
+        if ln.screen_rules(text, "fixture") or ln.text_rules(text, "fixture"):
+            fails.append(f"NatWest lint flagged clean copy {text!r}")
     for text in ("Business: Credit cards", "the MD's view", "most positive on undefined", "Final response · fca"):
         h = ln.screen_rules(text, "fixture")
         n += 1
@@ -526,7 +548,7 @@ NW_FIXTURES = [
      lambda s, o: _nw_period(o, lambda p: p["periods"]["7d"]["ombudsman"]["now"].update(
          received=p["periods"]["7d"]["ombudsman"]["now"]["open"]))),
     ("credit-card ladder off the register", "the credit-card ladder's complaint rungs",
-     lambda s, o: _nw_period(o, lambda p: _ladder_rung(p["periods"]["7d"]["cards"]["service_full"]["ladder"], "Financial Ombudsman Service", 0))),
+     lambda s, o: _nw_period(o, lambda p: _ladder_rung(p["periods"]["7d"]["cards"]["service_full"]["ladder"], "Financial Ombudsman Service", 50))),
     ("bank ladder off the register", "the bank ladder's complaint rungs",
      lambda s, o: _nw_agg(s, lambda a: _ladder_rung(a["deliverables_detail"]["ladder_bank"], "Complaint", 61219))),
     ("owners alerted stuck across periods", "owners alerted grows with the period",

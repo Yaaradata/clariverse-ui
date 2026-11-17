@@ -69,7 +69,7 @@ function brinkQA(
           signed(o.delta.unhappy),
         ],
         [
-          "Referred to the Ombudsman",
+          "Referred to the Financial Ombudsman",
           fmt(n.awaiting_io),
           signed(o.delta.awaiting_io),
         ],
@@ -92,13 +92,13 @@ function ombudsmanMd(p: Period): AskQA[] {
   return [
     brinkQA(
       "md-ombudsman",
-      "How many complaints are on the brink of going to the Ombudsman?",
+      "How many complaints are on the brink of going to the Financial Ombudsman?",
       o,
       "internal",
     ),
     {
       id: "md-ombudsman-business",
-      q: "Which product has the most Ombudsman risk?",
+      q: "Which product has the most Financial Ombudsman risk?",
       answer: `${biz[0].label}: ${fmt(biz[0].at_risk)} of the ${fmt(o.now.at_risk)} at-risk complaints (${fmt(biz[0].brink)} on the brink, ${fmt(biz[0].eligible)} eligible with no reply, ${fmt(biz[0].unhappy)} unhappy with the reply).`,
       table: {
         head: [
@@ -123,8 +123,8 @@ function ombudsmanMd(p: Period): AskQA[] {
     },
     {
       id: "md-ombudsman-lists",
-      q: "Are customers on our lists at risk of going to the Ombudsman?",
-      answer: `${fmt(o.on_lists.at_risk)} of the ${fmt(o.now.at_risk)} at-risk complaints come from customers on the bank's lists. The Owner should hear first.`,
+      q: "Are customers on our lists at risk of going to the Financial Ombudsman?",
+      answer: `${fmt(o.on_lists.at_risk)} of the ${fmt(o.now.at_risk)} at-risk complaints come from customers on the bank's lists (a customer can be on more than one list). Their owners should hear first.`,
       table: {
         head: ["List", "At-risk complaints"],
         rows: Object.entries(o.on_lists.by_list).map(([k, v]) => [
@@ -145,7 +145,7 @@ function ombudsmanCards(p: Period): AskQA[] {
   return [
     brinkQA(
       "cards-ombudsman",
-      "How many credit card complaints are close to the Ombudsman?",
+      "How many credit card complaints are close to the Financial Ombudsman?",
       o,
       "Credit cards",
     ),
@@ -166,7 +166,7 @@ function ombudsmanCards(p: Period): AskQA[] {
     },
     {
       id: "cards-ombudsman-categories",
-      q: "Which credit card categories feed Ombudsman risk?",
+      q: "Which credit card categories feed Financial Ombudsman risk?",
       answer: cats[0]
         ? `${cats[0].label} has the most: ${fmt(cats[0].at_risk)} of ${fmt(o.now.at_risk)} at-risk credit card complaints.`
         : "No credit card category has an at-risk complaint.",
@@ -352,7 +352,7 @@ function mdBase(p: Period): AskQA[] {
     {
       id: "md-response",
       q: "Did the bank respond to public posts?",
-      answer: `The bank responded to ${fmt(sp.responded)} of ${fmt(sp.mentions)} public mentions (${sp.response_pct ?? "—"}%), and to ${fmt(sp.high_impact_responded)} of ${fmt(sp.high_impact)} high-impact ones. Response means acknowledged and routed to an official channel. Informational, not a target. Google Play replies are collected; the other sources are illustrative.`,
+      answer: `The bank responded to ${fmt(sp.responded)} of ${fmt(sp.mentions)} public mentions (${sp.response_pct ?? "—"}%), and to ${fmt(sp.high_impact_responded)} of ${fmt(sp.high_impact)} high-impact ones. Response means acknowledged and routed to an official channel. Informational, not a target.`,
       table: {
         head: ["Source", "Mentions", "Responded", "Response"],
         rows: sp.by_source.map((x) => [

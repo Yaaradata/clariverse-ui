@@ -54,7 +54,7 @@ THEMES = [
     },
     {
         "id": "card_eligibility_upgrade",
-        "label": "Credit card eligibility and upgrades",
+        "label": "Credit card eligibility and card changes",
         "group": "Credit cards",
         "pillar": "experience",
         "owner": "cards",

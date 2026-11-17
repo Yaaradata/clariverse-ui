@@ -255,7 +255,7 @@ export function OmbudsmanWatch({
               value={pct(n.awaiting_io, n.received)}
               color={C.cyan}
               big={fmt(n.awaiting_io)}
-              label="Referred to the Ombudsman"
+              label="Referred to the Financial Ombudsman"
               sub={
                 <>
                   with the Financial Ombudsman Service
@@ -392,7 +392,7 @@ export function RiskPill({ r }: { r?: OmbudsmanRisk }) {
   return (
     <span
       data-testid="ombudsman-pill"
-      title={`Ombudsman risk: ${r.at_risk} at risk (${r.brink} on the brink, ${r.eligible} eligible with no reply, ${r.unhappy} unhappy with the reply)`}
+      title={`Financial Ombudsman risk: ${r.at_risk} at risk (${r.brink} on the brink, ${r.eligible} eligible with no reply, ${r.unhappy} unhappy with the reply)`}
       style={{
         display: "inline-flex",
         alignItems: "center",

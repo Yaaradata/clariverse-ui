@@ -129,7 +129,7 @@ def main():
         },
     ]
     dump({"prompts": prompts, "fallback": "I'd need your data for that. Here is what I'd look at: the CX pulse, the "
-          "Cora module and the Ombudsman watch."}, OUT_APP / "ask.json")
+          "Cora module and the Financial Ombudsman watch."}, OUT_APP / "ask.json")
     print("ask.json:", len(prompts), "prompts")
 
 

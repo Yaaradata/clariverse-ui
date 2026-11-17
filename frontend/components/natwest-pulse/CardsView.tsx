@@ -554,8 +554,8 @@ function Categories({ p }: { p: Period }) {
         public volume over the last {p.cards.categories[0]?.trend.length ?? 0}{" "}
         periods of the same length. About a service standard: the category
         carries a delivery standard; compliance is not shown here. Owners are
-        roles in the cards team. The at-risk pill counts complaints on the
-        Ombudsman watch (internal, illustrative).
+        roles in the credit cards team. The at-risk pill counts complaints on
+        the Financial Ombudsman watch (internal, illustrative).
       </MutedNote>
     </Tile>
   );
@@ -586,7 +586,7 @@ function QuestionCard({
   headline: string;
   headlineLabel: string;
   caption: string;
-  gauges: { label: string; value: number; sub: string; tone?: Tone }[];
+  gauges: { label: string; value: number | null; sub: string; tone?: Tone }[];
   stats: { label: string; value: string; sub: string; color?: string }[];
   saying: string;
   prov: ("public" | "internal")[];
@@ -837,15 +837,21 @@ function QuestionCards({ p }: { p: Period }) {
         icon={<Activity size={18} />}
         title="Are my customers happy?"
         micro="Sentiment · Consumer Duty outcomes · Top pain"
-        answer={`Net sentiment of credit card public voice is ${fmtSigned(m.net, "", 0)} (${fmtSigned(change, " pts", 0)} ${p.compare}), source-weighted. ${topPain ? `${topPain.label} draws the most negative posts.` : ""}`}
+        answer={
+          m.items
+            ? `Net sentiment of credit card public voice is ${fmtSigned(m.net, "", 0)} (${fmtSigned(change, " pts", 0)} ${p.compare}), source-weighted. ${topPain ? `${topPain.label} draws the most negative posts.` : ""}`
+            : `Public voice about credit cards is not yet loaded; inside the bank, ${fmt(pct(c.internal.resolved, c.internal.volume))}% of credit card contacts in the period are resolved.`
+        }
         headlineLabel="Net sentiment"
         headline={fmtSigned(m.net, "", 0)}
         caption={`${fmt(m.items)} public items about credit cards in the period. Positive share minus negative share, each source weighted by its share of the window.`}
         gauges={[
           {
             label: "Positive share",
-            value: c.external.positive_share ?? 0,
-            sub: "of credit card public voice",
+            value: c.external.volume ? (c.external.positive_share ?? 0) : null,
+            sub: c.external.volume
+              ? "of credit card public voice"
+              : "public voice not yet loaded",
             tone: "green",
           },
           {
@@ -886,14 +892,18 @@ function QuestionCards({ p }: { p: Period }) {
         gauges={[
           {
             label: "Google Play",
-            value: play?.share_positive ?? 0,
-            sub: `4–5★ share · ${fmt(play?.reviews)} reviews`,
+            value: play?.reviews ? (play.share_positive ?? 0) : null,
+            sub: play?.reviews
+              ? `4–5★ share · ${fmt(play.reviews)} reviews`
+              : "4–5★ share · not yet loaded",
             tone: "amber",
           },
           {
             label: "App Store",
-            value: ios?.share_positive ?? 0,
-            sub: `4–5★ share · ${fmt(ios?.reviews)} reviews`,
+            value: ios?.reviews ? (ios.share_positive ?? 0) : null,
+            sub: ios?.reviews
+              ? `4–5★ share · ${fmt(ios.reviews)} reviews`
+              : "4–5★ share · not yet loaded",
             tone: "amber",
           },
         ]}
@@ -935,8 +945,12 @@ function QuestionCards({ p }: { p: Period }) {
           },
           {
             label: "Asking status",
-            value: sv.transparency.share ?? 0,
-            sub: "of credit card public posts",
+            value: sv.transparency.share ?? null,
+            sub:
+              sv.transparency.share === null ||
+              sv.transparency.share === undefined
+                ? "public voice not yet loaded"
+                : "of credit card public posts",
             tone: "amber",
           },
         ]}

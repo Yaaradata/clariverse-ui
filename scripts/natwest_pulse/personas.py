@@ -547,7 +547,7 @@ ESCALATION_EMAILS = [
         "theme": "card_application",
         "language": "English",
         "subject": "Card application status",
-        "body": "I applied for a credit card two weeks ago. The status page says under process. How much longer?",
+        "body": "I applied for a credit card two weeks ago. The status page says it is being processed. How much longer?",
         "backend_status": "Checks complete; approval expected 13 Nov.",
         "bucket": "proactive_status",
     },

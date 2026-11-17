@@ -2,7 +2,7 @@
  "provenance": "public",
  "definition": "A store review is responded when the bank has posted a reply on it; open too long when there is still no reply 48 hours after it was posted. A redirect-only reply sends the customer elsewhere (email, call, DM, branch) rather than answering.",
  "replies_available": true,
- "scope_note": "Bank replies are counted where the source carries them. App Store exports carry no reply field; bank-authored X posts were not collected.",
+ "scope_note": "Bank replies are counted where the source carries them.",
  "reviews_in_scope": 0,
  "all": {
   "reviews": 0,

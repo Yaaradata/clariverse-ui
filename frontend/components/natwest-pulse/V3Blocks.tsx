@@ -305,9 +305,8 @@ export function DialsRow({
                   lineHeight: 1.5,
                 }}
               >
-                No Google Play reviews are tagged to this product, so no bank
-                replies are visible for it: its public voice is on X, Reddit and
-                forums, where bank replies were not collected.
+                No store reviews are tagged to this product yet, so no bank
+                replies are shown for it.
               </div>
             )}
           </div>

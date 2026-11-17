@@ -208,7 +208,7 @@ def to_close(vol, customers, is_open, labels) -> list[dict]:
     rows.sort(key=lambda x: -x[0])
     return [{"id": case_ref(r), "theme": labels.get(r["theme"], r["theme"]), "kind": kind(r),
              "channel": CHANNEL_LABEL[r["_ch"]], "age": age_label(age), "overdue": over > dt.timedelta(0),
-             "limit": LIMIT_LABEL[basis], "suggested_owner": "Upgrades lead" if r["theme"] == "card_eligibility_upgrade"
+             "limit": LIMIT_LABEL[basis], "suggested_owner": "Product lead" if r["theme"] == "card_eligibility_upgrade"
              else "Premium cards lead" if basis in ("priority_a", "uhni") else "Escalations lead" if r["high_impact"] else "Credit cards · CX lead"}
             for over, r, basis, age in rows[:15]]
 
@@ -328,7 +328,7 @@ def query_lists(inter, cards_complaints, pub, customers, is_open, responded, pub
     pri.sort(key=lambda r: r["_c"])
     return {
         "ombudsman_cards_week": {
-            "q": "Complaints at risk of reaching the ombudsman in cards this week",
+            "q": "Complaints at risk of reaching the Financial Ombudsman in credit cards this week",
             "count": sum(c["w"] for _, c, _ in risk), "as_of": END.isoformat(), "since": week.isoformat(),
             "list": [{"id": c["id"], "theme": labels.get(c["theme"], c["theme"]), "why": "; ".join(why)} for _, c, why in risk[:25]]},
         "unanswered_negatives_48h": {

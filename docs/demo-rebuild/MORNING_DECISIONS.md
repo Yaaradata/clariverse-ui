@@ -1181,3 +1181,22 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
 - **NW-D68 · Cora back within 7 days (brief Step 5.11).** The Cora module and the Cora Ask answer show the Cora
   conversations resolved in the window with 7 days of follow-up, and how many came back as a call or a complaint within 7
   days (about 10%, internal, illustrative).
+
+### Review round 3 (17 Nov): fixes C and D
+
+- **NW-D69 · Wording (fix C).** "Ombudsman" alone reads "Financial Ombudsman" everywhere on screen: the Ask questions and
+  link, the fourth tile ("Referred to the Financial Ombudsman"), the ladder's climb-risk title, the save-list reason
+  and the credit-card notes. "Under process" reads "being processed"; "attorney" reads "solicitor". The HDFC collection
+  history is deleted (the Reddit collector change, the capped X run, "Google Play replies are collected", "App Store
+  exports carry no reply field", "the exports hold no history before August"). Bare "cards" reads "credit cards"; the
+  card-eligibility theme and issue read "eligibility and card changes" and the module's lead line falls back to the
+  bank's own interactions when there is no public item. The multi-product block on /priority has its own footnote.
+  Lint NW-P2 adds each phrase (everywhere), and a screen-only rule bans "Ombudsman" not preceded by "Financial";
+  "power of attorney" stays allowed. Fixtures for every new rule and for the clean copy.
+- **NW-D70 · Coverage (fix D).** Ask links land on their section (#ombudsman-watch, #cx-pulse). Empty sentences get
+  fallback text when public voice is empty (switching posts, mood by source, missed standards heard, credit-card net
+  sentiment). Gauges with no data read "—" and "not yet loaded", never 0% (store ratings, positive share, asking
+  status). The Ask "on our lists" answer covers all four lists. The /priority Products column keeps room for a comma
+  list at 390px. Footer: the research pack is still not in the repo and the register has no dates, so the footer no
+  longer says "as dated in the research pack"; it reads "Regulatory rules as published by the FCA, the PSR and the
+  Financial Ombudsman Service". Restore the research-pack sentence once the pack is committed and the register dated.

@@ -309,7 +309,10 @@ export function DigitalModule({ b }: { b: Bundle }) {
 /* ================================================================= M2 cards */
 
 const CARD_ISSUES: { label: string; themes: string[]; note?: string }[] = [
-  { label: "Eligibility and upgrades", themes: ["card_eligibility_upgrade"] },
+  {
+    label: "Eligibility and card changes",
+    themes: ["card_eligibility_upgrade"],
+  },
   {
     label: "Application rejection and verification",
     themes: ["card_application"],
@@ -347,7 +350,7 @@ export function CardsModule({ b }: { b: Bundle }) {
     const pn = ci.themes.reduce((s, t) => {
       if (pubIssue[t]) return s + pubIssue[t].negative;
       const th = tm[t];
-      // Not in the product's issue list: estimate from the theme's negative share on its cards items.
+      // Not in the product's issue list: estimate from the theme's negative share on its credit card items.
       return th?.count
         ? s +
             Math.round(
@@ -371,7 +374,12 @@ export function CardsModule({ b }: { b: Bundle }) {
       met: ins[0]?.deliv_met_pct ?? null,
     };
   });
-  const top = [...rows].sort((a, z) => z.pn - a.pn)[0];
+  // The lead issue: by negative public items; with none, by the bank's own interactions (review round 3).
+  const top = [...rows].sort((a, z) => z.pn - a.pn || z.inter - a.inter)[0];
+  const leadLine =
+    top.pn > 0
+      ? `${top.ci.label} leads.`
+      : `Inside the bank, ${top.ci.label.toLowerCase()} leads (${fmt(top.inter)} interactions in the sample).`;
   const ev = ["card_eligibility_upgrade", "card_fees_charges", "rewards_value"]
     .flatMap((t) => (tm[t]?.exemplars ?? []).slice(0, 1))
     .map((id) => b.evidence[id])
@@ -390,7 +398,7 @@ export function CardsModule({ b }: { b: Bundle }) {
           {trend !== null
             ? `, share of voice ${fmtSigned(trend)} in the second half of the window (source-weighted)`
             : ""}
-          . {top.ci.label} leads.
+          . {leadLine}
         </AnswerLine>
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
           <Status value="needs_you" />
@@ -451,10 +459,8 @@ export function CardsModule({ b }: { b: Bundle }) {
           <BaselineCaption>
             Public trend is the source-weighted share of trend-basis items,
             second half vs first half of the window: each source counts by its
-            share of the window, so the capped late-September X run cannot swing
-            it. Reddit (collector changed 1 Sep) and the store exports that
-            start mid-window are left out. Internal weeks are from the demo
-            sample.
+            share of the window, so a burst in one source cannot swing it.
+            Internal weeks are from the demo sample.
           </BaselineCaption>
         </Section>
 
@@ -499,9 +505,9 @@ export function CardsModule({ b }: { b: Bundle }) {
             ])}
           />
           <MutedNote>
-            Public mentions count theme tags on cards items (an item can carry
-            up to three). Inside figures are from the synthetic sample and are
-            illustrative until discovery.
+            Public mentions count theme tags on credit card items (an item can
+            carry up to three). Inside figures are from the synthetic sample and
+            are illustrative until discovery.
           </MutedNote>
         </Section>
 
@@ -521,18 +527,18 @@ export function CardsModule({ b }: { b: Bundle }) {
 
         <Section n={5} title="How high">
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
-            {fmt(pub.escalation)} public cards items name a regulator, court or
-            ombudsman. Inside: {fmt(inn.high_impact)} high-impact card
-            complaints in the sample.
+            {fmt(pub.escalation)} public credit card items name a regulator, a
+            court or the Financial Ombudsman. Inside: {fmt(inn.high_impact)}{" "}
+            high-impact card complaints in the sample.
           </div>
         </Section>
 
         <Section n={6} title="Owner and action">
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
             Owner: <strong>Credit cards</strong>. Set a date on eligibility and
-            upgrade requests and tell customers before anything on their card
-            changes; close cards within the bank's standard (confirm with the
-            bank).
+            card-change requests and tell customers before anything on their
+            card changes; close cards within the bank's standard (confirm with
+            the bank).
           </div>
         </Section>
 

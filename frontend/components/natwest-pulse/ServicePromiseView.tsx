@@ -310,7 +310,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
                 letterSpacing: "0.04em",
               }}
             >
-              Climb risk: themes closest to the ombudsman rung
+              Climb risk: themes closest to the Financial Ombudsman rung
             </div>
             {ladderPublic.climb_themes.slice(0, 5).map((c) => (
               <div
@@ -567,7 +567,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
         <Tile
           id="failures"
           title="Top service failures"
-          sub="Service, payments, loans and cards themes with the most negative public items"
+          sub="Service, payments, loans and credit card themes with the most negative public items"
           prov="public"
           tone="red"
         >

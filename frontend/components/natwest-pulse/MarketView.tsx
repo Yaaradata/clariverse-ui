@@ -713,9 +713,8 @@ export function MarketView({ b }: { b: Bundle }) {
         <BaselineCaption>
           Dashed line: the theme&apos;s average weekly share. Shares, not
           counts, so a source whose collection starts, stops or bursts
-          mid-window cannot draw a spike; Reddit (collector changed 1 Sep) and
-          store exports that start mid-window are left out. No earlier baseline
-          for social sources.
+          mid-window cannot draw a spike. No earlier baseline for social
+          sources.
         </BaselineCaption>
       </Tile>
 

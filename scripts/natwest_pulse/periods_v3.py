@@ -1185,7 +1185,7 @@ def main():
         if item:
             cp["brief"]["needs_you"] = [item, *cp["brief"]["needs_you"]][:3]
         cp["brief"]["rules"] += (
-            " An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline "
+            " A Financial Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline "
             "limit, or more complaints are already eligible than at the previous period end.")
         print(p["id"], "internal", internal["volume"], "external", external["volume"], "lists",
               [(x["id"], x["volume"], x["open"], x["not_responded_48h"]) for x in cp["customer_pulse"]["lists"]],

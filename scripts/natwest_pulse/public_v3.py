@@ -125,8 +125,8 @@ def build_products(rows, basis) -> dict:
         "reconciles": total_rows + sum(excluded.values()) == meta["records"]["bank_on_topic_window"],
         "trend_rule": (
             "Source-weighted share of trend-basis items, second half (22 Sep–11 Nov) vs first half (1 Aug–21 Sep): each "
-            "source's share counts in proportion to its share of the window. Reddit (collector changed 1 Sep) and the "
-            "partial-window store exports are left out. Shown only when both halves have at least 15 items."
+            "source's share counts in proportion to its share of the window. Shown only when both halves have at "
+            "least 15 items."
         ),
         "labels": PRODUCT_LABEL,
     }

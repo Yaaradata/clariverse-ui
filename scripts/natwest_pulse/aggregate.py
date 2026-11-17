@@ -524,7 +524,7 @@ def main():
                 "fix_list": fix,
             }
         )
-    pulse = {"apps": apps, "note": "Ratings are counted in the window (1 August to 11 November). No baseline: the exports hold no history before August."}
+    pulse = {"apps": apps, "note": "Ratings are counted in the window (1 August to 11 November)."}
 
     # ------------------------------------------------------------ mood
     mood = {
@@ -628,7 +628,7 @@ def main():
         "provenance": "public",
         "definition": "A store review is responded when the bank has posted a reply on it; open too long when there is still no reply 48 hours after it was posted. A redirect-only reply sends the customer elsewhere (email, call, DM, branch) rather than answering.",
         "replies_available": True,
-        "scope_note": "Bank replies are counted where the source carries them. App Store exports carry no reply field; bank-authored X posts were not collected.",
+        "scope_note": "Bank replies are counted where the source carries them.",
         "reviews_in_scope": len(ps),
         "all": resp_stats(ps),
         "negative": resp_stats(neg_ps),

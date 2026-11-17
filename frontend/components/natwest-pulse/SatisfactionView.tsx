@@ -263,12 +263,9 @@ export function SatisfactionView({ b }: { b: Bundle }) {
               ])}
             />
             <MutedNote>
-              Mood by source. Unweighted, the last 7 days would read{" "}
-              {fmtSigned(b.mood.unweighted.delta_pts, " pts")} against the
-              window average, because one source&apos;s share jumped;
-              source-weighted, the change is{" "}
-              {fmtSigned(b.mood.delta_pts, " pts")}. Reddit is left out: its
-              collector changed on 1 Sep.
+              {b.mood.by_source.length
+                ? `Mood by source. Unweighted, the last 7 days would read ${fmtSigned(b.mood.unweighted.delta_pts, " pts")} against the window average; source-weighted, the change is ${fmtSigned(b.mood.delta_pts, " pts")}.`
+                : "Mood by source: public data not yet loaded."}
             </MutedNote>
           </div>
         </div>
@@ -489,10 +486,16 @@ export function SatisfactionView({ b }: { b: Bundle }) {
             ])}
           />
           <div style={{ fontSize: 13.5, color: C.textSec }}>
-            In public voice,{" "}
-            <strong>{fmt(b.signals.closure_intent.count)}</strong> posts say the
-            customer will switch, close or has closed an account or card. For
-            example:
+            {b.signals.closure_intent.count ? (
+              <>
+                In public voice,{" "}
+                <strong>{fmt(b.signals.closure_intent.count)}</strong> posts say
+                the customer will switch, close or has closed an account or card
+                {closureEx.length ? ". For example:" : "."}
+              </>
+            ) : (
+              "Public posts about switching or closing: public voice not yet loaded."
+            )}
           </div>
           {closureEx.map((e) => (
             <Link

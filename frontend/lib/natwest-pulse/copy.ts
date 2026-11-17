@@ -102,6 +102,8 @@ export function promiseAnswer(b: Bundle): string {
     kyc: "Identity checks and profile updates",
   };
   const share = b.signals.transparency_gap.share ?? 0;
+  if (!pb.length && !share)
+    return "No public post describes a missed service standard this window (public voice not yet loaded).";
   return `${pb.length} request types missed their service standard in public voice this window; ${RT[top?.request_type] ?? "service requests"} drives the most; ${share.toFixed(
     0,
   )}% of posts are customers asking where something is.`;
@@ -121,11 +123,8 @@ export function moodLine(b: Bundle): string {
 /** Review step 5: the one-line method note under the mood figure, with the unweighted figure it replaces. */
 export function moodNote(b: Bundle): string {
   const m = b.mood;
-  const x = m.by_source.find((s) => s.source === "x");
-  const xLine = x
-    ? ` X is ${Math.round(x.last7_share_pct)}% of the last 7 days (a capped collection run) against ${Math.round(x.weight_pct)}% of the window.`
-    : "";
-  return `Source-weighted: each source counts by its share of the window, so a burst in one source cannot move the figure. Unweighted it would read ${fmtSigned(m.unweighted.delta_pts, " pts")}.${xLine} Reddit is left out: its collector changed on 1 Sep.`;
+  if (!m.by_source.length) return "Public data not yet loaded.";
+  return `Source-weighted: each source counts by its share of the window, so a burst in one source cannot move the figure. Unweighted it would read ${fmtSigned(m.unweighted.delta_pts, " pts")}.`;
 }
 
 /** The same point in one line, for the exec question card (the satisfaction page carries the full note). */

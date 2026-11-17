@@ -1032,20 +1032,24 @@ export function HalfGauge({
   tone,
 }: {
   label: string;
-  value: number;
+  /** null: no data (public voice not loaded, or nothing to measure); the gauge reads "—", never 0%. */
+  value: number | null;
   sub: string;
   tone?: Tone;
 }) {
-  const v = Math.max(0, Math.min(100, value));
+  const empty = value === null;
+  const v = empty ? 0 : Math.max(0, Math.min(100, value));
   const r = 34;
   const circ = Math.PI * r;
-  const color = tone
-    ? TONE[tone]
-    : v >= 60
-      ? C.green
-      : v >= 40
-        ? C.amber
-        : C.red;
+  const color = empty
+    ? C.textMut
+    : tone
+      ? TONE[tone]
+      : v >= 60
+        ? C.green
+        : v >= 40
+          ? C.amber
+          : C.red;
   return (
     <div style={{ textAlign: "center", minWidth: 0 }}>
       <svg
@@ -1053,7 +1057,7 @@ export function HalfGauge({
         height="56"
         viewBox="0 0 84 48"
         role="img"
-        aria-label={`${label} ${Math.round(v)}%`}
+        aria-label={`${label} ${empty ? "no data" : `${Math.round(v)}%`}`}
       >
         <path
           d="M8 44 A34 34 0 0 1 76 44"
@@ -1079,7 +1083,7 @@ export function HalfGauge({
           fill={color}
           fontFamily="JetBrains Mono, monospace"
         >
-          {Math.round(v)}%
+          {empty ? "—" : `${Math.round(v)}%`}
         </text>
       </svg>
       <div style={{ fontSize: 12.5, color: C.textSec, fontWeight: 600 }}>
