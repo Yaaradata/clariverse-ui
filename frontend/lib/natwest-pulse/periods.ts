@@ -55,6 +55,9 @@ export type PublicFigures = {
   neutral: number;
   positive_share: number | null;
   negative_share: number | null;
+  /** NW-D93: set when the product has fewer than 20 review items in the period. */
+  negative_share_note?: string;
+  review_items?: number;
   share_method: "source_weighted";
   change_pct: number | null;
   trend_basis: { current: number; previous: number; sources: string[] };
@@ -237,6 +240,8 @@ export type CardsHappy = {
     negative: number;
     net: number | null;
     weight_pct: number;
+    /** NW-D91: X and Reddit sentiment shown on its own is indicative. */
+    indicative?: boolean;
   }[];
   weekly_net: { end: string; items: number; net: number | null }[];
   saying: (Quote & { id: string; label: string; count: number })[];

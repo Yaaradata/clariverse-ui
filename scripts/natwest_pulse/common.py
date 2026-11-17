@@ -24,9 +24,9 @@ def is_business_day(d) -> bool:
 
 # Rows of the "pulse by product" table (B7 §1 E1.6). Group-company apps stay excluded.
 PRODUCTS = [
+    {"id": "cards", "label": "Credit cards", "owner": "cards", "module": "cards"},  # NW-D95: the worked deep dive leads
     {"id": "current_accounts", "label": "Current accounts and app", "owner": "retail", "module": None},
     {"id": "payments_fraud", "label": "Payments and fraud", "owner": "payments", "module": None},
-    {"id": "cards", "label": "Credit cards", "owner": "cards", "module": "cards"},
     {"id": "savings", "label": "Savings", "owner": "product", "module": None},
     {"id": "mortgages", "label": "Mortgages", "owner": "loans", "module": None},
     {"id": "personal_loans", "label": "Personal loans", "owner": "loans", "module": None},
@@ -256,7 +256,7 @@ CHANNEL_GROUP_LABEL = {
 PULSE_LISTS = ["priority_a", "priority_b", "uhni", "multi"]
 
 # Businesses on the morning brief cards (3 + 3). Insurance is thin in public voice; auto loans thinner still.
-BRIEF_BUSINESSES = ["current_accounts", "payments_fraud", "cards", "savings", "mortgages", "personal_loans"]
+BRIEF_BUSINESSES = ["cards", "current_accounts", "payments_fraud", "savings", "mortgages", "personal_loans"]
 
 # Cards issue categories (C3): each public item and interaction counts once, under its primary theme's category;
 # the themes are the subcategories. Owners are roles in the cards team, never names. "tat" marks categories that

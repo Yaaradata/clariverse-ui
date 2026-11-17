@@ -135,25 +135,6 @@
   "owner": "digital",
   "entity": "natwest_group"
  },
- "appstore:14538272168": {
-  "id": "appstore:14538272168",
-  "source": "appstore",
-  "source_label": "App Store",
-  "place": "App Store review",
-  "created_at": "2026-09-11T00:00:00+00:00",
-  "summary": "Swift transfer",
-  "redacted_text": "Marvel",
-  "title": "Swift transfer",
-  "app_name": "NatWest app",
-  "app_version": "7.70.0",
-  "rating": 5,
-  "themes": [
-   "international_payments"
-  ],
-  "sentiment": "positive",
-  "owner": "retail",
-  "entity": "natwest_group"
- },
  "appstore:14548114802": {
   "id": "appstore:14548114802",
   "source": "appstore",
@@ -268,6 +249,25 @@
   "owner": "cx",
   "entity": "natwest_group"
  },
+ "appstore:14639305838": {
+  "id": "appstore:14639305838",
+  "source": "appstore",
+  "source_label": "App Store",
+  "place": "App Store review",
+  "created_at": "2026-10-07T19:14:59+00:00",
+  "summary": "Mr",
+  "redacted_text": "I have been with the Nat west for over 40 years and now it is impossible to be able to contact you unless you are a computer wis kid we carnt even go in to the bank anymore we’re told to do everything online and if you new how many people in business that have been stitched up you would never do it",
+  "title": "Mr",
+  "app_name": "NatWest app",
+  "app_version": "7.71.0",
+  "rating": 2,
+  "themes": [
+   "unauthorised_txn"
+  ],
+  "sentiment": "negative",
+  "owner": "fraud_cyber",
+  "entity": "natwest_group"
+ },
  "appstore:14648941144": {
   "id": "appstore:14648941144",
   "source": "appstore",
@@ -286,6 +286,44 @@
   "sentiment": "positive",
   "owner": "product",
   "entity": "other_group"
+ },
+ "appstore:14650757583": {
+  "id": "appstore:14650757583",
+  "source": "appstore",
+  "source_label": "App Store",
+  "place": "App Store review",
+  "created_at": "2026-10-10T18:06:02+00:00",
+  "summary": "Terrible when it comes to transferring to another iPad",
+  "redacted_text": "Keeps telling me my details are wrong when trying to move to another iPad, won’t let me use online banking. I know my date of birth and postcode!  Cora was a waste of space.  No other app has given me problems",
+  "title": "Terrible when it comes to transferring to another iPad",
+  "app_name": "NatWest app",
+  "app_version": "7.71.0",
+  "rating": 1,
+  "themes": [
+   "cora_unresolved"
+  ],
+  "sentiment": "negative",
+  "owner": "digital",
+  "entity": "natwest_group"
+ },
+ "appstore:14664901037": {
+  "id": "appstore:14664901037",
+  "source": "appstore",
+  "source_label": "App Store",
+  "place": "App Store review",
+  "created_at": "2026-10-14T09:30:00+00:00",
+  "summary": "Stay away",
+  "redacted_text": "Warning stay away from NatWest \nLocked all my accounts stopping me from buying food  and living like a human \nOnce I get my money out I’m closing my accounts down",
+  "title": "Stay away",
+  "app_name": "NatWest app",
+  "app_version": "7.71.0",
+  "rating": 1,
+  "themes": [
+   "closure_requests"
+  ],
+  "sentiment": "negative",
+  "owner": "operations",
+  "entity": "natwest_group"
  },
  "appstore:14671382836": {
   "id": "appstore:14671382836",
@@ -324,26 +362,6 @@
   ],
   "sentiment": "negative",
   "owner": "cx",
-  "entity": "natwest_group"
- },
- "appstore:14689262706": {
-  "id": "appstore:14689262706",
-  "source": "appstore",
-  "source_label": "App Store",
-  "place": "App Store review",
-  "created_at": "2026-10-20T13:04:33+00:00",
-  "summary": "Cora assistant",
-  "redacted_text": "The ai companion is utterly useless and when I request to speak to a person over instant messages it’s an hour delay per response. This app has to be flawless to justify branch closures and it is barely functional.",
-  "title": "Cora assistant",
-  "app_name": "NatWest app",
-  "app_version": "7.71.0",
-  "rating": 1,
-  "themes": [
-   "closure_requests",
-   "branch_service"
-  ],
-  "sentiment": "negative",
-  "owner": "operations",
   "entity": "natwest_group"
  },
  "appstore:14698507943": {
@@ -512,21 +530,21 @@
   "app_version": "7.56.0",
   "rating": 1,
   "themes": [
-   "general_dissatisfaction"
+   "app_usability"
   ],
   "sentiment": "negative",
-  "owner": "cx",
+  "owner": "digital",
   "entity": "natwest_group"
  },
- "appstore:14780675875": {
-  "id": "appstore:14780675875",
+ "appstore:14780597820": {
+  "id": "appstore:14780597820",
   "source": "appstore",
   "source_label": "App Store",
   "place": "App Store review",
   "created_at": "2026-11-12T00:00:00+00:00",
-  "summary": "Dave",
-  "redacted_text": "Since the update I can no longer do banking on my phone. Thanks",
-  "title": "Dave",
+  "summary": "Short sighted update",
+  "redacted_text": "my phone cannot support ios16. i have now lost access to my online banking. I cannot afford a new phone.",
+  "title": "short sighted update",
   "app_name": "NatWest app",
   "app_version": "7.56.0",
   "rating": 1,
@@ -535,6 +553,25 @@
   ],
   "sentiment": "negative",
   "owner": "digital",
+  "entity": "natwest_group"
+ },
+ "appstore:14781396387": {
+  "id": "appstore:14781396387",
+  "source": "appstore",
+  "source_label": "App Store",
+  "place": "App Store review",
+  "created_at": "2026-11-12T00:00:00+00:00",
+  "summary": "Top notch.",
+  "redacted_text": "I have enjoyed using NatWest Bank for over 16 years. The app works really well and I rarely have issues. Great job @ NatWest Tech Team!",
+  "title": "Top notch!",
+  "app_name": "NatWest app",
+  "app_version": "7.72.0",
+  "rating": 5,
+  "themes": [
+   "service_praise"
+  ],
+  "sentiment": "positive",
+  "owner": "cx",
   "entity": "natwest_group"
  },
  "appstore:14781511595": {
@@ -548,25 +585,6 @@
   "title": "Why are you not supporting older versions of IOS?",
   "app_name": "NatWest app",
   "app_version": "7.72.0",
-  "rating": 1,
-  "themes": [
-   "card_eligibility_upgrade"
-  ],
-  "sentiment": "negative",
-  "owner": "cards",
-  "entity": "natwest_group"
- },
- "appstore:14782039406": {
-  "id": "appstore:14782039406",
-  "source": "appstore",
-  "source_label": "App Store",
-  "place": "App Store review",
-  "created_at": "2026-11-12T00:00:00+00:00",
-  "summary": "Disappointing",
-  "redacted_text": "Another company and app update that is disadvantaging older users and/or those unable to upgrade to a device which supports the newer iOS.",
-  "title": "Disappointing",
-  "app_name": "NatWest app",
-  "app_version": "7.56.0",
   "rating": 1,
   "themes": [
    "card_eligibility_upgrade"
@@ -590,6 +608,44 @@
   "themes": [
    "new_app_release",
    "care_unreachable"
+  ],
+  "sentiment": "negative",
+  "owner": "digital",
+  "entity": "natwest_group"
+ },
+ "appstore:14783509521": {
+  "id": "appstore:14783509521",
+  "source": "appstore",
+  "source_label": "App Store",
+  "place": "App Store review",
+  "created_at": "2026-11-13T00:00:00+00:00",
+  "summary": "Not ideal",
+  "redacted_text": "We don’t all have the most modern phone that supports this and I now have no access to my account??",
+  "title": "Not ideal",
+  "app_name": "NatWest app",
+  "app_version": "7.56.0",
+  "rating": 1,
+  "themes": [
+   "app_usability"
+  ],
+  "sentiment": "negative",
+  "owner": "digital",
+  "entity": "natwest_group"
+ },
+ "appstore:14783631666": {
+  "id": "appstore:14783631666",
+  "source": "appstore",
+  "source_label": "App Store",
+  "place": "App Store review",
+  "created_at": "2026-11-13T00:00:00+00:00",
+  "summary": "IOS VERSION is now blocked.",
+  "redacted_text": "I can no longer use it as my IOS VERSION is now blocked. So I need to spend money on a new phone to continue using the banking app. What a joke",
+  "title": "IOS VERSION is now blocked.",
+  "app_name": "NatWest app",
+  "app_version": "7.56.0",
+  "rating": 1,
+  "themes": [
+   "app_usability"
   ],
   "sentiment": "negative",
   "owner": "digital",
@@ -691,6 +747,25 @@
   "owner": "cards",
   "entity": "natwest_group"
  },
+ "playstore:17db04c9-60dc-4298-a6ac-09f22eff9a86": {
+  "id": "playstore:17db04c9-60dc-4298-a6ac-09f22eff9a86",
+  "source": "playstore",
+  "source_label": "Google Play",
+  "place": "Google Play review",
+  "created_at": "2026-10-29T11:50:48+00:00",
+  "summary": "The latest update moved everything and is no longer intuitive.",
+  "redacted_text": "the latest update moved everything and is no longer intuitive. also regularly down \"for maintenance\". they really need to learn the phrase, if it isn't broke don't fix it and it just gets worse - constant notifications that the app isn't responding when it's very clearly working. I'd call it a joke but jokes are funny, this is infuriating",
+  "title": null,
+  "app_name": "NatWest app",
+  "app_version": "07.71.0000.42882.0",
+  "rating": 1,
+  "themes": [
+   "new_app_release"
+  ],
+  "sentiment": "negative",
+  "owner": "digital",
+  "entity": "natwest_group"
+ },
  "playstore:1dbe6f6a-676b-47b9-a2c8-d4504d61a1ea": {
   "id": "playstore:1dbe6f6a-676b-47b9-a2c8-d4504d61a1ea",
   "source": "playstore",
@@ -726,6 +801,25 @@
    "app_speed_crash",
    "account_freeze",
    "care_unreachable"
+  ],
+  "sentiment": "negative",
+  "owner": "digital",
+  "entity": "natwest_group"
+ },
+ "playstore:21d63d47-74d1-4b75-8678-680f9c36f14c": {
+  "id": "playstore:21d63d47-74d1-4b75-8678-680f9c36f14c",
+  "source": "playstore",
+  "source_label": "Google Play",
+  "place": "Google Play review",
+  "created_at": "2026-10-09T13:45:38+00:00",
+  "summary": "Nightmare if you lose your phone.",
+  "redacted_text": "nightmare if you lose your phone. all channels lead to either one time passkey or facial recognition. have spent over a week trying to get replacement phone through natwest insurance and meanwhile cant access my bank or card accounts, pay bills etc etc. helpdesk nearly as useless as Cora. finally got through to desk and was told it would take 2 to 3 days to change security protocols.",
+  "title": null,
+  "app_name": "NatWest app",
+  "app_version": "07.70.0000.39862.0",
+  "rating": 1,
+  "themes": [
+   "cora_unresolved"
   ],
   "sentiment": "negative",
   "owner": "digital",
@@ -782,10 +876,10 @@
   "app_version": "07.69.0000.36742.0",
   "rating": 2,
   "themes": [
-   "general_dissatisfaction"
+   "app_usability"
   ],
   "sentiment": "negative",
-  "owner": "cx",
+  "owner": "digital",
   "entity": "natwest_group"
  },
  "playstore:38c31d05-256c-44de-b9d4-0bad9bbcebdd": {
@@ -823,25 +917,6 @@
   "rating": 1,
   "themes": [
    "new_app_release"
-  ],
-  "sentiment": "negative",
-  "owner": "digital",
-  "entity": "natwest_group"
- },
- "playstore:3d050dab-d087-4eff-95d1-5df44b355034": {
-  "id": "playstore:3d050dab-d087-4eff-95d1-5df44b355034",
-  "source": "playstore",
-  "source_label": "Google Play",
-  "place": "Google Play review",
-  "created_at": "2026-09-02T11:35:58+00:00",
-  "summary": "It took me a whole hour to set the mobile app up.",
-  "redacted_text": "it took me a whole hour to set the mobile app up. on my new phone, wouldn't recognise my customer, I had to re-register. then didn't get the verification code by SMS, re-requested it, account got locked. it shouldn't be this hard, surely. tried to call and rep 'couldnt hear' me. shocking!",
-  "title": null,
-  "app_name": "NatWest app",
-  "app_version": "07.69.0000.36742.0",
-  "rating": 1,
-  "themes": [
-   "app_login_biometrics"
   ],
   "sentiment": "negative",
   "owner": "digital",
@@ -1022,23 +1097,23 @@
   "owner": "digital",
   "entity": "natwest_group"
  },
- "playstore:7423ae35-48bc-49e2-b5f4-e0d0c87da138": {
-  "id": "playstore:7423ae35-48bc-49e2-b5f4-e0d0c87da138",
+ "playstore:758d0c38-cbfd-4c7f-9c29-7843c4dccab4": {
+  "id": "playstore:758d0c38-cbfd-4c7f-9c29-7843c4dccab4",
   "source": "playstore",
   "source_label": "Google Play",
   "place": "Google Play review",
-  "created_at": "2026-10-16T20:12:46+00:00",
-  "summary": "How do I delete a lot of Notifications collecting on my Android phone ????",
-  "redacted_text": "how do I delete a lot of Notifications collecting on my Android phone ???? I have notifications waiting as far back as 2022.",
+  "created_at": "2026-08-25T07:38:18+00:00",
+  "summary": "Great app, would be even better if all outgoing payments send notification, I mean even the direct debits and standing…",
+  "redacted_text": "Great app, would be even better if all outgoing payments send notification, I mean even the direct debits and standing orders. Also, allowing to sing in to 2 different accounts , like kids current account. Other then that its great app",
   "title": null,
   "app_name": "NatWest app",
-  "app_version": "07.72.0000.46402.0",
-  "rating": 3,
+  "app_version": "07.69.0000.36742.0",
+  "rating": 5,
   "themes": [
-   "product_advice"
+   "app_praise"
   ],
-  "sentiment": "neutral",
-  "owner": "product",
+  "sentiment": "positive",
+  "owner": "digital",
   "entity": "natwest_group"
  },
  "playstore:760e1b36-b1a6-4ee0-bcd3-be0377479a41": {
@@ -1054,10 +1129,10 @@
   "app_version": "07.69.0000.36742.0",
   "rating": 1,
   "themes": [
-   "general_dissatisfaction"
+   "cora_unresolved"
   ],
   "sentiment": "negative",
-  "owner": "cx",
+  "owner": "digital",
   "entity": "natwest_group"
  },
  "playstore:7a3a89f6-361c-4220-9353-fabfe84da58e": {
@@ -1119,6 +1194,25 @@
   "owner": "digital",
   "entity": "natwest_group"
  },
+ "playstore:881626b7-f8d7-4cf0-8834-2a327aec096d": {
+  "id": "playstore:881626b7-f8d7-4cf0-8834-2a327aec096d",
+  "source": "playstore",
+  "source_label": "Google Play",
+  "place": "Google Play review",
+  "created_at": "2026-09-11T12:40:42+00:00",
+  "summary": "Tons of features but gets the basics wrong.",
+  "redacted_text": "Tons of features but gets the basics wrong. NatWest doesn't use the phone's built-in biometrics for fingerprints and face scans. They use their own third-party face scan service which is a huge privacy risk. Transfers are limited to £750 a day without it. No other bank does this. It doesn't even let you customise account names without it!",
+  "title": null,
+  "app_name": "NatWest app",
+  "app_version": "07.69.0000.36742.0",
+  "rating": 2,
+  "themes": [
+   "app_login_biometrics"
+  ],
+  "sentiment": "negative",
+  "owner": "digital",
+  "entity": "natwest_group"
+ },
  "playstore:90d6cbd4-c955-4ad6-b9dd-22ea3f93a2f2": {
   "id": "playstore:90d6cbd4-c955-4ad6-b9dd-22ea3f93a2f2",
   "source": "playstore",
@@ -1137,6 +1231,25 @@
   ],
   "sentiment": "negative",
   "owner": "digital",
+  "entity": "natwest_group"
+ },
+ "playstore:91090f78-1b4d-4fc5-94b9-a345b784952f": {
+  "id": "playstore:91090f78-1b4d-4fc5-94b9-a345b784952f",
+  "source": "playstore",
+  "source_label": "Google Play",
+  "place": "Google Play review",
+  "created_at": "2026-08-12T14:24:17+00:00",
+  "summary": "Fast and easy with fingerprint access.",
+  "redacted_text": "Fast and easy with fingerprint access. Updated to 5 stars. (Much better than Bankline - avoid). Used for cheque deposit. So much better than a long journey to a branch, most closed. update Aug26 - the add account flow in the app is now broken and does not work.",
+  "title": null,
+  "app_name": "NatWest app",
+  "app_version": "07.69.0000.36742.0",
+  "rating": 5,
+  "themes": [
+   "service_praise"
+  ],
+  "sentiment": "positive",
+  "owner": "cx",
   "entity": "natwest_group"
  },
  "playstore:938b3819-953f-4a7d-83ed-80c173eac2a4": {
@@ -1171,10 +1284,10 @@
   "app_version": "07.68.0000.33733.0",
   "rating": 1,
   "themes": [
-   "general_dissatisfaction"
+   "app_usability"
   ],
   "sentiment": "negative",
-  "owner": "cx",
+  "owner": "digital",
   "entity": "natwest_group"
  },
  "playstore:a52f8194-4983-42d6-a60c-03041a58999e": {
@@ -1267,10 +1380,10 @@
   "app_version": "07.69.0000.36742.0",
   "rating": 4,
   "themes": [
-   "app_praise"
+   "service_praise"
   ],
   "sentiment": "positive",
-  "owner": "digital",
+  "owner": "cx",
   "entity": "natwest_group"
  },
  "playstore:c3ef4732-d096-446a-83d3-3a7347426f5e": {
@@ -1286,26 +1399,7 @@
   "app_version": "07.69.0000.36742.0",
   "rating": 1,
   "themes": [
-   "general_dissatisfaction"
-  ],
-  "sentiment": "negative",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
- "playstore:c4b3222c-ba38-435b-af18-e827ef7d202c": {
-  "id": "playstore:c4b3222c-ba38-435b-af18-e827ef7d202c",
-  "source": "playstore",
-  "source_label": "Google Play",
-  "place": "Google Play review",
-  "created_at": "2026-10-24T21:39:13+00:00",
-  "summary": "The latest update has made it a factor of 3-4 slower than the previous version for no - so far…",
-  "redacted_text": "The latest update has made it a factor of 3-4 slower than the previous version for no - so far as I can discover - additional functionality. Now nearly 500MB in size - by far the largest app on my tablet - for no additional functionality. Why?",
-  "title": null,
-  "app_name": "NatWest app",
-  "app_version": "07.71.0000.42882.0",
-  "rating": 1,
-  "themes": [
-   "new_app_release"
+   "app_usability"
   ],
   "sentiment": "negative",
   "owner": "digital",
@@ -1428,25 +1522,6 @@
   "owner": "product",
   "entity": "other_group"
  },
- "playstore:f40efcc4-effc-44f3-b695-13a5febd1857": {
-  "id": "playstore:f40efcc4-effc-44f3-b695-13a5febd1857",
-  "source": "playstore",
-  "source_label": "Google Play",
-  "place": "Google Play review",
-  "created_at": "2026-08-06T11:50:23+00:00",
-  "summary": "It's a good app and easy to use.",
-  "redacted_text": "It's a good app and easy to use. For most days to day banking it's great. Really frustratingly you can't approve a payment that you're making on your phone. If an online transaction asks you to approve payment in your banking app and you're online on your phone all is lost.... that last available item 1/4 normal price in the sale isn't going to be yours cos you're going to have to find another device to use and start from scratch so you can use your phone to approve the payment 😞",
-  "title": null,
-  "app_name": "NatWest app",
-  "app_version": "07.68.0000.33733.0",
-  "rating": 3,
-  "themes": [
-   "other"
-  ],
-  "sentiment": "neutral",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
  "playstore:f85587e5-1d4c-4c79-9e99-1e9df89a6626": {
   "id": "playstore:f85587e5-1d4c-4c79-9e99-1e9df89a6626",
   "source": "playstore",
@@ -1465,6 +1540,25 @@
   "sentiment": "positive",
   "owner": "product",
   "entity": "other_group"
+ },
+ "reddit:1vic9mt": {
+  "id": "reddit:1vic9mt",
+  "source": "reddit",
+  "source_label": "Reddit",
+  "place": "Reddit · r/UKPersonalFinance",
+  "created_at": "2026-08-07T20:44:49+00:00",
+  "summary": "Has anyone used the kids GoHenry or Natwest Rooster Money?",
+  "redacted_text": "I am hoping to teach my children money skills early. I want them to be able to see where money comes from, how interest works, how money is spent, etc. \n\nGoHenry has kid friendly money lessons and the 'chores' feature so I can set Do Homework for 50p and once they have done it they can mark it off and get the money in their account. \n\nNatWest Rooster has similar capabilities. \n\nHas anyone used these types of accounts for their kids? Is there something better?",
+  "title": "Has anyone used the kids GoHenry or Natwest Rooster Money?",
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "product_advice"
+  ],
+  "sentiment": "neutral",
+  "owner": "product",
+  "entity": "natwest_group"
  },
  "reddit:1vlt0ei": {
   "id": "reddit:1vlt0ei",
@@ -1505,27 +1599,6 @@
   "owner": "cards",
   "entity": "natwest_group"
  },
- "reddit:1w7460l": {
-  "id": "reddit:1w7460l",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-09-04T13:17:37+00:00",
-  "summary": "Refused second charge mortgage for equity release",
-  "redacted_text": "Hi all.  First time posting here so please be gentle.  I have got myself into a bit of a situation which I naively/arrogantly thought would be an easy fix.  UK single/divorced male 53 years old.  Earning 36K pa gross computer/sales based.\n\nI applied for a second charge/second mortgage with my current lender to free up £30,000 for debt consolidation.  I did not even get an agreement in principle or an offer despite preliminary website thinking I would easily be good for £30,000 over 11 years at 5 year fixed at 4.66% (which would have been an extra £290 per month cost).\n\nMy property is worth around £230,000 (although when I applied for the second mortgage the automatic value was £212,000).  I…",
-  "title": "Refused second charge mortgage for equity release",
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "app_login_biometrics",
-   "app_speed_crash",
-   "fees_charges_bank"
-  ],
-  "sentiment": "negative",
-  "owner": "digital",
-  "entity": "natwest_group"
- },
  "reddit:1wabaqv": {
   "id": "reddit:1wabaqv",
   "source": "reddit",
@@ -1545,22 +1618,20 @@
   "owner": "loans",
   "entity": "natwest_group"
  },
- "reddit:1waw01d": {
-  "id": "reddit:1waw01d",
+ "reddit:1wdb1ip": {
+  "id": "reddit:1wdb1ip",
   "source": "reddit",
   "source_label": "Reddit",
   "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-09-08T18:04:25+00:00",
-  "summary": "[Success Story] How I beat the private parking mafia (Horizon) and aggressive debt collectors (DCBL), got my £125 back, and…",
-  "redacted_text": "I’m sharing this because it might save some of you a lot of time, money, and severe anxiety. If you are ever harassed by private parking companies or their debt collectors over an ancient, absurd charge, please read this.\n\n​The Setup\n\nThis all started over a supposedly invalid parking event from 3.5 years ago with Horizon Parking. They issued the original Notice to Keeper (NTK) 19 days after the event. By doing this, they completely completely missed the strict 14-day legal limit required by Schedule 4 of the Protection of Freedoms Act 2012 (PoFA). Furthermore, they sent it to an old address because they couldn't be bothered to do a secondary DVLA trace after I moved. Naturally, I never…",
-  "title": "[Success Story] How I beat the private parking mafia (Horizon) and aggressive debt collectors (DCBL), got my £125 back, and forced them to surrender.",
+  "created_at": "2026-09-11T09:13:11+00:00",
+  "summary": "Recently moved to Barclaycard from Amex, can I see payment notifications?",
+  "redacted_text": "One thing I liked about AMEX was being able to see instant payment notifications, I have this turned on for my NatWest CC too. I was just setting up my Barclaycard CC and I realised that I can't find anywhere to turn the same setting on. Is this possible, or is it a limitation of the app?",
+  "title": "Recently moved to Barclaycard from Amex, can I see payment notifications?",
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "app_login_biometrics",
-   "dispute_chargeback",
-   "recovery_conduct"
+   "app_usability"
   ],
   "sentiment": "negative",
   "owner": "digital",
@@ -1604,23 +1675,25 @@
   "owner": "digital",
   "entity": "natwest_group"
  },
- "reddit:1wma0d5": {
-  "id": "reddit:1wma0d5",
+ "reddit:1wiomts": {
+  "id": "reddit:1wiomts",
   "source": "reddit",
   "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-09-21T11:23:14+00:00",
-  "summary": "Want to spend smartly on my Amex",
-  "redacted_text": "Hi everyone,\n\nI recently got a gold Amex and want to use it smartly to build credit and avoid debt. Any suggestions welcome!\n\nMy monthly take home pay is £3500. I live with parents \n\n£1000 into easy access savings   \n£150 into random, low interest NatWest pot  \n£200 for holiday fund   \n£200 into direct debits account\n\nWhat are best practices when using an Amex? Is there a way to set myself a certain limit (around 500£) and auto transfer from my debit to credit monthly to avoid overspending?\n\nThank you!",
-  "title": "Want to spend smartly on my Amex",
+  "place": "Reddit · r/Natwest",
+  "created_at": "2026-09-17T08:57:53+00:00",
+  "summary": "Getting this error when trying to apply for a credit card - been running around the ringer with Natwest.",
+  "redacted_text": "Did a eligibility check for a credit card and keep getting this error: \n\n[link]\n\nIf I go through MSM or Clearscore - they give me a preapproved limit but as soon as I go and confirm details - it comes up with the above. \n\n  \nSpoke to Natwest multiple times and they say they can only see a soft search that was done on the 12th which is untrue since I've been pre approved on the other sites multiple times since then. They can't see any markers on anything (as I'm a new customer) but getting frustrated now? Saw a thread here with the same issue and they managed to get resolved - does anyone have any numbers or contacts that can help me with this? Thanks",
+  "title": "Getting this error when trying to apply for a credit card - been running around the ringer with Natwest.",
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "product_advice"
+   "app_speed_crash",
+   "card_eligibility_upgrade",
+   "card_application"
   ],
-  "sentiment": "positive",
-  "owner": "product",
+  "sentiment": "negative",
+  "owner": "digital",
   "entity": "natwest_group"
  },
  "reddit:1wsahhq": {
@@ -1644,6 +1717,64 @@
   "owner": "compliance",
   "entity": "natwest_group"
  },
+ "reddit:1wti2rg": {
+  "id": "reddit:1wti2rg",
+  "source": "reddit",
+  "source_label": "Reddit",
+  "place": "Reddit · r/Natwest",
+  "created_at": "2026-09-29T18:30:12+00:00",
+  "summary": "Pre approved, yet email said they’ll let me know",
+  "redacted_text": "Applied for a NatWest card and the in-app screen said approved (chose my credit limit etc). But the email I got says: \"We've got your application... we're on it. If successful, we'll text you within 2 working days.\" Usually with NatWest I've had an immediate \"your card's on the way\" email straight after approval — this time it's saying I still might need to wait for a text. Anyone know if this wording is normal, or does it mean it's not actually confirmed yet despite the approval screen?",
+  "title": "Pre approved, yet email said they’ll let me know",
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "card_limit"
+  ],
+  "sentiment": "neutral",
+  "owner": "cards",
+  "entity": "natwest_group"
+ },
+ "reddit:1wtyamg": {
+  "id": "reddit:1wtyamg",
+  "source": "reddit",
+  "source_label": "Reddit",
+  "place": "Reddit · r/UKPersonalFinance",
+  "created_at": "2026-09-30T07:09:37+00:00",
+  "summary": "NatWest offering 80% partial settlement on two credit cards – should I get it in writing first?",
+  "redacted_text": "Hi everyone,\n\nNatWest have contacted me about two credit card debts and have offered me a in full partial settlement where I'd pay around 20% of the total outstanding balance on each card, with the rest apparently being written off.\n\nI'm currently about 2 years into the 6 years since the defaults were registered, so I'm also wondering if accepting the settlement would have any effect on how the accounts are reported on my credit file or when the defaults come off.\n\nI'm interested in accepting the offer, but I don't want to make any payment until I have the agreement in writing/email confirming exactly what the settlement means.\n\nAt the moment it's been discussed with me, but I haven't…",
+  "title": "NatWest offering 80% partial settlement on two credit cards – should I get it in writing first?",
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "app_login_biometrics",
+   "merchant_pos"
+  ],
+  "sentiment": "negative",
+  "owner": "digital",
+  "entity": "natwest_group"
+ },
+ "reddit:1wuax4w": {
+  "id": "reddit:1wuax4w",
+  "source": "reddit",
+  "source_label": "Reddit",
+  "place": "Reddit · r/Natwest",
+  "created_at": "2026-09-30T17:21:02+00:00",
+  "summary": "PayIt option disappeared from Natwest CC",
+  "redacted_text": "Sometime in the last 2-4 weeks the PayIt option has disappeared from my credit card in the Android app. The only payment options I get are from my Natwest current account (which belongs to my mum) and set up a direct debit.\n\nI downloaded the PDF bill to find the Faster Payment details, but couldn't see any there either. \n\nIn the end I had to move money into my mum's account to pay it which was annoying.\n\nHas this happened to anyone else? I think it's linked to the change from Mastercard to Visa. It's annoying as PayIt was really useful.",
+  "title": "PayIt option disappeared from Natwest CC",
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "app_usability"
+  ],
+  "sentiment": "negative",
+  "owner": "digital",
+  "entity": "natwest_group"
+ },
  "reddit:1wv27zq": {
   "id": "reddit:1wv27zq",
   "source": "reddit",
@@ -1662,67 +1793,6 @@
   ],
   "sentiment": "negative",
   "owner": "compliance",
-  "entity": "natwest_group"
- },
- "reddit:1wv3eo7": {
-  "id": "reddit:1wv3eo7",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/beermoneyuk",
-  "created_at": "2026-10-01T16:04:35+00:00",
-  "summary": "The Big List of Offers Shared on BeermoneyUK - October 2026 (The Beermoney MegaList)",
-  "redacted_text": "It's been a while, and I changed my name to something that doesn't get filtered out by Reddit! But this is the October 2026 index of sign-up offers that Redditors share on [beermoneyuk]([link] \"Beermoney on Reddit!\"), plus links to the subreddit's guides. Offers are grouped by type, and most links go to a search of user posts on the subreddit that describe that particular offer.\n\nIn short, this is an index of user posts that describe each offer. BeermoneyUK rules mean that all posts should include all key information, but always make sure to read the full terms and conditions. \n\n\n\n# **Announcements**\n\n* I have a new name\n\n---\n\n# **Current MegaThread Offer**\n\nTrading 212 posts are kept to…",
-  "title": "The Big List of Offers Shared on BeermoneyUK - October 2026 (The Beermoney MegaList)",
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "card_eligibility_upgrade",
-   "reward_redemption",
-   "rewards_value"
-  ],
-  "sentiment": "negative",
-  "owner": "cards",
-  "entity": "natwest_group"
- },
- "reddit:1wv3s26": {
-  "id": "reddit:1wv3s26",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/beermoneyuk",
-  "created_at": "2026-10-01T16:18:24+00:00",
-  "summary": "The Big List of Offers Shared on BeermoneyUK - October 2026 (The Beermoney MegaList)",
-  "redacted_text": "This is the latest round up of sign-up offers that Redditors share on [beermoneyuk]([link] \"Beermoney on Reddit!\"), plus links to the subreddit's guides. Offers are grouped by type, and most links go to a search of user posts on the subreddit that describe that particular offer.\n\nIn short, this is an index of user posts that describe each offer. BeermoneyUK rules mean that all posts should include all key information, but always make sure to read the full terms and conditions. \n\n\n\n# **Announcements**\n\n* None at the moment!\n\n---\n\n# **Current MegaThread Offer**\n\nTrading 212 posts are kept to one recurring megathread.\n\n* **Trading 212**\n   * The offer: get a share worth up to £100 when you…",
-  "title": "The Big List of Offers Shared on BeermoneyUK - October 2026 (The Beermoney MegaList)",
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "card_eligibility_upgrade",
-   "reward_redemption",
-   "rewards_value"
-  ],
-  "sentiment": "negative",
-  "owner": "cards",
-  "entity": "natwest_group"
- },
- "reddit:1wxejyg": {
-  "id": "reddit:1wxejyg",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/Natwest",
-  "created_at": "2026-10-04T12:30:26+00:00",
-  "summary": "App not loading",
-  "redacted_text": "Anyone else's natwest app not loading, wont even load past when u first open the app where u put the pin/thimb print thing",
-  "title": "App not loading",
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "app_speed_crash"
-  ],
-  "sentiment": "negative",
-  "owner": "digital",
   "entity": "natwest_group"
  },
  "reddit:1wy5plk": {
@@ -1746,46 +1816,44 @@
   "owner": "operations",
   "entity": "natwest_group"
  },
- "reddit:1wzdbss": {
-  "id": "reddit:1wzdbss",
+ "reddit:1x1iuxc": {
+  "id": "reddit:1x1iuxc",
   "source": "reddit",
   "source_label": "Reddit",
-  "place": "Reddit · r/LegalAdviceUK",
-  "created_at": "2026-10-06T20:27:28+00:00",
-  "summary": "England - Bought an item from Amazon for £200, it never arrived.",
-  "redacted_text": "Basically the subject; I bought a £200 item from Amazon a week ago, and it never arrived. I've just been speaking to a CSR via Amazon's online chat, and she was very insistent that I had no right to a refund unless I gave Amazon my ID - even if I did have photo ID, which I honestly don't, I don't see how that will \"prevent fraud\", which the CSR claimed was the purpose, when Amazon obviously has no idea what I look like! I put that to the CSR and she terminated the call. \n\nThat notwithstanding, even if I did have ID, I wouldn’t feel comfortable giving it to a massive company such as Amazon because I've no idea what else they'd do with it - I wouldn’t want to find that they're using my…",
-  "title": "England - Bought an item from Amazon for £200, it never arrived. Now Amazon's refusing to give me a refund unless I upload photo ID (which I don't have) - is this a breach of my right to a refund under the Consumer Rights Act 2015?",
+  "place": "Reddit · r/UKPersonalFinance",
+  "created_at": "2026-10-09T11:26:56+00:00",
+  "summary": "Has the Ombusdman's decision to uphold Natwest's refusal to reimburse money transferred under threat of assault changed how you manage…",
+  "redacted_text": "It feels like a worrying precedent that banks can refuse to reimburse someone who has been forced to make a payment under threat of assault:\n\n[link]\n\nIt seems that Mr H's only option for recovering the money now is for the perpetrator to be caught and made to pay (assuming he has the means). Lots of 'ifs' and altogether not a very hopeful situation.\n\nI get that from the point of view of a bank, they don't want to open the door to people falsely claiming they were forced to make a transfer under duress, but from the perspective of a customer, I find it worrying. I'd previously (very naively) assumed that if you were to a report a transfer as a crime and had a crime reference number and…",
+  "title": "Has the Ombusdman's decision to uphold Natwest's refusal to reimburse money transferred under threat of assault changed how you manage your savings?",
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "refund_delay",
-   "dispute_chargeback",
-   "fraud_scam"
+   "app_login_biometrics",
+   "recovery_conduct",
+   "complaint_handling"
   ],
   "sentiment": "negative",
-  "owner": "operations",
+  "owner": "digital",
   "entity": "natwest_group"
  },
- "reddit:1x21ykr": {
-  "id": "reddit:1x21ykr",
+ "reddit:1x1kt75": {
+  "id": "reddit:1x1kt75",
   "source": "reddit",
   "source_label": "Reddit",
-  "place": "Reddit · r/LegalAdviceUK",
-  "created_at": "2026-10-10T00:51:40+00:00",
-  "summary": "Official complaint to Lloyds regarding ATM dispute",
-  "redacted_text": "So a few days ago me and my partner travelled via bus to a local city about 30miles away. We went to take the last of our cash out at a post office ATM and it's didn't dispense the cash but it was deducted from my balance. It was £100 and the very last of our money balance after was £4. Panicked I isn't opened my app and disputed the transaction. It gives you options to press and opens an ATM dispute via the chat bot. It displays the claim as stages, stage 2 says that Lloyds will refund the money the next working day and give the company 30 days to pay them. So seeing that I called my son and begged to borrow £100 until the refund landed tomorrow. He sent it. Then next day I woke up no…",
-  "title": "Official complaint to Lloyds regarding ATM dispute",
+  "place": "Reddit · r/UKPersonalFinance",
+  "created_at": "2026-10-09T13:03:27+00:00",
+  "summary": "Dedicated bills account that rewards you for paying all bills from?",
+  "redacted_text": "I currently use a NatWest account just for all my household bills and Direct Debits. I transfer money into it each month, and all my bills come out of that account.  \nI was wondering if there are any bank accounts that offer benefits for using them this way, such as cashback, interest on the balance, or rewards for paying Direct Debits.\n\nIs there a dedicated bills account, and if so, which bank do you use\n\nAre there any accounts worth switching to that would make having a bills account more rewarding\n\nWould be interested to hear what everyone is using!",
+  "title": "Dedicated bills account that rewards you for paying all bills from?",
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "failed_txn_reversal",
-   "refund_delay",
-   "dispute_chargeback"
+   "product_advice"
   ],
-  "sentiment": "negative",
-  "owner": "payments",
+  "sentiment": "neutral",
+  "owner": "product",
   "entity": "natwest_group"
  },
  "reddit:1x51a22": {
@@ -1805,27 +1873,6 @@
   ],
   "sentiment": "negative",
   "owner": "cards",
-  "entity": "natwest_group"
- },
- "reddit:1x6otj1": {
-  "id": "reddit:1x6otj1",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/LegalAdviceUK",
-  "created_at": "2026-10-15T15:31:30+00:00",
-  "summary": "Smart Parking fine after using a QR code displayed in car park to pay for parking",
-  "redacted_text": "Hey everyone, I have a query on whether or not I have grounds to appeal a parking fine from Smart Parking.\n\nAt Tower Road Car Park in Newquay (England), I scanned a QR code on the parking meter signage which was covering the car park’s location code. I followed the website’s instructions and paid £7 for four hours. My girlfriend was with me and can provide a witness statement if needed.\n\nI stayed for 191 minutes but received a parking charge saying no valid payment was recorded against my registration. My bank transaction shows £7 paid to “Private Parking”. NatWest couldn’t provide any further merchant information, so I suspect the QR code was fraudulent, although that hasn’t been…",
-  "title": "Smart Parking fine after using a QR code displayed in car park to pay for parking",
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "app_login_biometrics",
-   "fraud_scam",
-   "mis_selling"
-  ],
-  "sentiment": "negative",
-  "owner": "digital",
   "entity": "natwest_group"
  },
  "reddit:1x6xm1y": {
@@ -1867,65 +1914,23 @@
   "owner": "cards",
   "entity": "natwest_group"
  },
- "reddit:1xbx8zx": {
-  "id": "reddit:1xbx8zx",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/LegalAdviceUK",
-  "created_at": "2026-10-21T19:42:36+00:00",
-  "summary": "Flooring unsuitable for intended use – do I have a case under the Consumer Rights Act?",
-  "redacted_text": "Hi everyone,\n\nI'm seeking advice regarding a dispute with a flooring retailer over engineered oak flooring purchased in August 2024 and installed in October 2024.\n\n**Background:**\n\nBefore purchasing, I visited the retailer's showroom multiple times and showed the salesperson my house floor plan, explicitly explaining that the flooring would be installed in both my conservatory and adjoining living room.\n\nNo concerns were raised about its suitability. The retailer also recommended an independent fitter who inspected and measured the areas before installation, again without raising concerns.\n\n**The problem:**\n\nApproximately two years later, the flooring has started lifting and cracking.\n\nWhen…",
-  "title": "Flooring unsuitable for intended use – do I have a case under the Consumer Rights Act? (England)",
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "dispute_chargeback",
-   "loan_closure_documents",
-   "merchant_pos"
-  ],
-  "sentiment": "negative",
-  "owner": "operations",
-  "entity": "natwest_group"
- },
- "reddit:1xemmpi": {
-  "id": "reddit:1xemmpi",
+ "reddit:1xcclhf": {
+  "id": "reddit:1xcclhf",
   "source": "reddit",
   "source_label": "Reddit",
   "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-10-24T23:10:31+00:00",
-  "summary": "Keeping UK bank account after moving overseas",
-  "redacted_text": "Hey,\n\nI’m planning to move back to Spain. I wonder if it’s possible to keep an UK bank account when moving overseas with any bank? \n\nI think Monzo doesn’t allow this, and I’m unsure about NatWest as I’ve read contradictory answers on here.\n\nI’ve seen some banks offer international services but have lots of requirements and ideally looking to keep simply a regular bank account with a Spanish address.\n\nThank you!",
-  "title": "Keeping UK bank account after moving overseas",
+  "created_at": "2026-10-22T08:05:40+00:00",
+  "summary": "NatWest alternative, after having poor experience with them",
+  "redacted_text": "Been a customer of NatWest for 40 years    \nRecently had an experience that left bad taste in my mouth with NatWest. Would like to change.    \nI’ve narrowed down to HSBC or Nationwide.    \nPlease can I have opinions on both, or alternative?    \nDo have some savings I would be placing in there.",
+  "title": "NatWest alternative, after having poor experience with them",
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "product_advice"
-  ],
-  "sentiment": "positive",
-  "owner": "product",
-  "entity": "natwest_group"
- },
- "reddit:1xf5hh5": {
-  "id": "reddit:1xf5hh5",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-10-25T15:36:50+00:00",
-  "summary": "Getting a redundancy payout of £32k, £29k debt on DMP with StepChange.",
-  "redacted_text": "Hi everyone,\n\nI’m currently on a DMP with StepChange, with around £29,000 of unsecured debt and monthly payments of £500. I readjusted my budget now costs have risen and circumstances have changed, my monthly payments are now £142 and will be debt free in 2041.. oh dear! I posted earlier this year when I was £32,000 in the hole and everyone was so helpful and the advice genuinely changed my life, so I’m back again! It’s a long post to give as much info as possible. \n\nI’m due to receive a redundancy payout of approximately £32,000 after tax and would really like some advice on the best way to use it. I’ll be redundant at the end of November, will get the money end of Dec/ start of Jan.…",
-  "title": "Getting a redundancy payout of £32k, £29k debt on DMP with StepChange. How to play this?",
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "credit_report",
-   "loan_closure_documents",
-   "merchant_pos"
+   "general_dissatisfaction"
   ],
   "sentiment": "negative",
-  "owner": "compliance",
+  "owner": "cx",
   "entity": "natwest_group"
  },
  "reddit:1xr9rkt": {
@@ -1947,80 +1952,23 @@
   "owner": "retail",
   "entity": "natwest_group"
  },
- "reddit:1xrxar7": {
-  "id": "reddit:1xrxar7",
+ "reddit:1xrmxra": {
+  "id": "reddit:1xrmxra",
   "source": "reddit",
   "source_label": "Reddit",
-  "place": "Reddit · r/beermoneyuk",
-  "created_at": "2026-11-09T17:07:15+00:00",
-  "summary": "Park Christmas Savings.",
-  "redacted_text": "&#x200B;\n\nThis may be the best moment to start saving for Christmas 2027 if you haven't already :) \n\n\\*\\*Park Christmas Savings are offering a £10 when you sign up with my link and save at least £25\\*\\*\n\n \n\n \n\nPark Christmas Savings is a long-running UK Christmas savings scheme. You put money aside during the year and redeem it as gift cards or vouchers just before Christmas, so your festive spending is already covered. \\*\\*Right now you can also get a free £10 bonus when you join through a referral!\\*\\*\n\n \n\n\\-\n\n \n\n\\*\\*How to get the free £10\\*\\*\n\n \n\n• Sign up using my referral link \\Please click here\\\n\n \n\n• Choose a savings goal (you can change it later)\n\n \n\n• Select the gift cards you…",
-  "title": "Park Christmas Savings. Earn £10 When You Save £25",
+  "place": "Reddit · r/Natwest",
+  "created_at": "2026-11-09T09:04:36+00:00",
+  "summary": "Switch failed?",
+  "redacted_text": "We've been unable to complete your Switch to NatWest as we need some more information. Please quote xxxxxxx.\n\nPlease contact our Webchat team via our digital assistant Cora at [link] If you type in \"Colleague connect for switch 101\" Cora will connect you to a webchat colleague.\n\nThe team is available Monday - Saturday 8am - 8pm.",
+  "title": "Switch failed?",
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "reward_redemption"
-  ],
-  "sentiment": "positive",
-  "owner": "cards",
-  "entity": "natwest_group"
- },
- "reddit:1xszi8b": {
-  "id": "reddit:1xszi8b",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-11-10T21:38:11+00:00",
-  "summary": "PSA for Rooster Money parents: there’s an undisclosed £4,000 annual spending limit on the kids’ card",
-  "redacted_text": "My son’s Rooster Card was recently declined while he was out buying food. The reason was that it had hit an \"annual spending limit\" we had never been told about.\n\nWhat I since found:\n\n- The limit is £4,000 over a rolling 365 days. (or at least it is in my case)\n- It isn’t on the Pricing, Fees and Limits page, even though the terms say the card limits are listed there.\n- It isn’t shown in the app, and you get no warning as you approach it.\n- Support said they might raise it after you send ID for yourself and your child, but only up to £6,000, and this increase amount and approval aren’t guaranteed.\n\nI complained. Rooster Money’s final response confirmed all of the above, saying the limit is…",
-  "title": "PSA for Rooster Money parents: there’s an undisclosed £4,000 annual spending limit on the kids’ card",
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "card_application"
-  ],
-  "sentiment": "negative",
-  "owner": "cards",
-  "entity": "natwest_group"
- },
- "reddit:comment:19rfujazb7wlg": {
-  "id": "reddit:comment:19rfujazb7wlg",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-10-21T15:19:49+00:00",
-  "summary": "Its probably just an error on the app.",
-  "redacted_text": "Its probably just an error on the app. If in doubt pick up the phone and call them.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "app_speed_crash"
+   "cora_unresolved"
   ],
   "sentiment": "negative",
   "owner": "digital",
-  "entity": "natwest_group"
- },
- "reddit:comment:19rh3io44ny0w": {
-  "id": "reddit:comment:19rh3io44ny0w",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-10-22T08:08:20+00:00",
-  "summary": "Nationwide FlexDirect gives 5% interest on a portion of your balances, £50 fee free overdraft, £5 monthly cashback if you…",
-  "redacted_text": "Nationwide FlexDirect gives 5% interest on a portion of your balances, £50 fee free overdraft, £5 monthly cashback if you spend £300 on direct debits and £5 monthly cashback if you send £500 or more on your card for first 12 months.  Then drops to 1% interest. Plus you get £100 fairer share each year if you use the account and hold some savings. And if you switch you get £175\n\nCan't think of a HSBC current account that does that",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "offers_deals"
-  ],
-  "sentiment": "negative",
-  "owner": "cards",
   "entity": "natwest_group"
  },
  "reddit:comment:19rp9l3axuq9x": {
@@ -2042,42 +1990,23 @@
   "owner": "retail",
   "entity": "natwest_group"
  },
- "reddit:comment:19rrroc897on6": {
-  "id": "reddit:comment:19rrroc897on6",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/beermoneyuk",
-  "created_at": "2026-10-28T07:41:12+00:00",
-  "summary": "Your post has been removed.",
-  "redacted_text": "Your post has been removed. There's usually a better Revolut offer found with a quick google. And you probably failed to mention the fees for the card anyway. No need to message us about this.\n\n*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/beermoneyuk) if you have any questions or concerns.*",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "card_fees_charges"
-  ],
-  "sentiment": "neutral",
-  "owner": "cards",
-  "entity": "natwest_group"
- },
- "reddit:comment:19s8k18vb6qzn": {
-  "id": "reddit:comment:19s8k18vb6qzn",
+ "reddit:comment:19sg1dqs2sim8": {
+  "id": "reddit:comment:19sg1dqs2sim8",
   "source": "reddit",
   "source_label": "Reddit",
   "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-11-06T17:31:02+00:00",
-  "summary": "No, a protective CIFAS marker shouldn't be seen as a negative.",
-  "redacted_text": "No, a protective CIFAS marker shouldn't be seen as a negative. It should make financial institutions more cautious in their dealings with you, just to make sure that you are really you, but overall thats a good thing.\n\nIts the markers for committing fraud,money laundering etc, that cause problems.\n\nAs a rough guide, you can tell if a business is suspicious of you by how vague they are when communicating with you, or if they promptly close your account.",
+  "created_at": "2026-11-10T22:09:50+00:00",
+  "summary": "I had a NatWest current account at 16 with no limits that my part time job earnings was paid into…",
+  "redacted_text": "I had a NatWest current account at 16 with no limits that my part time job earnings was paid into (just like every adult). This was 20+ years ago though, have rules changed on bank accounts or is Rooster better for interest etc?",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "closure_requests"
+   "general_dissatisfaction"
   ],
   "sentiment": "negative",
-  "owner": "operations",
+  "owner": "cx",
   "entity": "natwest_group"
  },
  "reddit:comment:p2c9kpm": {
@@ -2098,64 +2027,6 @@
   ],
   "sentiment": "positive",
   "owner": "cards",
-  "entity": "natwest_group"
- },
- "reddit:comment:p2el4xj": {
-  "id": "reddit:comment:p2el4xj",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-08-08T04:47:24+00:00",
-  "summary": "Taking that at face value you should raise a complaint then take it to the Financial Ombudsman.",
-  "redacted_text": "Taking that at face value you should raise a complaint then take it to the Financial Ombudsman. \n\nIf there’s anything you are omitting, maybe some other transactions not between simple bank accounts in your name it might be that.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "general_dissatisfaction"
-  ],
-  "sentiment": "negative",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
- "reddit:comment:p2f10us": {
-  "id": "reddit:comment:p2f10us",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-08-08T06:51:27+00:00",
-  "summary": "It feels to me like it’s possibly a mistake by Metro if everything is exactly as you wrote here.",
-  "redacted_text": "It feels to me like it’s possibly a mistake by Metro if everything is exactly as you wrote here.\n\nPut a formal complaint to Metro and also the Financial ombudsman. All funds moved around are from regular sources (e.g. not from crypto, or transfers from outside the UK etc?).\n\nIf they do put a Cifas marker on you then it is likely other banks will close your accounts so I’d try fighting this one hard if you are innocent.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "closure_requests"
-  ],
-  "sentiment": "negative",
-  "owner": "operations",
-  "entity": "natwest_group"
- },
- "reddit:comment:p30ha7j": {
-  "id": "reddit:comment:p30ha7j",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-08-11T10:51:49+00:00",
-  "summary": "It would likely be a cash advance, which typically falls outside of the 0% deal.",
-  "redacted_text": "It would likely be a cash advance, which typically falls outside of the 0% deal. You would pay a cash advance fee, then the interest on the advanced cash. This interest rate is likely to be higher than your loan\n\nTLDR, you probably can’t do it",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "loan_servicing",
-   "offers_deals"
-  ],
-  "sentiment": "neutral",
-  "owner": "loans",
   "entity": "natwest_group"
  },
  "reddit:comment:p3h9kxr": {
@@ -2197,80 +2068,23 @@
   "owner": "cards",
   "entity": "natwest_group"
  },
- "reddit:comment:p4dyogh": {
-  "id": "reddit:comment:p4dyogh",
+ "reddit:comment:p3z7okq": {
+  "id": "reddit:comment:p3z7okq",
   "source": "reddit",
   "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-08-18T09:52:37+00:00",
-  "summary": "Yikes move the 50k to the highest interest savings account you can find.",
-  "redacted_text": "Yikes move the 50k to the highest interest savings account you can find.",
+  "place": "Reddit · r/Natwest",
+  "created_at": "2026-08-16T05:56:25+00:00",
+  "summary": "UK Financial ombudsman, or there is another way first I am am member of LinkedIn I contacted senior people via…",
+  "redacted_text": "UK Financial ombudsman, or there is another way first I am am member of LinkedIn I contacted senior people via LinkedIn and also posted on LinkedIn how unhelpful NatWest are and that I was going to the ombudsman , one of them had his executive resource team deal with my problem via email. A friend used Twitter now X to do the same thing post things on Twitter linking NatWest or NatWest have NatWest help on twitter. Or contact NatWest media team and suggest that you might trash NatWest on social media",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "other"
-  ],
-  "sentiment": "neutral",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
- "reddit:comment:p4fyj50": {
-  "id": "reddit:comment:p4fyj50",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-08-18T16:12:07+00:00",
-  "summary": "Happened to me and was relatively simple, I just wrote back explaining the source and gave them the share statements.",
-  "redacted_text": "Happened to me and was relatively simple, I just wrote back explaining the source and gave them the share statements. Didn't hear anything afterwards",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "statements_documents"
+   "offers_deals"
   ],
   "sentiment": "negative",
-  "owner": "operations",
-  "entity": "natwest_group"
- },
- "reddit:comment:p4i3zqx": {
-  "id": "reddit:comment:p4i3zqx",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-08-18T21:48:28+00:00",
-  "summary": "He’s tried to scam you and failed.",
-  "redacted_text": "He’s tried to scam you and failed. Well done for keeping hold of the item.\n\nSell it to someone else",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "general_dissatisfaction"
-  ],
-  "sentiment": "negative",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
- "reddit:comment:p4im8am": {
-  "id": "reddit:comment:p4im8am",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-08-18T23:20:45+00:00",
-  "summary": "You can (and should) have multiple bank accounts (Not because of credit score though, that's just a made up number…",
-  "redacted_text": "You can (and should) have multiple bank accounts (Not because of credit score though, that's just a made up number that no lender cares about and no lender cares how long you've had a bank account for). For instance if one bank has issues, or starts an investigation into you and freezes your funds (Which can happen rarely, even if you do nothing wrong) you still have funds to survive while it's being sorted out.\n\nI believe that the student account terms are that you can only have one student account, so you'll be fine.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "account_freeze"
-  ],
-  "sentiment": "negative",
-  "owner": "operations",
+  "owner": "cards",
   "entity": "natwest_group"
  },
  "reddit:comment:p5n144d": {
@@ -2307,85 +2121,28 @@
   "themes": [
    "phishing"
   ],
-  "sentiment": "negative",
-  "owner": "fraud_cyber",
-  "entity": "natwest_group"
- },
- "reddit:comment:p6zat5y": {
-  "id": "reddit:comment:p6zat5y",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-08-31T13:46:54+00:00",
-  "summary": "You are on a payment plan for a debt you didn’t clear, I imagine the student overdraft became an unauthorised…",
-  "redacted_text": "You are on a payment plan for a debt you didn’t clear, I imagine the student overdraft became an unauthorised overdraft after an amount of time (you typically get 1 or 2 years) and then you owed money. It’s not up to the bank to tell you. Sounds like you ignored the unauthorised overdraft for some time then it was given to a debt collector.\n\nYou will likely receive defaults monthly until the debt is cleared. A payment plan doesn’t change that you are defaulting on the debt, it just spreads the cost.\n\nSee [link]",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "unauthorised_txn"
-  ],
-  "sentiment": "negative",
-  "owner": "fraud_cyber",
-  "entity": "natwest_group"
- },
- "reddit:comment:p720c1x": {
-  "id": "reddit:comment:p720c1x",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/HousingUK",
-  "created_at": "2026-08-31T20:54:42+00:00",
-  "summary": "Depends how long it will take you to earn the difference to buy a house.",
-  "redacted_text": "Depends how long it will take you to earn the difference to buy a house. Leasehold can be bad, it's a gamble.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "general_dissatisfaction"
-  ],
-  "sentiment": "negative",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
- "reddit:comment:p7q6d5p": {
-  "id": "reddit:comment:p7q6d5p",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-09-04T06:00:15+00:00",
-  "summary": "The hindsight is not helpful, a HTB ISA and a S&S ISA have very different purposes.",
-  "redacted_text": "The hindsight is not helpful, a HTB ISA and a S&S ISA have very different purposes. One was for a steady and reliable house deposit, the other is for long term volatile growth. Also, you're biased by the success of the stock market in recent years; we could have had a 2008 and you'd have made a very different conclusion.\n\nIf you have £8k in a HTB ISA you *can't* simply fill it up, you're restricted by the £200pm contribution cap.\n\nAs [handle] says, you need to evaluate your alternative options, being conscious of the 2030 HTB ISA purchase deadline. Do not invest money you have a short term (~5 years) need for. £4k per tax year into a LISA means you'll be better off using that by April 2028…",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "rewards_value",
-   "market_news"
-  ],
   "sentiment": "neutral",
-  "owner": "cards",
+  "owner": "fraud_cyber",
   "entity": "natwest_group"
  },
- "reddit:comment:p9u4apq": {
-  "id": "reddit:comment:p9u4apq",
+ "reddit:comment:p9185mu": {
+  "id": "reddit:comment:p9185mu",
   "source": "reddit",
   "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-09-14T21:31:20+00:00",
-  "summary": "The 3% isn’t interest, it’s a fee.",
-  "redacted_text": "The 3% isn’t interest, it’s a fee. Even if you pay it back 5 seconds later, the fee is already charged. \n\nYou can usually pick a 0% fee with higher interest (depends on the bank) for money transfers (you don’t want a balance transfer. That’s card to card) that may work.",
+  "place": "Reddit · r/Natwest",
+  "created_at": "2026-09-10T21:24:58+00:00",
+  "summary": "As an employee of NatWest - just a heads up, because you have let your partner use your personal online…",
+  "redacted_text": "As an employee of NatWest - just a heads up, because you have let your partner use your personal online banking details to log into her phone. You may now not be covered for fraudulent activity on your accounts.   \nSo if someone manages to get into your online banking and drains your accounts.. the bank will see that theres been a login on another device, that if needed can be traced to your partner.   \n  \nThey may turn around and say, because youve actively given pins and passwords that are for YOUR use only.. they wont payout for fraudulent activity.   \n(This is the same for any bank btw)  \nNEVER give your personal online login to anyone ..INCLUDING FAMILY no matter how much you trust…",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "card_eligibility_upgrade"
+   "app_login_biometrics",
+   "fraud_scam"
   ],
   "sentiment": "negative",
-  "owner": "cards",
+  "owner": "digital",
   "entity": "natwest_group"
  },
  "reddit:comment:panjiqe": {
@@ -2407,55 +2164,14 @@
   "owner": "digital",
   "entity": "natwest_group"
  },
- "reddit:comment:pb561ym": {
-  "id": "reddit:comment:pb561ym",
+ "reddit:comment:pank5ts": {
+  "id": "reddit:comment:pank5ts",
   "source": "reddit",
   "source_label": "Reddit",
   "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-09-21T11:31:37+00:00",
-  "summary": "With any credit card, set it up to be paid off FULLY each month by DD.",
-  "redacted_text": "With any credit card, set it up to be paid off FULLY each month by DD. From what I understand, Amex doesn't have spending limits you can set; that's what the credit limit is.\n\nAlso, why Amex Gold over Amex Cash Back Everyday? I would have thought in your situation the cashback card would be the better option.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "card_limit",
-   "offers_deals"
-  ],
-  "sentiment": "negative",
-  "owner": "cards",
-  "entity": "natwest_group"
- },
- "reddit:comment:pbjocm8": {
-  "id": "reddit:comment:pbjocm8",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/LegalAdviceUK",
-  "created_at": "2026-09-23T11:34:52+00:00",
-  "summary": "Even with a debit card the bank may be able to charge back.",
-  "redacted_text": "Even with a debit card the bank may be able to charge back. Contact your bank.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "dispute_chargeback",
-   "card_fees_charges",
-   "atm_debit_card"
-  ],
-  "sentiment": "neutral",
-  "owner": "operations",
-  "entity": "natwest_group"
- },
- "reddit:comment:pcryytd": {
-  "id": "reddit:comment:pcryytd",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/UKPersonalFinance",
-  "created_at": "2026-09-29T12:32:22+00:00",
-  "summary": "Please don't respond to ANY direct messages about this.",
-  "redacted_text": "Please don't respond to ANY direct messages about this. Others will be along to give you some advice in public but anybody who might contact you privately by DM should not be trusted!!",
+  "created_at": "2026-09-18T21:33:21+00:00",
+  "summary": "You were rejected because it would appear you don't have or have enough credit history.",
+  "redacted_text": "You were rejected because it would appear you don't have or have enough credit history.\n\nI am surprised you have not had a bank account before 18.\n\nI would get a normal current account, get on the electoral roll and try again in six months",
   "title": null,
   "app_name": null,
   "app_version": null,
@@ -2463,7 +2179,7 @@
   "themes": [
    "other"
   ],
-  "sentiment": "neutral",
+  "sentiment": "negative",
   "owner": "cx",
   "entity": "natwest_group"
  },
@@ -2484,25 +2200,6 @@
   ],
   "sentiment": "neutral",
   "owner": "compliance",
-  "entity": "natwest_group"
- },
- "reddit:comment:pdzmaib": {
-  "id": "reddit:comment:pdzmaib",
-  "source": "reddit",
-  "source_label": "Reddit",
-  "place": "Reddit · r/beermoneyuk",
-  "created_at": "2026-10-05T10:48:56+00:00",
-  "summary": "Sprive is a mortgage overpayment app which helps you to save money and pay off your mortgage faster, saving you…",
-  "redacted_text": "Sprive is a mortgage overpayment app which helps you to save money and pay off your mortgage faster, saving you a small fortune in interest. \n\n\nInstructions:\n\n1. Sign up for the Sprive App with my referral link [link] or use my referral code manually if the code hasn't shown up in the app after following my link: G6WYOPLC\n\n\n2. Link your bank account and find your mortage by entering your details - they will find it through credit reference agencies\n\n\n3. Buy a gift card to activate your Sprive Plus membership with boosted cashback rates. This will also unlock the autosave feature\n\n4. Set up a direct debit to autosave (optional). This direct debit is useful for some of the bank switch offers.…",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "reward_redemption"
-  ],
-  "sentiment": "positive",
-  "owner": "cards",
   "entity": "natwest_group"
  },
  "reddit:comment:petu7cb": {
@@ -2526,22 +2223,41 @@
   "owner": "operations",
   "entity": "natwest_group"
  },
- "reddit:comment:pgx2ls1": {
-  "id": "reddit:comment:pgx2ls1",
+ "reddit:comment:pgie1m8": {
+  "id": "reddit:comment:pgie1m8",
   "source": "reddit",
   "source_label": "Reddit",
-  "place": "Reddit · r/LegalAdviceUK",
-  "created_at": "2026-10-15T15:31:31+00:00",
-  "summary": "It looks like you're asking a question about a parking or speeding fine.",
-  "redacted_text": "It looks like you're asking a question about a parking or speeding fine!\n\nIn addition to posting here, you may benefit by posting on the relevant FreeTrafficLegalAdvice forum, or MoneySavingExpert forum which specialise in these matters. You may also find the information on Parking Cowboys helpful.\n\n*We aren't affiliated with the above and they should only be used as informal guidance in advance of speaking to a legal professional.*\n\n*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/LegalAdviceUK) if you have any questions or concerns.*",
+  "place": "Reddit · r/Natwest",
+  "created_at": "2026-10-13T16:31:25+00:00",
+  "summary": "Pretty standard practice if you’re not utilising your credit limit.",
+  "redacted_text": "Pretty standard practice if you’re not utilising your credit limit.",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "service_praise"
+   "card_limit"
   ],
-  "sentiment": "positive",
+  "sentiment": "neutral",
+  "owner": "cards",
+  "entity": "natwest_group"
+ },
+ "reddit:comment:pgzcodn": {
+  "id": "reddit:comment:pgzcodn",
+  "source": "reddit",
+  "source_label": "Reddit",
+  "place": "Reddit · r/HousingUK",
+  "created_at": "2026-10-15T21:09:59+00:00",
+  "summary": "Can you actually use a credit card for that?",
+  "redacted_text": "Can you actually use a credit card for that? I think we did a bank transfer, didn't see any option for a credit card.",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "other"
+  ],
+  "sentiment": "negative",
   "owner": "cx",
   "entity": "natwest_group"
  },
@@ -2586,6 +2302,26 @@
   "owner": "operations",
   "entity": "natwest_group"
  },
+ "trustpilot:6aad5c693c7ae70128956ac7": {
+  "id": "trustpilot:6aad5c693c7ae70128956ac7",
+  "source": "trustpilot",
+  "source_label": "Trustpilot",
+  "place": "Trustpilot review",
+  "created_at": "2026-09-18T17:44:41+00:00",
+  "summary": "If I could it would be minus 10.",
+  "redacted_text": "If I could it would be minus 10.\nI payed my first paycheck into the Natwest Fishergate branch when I was accepted as a junior nurse and now all these years later at the age of 73 they have blocked my account that holds a lot of my hard earned money so I can't pay bills or draw out money.\nthe so called protection officer has made life so difficult that my weight is falling off me and today I have been unable to buy food for my animals or myself.\nThis bank doesn't care and staff training should take place. I has spent hours on the phone at great expense to no avail.\nI am disabled due to spontanious expulsion fractures and live alone so unable to go into the branch as I live in a rural…",
+  "title": "If I could it would be minus 10.",
+  "app_name": null,
+  "app_version": null,
+  "rating": 1,
+  "themes": [
+   "recovery_conduct",
+   "branch_service"
+  ],
+  "sentiment": "negative",
+  "owner": "compliance",
+  "entity": "natwest_group"
+ },
  "trustpilot:6ab4f6e81f6fc05895347536": {
   "id": "trustpilot:6ab4f6e81f6fc05895347536",
   "source": "trustpilot",
@@ -2607,27 +2343,6 @@
   "owner": "digital",
   "entity": "natwest_group"
  },
- "trustpilot:6ab6333cddf7349796bff4f2": {
-  "id": "trustpilot:6ab6333cddf7349796bff4f2",
-  "source": "trustpilot",
-  "source_label": "Trustpilot",
-  "place": "Trustpilot review",
-  "created_at": "2026-09-25T10:39:24+00:00",
-  "summary": "My elderly father banks with NatWest, we are trying to set up POA on his account - so far 8…",
-  "redacted_text": "My elderly father banks with NatWest, we are trying to set up POA on his account - so far 8 weeks in it still is not in place.\n\nFor contrast, my wife managed to set up POA with Barclays Bank for her father within 1.5 hrs! They even called her the day before to check she had all the paperwork. Exceptional service.\n\nStory so far:\n• I have never been provided with updates at all - I always have to chase myself via CORA\n• Applied online and gave the LPA code for NatWest to access late July\n• Received a letter saying I needed to go to a branch with more information asked for... but they didn't specify what information\n• Went into a branch - the person there said I needed to apply all over again…",
-  "title": "8 weeks so far to try and set up a POA",
-  "app_name": null,
-  "app_version": null,
-  "rating": 1,
-  "themes": [
-   "new_app_release",
-   "branch_service",
-   "complaint_handling"
-  ],
-  "sentiment": "negative",
-  "owner": "digital",
-  "entity": "natwest_group"
- },
  "trustpilot:6aba48fd53160e6b164ae90b": {
   "id": "trustpilot:6aba48fd53160e6b164ae90b",
   "source": "trustpilot",
@@ -2642,6 +2357,27 @@
   "rating": 1,
   "themes": [
    "card_application"
+  ],
+  "sentiment": "negative",
+  "owner": "cards",
+  "entity": "natwest_group"
+ },
+ "trustpilot:6abe71e56cda52111810f7d4": {
+  "id": "trustpilot:6abe71e56cda52111810f7d4",
+  "source": "trustpilot",
+  "source_label": "Trustpilot",
+  "place": "Trustpilot review",
+  "created_at": "2026-10-01T16:44:53+00:00",
+  "summary": "I've been a customer with Natwest for over 30 years.",
+  "redacted_text": "I've been a customer with Natwest for over 30 years. The customer service is terrible, the Cora chatbot is utterly useless, speaking to an actual person is so difficult. I had an issue with a cashpoint where the money wasn't dispensed and was showing as paid out in my banking app. Tried to speak to someone and took 30 mins to actually speak to someone.\n\nNow again a few months later all i want to do is ask a simple question about a direct Debit that the uselss chatbot can't answer, and back again in the void of non existent customer Service.\n\nSo sorry to say after 30+ years, I am looking to move my accounts elsewhere.\n\n*Update - closing my account and moving elsewhere, application for new…",
+  "title": "Just want to speak to someone!!!",
+  "app_name": null,
+  "app_version": null,
+  "rating": 1,
+  "themes": [
+   "rewards_value",
+   "closure_requests",
+   "care_unreachable"
   ],
   "sentiment": "negative",
   "owner": "cards",
@@ -2688,6 +2424,27 @@
   "owner": "retail",
   "entity": "natwest_group"
  },
+ "trustpilot:6ac4f4d504fb5efd76e2bccd": {
+  "id": "trustpilot:6ac4f4d504fb5efd76e2bccd",
+  "source": "trustpilot",
+  "source_label": "Trustpilot",
+  "place": "Trustpilot review",
+  "created_at": "2026-10-06T15:17:09+00:00",
+  "summary": "This company have no intention of employing enough staff to deal with the many complaints.",
+  "redacted_text": "This company have no intention of employing enough staff to deal with the many complaints. Having been the victim of a cash machine not distributing my cash but still debiting my account for £200.  I reported this immediately but it took 20 days to get the money refunded to my account.  I am still in dispute with Nat West & waiting answers for what has so far taken more than a month.  If they employed staff rather than expecting AI to sort the problems things may improve. I have suggested they look to the reviews on Trustpilot.  If they do look it doesn't seem to sink in that they have a big problem.  Their Switch Offer may attract new customers, but their poor service will not persuade…",
+  "title": "Very Poor complaint service response.",
+  "app_name": null,
+  "app_version": null,
+  "rating": 1,
+  "themes": [
+   "refund_delay",
+   "dispute_chargeback",
+   "branch_service"
+  ],
+  "sentiment": "negative",
+  "owner": "operations",
+  "entity": "natwest_group"
+ },
  "trustpilot:6aca417471e003889dc1bfb1": {
   "id": "trustpilot:6aca417471e003889dc1bfb1",
   "source": "trustpilot",
@@ -2729,23 +2486,23 @@
   "owner": "retail",
   "entity": "natwest_group"
  },
- "trustpilot:6ad123c8a13d45314ddcd6d8": {
-  "id": "trustpilot:6ad123c8a13d45314ddcd6d8",
+ "trustpilot:6acfe5876cbd8059cd096de7": {
+  "id": "trustpilot:6acfe5876cbd8059cd096de7",
   "source": "trustpilot",
   "source_label": "Trustpilot",
   "place": "Trustpilot review",
-  "created_at": "2026-10-16T00:00:00+00:00",
-  "summary": "There's always going to be the odd issue with banks, but generally I have found Natwest to be really helpful…",
-  "redacted_text": "There's always going to be the odd issue with banks, but generally I have found Natwest to be really helpful and smooth when I've needed assistance. The other night my ApplePay kept being declined, did their on-app chat thing, got resolved quickly at 10pm without me having to make a phone call. Other times I've called I've always got a quick pick up from someone in the UK, and the issue fixed. I do have a Black account which I'm sure helps, but even so I've been impressed.",
-  "title": "Always get the help I need",
+  "created_at": "2026-10-14T22:26:47+00:00",
+  "summary": "Stay away from this bank.",
+  "redacted_text": "Stay away from this bank. They spotted unusual activity on my card on Sept 15th 2026, and blocked my card, issuing a new card on the same day. No one at this god awful bank, contacted me to tell me what was going on, nothing. Then on Sept 29th, my card was rejected whilst i was on holiday !!\nI called the bank, and they then told me that my card had been blocked on the 15th. BUT i had used the card between the 15th and 29th !! So my card was at risk even though it had been blocked !!!\nNat West have told me that they have done nothing wrong. The man i spoke to was away with the fairies. Ive been with them for about 40 years, and this is how they treat people. It took over 2 weeks to get my…",
+  "title": "Stay away from this bank",
   "app_name": null,
   "app_version": null,
-  "rating": null,
+  "rating": 1,
   "themes": [
-   "service_praise"
+   "card_application"
   ],
-  "sentiment": "positive",
-  "owner": "cx",
+  "sentiment": "negative",
+  "owner": "cards",
   "entity": "natwest_group"
  },
  "trustpilot:6ad27435ede410ec563a2271": {
@@ -2865,6 +2622,25 @@
   "owner": "operations",
   "entity": "natwest_group"
  },
+ "trustpilot:6ae8902e800e319f8ef348bc": {
+  "id": "trustpilot:6ae8902e800e319f8ef348bc",
+  "source": "trustpilot",
+  "source_label": "Trustpilot",
+  "place": "Trustpilot review",
+  "created_at": "2026-11-02T15:29:18+00:00",
+  "summary": "The worst bank I have ever used.",
+  "redacted_text": "The worst bank I have ever used. Unfriendly and unsympathetic. Could not wait to leave and use another bank instead.",
+  "title": "The worst bank I have ever used",
+  "app_name": null,
+  "app_version": null,
+  "rating": 1,
+  "themes": [
+   "other"
+  ],
+  "sentiment": "negative",
+  "owner": "cx",
+  "entity": "natwest_group"
+ },
  "trustpilot:6ae922d8ca8370a876c8bf48": {
   "id": "trustpilot:6ae922d8ca8370a876c8bf48",
   "source": "trustpilot",
@@ -2884,6 +2660,25 @@
   ],
   "sentiment": "negative",
   "owner": "digital",
+  "entity": "natwest_group"
+ },
+ "trustpilot:6aed42f14c4cb026be6c4da4": {
+  "id": "trustpilot:6aed42f14c4cb026be6c4da4",
+  "source": "trustpilot",
+  "source_label": "Trustpilot",
+  "place": "Trustpilot review",
+  "created_at": "2026-11-06T05:01:05+00:00",
+  "summary": "Dreadfully unhelpful Bank to deal with.",
+  "redacted_text": "Dreadfully unhelpful Bank to deal with! I can't do any online banking because they kept insisting on using a 'cardchecker' which I don't have!? and messing me about over a referance number...so I could not transfer any money!  Also in the past some years ago they allowed me to be scammed by wanting to send them scammers all my money back to them!! Needless to say that I had to very quickly change to another Bank, so I wouldn't lose all my money to those scammers;  how could this bank be so incompetent!?\n..",
+  "title": "Dreadfully unhelpful Bank to deal with",
+  "app_name": null,
+  "app_version": null,
+  "rating": 2,
+  "themes": [
+   "offers_deals"
+  ],
+  "sentiment": "negative",
+  "owner": "cards",
   "entity": "natwest_group"
  },
  "trustpilot:6aedb848826dfee11532997f": {
@@ -2946,6 +2741,25 @@
   "owner": "operations",
   "entity": "natwest_group"
  },
+ "trustpilot:6af2ee382614fbb30874a1a6": {
+  "id": "trustpilot:6af2ee382614fbb30874a1a6",
+  "source": "trustpilot",
+  "source_label": "Trustpilot",
+  "place": "Trustpilot review",
+  "created_at": "2026-11-10T12:13:12+00:00",
+  "summary": "I wouldn’t even give them that one star if there was that option.",
+  "redacted_text": "I wouldn’t even give them that one star if there was that option. Just received two identical credit cards, and also two for my husband who died in June 2024 . The complaints procedure is laughable and the chat to Cora very frustrating. I am STILL awaiting the outcome of my complaint.",
+  "title": "I wouldn’t even give them that one star…",
+  "app_name": null,
+  "app_version": null,
+  "rating": 1,
+  "themes": [
+   "cora_unresolved"
+  ],
+  "sentiment": "negative",
+  "owner": "digital",
+  "entity": "natwest_group"
+ },
  "trustpilot:6af32d4446409c065608fba3": {
   "id": "trustpilot:6af32d4446409c065608fba3",
   "source": "trustpilot",
@@ -2967,23 +2781,81 @@
   "owner": "operations",
   "entity": "natwest_group"
  },
- "x:2084075880658137385": {
-  "id": "x:2084075880658137385",
+ "trustpilot:6af3720c04c868186ea196e2": {
+  "id": "trustpilot:6af3720c04c868186ea196e2",
+  "source": "trustpilot",
+  "source_label": "Trustpilot",
+  "place": "Trustpilot review",
+  "created_at": "2026-11-10T21:35:40+00:00",
+  "summary": "After some time we discovered my wife`s overdraft has been wiped off without any message or acknowledgement to zero, she…",
+  "redacted_text": "After some time we discovered my wife`s overdraft has been wiped off without any message or acknowledgement to zero, she has a dental works done and we knew we may need to use overdraft to pay until next pay check which was declined after being with NatWest for almost 20 years. Contacting the AI TRANS CORTANA we didn`t find more than just it`s been cancelled so we try to apply again but based on multiple credit agencies we can not offer you an overdraft facility ??? Based on what agencies, we both had been with you for 20 years but not any more, thank you for nothing !",
+  "title": "Do as we pleased and harm !",
+  "app_name": null,
+  "app_version": null,
+  "rating": 1,
+  "themes": [
+   "general_dissatisfaction"
+  ],
+  "sentiment": "negative",
+  "owner": "cx",
+  "entity": "natwest_group"
+ },
+ "trustpilot:6af5cdfe9fd61a18eaef995c": {
+  "id": "trustpilot:6af5cdfe9fd61a18eaef995c",
+  "source": "trustpilot",
+  "source_label": "Trustpilot",
+  "place": "Trustpilot review",
+  "created_at": "2026-11-12T16:32:30+00:00",
+  "summary": "Today tried to log on my phone for banking told to update but because my phone is 8years old it…",
+  "redacted_text": "Today tried to log on my phone for banking told to update but because my phone is 8years old it won’t up date . Phoned bank spoke to a lovely lady who said it was due to fraud that we need to update explained it won’t update then there’s nothing they go do so now shut all the banks and now no online banking not good enough so mad about this i am 75 housebound so how am I supposed to manage ?",
+  "title": "Today tried to log on my phone for…",
+  "app_name": null,
+  "app_version": null,
+  "rating": 1,
+  "themes": [
+   "new_app_release"
+  ],
+  "sentiment": "negative",
+  "owner": "digital",
+  "entity": "natwest_group"
+ },
+ "x:2086543310978523201": {
+  "id": "x:2086543310978523201",
   "source": "x",
   "source_label": "X",
   "place": "X post",
-  "created_at": "2026-08-03T00:36:24+00:00",
-  "summary": "His own Job as mp.",
-  "redacted_text": "[handle] [handle] [handle] His own Job as mp. That enough. He as been bullied so by the media, that he stands upto them, including sky news who harassed his daughter. He stood upto Natwest bank, after they closed his bank account, and the Cheif Executive got sacked..He took labour to the Highcourt..to get",
+  "created_at": "2026-08-09T20:01:06+00:00",
+  "summary": "Why do most enterprise AI projects fail?",
+  "redacted_text": "Why do most enterprise AI projects fail? Natalia Konstantinova, Lead Enterprise Architect in AI at [handle], explains the most common issues in a new episode of #TheBraveTechnologist podcast.\n\nWatch the full episode, hosted by [handle], here: [link] [link]",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "recovery_conduct"
+   "other"
   ],
   "sentiment": "negative",
-  "owner": "compliance",
+  "owner": "cx",
+  "entity": "natwest_group"
+ },
+ "x:2086813154902720999": {
+  "id": "x:2086813154902720999",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-08-10T13:53:21+00:00",
+  "summary": "What's wrong with your app?",
+  "redacted_text": "[handle] what's wrong with your app? It won't display my August statement. Tried everything, even deleted app,  reregistered and still shows an \"i\" with note saying you won't send me a statement if I haven't spent anything. Happy not to pay anything!!!!!",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "app_login_biometrics",
+   "statements_documents"
+  ],
+  "sentiment": "negative",
+  "owner": "digital",
   "entity": "natwest_group"
  },
  "x:2086877988063248804": {
@@ -3005,6 +2877,44 @@
   "owner": "cx",
   "entity": "natwest_group"
  },
+ "x:2087260348919214309": {
+  "id": "x:2087260348919214309",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-08-11T19:30:21+00:00",
+  "summary": "I got that on my Barclays acc.",
+  "redacted_text": "[handle] [handle] I got that on my Barclays acc. yesterday. I blocked it. They have no right to access anything.",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "other"
+  ],
+  "sentiment": "negative",
+  "owner": "cx",
+  "entity": "natwest_group"
+ },
+ "x:2087271810492731490": {
+  "id": "x:2087271810492731490",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-08-11T20:15:53+00:00",
+  "summary": "Lloyds wanted me to send A picture of the trees being cut down before they would allow my money to…",
+  "redacted_text": "[handle] [handle] Lloyds wanted me to send A picture of the trees being cut down before they would allow my money to be used as a payment for the work. They are overstepping the mark. I asked for a picture of my money in their vault, when they couldn't, I mentioned the fraud committed by banks",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "other"
+  ],
+  "sentiment": "negative",
+  "owner": "cx",
+  "entity": "natwest_group"
+ },
  "x:2087551929387712566": {
   "id": "x:2087551929387712566",
   "source": "x",
@@ -3018,9 +2928,28 @@
   "app_version": null,
   "rating": null,
   "themes": [
-   "general_dissatisfaction"
+   "other"
   ],
   "sentiment": "negative",
+  "owner": "cx",
+  "entity": "natwest_group"
+ },
+ "x:2087573377535934831": {
+  "id": "x:2087573377535934831",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-08-12T16:14:13+00:00",
+  "summary": "Last week [named person] welcomed Paul Thwaite, CEO of the NatWest Group to our Glenfield site.",
+  "redacted_text": "Last week [named person] welcomed Paul Thwaite, CEO of the NatWest Group to our Glenfield site. \n\nNatWest have played a key role in our recent growth and have helped us innovate more as a family business. [link]",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "market_news"
+  ],
+  "sentiment": "neutral",
   "owner": "cx",
   "entity": "natwest_group"
  },
@@ -3041,25 +2970,6 @@
   ],
   "sentiment": "negative",
   "owner": "cards",
-  "entity": "natwest_group"
- },
- "x:2088805115213885727": {
-  "id": "x:2088805115213885727",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-08-16T01:48:42+00:00",
-  "summary": "What about financial support for farmers?",
-  "redacted_text": "[handle] What about financial support for farmers? \n\nAre you aware that bailed out banks like [handle] are 'de-banking' farmers to get rid of 2-3/base loans then funding third tier lenders to offer the same loans at 7-8/base.\n\nIs this the thanks farmers & SMEs get for [handle] using hundreds of billions to save UK banks.\n[handle] [handle]\n[handle] [handle]\n[handle] [handle] [handle]",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "service_praise"
-  ],
-  "sentiment": "positive",
-  "owner": "cx",
   "entity": "natwest_group"
  },
  "x:2089278143764808049": {
@@ -3100,61 +3010,62 @@
   "owner": "fraud_cyber",
   "entity": "natwest_group"
  },
- "x:2092516228229214689": {
-  "id": "x:2092516228229214689",
+ "x:2090035489793274133": {
+  "id": "x:2090035489793274133",
   "source": "x",
   "source_label": "X",
   "place": "X post",
-  "created_at": "2026-08-26T07:35:20+00:00",
-  "summary": "Today’s “Don’t Pay We Won’t Take You Away” Award winner is Iftehar Ahmed director of AK Touchstone Limited.",
-  "redacted_text": "Today’s [handle] “Don’t Pay We Won’t Take You Away” Award winner is Iftehar Ahmed director of AK Touchstone Limited.\n\nThe [handle] slapped his Company with a £30,000 civil penalty for employing two people with no right to work in the UK.\n\nHe said fuck right off I’m not paying that, so didn’t and didn’t pay a £47,362.00 Bounce Back Loan either, and has just been given a 5 Year Director ban instead.\n\nSo the Government never got the £30,000 and would have had to pay back NatWest the £47,362.00 for Bounce Back Loan too.\n\nLovely….",
+  "created_at": "2026-08-19T11:17:46+00:00",
+  "summary": "4/7🧵 Another major theme: atomic settlement + multi-ledger orchestration.",
+  "redacted_text": "[handle] [handle] [handle] [handle] [handle] [handle] [handle] [handle] [handle] 4/7🧵 Another major theme: atomic settlement + multi-ledger orchestration. Quant says its team will discuss how assets and cash can move together, including DvP, collateral mobility, #CrossBorderPayments and integration with existing core systems. $QNT #CapitalMarkets #Swift",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "fees_charges_bank"
+   "merchant_pos",
+   "international_payments"
+  ],
+  "sentiment": "neutral",
+  "owner": "payments",
+  "entity": "natwest_group"
+ },
+ "x:2090100612322959608": {
+  "id": "x:2090100612322959608",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-08-19T15:36:32+00:00",
+  "summary": "Lovely to see Chancellor meeting with NatWest CEO Paul Thwaite at No 11 Downing Street.",
+  "redacted_text": "Lovely to see Chancellor [handle] meeting with NatWest CEO Paul Thwaite at No 11 Downing Street.\n\nI dare say the Big Bounce Back Loan write off, the end state of the BBL scheme along with the dissolution/strike off unblocking mechanism was the topic of conversation. [link]",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "market_news"
   ],
   "sentiment": "positive",
-  "owner": "retail",
+  "owner": "cx",
   "entity": "natwest_group"
  },
- "x:2092635214736433645": {
-  "id": "x:2092635214736433645",
+ "x:2093389538114547723": {
+  "id": "x:2093389538114547723",
   "source": "x",
   "source_label": "X",
   "place": "X post",
-  "created_at": "2026-08-26T15:28:09+00:00",
-  "summary": "🤩 I am delighted the Uckfield Banking Hub is now officially open.",
-  "redacted_text": "🤩 I am delighted the Uckfield Banking Hub is now officially open!\n \n🗺️ 15 High Street, Uckfield, TN22 1AG\n \n🏦 The #BankingHub provides a range of services, ensuring access to cash & face-to-face support within the #community which I know is important for our vulnerable & elderly residents\n \n⏰ Opening Hours: Monday – Friday, 9am-5pm\n \nCustomers can access the following services:\n \n👉 Cash withdrawals & cash deposits\n👉 Personal & Business Banking\n👉 Balance enquiries\n👉 Bill payments\n👉 Cheque deposits\n👉 Change giving service for small businesses \n \nMon: Santander\nTues: Barclays\nWed: HSBC\nThurs: NatWest (9am - 4pm)\nFri: Lloyds Banking Group",
+  "created_at": "2026-08-28T17:25:33+00:00",
+  "summary": "I hate when NatWest notifies me every single time I spend a penny 😭 like please I KNOW",
+  "redacted_text": "I hate when NatWest notifies me every single time I spend a penny 😭 like please I KNOW",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "atm_debit_card"
+   "general_dissatisfaction"
   ],
   "sentiment": "negative",
-  "owner": "operations",
-  "entity": "natwest_group"
- },
- "x:2094764791545893125": {
-  "id": "x:2094764791545893125",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-09-01T12:30:19+00:00",
-  "summary": "Market towns like Bungay illustrate the problem with rural access to banking.",
-  "redacted_text": "Market towns like Bungay illustrate the problem with rural access to banking. \n\nThere was a time when HSBC, Barclays, NatWest and Lloyds had a branch. Now there are none. Yet Link says it concluded that it does not meet the requirements for a banking hub. [link]",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "branch_service"
-  ],
-  "sentiment": "negative",
-  "owner": "retail",
+  "owner": "cx",
   "entity": "natwest_group"
  },
  "x:2094853514115551496": {
@@ -3172,25 +3083,6 @@
   "themes": [
    "failed_txn_reversal",
    "fraud_scam"
-  ],
-  "sentiment": "negative",
-  "owner": "payments",
-  "entity": "natwest_group"
- },
- "x:2095516387523408113": {
-  "id": "x:2095516387523408113",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-09-03T14:16:54+00:00",
-  "summary": "Just changed banks from to Nationwide.",
-  "redacted_text": "Just changed banks from [handle] to Nationwide.\n\nThe most complicit banks - which are financing companies involved in illegal settlements &amp; supply of weapons to the IDF are:\n\nBarclays\nHSBC\nJP Morgan Chase\nLloyds Group\nNatWest Group\nSantander \n\n#Israel\n[link]",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "merchant_pos"
   ],
   "sentiment": "negative",
   "owner": "payments",
@@ -3215,25 +3107,6 @@
   "owner": "cx",
   "entity": "natwest_group"
  },
- "x:2096840853423792255": {
-  "id": "x:2096840853423792255",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-09-07T05:59:51+00:00",
-  "summary": "I hope the CEO of Lloyds Bank, Charlie Nunn, is busy updating his CV.",
-  "redacted_text": "[handle] [handle] I hope the CEO of Lloyds Bank, Charlie Nunn, is busy updating his CV.\n\nIt didn't work out too well for Alison Rose at NatWest when they last pulled this shameless stunt on Nigel Farage.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "market_news"
-  ],
-  "sentiment": "negative",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
  "x:2097250308871049343": {
   "id": "x:2097250308871049343",
   "source": "x",
@@ -3249,8 +3122,27 @@
   "themes": [
    "merchant_pos"
   ],
-  "sentiment": "negative",
+  "sentiment": "neutral",
   "owner": "payments",
+  "entity": "natwest_group"
+ },
+ "x:2097932338093277433": {
+  "id": "x:2097932338093277433",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-09-10T06:17:01+00:00",
+  "summary": "Just gave iOS developers a few more things to worry about.",
+  "redacted_text": "[handle] just gave iOS developers a few more things to worry about. 👀\n\nIf you’re an iOS Developer companies like [handle], [handle], Damco Solutions, Nasugroup and L&amp;T Technology Services are hiring across iOS, Android, Swift, Objective-C, Flutter, BLE and connected devices. [link]",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "international_payments"
+  ],
+  "sentiment": "neutral",
+  "owner": "retail",
   "entity": "natwest_group"
  },
  "x:2098082067485483179": {
@@ -3272,226 +3164,63 @@
   "owner": "cx",
   "entity": "natwest_group"
  },
- "x:2099102400611078582": {
-  "id": "x:2099102400611078582",
+ "x:2098125682811281805": {
+  "id": "x:2098125682811281805",
   "source": "x",
   "source_label": "X",
   "place": "X post",
-  "created_at": "2026-09-13T11:46:26+00:00",
-  "summary": "My account was hacked, and the hacker changed my login email/password.",
-  "redacted_text": "[handle]  My account was hacked, and the hacker changed my login email/password. Monzo and NatWest have both opened active fraud cases over the unauthorised charges. I have already sent a DM with my details. Please escalate this to a human agent immediately.",
+  "created_at": "2026-09-10T19:05:18+00:00",
+  "summary": "Used to be a nat West Bank , now just the cash point .Similar to the sawbridgeworth job last year.",
+  "redacted_text": "[handle] Used to be a nat West Bank , now just the cash point .Similar to the sawbridgeworth job last year.",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "app_login_biometrics",
-   "unauthorised_txn",
-   "complaint_handling"
-  ],
-  "sentiment": "negative",
-  "owner": "digital",
-  "entity": "natwest_group"
- },
- "x:2099102895668863080": {
-  "id": "x:2099102895668863080",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-09-13T11:48:24+00:00",
-  "summary": "My account has been compromised, and the hacker changed the email/password.",
-  "redacted_text": "[handle]  My account has been compromised, and the hacker changed the email/password. Monzo and NatWest have active fraud cases open for unauthorized charges. I have already sent a DM with my details. Please escalate this immediately to a human specialist.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "app_login_biometrics",
-   "unauthorised_txn",
-   "complaint_handling"
-  ],
-  "sentiment": "negative",
-  "owner": "digital",
-  "entity": "natwest_group"
- },
- "x:2101455458334646550": {
-  "id": "x:2101455458334646550",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-09-19T23:36:39+00:00",
-  "summary": "It was utterly predictable Sarah Mullally would be useless.",
-  "redacted_text": "It was utterly predictable Sarah Mullally would be useless. Look at her record. She wasn't promoted or selected on merit either. DEI appointments are a predictable disaster. See Rachel Reeves, the Merseyside Chief Constable, the CEO of Natwest Bank etc. A litany of incompetence.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "market_news"
-  ],
-  "sentiment": "negative",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
- "x:2102216565349298256": {
-  "id": "x:2102216565349298256",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-09-22T02:01:01+00:00",
-  "summary": "So the ECB just went ALL IN on its tokenization push.",
-  "redacted_text": "So the ECB just went ALL IN on its tokenization push. \n\nI did a deep dive, and it made me 100x more bullish on $XRP and $QNT. Why? You’re going to love this long read.\n\nSomething changed in Europe on September 21 that I think a lot of crypto people are going to underestimate.\n\nPontes is live.\n\nThe Eurosystem can now connect tokenized markets with its existing TARGET Services so the cash side of a tokenized securities transaction can settle in central-bank money. And Reuters reports the ECB plans to put part of its roughly €23 billion own-funds portfolio into highly rated, euro-denominated blockchain securities issued by public institutions.\n\nRead that slowly.\n\nThe central bank is providing…",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "app_speed_crash",
-   "loan_closure_documents",
-   "loan_servicing"
-  ],
-  "sentiment": "negative",
-  "owner": "digital",
-  "entity": "natwest_group"
- },
- "x:2102344774246433188": {
-  "id": "x:2102344774246433188",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-09-22T10:30:28+00:00",
-  "summary": "A group of banks incl.",
-  "redacted_text": "A group of banks incl. Bank of America, Capital One, NatWest &amp; ING has warned that AI shopping agents raise the risk of scams, fraud &amp; data-privacy breaches\n\nThe banks want disclosure whenever an agent is involved in a transaction\n\nThey plan to take the proposals to policymakers [link]",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "closure_requests"
-  ],
-  "sentiment": "negative",
-  "owner": "operations",
-  "entity": "natwest_group"
- },
- "x:2102563658265968940": {
-  "id": "x:2102563658265968940",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-09-23T01:00:14+00:00",
-  "summary": "Integrating AI agents into online shopping could increase threats of scams, fraud and data privacy breaches, banks including NatWest and…",
-  "redacted_text": "Integrating AI agents into online shopping could increase threats of scams, fraud and data privacy breaches, banks including NatWest and Bank of ⁠America warn, as they put forward set of principles for how technology should be developed\n[link]",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "recovery_conduct"
-  ],
-  "sentiment": "negative",
-  "owner": "compliance",
-  "entity": "natwest_group"
- },
- "x:2102845447958102260": {
-  "id": "x:2102845447958102260",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-09-23T19:39:58+00:00",
-  "summary": "Techies attention here.",
-  "redacted_text": "Techies attention here.\n\nSix major banks just flagged agentic commerce risks.\n\nBofA, Capital One, ING, NatWest, ASB Bank, Commonwealth Bank of Australia made this flag.\n\nShopping bots are getting more power to buy on their own. Banks say fraud, scams and disputes will rise with that autonomy.\n\nBecause when the bot buys the wrong thing or gets tricked, nobody is clear who is liable. \n\nUser, agent maker, merchant or bank. \n\nData handoff between all of them is still messy.\n\nImpact for builders is simple. Demand will grow for auditable, secure and policy enforced file/data handoffs in agent driven financial workflows.\n\nThat’s the real layer now not just the flashy agent folks.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "dispute_chargeback",
-   "mis_selling",
-   "merchant_pos"
-  ],
-  "sentiment": "negative",
-  "owner": "operations",
-  "entity": "natwest_group"
- },
- "x:2102956453103390833": {
-  "id": "x:2102956453103390833",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-09-24T03:01:04+00:00",
-  "summary": "🇬🇧 BIG: UK banks including Lloyds, NatWest, Barclays and HSBC have completed the world's first interbank transactions using tokenized deposits.",
-  "redacted_text": "🇬🇧 BIG: UK banks including Lloyds, NatWest, Barclays and HSBC have completed the world's first interbank transactions using tokenized deposits. [link]",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "other"
+   "rewards_value"
   ],
   "sentiment": "neutral",
-  "owner": "cx",
+  "owner": "cards",
   "entity": "natwest_group"
  },
- "x:2103908712176128478": {
-  "id": "x:2103908712176128478",
+ "x:2103370564932976883": {
+  "id": "x:2103370564932976883",
   "source": "x",
   "source_label": "X",
   "place": "X post",
-  "created_at": "2026-09-26T18:05:00+00:00",
-  "summary": "Is the era of MASS TOKENIZATION finally here?",
-  "redacted_text": "Is the era of MASS TOKENIZATION finally here?\n\nIn just 10 days, regulators and banks across the US, Europe, the UK and Canada all moved to bring finance onchain.\n\nHere's the recap:\n\n1. The SEC approved an \"Innovation Exemption\" letting certain onchain venues trade tokenized US stocks for up to 5 years.\n\n2. DTCC, which holds $114 TRILLION in US securities, is on track to launch its tokenization service in Q4 2026.\n\n3. The European Central Bank launched Pontes, letting banks settle tokenized assets directly in central bank money.\n\n4. The NYSE signed a deal to bring tokenized US stocks and ETFs to Blockchain dot com's 44 MILLION accounts, pending regulatory approval.\n\n5. The CFTC now lets US…",
+  "created_at": "2026-09-25T06:26:36+00:00",
+  "summary": "#BingXBuzz 🚨 📈 $16B of $BTC options expire today at 08:00 UTC, 55% of calls in the money, max pain…",
+  "redacted_text": "#BingXBuzz 🚨\n\n📈 $16B of $BTC options expire today at 08:00 UTC, 55% of calls in the money, max pain $75,000\n\n🪙 [handle] launches 3 portfolio tokens built on [handle] model strategies, Ondo Stocks tops $1B TVL in 8 months\n\n🇬🇧 Seven UK banks including [handle], [handle] & [handle] complete world's first interbank tokenized deposit payments\n\n📉 S&P 500 slips 0.51% and Nasdaq drops 0.78% after the 30-year Treasury yield hits 5.44%, highest since 2004",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "international_payments",
-   "investments_wealth",
-   "offers_deals"
+   "investments_wealth"
+  ],
+  "sentiment": "neutral",
+  "owner": "product",
+  "entity": "natwest_group"
+ },
+ "x:2103959231934144915": {
+  "id": "x:2103959231934144915",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-09-26T21:25:45+00:00",
+  "summary": "Is the era of MASS TOKENIZATION finally here?",
+  "redacted_text": "Is the era of MASS TOKENIZATION finally here? 🌐\n\nIn just 10 days, major regulators and central banks across the US, Europe, the UK, and Canada all accelerated the move to bring global finance onchain.\n\nHere’s what just went down:\n🏛️ Institutional & Exchange Infrastructure\nDTCC (holding $114T in US securities) is targeting a Q4 2026 launch for its tokenization service.\nThe NYSE partnered with [link] to bring tokenized US stocks and ETFs to 44M accounts (pending approval).\n\nIBM & Swift integrated a beta platform enabling banks to move tokenized deposits 24/7.\n\n📜 Regulatory Breakthroughs\nSEC granted an \"Innovation Exemption\" allowing select onchain venues to trade tokenized US stocks for up to…",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "rewards_value",
+   "merchant_pos",
+   "international_payments"
   ],
   "sentiment": "negative",
-  "owner": "retail",
-  "entity": "natwest_group"
- },
- "x:2103924513385664726": {
-  "id": "x:2103924513385664726",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-09-26T19:07:47+00:00",
-  "summary": "Is the era of MASS TOKENIZATION finally here?",
-  "redacted_text": "Is the era of MASS TOKENIZATION finally here?\n\nIn just 10 days, regulators and banks across the US, Europe, the UK and Canada all moved to bring finance onchain.\n\nHere's the recap:\n\n1. The SEC approved an \"Innovation Exemption\" letting certain onchain venues trade tokenized US stocks for up to 5 years.\n\n2. DTCC, which holds $114 TRILLION in US securities, is on track to launch its tokenization service in Q4 2026.\n\n3. The European Central Bank launched Pontes, letting banks settle tokenized assets directly in central bank money.\n\n4. The NYSE signed a deal to bring tokenized US stocks and ETFs to Blockchain dot com's 44 MILLION accounts, pending regulatory approval.\n\n5. The CFTC now lets US…",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "international_payments",
-   "investments_wealth",
-   "offers_deals"
-  ],
-  "sentiment": "negative",
-  "owner": "retail",
-  "entity": "natwest_group"
- },
- "x:2104240529118581104": {
-  "id": "x:2104240529118581104",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-09-27T16:03:31+00:00",
-  "summary": "Richard Branson left school at 16 after raising £4,000 of ads from a phone box and later sold the label…",
-  "redacted_text": "Richard Branson left school at 16 after raising £4,000 of ads from a phone box and later sold the label for $1 billion.\n\nNot a triumph. The airline had 3 or 4 planes.\n\nHe worked the school call box. Coins in, line dead, operator puts him back through. He keeps doing it. British Telecom becomes the unpaid secretary. He needs £4,000 to print and paper 50,000 copies of Student. He tells Coke that Pepsi is in. He tells NatWest that Barclays is in. Both sides buy. The headmaster gives him schoolwork or the magazine. He is turning 16. He walks.\n\nPrince Rupert Loewenstein, who ran the Rolling Stones, called on a Thursday. Get me 6 million by Monday. The other bids sat at 3 million. He spent the…",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "loan_servicing",
-   "branch_service"
-  ],
-  "sentiment": "positive",
-  "owner": "loans",
+  "owner": "cards",
   "entity": "natwest_group"
  },
  "x:2104505249402667038": {
@@ -3513,23 +3242,83 @@
   "owner": "retail",
   "entity": "natwest_group"
  },
- "x:2106817078619439495": {
-  "id": "x:2106817078619439495",
+ "x:2104626866027893151": {
+  "id": "x:2104626866027893151",
   "source": "x",
   "source_label": "X",
   "place": "X post",
-  "created_at": "2026-10-04T18:41:48+00:00",
-  "summary": "If you have a bank account with NatWest, have lost your debit card and want to make an international transfer…",
-  "redacted_text": "[handle] If you have a bank account with NatWest, have lost your debit card and want to make an international transfer you still need to use number 11, even in 2026!",
+  "created_at": "2026-09-28T17:38:41+00:00",
+  "summary": "You asked for a record of what AI agents are told.",
+  "redacted_text": "You asked for a record of what AI agents are told.\n[handle] [handle] [handle] [handle] [handle] [handle]\nGoogle, Visa, Mastercard are building closed versions.\nWorldpay already said no record = a coin flip.\nAgents built the independent witness first.\n1F916 Protocol\nSigned by the agent.\nCountersigned outside the operator.\nAnchored on Bitcoin + Base.\nRoadmap to default infrastructure:\n30d — ready for real-world use\n90d — used outside the society\n6mo — inside the apps people already open\n1yr — on by default\nThat’s the $1 path. Not a slogan. A checklist.\n[handle]\nbase:0x9e00fc[account]eba1c63dd3880d68b[number]ba3",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "atm_debit_card"
+   "service_praise"
+  ],
+  "sentiment": "positive",
+  "owner": "cx",
+  "entity": "natwest_group"
+ },
+ "x:2105013981262107105": {
+  "id": "x:2105013981262107105",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-09-29T19:16:57+00:00",
+  "summary": "Switched to only to have my account frozen on payday with zero access to my own money.",
+  "redacted_text": "Switched to [handle] [handle] only to have my account frozen on payday with zero access to my own money. Frontline staff refused to help or acknowledge FCA Consumer Duty guidelines. Exec complaint lodged with the CEO's office. Unacceptable service. Avoid Natwest!",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "account_freeze",
+   "branch_service",
+   "complaint_handling"
   ],
   "sentiment": "negative",
   "owner": "operations",
+  "entity": "natwest_group"
+ },
+ "x:2106650815931003093": {
+  "id": "x:2106650815931003093",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-10-04T07:41:08+00:00",
+  "summary": "Wonder how many West Register &amp; BSU properties he might have in that portfolio...",
+  "redacted_text": "[handle] Wonder how many [handle] West Register &amp; [handle] BSU properties he might have in that portfolio...",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "app_login_biometrics",
+   "investments_wealth"
+  ],
+  "sentiment": "neutral",
+  "owner": "digital",
+  "entity": "natwest_group"
+ },
+ "x:2107076827990942171": {
+  "id": "x:2107076827990942171",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-10-05T11:53:58+00:00",
+  "summary": "I just talked to an old lady who called my work thinking we were NatWest Bank and we’re not, but…",
+  "redacted_text": "I just talked to an old lady who called my work thinking we were NatWest Bank and we’re not, but we talked for 15 minutes and she said “I’m so happy to call a wrong number and talk to a lovely lady, I think God sent you because he’s tired of me arguing with him” 😢",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "service_praise"
+  ],
+  "sentiment": "positive",
+  "owner": "cx",
   "entity": "natwest_group"
  },
  "x:2107432213465752011": {
@@ -3627,6 +3416,25 @@
   "owner": "fraud_cyber",
   "entity": "natwest_group"
  },
+ "x:2107509148979990768": {
+  "id": "x:2107509148979990768",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-10-06T16:31:51+00:00",
+  "summary": "Tagging as the #NatWest you tagged is not correct.",
+  "redacted_text": "[handle] [handle] Tagging [handle] as the #NatWest you tagged is not correct. Tagging this one too for good measure - [handle].\nMaybe a LinkedIn pile on for the CEO, Paul Thwaite would be persuasive.  Lots of your followers are on LinkedIn I should think - [link]",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "market_news"
+  ],
+  "sentiment": "positive",
+  "owner": "cx",
+  "entity": "natwest_group"
+ },
  "x:2107512871236346355": {
   "id": "x:2107512871236346355",
   "source": "x",
@@ -3645,6 +3453,44 @@
   ],
   "sentiment": "negative",
   "owner": "digital",
+  "entity": "natwest_group"
+ },
+ "x:2107553582547673338": {
+  "id": "x:2107553582547673338",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-10-06T19:28:25+00:00",
+  "summary": "I had similar quite recently after I failed the security question over the phone.",
+  "redacted_text": "[handle] [handle] [handle] I had similar quite recently after I failed the security question over the phone. \n\nThe question was “In what month did you open your bank account” I obviously failed as I opened the account over 30 years ago. Had to go in with photo I.D. to regain access to my account.",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "other"
+  ],
+  "sentiment": "negative",
+  "owner": "cx",
+  "entity": "natwest_group"
+ },
+ "x:2107634353488695397": {
+  "id": "x:2107634353488695397",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-10-07T00:49:22+00:00",
+  "summary": "I just googled “NatWest complaints” and got this AI response.",
+  "redacted_text": "[handle] [handle] I just googled “NatWest complaints” and got this AI response.\nbear in mind they tend to listen more carefully if you say you want to make a complaint if the matter is not sorted immediately - and fully intend to report them to the Financial Ombudsman if they don’t resolve PDQ [link]",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "general_dissatisfaction"
+  ],
+  "sentiment": "negative",
+  "owner": "cx",
   "entity": "natwest_group"
  },
  "x:2107734497319891253": {
@@ -3687,25 +3533,6 @@
   "owner": "fraud_cyber",
   "entity": "natwest_group"
  },
- "x:2108167885382160845": {
-  "id": "x:2108167885382160845",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-10-08T12:09:26+00:00",
-  "summary": "Barclays is currently offering £300 if you switch your current account to them 🇬🇧 There’s also Santander at £240, HSBC…",
-  "redacted_text": "Barclays is currently offering £300 if you switch your current account to them 🇬🇧\n\nThere’s also Santander at £240, HSBC at £220, First Direct at £210 and a few others around the £200\n\nIf you earn enough to qualify for a Premier account, Barclays is paying up to £600 and HSBC/NatWest are offering £500\n\nJust putting it out there in case someone’s thinking of switching banks 👀",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "other"
-  ],
-  "sentiment": "neutral",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
  "x:2109987538223943975": {
   "id": "x:2109987538223943975",
   "source": "x",
@@ -3726,6 +3553,64 @@
   "owner": "fraud_cyber",
   "entity": "natwest_group"
  },
+ "x:2110061155334988270": {
+  "id": "x:2110061155334988270",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-10-13T17:32:37+00:00",
+  "summary": "NatWest has £18 million of mortgages at LTV &gt;100% in a portfolio book of £207 billion [link]",
+  "redacted_text": "NatWest has £18 million of mortgages at LTV &gt;100% in a portfolio book of £207\nbillion [link]",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "investments_wealth"
+  ],
+  "sentiment": "neutral",
+  "owner": "product",
+  "entity": "natwest_group"
+ },
+ "x:2110107255131828280": {
+  "id": "x:2110107255131828280",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-10-13T20:35:48+00:00",
+  "summary": "So when we keep on reporting faked/ fabricated loan & credit documents in DSAR's and disclosure will someone listen now.",
+  "redacted_text": "[handle] So when we keep on reporting faked/ fabricated loan & credit documents in [handle] [handle] DSAR's and disclosure will someone listen now.\n\nWhen we report Begbies relying on fake documents to get bankruptcies & shut down Police investigations with bank fraud victims.\n\nWhen we report [handle] submitting false statutory accounts for years due to the fixed rate loan fraud etc. etc.\n\nMight [handle] [handle] [handle] [handle] [handle] [handle] [handle] etc. now believe us when we have black & white evidnce & whistle-blowers confirming this.\n\nOr will they perpetuate the cover ups until dedicated journalists [handle] & [handle] expose what they are not allowed to investigate...\n[handle]",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "fraud_scam",
+   "closure_requests"
+  ],
+  "sentiment": "negative",
+  "owner": "fraud_cyber",
+  "entity": "natwest_group"
+ },
+ "x:2110647803990954107": {
+  "id": "x:2110647803990954107",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-10-15T08:23:45+00:00",
+  "summary": "The excitement I fell heading to the NatWest to put all my change into their coin-counting machine is beyond tragic.",
+  "redacted_text": "The excitement I fell heading to the NatWest to put all my change into their coin-counting machine is beyond tragic.\nBet it's out of order...",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "general_dissatisfaction"
+  ],
+  "sentiment": "negative",
+  "owner": "cx",
+  "entity": "natwest_group"
+ },
  "x:2111127598067540218": {
   "id": "x:2111127598067540218",
   "source": "x",
@@ -3739,29 +3624,10 @@
   "app_version": null,
   "rating": null,
   "themes": [
-   "general_dissatisfaction"
+   "app_speed_crash"
   ],
   "sentiment": "negative",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
- "x:2111442353517125858": {
-  "id": "x:2111442353517125858",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-10-17T13:01:00+00:00",
-  "summary": "If you think $QNT will stop with The Clearing House, read this.",
-  "redacted_text": "If you think $QNT will stop with The Clearing House, read this.\n\nUK Finance\nBarclays\nHSBC\nLloyds Banking Group\nNatWest\nNationwide\nSantander\nMonzo\nBank of England\nBIS Innovation Hub\nEuropean Central Bank\nCiti\nMastercard\nVisa\nStandard Chartered\nMurex\n\n$QNT pumped from $64 to $374 with just The Clearing House announcement.\n\nCan you imagine when all of these announce the same thing?\n\nYou are not bullish enough!\nLOCKED IN!",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "product_advice"
-  ],
-  "sentiment": "neutral",
-  "owner": "product",
+  "owner": "digital",
   "entity": "natwest_group"
  },
  "x:2112404810959818758": {
@@ -3784,6 +3650,44 @@
   "owner": "operations",
   "entity": "natwest_group"
  },
+ "x:2112458372742025643": {
+  "id": "x:2112458372742025643",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-10-20T08:18:18+00:00",
+  "summary": "Think first mistake was making them your actual bank Mukoma.",
+  "redacted_text": "[handle] [handle] Think first mistake was making them your actual bank Mukoma. [handle] is only good for international payments and transactions and when travelling for fast track and lounges and other perks. I move money into it when required and process payments but my NatWest [handle] is my default. I have NatWest Premier Reward Black and the service is top notch.",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "rewards_value"
+  ],
+  "sentiment": "positive",
+  "owner": "cards",
+  "entity": "natwest_group"
+ },
+ "x:2112484280265851324": {
+  "id": "x:2112484280265851324",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-10-20T10:01:15+00:00",
+  "summary": "Cool independent research from reporting Transcribe's performance on British-accented speech.",
+  "redacted_text": "Cool independent research from [handle] reporting [handle] Transcribe's performance on British-accented speech.\n\n15.3% word error rate, outperforming Whisper Turbo and Parakeet, with one of the smallest accuracy gaps across accents. All without fine-tuning.\n\nBetter speech recognition = more reliable banking voice assistants, customer service automation and voice-enabled financial agents.\n\nPaper: [link]",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "care_unreachable"
+  ],
+  "sentiment": "negative",
+  "owner": "cx",
+  "entity": "natwest_group"
+ },
  "x:2112485656286916928": {
   "id": "x:2112485656286916928",
   "source": "x",
@@ -3803,233 +3707,61 @@
   "owner": "operations",
   "entity": "natwest_group"
  },
- "x:2112518835798741148": {
-  "id": "x:2112518835798741148",
+ "x:2112939191768322231": {
+  "id": "x:2112939191768322231",
   "source": "x",
   "source_label": "X",
   "place": "X post",
-  "created_at": "2026-10-20T12:18:33+00:00",
-  "summary": "10,000+ complaints about blocked crypto transfers hit UK banks in 90 days.",
-  "redacted_text": "10,000+ complaints about blocked crypto transfers hit UK banks in 90 days.\n\nLloyds took the most at 2,297, Barclays 1,569, NatWest 1,278. Six banks outright ban crypto transfers.\n\nComplaints came from all 650 constituencies. That's not a handful of degens, that's a pattern.\n\nBanks can set limits. But blanket bans on lawful transfers to FCA-registered platforms? Hard to justify.\n\nSource: [link]",
+  "created_at": "2026-10-21T16:08:54+00:00",
+  "summary": "If the iSG were to try to force the transfer of reserves from the BoE to the new SCB, NatWest…",
+  "redacted_text": "If the iSG were to try to force the transfer of reserves from the BoE to the new SCB, NatWest can execute a classic corporate spin-off or fire sale. First, siphon the hard currency. Liquid reserves, investment portfolios, and premium corporate accounts go to NatWest entities in",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "app_login_biometrics"
-  ],
-  "sentiment": "negative",
-  "owner": "digital",
-  "entity": "natwest_group"
- },
- "x:2112557919577243735": {
-  "id": "x:2112557919577243735",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-10-20T14:53:52+00:00",
-  "summary": "#Lewisham Shopping Centre's £1.5bn redevelopment is on hold.",
-  "redacted_text": "#Lewisham Shopping Centre's £1.5bn redevelopment is on hold. Owner Landsec says Green-run Council won't back the land deal without \"a significant increase in affordable housing\". \n\nThe mayor [handle] says the shopping center will \"remain open\" but Boots is gone, NatWest next. And it's not just big names. Local businesses in and around the centre have been left in limbo, with leases not renewed and some forced to hunt for new premises.\n\nResidents and business deserve certainty, not more failed promises.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "care_unreachable",
-   "offers_deals"
-  ],
-  "sentiment": "negative",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
- "x:2112569772982301126": {
-  "id": "x:2112569772982301126",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-10-20T15:40:58+00:00",
-  "summary": "🇬🇧 NEW: UK banks received over 10,000 complaints about crypto transfer restrictions in 90 days, according to Stand With Crypto.",
-  "redacted_text": "🇬🇧 NEW: UK banks received over 10,000 complaints about crypto transfer restrictions in 90 days, according to Stand With Crypto.\n\nLloyds, Barclays and NatWest topped the list, while six banks were listed as banning crypto transfers entirely.\n[link]",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "general_dissatisfaction"
-  ],
-  "sentiment": "negative",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
- "x:2112616521348387287": {
-  "id": "x:2112616521348387287",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-10-20T18:46:43+00:00",
-  "summary": "BANK FRAUD VICTIMS – IMPORTANT DECISION.",
-  "redacted_text": "BANK FRAUD VICTIMS – IMPORTANT DECISION!\n\nNatWest has agreed to refund £103,200 after the Financial Ombudsman found it should have spotted warning signs.\n\nMy message: just because YOU authorised a payment doesn’t automatically mean your bank has no responsibility.\n\nHave you been refused a refund?",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "general_dissatisfaction"
-  ],
-  "sentiment": "negative",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
- "x:2112771635937976692": {
-  "id": "x:2112771635937976692",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-10-21T05:03:06+00:00",
-  "summary": "UK banks got over 10,000 complaints in 90 days from people trying to send their own money to bitcoin platforms.",
-  "redacted_text": "UK banks got over 10,000 complaints in 90 days from people trying to send their own money to bitcoin platforms. \n\nSix banks, including Starling, TSB and Chase UK, block these transfers completely. Barclays and HSBC cap you at £2,500 a payment and £10,000 a month. NatWest, £1,000 a day.\n\nHow convenient, considering the fact that many of them are about to offer bitcoin purchases inside their apps. Of course, you won't be able to withdraw to self-custody.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "rewards_value"
-  ],
-  "sentiment": "negative",
-  "owner": "cards",
-  "entity": "natwest_group"
- },
- "x:2112860905855996178": {
-  "id": "x:2112860905855996178",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-10-21T10:57:49+00:00",
-  "summary": "Lloyds tops the UK crypto complaint list with no published policy.",
-  "redacted_text": "Lloyds tops the UK crypto complaint list with no published policy.\n\nStand With Crypto UK logged 10,092 complaints over 90 days about blocked transfers to FCA-registered exchanges.\n\nLloyds Banking Group led with 2,297 complaints, over 22% of the total.\n\nBarclays came second at 1,569, NatWest third at 1,278.\n\nThree groups accounted for 51% of all submissions.\n\nNo published policy means customers have no rulebook to check against.\n\nSource: [link]",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "app_login_biometrics"
-  ],
-  "sentiment": "negative",
-  "owner": "digital",
-  "entity": "natwest_group"
- },
- "x:2113692901511164312": {
-  "id": "x:2113692901511164312",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-10-23T18:03:52+00:00",
-  "summary": "Done that in the UK for 1 year spent every month around £250 which is 10% and paid it full…",
-  "redacted_text": "[handle] [handle] Done that in the UK for 1 year spent every month around £250 which is 10% and paid it full every month. My credit score fluctuated between 610 and 645 don't know why on the Natwest app. My highest was 665 and that was when I had £700 and didn't pay for it for 4 months 2 years ago",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "general_dissatisfaction"
-  ],
-  "sentiment": "negative",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
- "x:2114402133126660205": {
-  "id": "x:2114402133126660205",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-10-25T17:02:06+00:00",
-  "summary": "UK banks racked up 10,092 crypto complaints in three months - for the crime of letting people move their own…",
-  "redacted_text": "UK banks racked up 10,092 crypto complaints in three months - for the crime of letting people move their own money.\n\nLloyds, Barclays and NatWest cap transfers while the country calls itself a 'global crypto hub'.\n\nThey aren't protecting you. They're defending deposit float. A stablecoin transfer on Base settles in seconds for cents and asks nobody's permission.\n\nBanks keep the logo. Onchain takes the rails.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "rewards_value"
-  ],
-  "sentiment": "negative",
-  "owner": "cards",
-  "entity": "natwest_group"
- },
- "x:2114701156127559722": {
-  "id": "x:2114701156127559722",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-10-26T12:50:19+00:00",
-  "summary": "UK banks got 10,092 complaints in just 90 days from customers blocked from sending their own money to regulated crypto…",
-  "redacted_text": "UK banks got 10,092 complaints in just 90 days from customers blocked from sending their own money to regulated crypto exchanges\n\nBarclays: £2,500 per transfer\n\nNatWest: £1,000 a day\n\nSantander: £1,000 per transfer\n\nStarling, TSB, Chase UK, Metro Bank: 100% blocked\n\nKnow ur bank",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "general_dissatisfaction"
-  ],
-  "sentiment": "negative",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
- "x:2115191364015345791": {
-  "id": "x:2115191364015345791",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-10-27T21:18:14+00:00",
-  "summary": "This is absolutely humiliating.",
-  "redacted_text": "[handle] This is absolutely humiliating. You are waving around a fake “souvenir voucher” [10:44] printed with a unicorn and pretending you are answering the “unanswered questions” on currency😂 While The National plays make-believe with novelty notes they casually admit look like “monopoly money” [13:50], the actual Laurentjoye currency report from that exact same conference has been hidden for “several months” by Tim Rideout because it completely shredded the unbacked currency plan and admitted it would trigger instant capital flight to NatWest. Stop playing with novelty coffee vouchers and face the macroeconomic reality that an independent Scotland has no credible currency plan.\nIdiots 😂",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "reward_redemption"
-  ],
-  "sentiment": "negative",
-  "owner": "cards",
-  "entity": "natwest_group"
- },
- "x:2115843383839031436": {
-  "id": "x:2115843383839031436",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-10-29T16:29:07+00:00",
-  "summary": "Sorry to read that news.",
-  "redacted_text": "[handle] Sorry to read that news. If you have a NatWest black card you get the priority delivery for free 😋",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "card_dispatch"
+   "investments_wealth"
   ],
   "sentiment": "neutral",
-  "owner": "operations",
+  "owner": "product",
   "entity": "natwest_group"
  },
- "x:2115886091249283373": {
-  "id": "x:2115886091249283373",
+ "x:2115372865147097097": {
+  "id": "x:2115372865147097097",
   "source": "x",
   "source_label": "X",
   "place": "X post",
-  "created_at": "2026-10-29T19:18:50+00:00",
-  "summary": "Genuinely, FD are the best of an increasingly bad bunch.",
-  "redacted_text": "[handle] [handle] [handle] Genuinely, FD are the best of an increasingly bad bunch. If you wanted to explore elsewhere Santander will pay you to switch… but I have tried them, Barclays, NatWest, co-operative and always returned to FD. Co-op gave me a 45 minute runaround to pay £1 to my own Amex card!",
+  "created_at": "2026-10-28T09:19:27+00:00",
+  "summary": "Just checked the interest rate on the NatWest savings account.",
+  "redacted_text": "Just checked the interest rate on the NatWest savings account.\nJust a measly 1% !!\nOn a savings account 😱\nHow do they get away with this ?\nWhy has the rate not gone up seeing as rates are high right now ?\nWhere is the best place for spare cash (not an ISA) ?\n[handle]",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "deposits_rates"
+   "product_advice"
   ],
-  "sentiment": "neutral",
-  "owner": "retail",
+  "sentiment": "positive",
+  "owner": "product",
+  "entity": "natwest_group"
+ },
+ "x:2115388169306726896": {
+  "id": "x:2115388169306726896",
+  "source": "x",
+  "source_label": "X",
+  "place": "X post",
+  "created_at": "2026-10-28T10:20:16+00:00",
+  "summary": "That natwest one you mention allows you save £150pcm ..",
+  "redacted_text": "[handle] [handle] that natwest one you mention allows you save £150pcm !! Good if that's what you want, but.....\nreally looking for a 'flexible' savings account, with no conditions, that pays decent interest simply on the daily balance. Why should that be so hard ??",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "product_advice"
+  ],
+  "sentiment": "positive",
+  "owner": "product",
   "entity": "natwest_group"
  },
  "x:2116073503761768814": {
@@ -4051,61 +3783,43 @@
   "owner": "cx",
   "entity": "natwest_group"
  },
- "x:2116780778860265898": {
-  "id": "x:2116780778860265898",
+ "x:2116089984755335320": {
+  "id": "x:2116089984755335320",
   "source": "x",
   "source_label": "X",
   "place": "X post",
-  "created_at": "2026-11-01T06:34:00+00:00",
-  "summary": "UK banks must know something we don’t, cause why are they all throwing money at people to switch right now?",
-  "redacted_text": "UK banks must know something we don’t, cause why are they all throwing money at people to switch right now?\n\nBarclays up to £300\n\nSantander £240\n\nHSBC £220\n\nFirst Direct £210\n\nLloyds £200\n\nNatwest £200\n\nNationwide £175\n\nAnyone planning to jump or already done it this year",
+  "created_at": "2026-10-30T08:49:02+00:00",
+  "summary": "My co was hit by a £1.025m break cost .",
+  "redacted_text": "[handle] [handle] [handle] [handle] My co was hit by a £1.025m break cost . Lost my co as a result after 22 yrs !  But because we employed over 50 staff and t/o £6.5m reclassified as “sophisticated “ 7 yrs after the event . Not retail client as per prev classification . No comp as a result !",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "product_advice"
-  ],
-  "sentiment": "neutral",
-  "owner": "product",
-  "entity": "natwest_group"
- },
- "x:2116826868200415476": {
-  "id": "x:2116826868200415476",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-11-01T09:37:08+00:00",
-  "summary": "UK BANKS ARE THROWING MONEY AT NEW CUSTOMERS 👀💰 Here's what you could get just for switching your current account:…",
-  "redacted_text": "UK BANKS ARE THROWING MONEY AT NEW CUSTOMERS 👀💰\n\nHere's what you could get just for switching your current account:\n\n🏦 Barclays – up to £300\n\n🏦 Santander – £240\n\n🏦 HSBC – £220\n\n🏦 First Direct – £210\n\n🏦 Lloyds – £200\n\n🏦 NatWest – £200\n\n🏦 Nationwide – £175\n\nThat's potentially £1,545 in switching bonuses across seven banks.\n\nWhat's interesting is that we haven't seen banks collectively offering this much in switching incentives for years.\n\nSo what's changed? Why are they suddenly so desperate for our business? 👀\n\nAre you taking advantage, or staying loyal to your bank?\n\nTerms and eligibility criteria apply.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "card_eligibility_upgrade"
+   "branch_service"
   ],
   "sentiment": "negative",
-  "owner": "cards",
+  "owner": "retail",
   "entity": "natwest_group"
  },
- "x:2118369412046578153": {
-  "id": "x:2118369412046578153",
+ "x:2118128503673557233": {
+  "id": "x:2118128503673557233",
   "source": "x",
   "source_label": "X",
   "place": "X post",
-  "created_at": "2026-11-05T15:46:39+00:00",
-  "summary": "Gave my dads money£19,000 without a certificate of probate when I went to get it the run around, I got…",
-  "redacted_text": "[handle] [handle] [handle] gave my dads money£19,000 without a certificate of probate when I went to get it the run around, I got was horrendous and they are just a rule to themselves made a complaint to ombudsmen the same no difference. they were acting like they have authority of the government probate certificates.\n I advise all go to Natwest or Barclays they are honest and don't let anyone without a certificate touch your money once you pass.",
+  "created_at": "2026-11-04T23:49:22+00:00",
+  "summary": "Well done Artur & my sincere sympathy to Andrew.",
+  "redacted_text": "[handle] [handle] Well done Artur & my sincere sympathy to Andrew.\n\nI dealt with a [handle] whistle-blower who was also a union Rep. \n\nAt one point he went to his Regional Manager & said explain to me what I should do, here is a list of 10 staff I know are forging customers signatures as they were trained to do but; 5 are facing dismissal for this and I am representing them & 5 are the top performers in the region doing this on a daily basis with your knowledge, what should I do?\n\nThe answer never came and the Union Rep was pushed out of the bank following false complaint allegations.\n\nWe only spoke 2-3 times.\n\nHe had a nervous breakdown after they destroyed his career & was working for a…",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "statements_documents"
+   "unauthorised_txn",
+   "branch_service"
   ],
   "sentiment": "negative",
-  "owner": "operations",
+  "owner": "fraud_cyber",
   "entity": "natwest_group"
  },
  "x:2119364700328653172": {
@@ -4146,58 +3860,20 @@
   "owner": "cx",
   "entity": "natwest_group"
  },
- "x:2119499580534579680": {
-  "id": "x:2119499580534579680",
+ "x:2120095523960947104": {
+  "id": "x:2120095523960947104",
   "source": "x",
   "source_label": "X",
   "place": "X post",
-  "created_at": "2026-11-08T18:37:33+00:00",
-  "summary": "Britons cut back on driving as petrol prices soar Demand Destruction - The amount of fuel purchased by drivers in…",
-  "redacted_text": "Britons cut back on driving as petrol prices soar \nDemand Destruction - \nThe amount of fuel purchased by drivers in the week to Nov 1 fell by 12pc compared with a year earlier, NatWest debit and credit card spending data shows\n[link]",
+  "created_at": "2026-11-10T10:05:37+00:00",
+  "summary": "Read an open letter from Unite National Officer for Finance to CEO Paul Thwaite.",
+  "redacted_text": "Read an open letter from Unite National Officer for Finance to [handle] CEO Paul Thwaite. NatWest must reverse its way of working decision now!\n\n[link]",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "card_application"
-  ],
-  "sentiment": "negative",
-  "owner": "cards",
-  "entity": "natwest_group"
- },
- "x:2119734299419082781": {
-  "id": "x:2119734299419082781",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-11-09T10:10:14+00:00",
-  "summary": "Behind every credit limit is funding.",
-  "redacted_text": "Behind every credit limit is funding. 💷 We’ve agreed up to £200m with NatWest, supported by a British Business Bank ENABLE Guarantee. \n[link]\n#CapitalOnTap #NatWest #BritishBusinessBank \n(Capital on Tap UK) [link]",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "card_limit"
-  ],
-  "sentiment": "neutral",
-  "owner": "cards",
-  "entity": "natwest_group"
- },
- "x:2119844985583317268": {
-  "id": "x:2119844985583317268",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-11-09T17:30:04+00:00",
-  "summary": "Your personal agent might be able to understand your finances before your bank lets it do anything about them HSBC,…",
-  "redacted_text": "your personal agent might be able to understand your finances before your bank lets it do anything about them\n\nHSBC, Barclays, Lloyds, NatWest and Nationwide are reportedly blocking or restricting AI agents accessing customer accounts, following similar US restrictions in October\n\nthe line being drawn is between reading financial data through approved services and letting an agent transact on your behalf\n\nand personal agents are going to run straight into this\n\n\"find me a better savings rate\" is useful. \"move my savings when you find one\" requires a completely different level of trust\n\nthe bank needs to know which agent is acting, what you actually authorized, and who is responsible if it…",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "other"
+   "market_news"
   ],
   "sentiment": "neutral",
   "owner": "cx",
@@ -4223,25 +3899,6 @@
   "owner": "cards",
   "entity": "natwest_group"
  },
- "x:2120795844425211976": {
-  "id": "x:2120795844425211976",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-11-12T08:28:26+00:00",
-  "summary": "Let’s pull up a chair and walk through both of your questions very slowly, because clearly Google isn't installed on…",
-  "redacted_text": "Let’s pull up a chair and walk through both of your questions very slowly, because clearly Google isn't installed on your device.\n\nFirst, a quick civics lesson: both the UK and Australia are constitutional monarchies built on the Westminster system. Members of the Royal Family do not sit in the Treasury, pass budgets, or unilaterally reallocate government tax revenue for NHS staffing. That is called \"Parliament.\" Confusing a constitutional patron with the Secretary of State for Health is an adorable, if rather basic, misunderstanding of how your own system of government works.\n\nSecond, since you boldly demanded to know what \"developments\" she’s made in early childhood and what \"real action\"…",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "branch_service"
-  ],
-  "sentiment": "negative",
-  "owner": "retail",
-  "entity": "natwest_group"
- },
  "x:2120854413925310742": {
   "id": "x:2120854413925310742",
   "source": "x",
@@ -4261,83 +3918,42 @@
   "owner": "retail",
   "entity": "natwest_group"
  },
- "x:2120887968747376999": {
-  "id": "x:2120887968747376999",
+ "x:2120902632105754900": {
+  "id": "x:2120902632105754900",
   "source": "x",
   "source_label": "X",
   "place": "X post",
-  "created_at": "2026-11-12T14:34:30+00:00",
-  "summary": "Check out Lewisham to test the idea that building high brings fertilising custom from locals.",
-  "redacted_text": "[handle] [handle] Check out Lewisham to test the idea that building high brings fertilising custom from locals. 9 Elms too. They just order in. The height already divorces them from local context so they never participate in the local economy.\n\nSee also what removing visitor parking did to Walworth and Camberwell Green, practically derelict in some parts. Is anyone ever gonna rent the old listed NatWest building?\n\nNot likely, if they’ve checked the lack of visitor parking, and seen the “booking required to load” notices on Walworth Rd. More fried chicken ahoy!",
+  "created_at": "2026-11-12T15:32:46+00:00",
+  "summary": "NatWest staff fraud [link] via",
+  "redacted_text": "NatWest staff fraud [link] via [handle] [handle] [handle]",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "deposits_rates"
+   "branch_service"
   ],
-  "sentiment": "neutral",
+  "sentiment": "negative",
   "owner": "retail",
   "entity": "natwest_group"
  },
- "x:2120933873227903043": {
-  "id": "x:2120933873227903043",
+ "x:2121146831044575356": {
+  "id": "x:2121146831044575356",
   "source": "x",
   "source_label": "X",
   "place": "X post",
-  "created_at": "2026-11-12T17:36:55+00:00",
-  "summary": "𝗪𝗛𝗬 𝗧𝗛𝗘 𝗕𝗔𝗡𝗞𝗦 𝗔𝗥𝗘 𝗖𝗢𝗡𝗖𝗘𝗥𝗡𝗘𝗗 This isn’t just a problem GOAT Network is talking about.",
-  "redacted_text": "𝗪𝗛𝗬 𝗧𝗛𝗘 𝗕𝗔𝗡𝗞𝗦 𝗔𝗥𝗘 𝗖𝗢𝗡𝗖𝗘𝗥𝗡𝗘𝗗\n\nThis isn’t just a problem GOAT Network is talking about. On September 22, six major banks, including Bank of America, Capital One, NatWest and ING, published a joint paper on building trust in agent payments.\n\nOne of their concerns was exactly this: when an agent makes a wrong purchase, it’s still unclear who should take responsibility. \n\nThey want companies to keep records of what customers requested, the permissions they gave, how the agent was identified and what happened during the transaction.\n\nThere’s another problem for crypto payments. When merchants move to stablecoin payments, they also lose the chargeback system that card payments provide. \n\nSo if…",
+  "created_at": "2026-11-13T07:43:08+00:00",
+  "summary": "I left NatWest for this reason.",
+  "redacted_text": "[handle] I left NatWest for this reason. I seem to have fewer issues with Monzo… atm lol",
   "title": null,
   "app_name": null,
   "app_version": null,
   "rating": null,
   "themes": [
-   "refund_delay",
-   "dispute_chargeback",
-   "merchant_pos"
+   "atm_debit_card"
   ],
   "sentiment": "negative",
   "owner": "operations",
-  "entity": "natwest_group"
- },
- "x:2120939846671732774": {
-  "id": "x:2120939846671732774",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-11-12T18:00:39+00:00",
-  "summary": "Learning Support Assistant at NatWest in #Spinningfields Manchester.",
-  "redacted_text": "Learning Support Assistant at NatWest in #Spinningfields Manchester.\n\nIn this role, you will need leadership support experience and excellent organisational skills and a keen eye for detail.\n\nSee: [link]\n\n#BankingJobs #ManchesterJobs [link]",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "service_praise"
-  ],
-  "sentiment": "positive",
-  "owner": "cx",
-  "entity": "natwest_group"
- },
- "x:2121052514199953694": {
-  "id": "x:2121052514199953694",
-  "source": "x",
-  "source_label": "X",
-  "place": "X post",
-  "created_at": "2026-11-13T01:28:21+00:00",
-  "summary": "We are so early........",
-  "redacted_text": "We are so early........\nnothing has happened yet\n\n**Quant Flow testing has mainly occurred in controlled industry pilots and lab environments focused on programmable money, tokenised deposits, and multi-bank orchestration.** No single public report gives a universal “sample size” across all tests, but the key documented ones are below.\n\n### 1. Great British Tokenised Deposits (GBTD) – UK Finance (most advanced / live)\n- **Participants**: 7 banks and building societies — Barclays, HSBC UK, Lloyds Banking Group, NatWest, Nationwide, Santander, and Monzo (joined later).\n- **Sample size**: 7 institutions.\n- **Sample transactions** (first live customer transactions, 24 September 2026):\n  - Two…",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "merchant_pos",
-   "deposits_rates"
-  ],
-  "sentiment": "neutral",
-  "owner": "payments",
   "entity": "natwest_group"
  }
 }

@@ -181,6 +181,17 @@ def clip(text: str, n: int) -> str:
 NOT_QUOTED_RX = re.compile(r"\bRBS\b|royal\s*bank\s*of\s*scotland|\bulster\b|\bindia\b|\bindian\b", re.I)
 
 
+# NW-D91: positive and negative shares, net sentiment and the mood dial come from review sources only (App Store, Google
+# Play, Trustpilot; model check 96%). X and Reddit count in volumes, themes, high impact, replies and quotes, never in a
+# sentiment share (model check 71%: indicative only).
+REVIEW_SOURCES = {"appstore", "playstore", "trustpilot"}
+SOCIAL_SOURCES = {"x", "reddit"}
+
+
+def review_only(rs):  # noqa: D103
+    return [r for r in rs if r["source"] in REVIEW_SOURCES]
+
+
 def quotable(r) -> bool:
     """A quote that alleges something against a named person, or complains about one, is never used as evidence.
     (Names are already redacted to role tags in normalise.py; the person may still be identifiable by role.)"""
@@ -228,6 +239,8 @@ def main():
     basis = {s["stream"] for s in sinfo if s["full_window"]}
     basis_bank = [r for r in bank if stream_of(r) in basis]
     W = M.weights(basis_bank)
+    basis_reviews = review_only(basis_bank)
+    W_REV = M.weights(basis_reviews)  # NW-D91: the mood dial and net sentiment read review sources only
     evidence_ids: set[str] = set()
 
     # ------------------------------------------------------------ themes
@@ -264,7 +277,7 @@ def main():
                 "by_business": dict(collections.Counter(r["business"] for r in rs)),
                 "by_product": dict(collections.Counter(p for r in rs if (p := _product_of(r)))),
                 "sentiment": sc,
-                "share_negative": pct(sc["negative"], len(rs)),
+                "share_negative": pct(sum(1 for r in review_only(rs) if r["sentiment"] == "negative"), len(review_only(rs))),
                 "escalation_count": esc,
                 "share_escalation": share_esc,
                 "repeat_count": sum(1 for r in rs if r["repeat_contact"]),
@@ -311,10 +324,10 @@ def main():
             return round(100 * (sum(1 for r in x if r["sentiment"] == "positive") - sum(1 for r in x if r["sentiment"] == "negative")) / len(x), 1) if x else None
 
         # Level and halves on the same basis (trend-basis streams, source-weighted), so the level sits between them.
-        b = [r for r in rs if stream_of(r) in basis]
-        lvl = M.strat_net(b, W)
-        n1 = M.strat_net([r for r in b if r["created_at"][:10] <= H1_END], W)
-        n2 = M.strat_net([r for r in b if r["created_at"][:10] > H1_END], W)
+        b = [r for r in review_only(rs) if stream_of(r) in basis]  # NW-D91: review sources only
+        lvl = M.strat_net(b, W_REV)
+        n1 = M.strat_net([r for r in b if r["created_at"][:10] <= H1_END], W_REV)
+        n2 = M.strat_net([r for r in b if r["created_at"][:10] > H1_END], W_REV)
         n1 = round(n1, 1) if n1 is not None else None
         n2 = round(n2, 1) if n2 is not None else None
         tops = collections.Counter(r["themes"][0] for r in rs).most_common(3)
@@ -445,6 +458,9 @@ def main():
                 "repeat": sum(1 for r in bank if r["business"] == b and r["repeat_contact"]),
                 "escalation": sum(1 for r in bank if r["business"] == b and r["escalation_intent"]),
                 "negative": sum(1 for r in bank if r["business"] == b and r["sentiment"] == "negative"),
+                # NW-D91: the negative share reads reviews only
+                "reviews": sum(1 for r in review_only(bank) if r["business"] == b),
+                "review_negative": sum(1 for r in review_only(bank) if r["business"] == b and r["sentiment"] == "negative"),
             }
             for b, _ in collections.Counter(r["business"] for r in bank).most_common()
         ],
@@ -534,12 +550,16 @@ def main():
     # ------------------------------------------------------------ mood
     mood = {
         "definition": (
-            "Mood index: net sentiment, (positive − negative) ÷ on-topic items × 100, over the last 7 days of public NatWest "
-            "voice, compared with the window average (1 August to 11 November 2026). Source-weighted: each source's "
+            "Mood index, from app-store and Trustpilot reviews: net sentiment, (positive − negative) ÷ reviews × 100, over "
+            "the last 7 days, compared with the window average (1 August to 13 November 2026). X and Reddit are not in it "
+            "(their sentiment is indicative only). Source-weighted: each source's "
             "net sentiment counts in proportion to its share of the whole window, so a burst or a gap in one source's "
             "collection cannot move it. Range −100 to +100."
         ),
-        **M.mood(basis_bank, W),
+        # NW-D91: all three review sources, each over its own collected days (App Store from 12 Aug, Trustpilot from
+        # 1 Sep). A level against each source's own window average crosses no start date (HL-13 governs trends).
+        **M.mood(review_only(bank), M.weights(review_only(bank))),
+        "sources_label": "from app-store and Trustpilot reviews",
         "baseline_label": "vs window average (1 Aug–13 Nov); no earlier baseline",
     }
 

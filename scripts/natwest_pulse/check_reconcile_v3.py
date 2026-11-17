@@ -101,6 +101,12 @@ def run(seed_dir: Path = SEED_V3, out_dir: Path = OUT_APP, quiet: bool = False) 
         meta = load(out_dir / "meta.json")
         ok(meta["scope_note"].startswith("Retail figures: NatWest (England and Wales)"), "scope note names NatWest alone")
 
+    # NW-D91: the mood dial and its per-source rows come from review sources only; X and Reddit never enter a mood figure.
+    if (out_dir / "mood.json").exists():
+        mood = load(out_dir / "mood.json")
+        social = sorted({x["source"] for x in mood.get("by_source", [])} & {"x", "reddit"})
+        ok(not social, f"mood: from app-store and Trustpilot reviews only, no social source ({social or 'none'})")
+
     # Store ratings: never pooled across the Play Store and the App Store (follow-up fix 2).
     pulse = load(out_dir / "app_pulse.json")
     release = load(out_dir / "briefing.json").get("release_pulse") or {}
@@ -432,6 +438,31 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
             continue
         ok(otl <= 0.25 * cora.get("open", 0) and otl < (calls.get("open_too_long") or 0),
            f"[{pid}] Cora open too long within 25% of Cora open and below Calls ({otl} of {cora.get('open')}; Calls {calls.get('open_too_long')})")
+    # NW-D95: windows nest. Morning brief <= last 7 days <= last 30 days <= full window for every count, for the bank
+    # and each product: contacts, open and waiting inside the bank; items and replies in public.
+    order = ("brief", "7d", "30d", "all")
+    def chain(get):  # noqa: E306
+        vals = [get(per["periods"][k]) for k in order]
+        return all(a <= b for a, b in zip(vals, vals[1:])), vals
+    bad_nest = []
+    probes = [
+        ("bank contacts", lambda p: p["cx_pulse"]["internal"]["volume"]),
+        ("bank open", lambda p: p["cx_pulse"]["internal"]["open"]),
+        ("bank public items", lambda p: p["cx_pulse"]["external"]["volume"]),
+        ("bank public replies", lambda p: p["social_pulse"]["responded"]),
+    ]
+    for pid_ in [x["id"] for x in per["periods"]["all"]["businesses"]]:
+        probes += [
+            (f"{pid_} contacts", lambda p, i=pid_: next(x for x in p["businesses"] if x["id"] == i)["internal"]["volume"]),
+            (f"{pid_} open", lambda p, i=pid_: next(x for x in p["businesses"] if x["id"] == i)["internal"]["open"]),
+            (f"{pid_} public items", lambda p, i=pid_: next(x for x in p["businesses"] if x["id"] == i)["external"]["volume"]),
+        ]
+    for name, get in probes:
+        good, vals = chain(get)
+        if not good:
+            bad_nest.append(f"{name} {vals}")
+    ok(not bad_nest, f"windows nest: brief <= 7 days <= 30 days <= full window for every count ({bad_nest[:3] or 'all nest'})")
+
     # One referral series (NW-D62): the ladder's Financial Ombudsman Service rung (referrals made in the window) and the
     # Ombudsman watch's "Referred" tile (referrals in the last 8 weeks) run at the same weekly pace, within 15%.
     lb = {r["rung"]: r["count"] for r in agg["deliverables_detail"].get("ladder_bank", [])}

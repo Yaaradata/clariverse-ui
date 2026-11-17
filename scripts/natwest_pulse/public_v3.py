@@ -40,24 +40,38 @@ def load():
     return [r for r in rows if W_START <= r["created_at"][:10] <= W_END and r["relevant"] == "on_topic" and r["entity"] == "natwest_group"]
 
 
+# NW-D92: product routing by what the post is about (UK words and the theme), in this order. The old HDFC business
+# lines sent almost everything to Current accounts.
+ROUTE = [
+    ("mortgages", re.compile(r"mortgage|remortgag|rate switch|product transfer|redemption|redeem|\bLTV\b|fixed rate (deal|ends)", re.I),
+     {"mortgage_rate_switch", "loan_closure_documents"}),
+    ("savings", re.compile(r"\bsavings?\b|\bisa\b|\bisas\b|interest rate|\bAER\b|bonus rate|saver\b|easy access|regular saver", re.I),
+     {"deposits_rates"}),
+    ("payments_fraud", re.compile(r"faster payment|payment (failed|declined|pending|delayed|not (arrived|received))|transfer|"
+                                  r"\brefund|chargeback|\bfraud|\bscam|blocked (my )?(account|card|payment)|"
+                                  r"direct debit|standing order|open banking|\bpayee\b", re.I),
+     {"faster_payments_failures", "failed_txn_reversal", "refund_delay", "fraud_scam", "unauthorised_txn", "phishing",
+      "app_reimbursement", "account_freeze", "merchant_pos"}),
+    ("cards", re.compile(r"credit card|credit limit|\bcard limit|reward|cashback|balance transfer|\bapr\b|annual fee", re.I),
+     {"card_fees_charges", "card_limit", "rewards_value", "reward_redemption", "card_application", "card_eligibility_upgrade",
+      "card_dispatch", "dispute_chargeback"}),
+    ("personal_loans", re.compile(r"personal loan|\bloan\b(?! to value)", re.I), {"loan_processing", "loan_servicing"}),
+]
+
+
 def product_of(r) -> str | None:
-    b = r["business"]
+    if r.get("business") == "group_company":
+        return None
     text = f"{r.get('title') or ''} {r.get('text') or ''}"
-    if b == "cards":
-        return "cards"
-    if b == "payments":
-        return "payments_fraud"
-    if b == "loans":
-        if r.get("app_name") == "Home Loans" or HOME.search(text):
-            return "mortgages"
-        return "personal_loans"
-    if b == "retail_banking":
-        if r["themes"][0] in ("mis_selling", "insurance_group") or (INSURANCE.search(text) and r["themes"][0] in ("mis_selling", "fees_charges_bank", "other", "general_dissatisfaction", "complaint_handling")):
-            return "savings"
-        if r["themes"][0] in DIGITAL_GROUP or r.get("app_name") == "NatWest app":
-            return "current_accounts"
-        return "current_accounts"
-    return None
+    theme = r["themes"][0] if r.get("themes") else None
+    # The theme decides first when it belongs to one product; otherwise the words of the post.
+    for pid, _rx, themes in ROUTE:
+        if theme in themes:
+            return pid
+    for pid, rx, _themes in ROUTE:
+        if rx.search(text):
+            return pid
+    return "current_accounts"  # accounts, overdrafts, the app and everyday banking
 
 
 def build_products(rows, basis) -> dict:
@@ -99,7 +113,10 @@ def build_products(rows, basis) -> dict:
                 "escalation": sum(1 for r in rs if r["escalation_intent"]),
                 "repeat": sum(1 for r in rs if r["repeat_contact"]),
                 "promise_break_mentions": sum(1 for r in rs if r["promise_break"]),
-                "share_negative": round(100 * neg / len(rs), 1) if rs else None,
+                "share_negative": (round(100 * sum(1 for r in rs if r["source"] in ("appstore", "playstore", "trustpilot")
+                                                and r["sentiment"] == "negative")
+                                         / max(sum(1 for r in rs if r["source"] in ("appstore", "playstore", "trustpilot")), 1), 1)
+                                   if any(r["source"] in ("appstore", "playstore", "trustpilot") for r in rs) else None),  # NW-D91
                 "trend_change_pct": change,
                 "trend_basis": {"first_half": f, "second_half": s, "first_share": tr["first_share"], "second_share": tr["second_share"]},
                 "top_issue": {"id": ranked[0][0], "label": labels[ranked[0][0]], "negative": ranked[0][1]["negative"]} if ranked else None,

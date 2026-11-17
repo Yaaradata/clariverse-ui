@@ -16,9 +16,9 @@ import { C, MONO, Tile, tint } from "./primitives";
 
 const CARDS_VIEW = "/natwest-pulse/v1/business/cards";
 const BRIEF_ORDER = [
+  "cards",
   "current_accounts",
   "payments_fraud",
-  "cards",
   "savings",
   "mortgages",
   "personal_loans",
@@ -155,7 +155,7 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
           <span style={{ fontSize: 12, color: C.textMut, lineHeight: 1.3 }}>
             negative
             <br />
-            public
+            {e.negative_share_note ?? "public"}
           </span>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -181,7 +181,14 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
       </div>
       <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
         <TrendChip pct={i.change_pct} label="internal" />
-        <TrendChip pct={e.change_pct} label="public" />
+        {e.volume ? (
+          <TrendChip pct={e.change_pct} label="public" />
+        ) : (
+          // NW-D92: no public items in the period reads as such, never "▼ −100%".
+          <span style={{ fontSize: 12, color: C.textMut }}>
+            no public items
+          </span>
+        )}
       </div>
       <div
         style={{
@@ -207,6 +214,9 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
         <span>
           Negative public:{" "}
           <strong style={{ color: C.text }}>{fmtPct(e.negative_share)}</strong>
+          {e.negative_share_note ? (
+            <span style={{ color: C.textMut }}> {e.negative_share_note}</span>
+          ) : null}
         </span>
         <span>
           Negative internal:{" "}

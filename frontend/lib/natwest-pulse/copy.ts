@@ -114,20 +114,20 @@ export function moodLine(b: Bundle): string {
   const m = b.mood;
   const d = m.delta_pts ?? 0;
   const dir = d < 0 ? "below" : "above";
-  const level = `Public voice skews negative (window average ${fmtNum(Math.round(m.window_average))}), so the change matters more than the level.`;
+  const level = `Reviews skew negative (window average ${fmtNum(Math.round(m.window_average))}), so the change matters more than the level.`;
   if (Math.abs(d) < 5)
-    return `Mood is steady: the last 7 days sit within ${fmtNum(Math.ceil(Math.abs(d)))} points of the window average, source-weighted. ${level}`;
-  return `The last 7 days sit ${fmtNum(Math.abs(Math.round(d)))} points ${dir} the window average, source-weighted. ${level}`;
+    return `Mood, from app-store and Trustpilot reviews, is steady: the last 7 days sit within ${fmtNum(Math.ceil(Math.abs(d)))} points of the window average, source-weighted. ${level}`;
+  return `Mood, from app-store and Trustpilot reviews: the last 7 days sit ${fmtNum(Math.abs(Math.round(d)))} points ${dir} the window average, source-weighted. ${level}`;
 }
 
 /** Review step 5: the one-line method note under the mood figure, with the unweighted figure it replaces. */
 export function moodNote(b: Bundle): string {
   const m = b.mood;
   if (!m.by_source.length) return "Public data not yet loaded.";
-  return `Source-weighted: each source counts by its share of the window, so a burst in one source cannot move the figure. Unweighted it would read ${fmtSigned(m.unweighted.delta_pts, " pts")}.`;
+  return `From app-store and Trustpilot reviews, source-weighted: each review source counts by its share of the window, so a burst in one cannot move the figure. X and Reddit are not in it. Unweighted it would read ${fmtSigned(m.unweighted.delta_pts, " pts")}.`;
 }
 
 /** The same point in one line, for the exec question card (the satisfaction page carries the full note). */
 export function moodNoteShort(b: Bundle): string {
-  return `Source-weighted; unweighted it would read ${fmtSigned(b.mood.unweighted.delta_pts, " pts")} (a burst in X). Reddit left out.`;
+  return `From app-store and Trustpilot reviews, source-weighted; unweighted it would read ${fmtSigned(b.mood.unweighted.delta_pts, " pts")}. X and Reddit are not in it.`;
 }

@@ -141,6 +141,38 @@ OWNER_BY_RT = {
 }
 
 
+
+# ---- NW-D90 (sentiment check v1 failed 76/100): X and Reddit carry sentiment only when the author speaks about their
+# own experience with NatWest; news, ads, advice to others, politics and chatter are neutral. Reviews keep the rating.
+FIRST_PERSON = re.compile(r"\b(i|i'm|im|i've|ive|i'd|i'll|my|me|mine|we|we've|our|us)\b", re.I)
+BANK_WORD = re.compile(r"nat ?west|\bbank\b|\baccount\b|\bcard\b|\bapp\b|branch|\bcora\b|mortgage|\bloan\b|overdraft|savings|"
+                       r"\bisa\b|payment|transfer|direct debit|customer service|helpline|complain", re.I)
+AIMED = re.compile(r"(nat ?west|\byou\b|\byour\b)[^.?!]{0,50}\b(useless|awful|terrible|worst|appalling|disgusting|rubbish|"
+                   r"shocking|disgrace|pathetic|joke|thank|thanks|brilliant|amazing|excellent|fantastic|helpful|sorted)\b|"
+                   r"\b(thank you|thanks|cheers|shame on you|well done)\b[^.?!]{0,30}(nat ?west|\byou\b)", re.I)
+# App issues an unhappy post can name: it goes to the matching app theme, never to General dissatisfaction.
+APP_ISSUES = [
+    ("cora_unresolved", re.compile(r"\bcora\b|chat ?bot", re.I)),
+    ("app_login_biometrics", re.compile(r"log ?in|sign ?in|passcode|password|face ?id|fingerprint|biometric|locked out", re.I)),
+    ("app_speed_crash", re.compile(r"crash|freez|won'?t (open|load)|not (opening|loading|working)|keeps? (closing|crashing)|"
+                                   r"\bslow\b|\berror\b|\bglitch|\bbug", re.I)),
+    ("new_app_release", re.compile(r"\bupdate\b|new version|latest version|since the update", re.I)),
+    ("app_usability", re.compile(r"\bapp\b", re.I)),  # NW-D92: only posts that name the app itself
+]
+STAFF_PRAISE = re.compile(r"\b(staff|branch|phone|call(ed)?|advis[eo]r|agent|colleague|lady|gentleman|team|customer service|"
+                          r"helpline|cashier|manager)\b", re.I)
+PRODUCT_WORD = re.compile(r"\baccount\b|\bcard\b|mortgage|\bloan\b|overdraft|savings|\bisa\b|switch", re.I)
+NATWEST_RX = re.compile(r"nat ?west|\bcora\b", re.I)
+
+
+def own_experience(rec, low: str) -> bool:
+    return bool(rec.get("addresses_bank") or (FIRST_PERSON.search(low) and BANK_WORD.search(low)) or AIMED.search(low))
+
+
+def app_issue(low: str) -> str | None:
+    return next((tid for tid, r in APP_ISSUES if r.search(low)), None)
+
+
 def sentiment(rec, text: str) -> tuple[str, int]:
     if rec["rating"] is not None:
         r = rec["rating"]
@@ -158,6 +190,8 @@ def classify(rec: dict) -> dict:
     text = f"{rec.get('title') or ''} {rec.get('text') or ''}".strip()
     low = text.lower()
     sent, inten = sentiment(rec, low)
+    if rec["source"] in ("x", "reddit") and sent != "neutral" and not own_experience(rec, low):
+        sent, inten = "neutral", 1  # NW-D90: not the author's own experience with NatWest
     themes: list[str] = []
     if rec["entity"] in ("hdfc_life", "hdfc_securities", "other_group"):
         for tid, r in GROUP_THEME_RULES:
@@ -176,19 +210,27 @@ def classify(rec: dict) -> dict:
                 break
         # Store-only: a negative review with no specific issue is about the app's speed only if it says so;
         # otherwise it falls through to the fallbacks.
+        # NW-D90: General dissatisfaction and Product questions are last resorts; Other is preferred when nothing
+        # specific matches. An unhappy post naming an app issue goes to that app theme; praise naming staff, branch or
+        # phone service is service praise.
+        store = rec["source"] in ("playstore", "appstore")
         if not themes:
-            if sent == "positive" and rec["source"] in ("playstore", "appstore"):
-                themes = ["app_praise"]
-            elif sent == "positive" and SERVICE_PRAISE.search(low):
+            if sent == "positive" and STAFF_PRAISE.search(low):
                 themes = ["service_praise"]
-            elif QUESTION.search(low) and sent != "negative":
-                themes = ["product_advice"]
-            elif sent == "negative":
+            elif sent == "positive" and store:
+                themes = ["app_praise"]
+            elif sent == "negative" and (app_issue(low) or store):
+                themes = [app_issue(low) or "app_usability"]
+            elif sent == "negative" and NATWEST_RX.search(low) and own_experience(rec, low):
                 themes = ["general_dissatisfaction"]
+            elif QUESTION.search(low) and sent != "negative" and PRODUCT_WORD.search(low) and NATWEST_RX.search(low):
+                themes = ["product_advice"]
             else:
                 themes = ["other"]
-        elif sent == "positive" and rec["source"] in ("playstore", "appstore") and themes[0] in ("app_speed_crash", "app_login_biometrics", "new_app_release") and not NEG.search(low):
+        elif sent == "positive" and store and themes[0] in ("app_speed_crash", "app_login_biometrics", "new_app_release") and not NEG.search(low):
             themes = ["app_praise"]  # "fast and easy login" is praise, not a login problem
+        if themes[0] == "app_praise" and STAFF_PRAISE.search(low):
+            themes = ["service_praise", *[t for t in themes[1:] if t != "service_praise"]]
     # Business
     business = rec.get("business_hint")
     if rec["entity"] != "natwest_group":

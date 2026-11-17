@@ -1250,3 +1250,45 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
     step in one weight. check_pii skips a public record id ("trustpilot:<hex>"), which is not a hashed handle.
   - The public escalation target "grievance" is renamed complaints_team; a theme definition no longer says "title
     deeds".
+- **NW-D90 · Public sentiment and theme rules (after the model sentiment check failed 76/100).** X and Reddit carry a
+  positive or negative label only when the author speaks about their own experience with NatWest: first person with a
+  banking word, a post addressed to the bank's handles (read before redaction), or praise or a complaint aimed at the
+  bank; news, ads, advice to others, politics and chatter are neutral. Reviews keep the rating rule. Neutral share:
+  X 60% → 73%, Reddit 52% → 68%. Themes: an unhappy post naming an app issue goes to that app theme; an unhappy store
+  review with nothing specific goes to App features and usability; praise naming staff, branch or phone service is
+  service praise; General dissatisfaction and Product questions are last resorts, Other is preferred. Re-check on a new
+  stratified sample (seed 20261117, qa/natwest_l2_sample_check_v2.md), labelled blind by a model: sentiment 84/100 (FAIL
+  by one against the 85 gate), themes 43/100 (not a gate). Negative share stays hidden.
+- **NW-D91 · Sentiment check closed at source level (Usha).** Reviews (App Store, Google Play, Trustpilot) 49/51 = 96%:
+  data/public/natwest_config.json records sentiment_accuracy_check as passed for review sources (model stand-in, pending
+  human review; seeds 20261116 and 20261117 and both result files cited). Social (X, Reddit) 35/49 = 71%: indicative
+  only. Every positive and negative share, net sentiment and the mood dial are computed from review sources; X and Reddit
+  still count in volumes, themes, high impact, replies and quotes. The mood reads all three review sources, each over its
+  own collected days (App Store 49%, Google Play 41%, Trustpilot 10%); trends keep the full-window rule (HL-13). Mood
+  figures say "from app-store and Trustpilot reviews"; X and Reddit rows shown on their own say "indicative". The
+  reconcile fails if a social source enters the mood (fixture: X added to the mood). Negative share unhidden.
+- **NW-D92 · On topic, quotes, product routing (Usha).** On X and Reddit an item counts only when NatWest is its subject
+  (named in the title or first sentence, addressed to the bank's handles, or a comment in a NatWest thread); another
+  bank as subject (or a thread about one) is mentions_peer, otherwise a passing mention; reviews are always on topic.
+  Removed: X 1,314 → 777 on topic (261 another bank as subject, the rest passing mentions); Reddit 772 → 379 (111 and
+  the rest). Product-card quotes are on topic, first person and name the card's product. Products are routed by theme
+  then by the words of the post: public items by product before → after: Current accounts 3,578 → 2,749 · Payments and
+  fraud 15 → 328 · Credit cards 411 → 149 · Savings 18 → 75 · Mortgages 143 → 58 · Personal loans 52 → 18. App
+  features and usability takes only posts that name the app. A product with no public items in the period reads "no
+  public items", not "▼ −100%". Rings show one decimal below 1% (9,195 of 2.3m reads 0.4%, not 0%).
+- **NW-D93 · Quote order (Usha).** A card's quote is the top-issue theme first, then the product's most-engaged eligible
+  on-topic item.
+- **NW-D94 · Morning brief for public items (Usha).** The calendar day before the freeze (12 Nov) against 11 Nov; store
+  reviews are date-only. Internal figures keep the 24 hours to 07:45. Fixed on the way: the public end date was still
+  11 Nov 23:59 from the old freeze; it is now the freeze.
+- **NW-D95 · A figure in every window, nesting, card order (Usha).** Negative public share is always shown: from reviews
+  when the product has 20 or more in the period; below that from all its on-topic public items, labelled
+  "indicative (n=…)"; below 5 public items "—" with "n=…". Windows nest: Morning brief ≤ 7 days ≤ 30 days ≤ full window
+  for contacts, open, public items and replies, for the bank and every product; the reconcile checks it and a fixture
+  (a brief larger than the last 7 days) proves it trips. Credit cards lead (the worked deep dive): Credit cards, Current
+  accounts and app, Payments and fraud, Savings, Mortgages, Personal loans, on the cards, the at-risk list, the morning
+  brief and the Ask tables. Reverses the Pass 2 §5 order.
+- **NW-D96 · Header (Usha, 17 Nov).** The watermark bar is removed (overrides brief Step 1.2; the footer still says the
+  internal figures are illustrative, and the crawl checks that instead). The header is no longer a block: the brand line,
+  period buttons and theme toggle sit on a transparent background, and only the Ask LisN bar stays fixed at the top with
+  transparent space either side. Logged as NW-D96 because the request numbered NW-D95 above arrived with it.

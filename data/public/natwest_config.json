@@ -1,4 +1,15 @@
 {
- "about": "NatWest pulse switches. sentiment_accuracy_check: public negative share stays hidden until the hand check of qa/natwest_l2_sample_check.md is recorded here as passed (NW-D84).",
- "sentiment_accuracy_check": {"passed": false, "checked_by": null, "checked_on": null, "sample": "qa/natwest_l2_sample_check.md", "accuracy_pct": null}
+ "about": "NatWest pulse switches. sentiment_accuracy_check (NW-D91): passed for review sources (App Store, Google Play, Trustpilot), model stand-in, pending human review; X and Reddit sentiment is indicative only and never in a sentiment share or the mood dial.",
+ "sentiment_accuracy_check": {
+  "passed": true,
+  "scope": "review sources",
+  "checked_by": "model stand-in (blind relabel by a separate agent), pending human review",
+  "checked_on": "2026-11-17",
+  "review_sources": {"sources": ["appstore", "playstore", "trustpilot"], "accuracy": "49/51", "accuracy_pct": 96},
+  "social_sources": {"sources": ["x", "reddit"], "accuracy": "35/49", "accuracy_pct": 71, "status": "indicative only"},
+  "samples": [
+   {"file": "qa/natwest_l2_sample_check.md", "seed": 20261116, "result": "qa/natwest_l2_sample_check_result.md", "sentiment": "76/100", "rules": "before NW-D90"},
+   {"file": "qa/natwest_l2_sample_check_v2.md", "seed": 20261117, "result": "qa/natwest_l2_sample_check_v2_result.md", "sentiment": "84/100", "rules": "NW-D90"}
+  ]
+ }
 }

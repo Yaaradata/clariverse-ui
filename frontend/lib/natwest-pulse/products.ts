@@ -2,9 +2,9 @@
 import type { ProductId } from "./types";
 
 export const PRODUCT_ORDER: ProductId[] = [
+  "cards",
   "current_accounts",
   "payments_fraud",
-  "cards",
   "savings",
   "mortgages",
   "personal_loans",

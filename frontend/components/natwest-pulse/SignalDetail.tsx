@@ -41,15 +41,13 @@ const PILLAR: Record<string, string> = {
   understanding: "Consumer understanding",
   support: "Consumer support",
 };
-const BUSINESS: Record<string, string> = {
-  retail_banking: "Retail banking",
+const PRODUCT_NAME: Record<string, string> = {
+  current_accounts: "Current accounts and app",
+  payments_fraud: "Payments and fraud",
   cards: "Credit cards",
-  loans: "Loans",
-  payments: "Payments",
-  wealth: "Wealth",
-  sme_merchant: "SME and merchant",
-  corporate: "Corporate",
-  group_company: "Group company",
+  savings: "Savings",
+  mortgages: "Mortgages",
+  personal_loans: "Personal loans",
 };
 const SOURCE: Record<string, string> = {
   x: "X",
@@ -277,12 +275,12 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
             </span>
             <span style={{ fontSize: 14, color: C.textMut }}>·</span>
             <span style={{ fontSize: 14 }}>
-              Business:{" "}
-              {Object.entries(t.by_business)
+              Product:{" "}
+              {Object.entries(t.by_product ?? {})
                 .sort((a, c) => c[1] - a[1])
                 .slice(0, 3)
-                .map(([k, v]) => `${BUSINESS[k] ?? k} ${fmt(v)}`)
-                .join(", ")}
+                .map(([k, v]) => `${PRODUCT_NAME[k] ?? k} ${fmt(v)}`)
+                .join(", ") || "—"}
             </span>
           </div>
           <Table

@@ -68,7 +68,7 @@ CORA_THEMES = ["cora_unresolved", "cora_wrong_answer", "cora_handoff_lost", "cor
 END = dt.datetime.fromisoformat(PERIOD_END)
 START = dt.datetime.fromisoformat(DATA_START)
 H48 = dt.timedelta(hours=48)
-PUBLIC_END = dt.datetime(2026, 11, 11, 23, 59, 59, tzinfo=END.tzinfo)
+PUBLIC_END = END  # NW-D94: public items run to the freeze (13 Nov 07:45); later ones are kept out in normalise.py
 SOURCE_LABEL = {"appstore": "App Store", "playstore": "Google Play", "x": "X", "reddit": "Reddit", "trustpilot": "Trustpilot", "forum": "Forums"}
 TREND_SOURCES = {"playstore", "appstore", "trustpilot", "x", "reddit"}  # one continuous collector each (NW-D82)
 # HL-13: a source counts in a trend only when it was collecting before the comparison window began.
@@ -391,6 +391,17 @@ def source_weights(pub) -> dict:
     return {s: v / n for s, v in c.items()}
 
 
+# NW-D91: positive and negative shares, net sentiment and the mood dial come from review sources only (App Store, Google
+# Play, Trustpilot; model check 96%). X and Reddit count in volumes, themes, high impact, replies and quotes, never in a
+# sentiment share (model check 71%: indicative only).
+REVIEW_SOURCES = {"appstore", "playstore", "trustpilot"}
+SOCIAL_SOURCES = {"x", "reddit"}
+
+
+def reviews(rs):
+    return [r for r in rs if r["source"] in REVIEW_SOURCES]
+
+
 def weighted_share(rs, pred, W, min_items: int = 3):
     """Source-weighted share (%) of rs where pred holds: each source's own share, weighted by its window share."""
     by = collections.defaultdict(list)
@@ -443,11 +454,20 @@ def replies(rs) -> dict:
     }
 
 
+def pub_span(w):
+    """NW-D94: the public window. The Morning brief is the calendar day before the freeze (12 Nov) against the day
+    before it (11 Nov); store reviews carry a date only. Every other period is the period's own window, so the brief's
+    day sits inside the last 7 days, 30 days and the full window (NW-D95)."""
+    if w.get("period_id") != "brief":
+        return w["start"], w["end"], w["prev"], w["trend_cur"]
+    day = dt.datetime.combine(w["end"].date() - dt.timedelta(days=1), dt.time(0), tzinfo=w["end"].tzinfo)
+    nxt = day + dt.timedelta(days=1)
+    return day, nxt, (day - dt.timedelta(days=1), day), (day, nxt)
+
+
 def public_block(rs_all, w, W, keep=lambda r: True) -> dict:
-    a, b = w["start"], w["end"]
+    a, b, (pa, pb), (ta, tb) = pub_span(w)
     rs = [r for r in rs_all if keep(r) and a <= r["_c"] < b]
-    pa, pb = w["prev"]
-    ta, tb = w["trend_cur"]
     basis = lambda r: r["source"] in TREND_SOURCES and SOURCE_START.get(r["source"], START) <= pa  # noqa: E731  (HL-13)
     cur_t = sum(1 for r in rs_all if keep(r) and basis(r) and ta <= r["_c"] < tb)
     prev_t = sum(1 for r in rs_all if keep(r) and basis(r) and pa <= r["_c"] < pb)
@@ -457,8 +477,8 @@ def public_block(rs_all, w, W, keep=lambda r: True) -> dict:
         "positive": sum(1 for r in rs if r["sentiment"] == "positive"),
         "negative": sum(1 for r in rs if r["sentiment"] == "negative"),
         "neutral": sum(1 for r in rs if r["sentiment"] == "neutral"),
-        "positive_share": weighted_share(rs, lambda r: r["sentiment"] == "positive", W),
-        "negative_share": weighted_share(rs, lambda r: r["sentiment"] == "negative", W),
+        "positive_share": weighted_share(reviews(rs), lambda r: r["sentiment"] == "positive", W),
+        "negative_share": weighted_share(reviews(rs), lambda r: r["sentiment"] == "negative", W),
         "share_method": "source_weighted",
         "change_pct": change(cur_t, prev_t),
         "trend_basis": {"current": cur_t, "previous": prev_t,
@@ -471,8 +491,8 @@ def public_block(rs_all, w, W, keep=lambda r: True) -> dict:
             "positive": sum(1 for r in hi if r["sentiment"] == "positive"),
             "negative": sum(1 for r in hi if r["sentiment"] == "negative"),
             "escalation": sum(1 for r in hi if r["escalation_intent"]),
-            "positive_share": weighted_share(hi, lambda r: r["sentiment"] == "positive", W, 1),
-            "negative_share": weighted_share(hi, lambda r: r["sentiment"] == "negative", W, 1),
+            "positive_share": weighted_share(reviews(hi), lambda r: r["sentiment"] == "positive", W, 1),
+            "negative_share": weighted_share(reviews(hi), lambda r: r["sentiment"] == "negative", W, 1),
             "share_method": "source_weighted",
             "responded": replies(hi),
         },
@@ -502,7 +522,7 @@ def social_pulse(pub, w, W) -> dict:
     """External block of the Customer pulse (30 Sep review, K2 and follow-ups 1-2): public mentions, the ones with
     reach, how many got a bank reply (by source), and the five posts with the most engagement. Text is the anonymised
     summary; no names, handles or links."""
-    a, b = w["start"], w["end"]
+    a, b, _prev, _cur = pub_span(w)
     rs = [r for r in pub if a <= r["_c"] < b]
     hi = [r for r in rs if reach(r)]
     by_source = response_by_source(rs)
@@ -543,7 +563,7 @@ def social_pulse(pub, w, W) -> dict:
         "mentions_series": [{"end": e.isoformat(), "count": sum(1 for r in pub if s <= r["_c"] < e)} for s, e in w["series"]],
         "high_impact_series": [{"end": e.isoformat(), "count": sum(1 for r in pub if s <= r["_c"] < e and reach(r))} for s, e in w["series"]],
         "negative_share_series": [
-            {"end": e.isoformat(), "pct": weighted_share(xs, lambda r: r["sentiment"] == "negative", W) if xs else None}
+            {"end": e.isoformat(), "pct": weighted_share(reviews(xs), lambda r: r["sentiment"] == "negative", W) if xs else None}
             for s, e in w["series"] for xs in [[r for r in pub if s <= r["_c"] < e]]
         ],
         "response_series": [
@@ -564,15 +584,39 @@ def social_pulse(pub, w, W) -> dict:
     }
 
 
-def anecdote(rs, theme):
+QUOTE_FIRST_PERSON = re.compile(r"\b(i|i'm|im|i've|ive|i'd|my|me|we|our|us)\b", re.I)
+QUOTE_PRODUCT = {  # NW-D92: a card's quote must name the product the card is about
+    "current_accounts": re.compile(r"current account|\baccount\b|overdraft|debit card|\bapp\b|branch", re.I),
+    "payments_fraud": re.compile(r"payment|transfer|\bfraud|\bscam|refund|chargeback|direct debit|payee", re.I),
+    "cards": re.compile(r"credit card|\bcard\b|credit limit|reward|cashback", re.I),
+    "savings": re.compile(r"\bsavings?\b|\bisas?\b|interest|saver", re.I),
+    "mortgages": re.compile(r"mortgage|remortgag|rate switch|redemption", re.I),
+    "personal_loans": re.compile(r"\bloan", re.I),
+}
+
+
+def anecdote(rs, theme, pid=None):
     # A card's anecdote is the business's voice in one line: never a quote naming a person, and never an allegation
     # (fraud, corruption, lying…) even against an unnamed role, which on an exec screen reads as the bank's view.
+    # NW-D92: on-topic, first-person, naming the card's product; never an item whose subject is another bank.
+    prod = QUOTE_PRODUCT.get(pid)
     cands = [
         r for r in rs
         if quotable(r) and r["summary"] and r["sentiment"] == "negative"
+        and r.get("relevant", "on_topic") == "on_topic"
+        and QUOTE_FIRST_PERSON.search(f"{r.get('title') or ''} {r.get('text') or ''}")
+        and (prod is None or prod.search(f"{r.get('title') or ''} {r.get('text') or ''}"))
         and not ALLEGATION.search(f"{r['summary']} {r.get('text') or ''}")
     ]
-    pick = [r for r in cands if theme in r["themes"]] or cands
+    # NW-D93: the top-issue theme first; then the product's most-engaged eligible on-topic item, any sentiment.
+    others = [
+        r for r in rs
+        if quotable(r) and r["summary"] and r.get("relevant", "on_topic") == "on_topic"
+        and QUOTE_FIRST_PERSON.search(f"{r.get('title') or ''} {r.get('text') or ''}")
+        and (prod is None or prod.search(f"{r.get('title') or ''} {r.get('text') or ''}"))
+        and not ALLEGATION.search(f"{r['summary']} {r.get('text') or ''}")
+    ]
+    pick = [r for r in cands if theme in r["themes"]] or others
     if not pick:
         return None
 
@@ -595,6 +639,8 @@ def theme_labels():
 # ------------------------------------------------------------------ businesses, brief
 
 THIN_ROWS = 30
+MIN_REVIEWS = 20  # NW-D93
+MIN_PUBLIC = 5  # NW-D95
 
 
 def businesses(inter, pub, w, W, labels) -> list[dict]:
@@ -613,7 +659,21 @@ def businesses(inter, pub, w, W, labels) -> list[dict]:
         ib["negative_share"] = pct(sum(r["w"] for r in basis if r["sentiment"] == "negative"), wn(basis))
         ib["negative_share_basis"] = "last 7 days" if basis is not rows else None
         pb = public_block(pub, w, W, keep=lambda r, pid=pid: r["_product"] == pid)
-        prs = [r for r in pub if r["_product"] == pid and a <= r["_c"] < b]
+        # NW-D93: the card's negative-public figure needs at least MIN_REVIEWS review items in the period.
+        pa_, pb_, _p, _c = pub_span(w)
+        prs = [r for r in pub if r["_product"] == pid and pa_ <= r["_c"] < pb_]
+        n_rev = sum(1 for r in prs if r["source"] in REVIEW_SOURCES)
+        pb["review_items"] = n_rev
+        if n_rev < MIN_REVIEWS:
+            # NW-D95: fewer than 20 reviews -> all on-topic public items for the product, labelled indicative; fewer than
+            # 5 public items of any kind -> no figure.
+            n_all = len(prs)
+            if n_all >= MIN_PUBLIC:
+                pb["negative_share"] = pct(sum(1 for r in prs if r["sentiment"] == "negative"), n_all)
+                pb["negative_share_note"] = f"indicative (n={n_all})"
+            else:
+                pb["negative_share"] = None
+                pb["negative_share_note"] = f"n={n_all}"
         neg_t = collections.Counter(r["themes"][0] for r in prs if r["sentiment"] == "negative")
         top = neg_t.most_common(1)[0] if neg_t else None
         if not top:  # thin public voice: fall back to the internal top issue, and say so
@@ -628,7 +688,7 @@ def businesses(inter, pub, w, W, labels) -> list[dict]:
             "internal": ib,
             "external": pb,
             "top_issue": top_issue,
-            "anecdote": anecdote(prs, top_issue["id"]) if top_issue else None,
+            "anecdote": anecdote(prs, top_issue["id"], pid) if top_issue else None,
         })
     return out
 
@@ -681,8 +741,8 @@ def brief(biz: list[dict], pub, w, W, labels, p) -> dict:
         prv = [r for r in pub if r["_product"] == x["id"] and pa <= r["_c"] < pb]
         if len(cur) < min_n or len(prv) < min_n:
             continue
-        n_now = weighted_share(cur, lambda r: r["sentiment"] == "negative", W, 1)
-        n_prev = weighted_share(prv, lambda r: r["sentiment"] == "negative", W, 1)
+        n_now = weighted_share(reviews(cur), lambda r: r["sentiment"] == "negative", W, 1)
+        n_prev = weighted_share(reviews(prv), lambda r: r["sentiment"] == "negative", W, 1)
         if n_now is None or n_prev is None or not n_prev:
             continue
         d = (n_now - n_prev) / n_prev
@@ -721,8 +781,8 @@ def brief(biz: list[dict], pub, w, W, labels, p) -> dict:
                 continue
             cur = [r for r in pub if r["_product"] == x["id"] and ta <= r["_c"] < tb]
             prv = [r for r in pub if r["_product"] == x["id"] and pa <= r["_c"] < pb]
-            n_now = weighted_share(cur, lambda r: r["sentiment"] == "negative", W, 1) if cur else None
-            n_prev = weighted_share(prv, lambda r: r["sentiment"] == "negative", W, 1) if prv else None
+            n_now = weighted_share(reviews(cur), lambda r: r["sentiment"] == "negative", W, 1) if cur else None
+            n_prev = weighted_share(reviews(prv), lambda r: r["sentiment"] == "negative", W, 1) if prv else None
             if n_now is None or not n_prev:
                 extra.append((9, {"business": x["id"], "business_label": x["label"], "status": "watch",
                                   "text": f"Too few public items to compare ({len(cur)} now, {len(prv)} before); negative share {n_now:.0f}%." if n_now is not None else f"Too few public items to compare ({len(cur)} now, {len(prv)} before)."}))
@@ -759,7 +819,8 @@ def cards_view(inter, customers, pub, w, W, labels) -> dict:
     irs = [r for r in inter if r["product"] == "cards"]
     keep = lambda r: r["_product"] == "cards"  # noqa: E731
     prs_all = [r for r in pub if keep(r)]
-    prs = [r for r in prs_all if a <= r["_c"] < b]
+    pa_, pb_, _p, _c = pub_span(w)
+    prs = [r for r in prs_all if pa_ <= r["_c"] < pb_]
     ivol = [r for r in irs if in_win(r, a, b)]
 
     def cat_row(c, sub_themes=None):
@@ -800,7 +861,7 @@ def cards_view(inter, customers, pub, w, W, labels) -> dict:
     # Mood: source-weighted net sentiment of Cards public voice, this period vs the comparison window.
     ta, tb = w["trend_cur"]
     pa, pbb = w["prev"]
-    net = lambda xs: (weighted_share(xs, lambda r: r["sentiment"] == "positive", W) or 0) - (weighted_share(xs, lambda r: r["sentiment"] == "negative", W) or 0) if xs else None  # noqa: E731
+    net = lambda xs: (weighted_share(reviews(xs), lambda r: r["sentiment"] == "positive", W) or 0) - (weighted_share(reviews(xs), lambda r: r["sentiment"] == "negative", W) or 0) if xs else None  # noqa: E731
     cur_m = [r for r in prs_all if ta <= r["_c"] < tb]
     prv_m = [r for r in prs_all if pa <= r["_c"] < pbb]
     mood = {"net": round(net(prs), 1) if prs else None, "net_trend_current": round(net(cur_m), 1) if cur_m else None,
@@ -830,7 +891,7 @@ def cards_view(inter, customers, pub, w, W, labels) -> dict:
             "repeat_contact_internal": pct(sum(r["w"] for r in ir if r.get("repeat")), wn(ir)),
             "escalation_internal": sum(r["w"] for r in ir if r.get("escalation")),
             "escalation_external": sum(1 for r in pr if r["escalation_intent"]),
-            "negative_share": weighted_share(pr, lambda r: r["sentiment"] == "negative", W) if pr else None,
+            "negative_share": weighted_share(reviews(pr), lambda r: r["sentiment"] == "negative", W) if pr else None,
         })
     # Themes by Consumer Duty outcome (public).
     pillars = []
@@ -927,8 +988,8 @@ def cards_drilldowns(inter, customers, pub, w, W, labels, ivol, prs, prs_all, ir
     def net(xs):
         if not xs:
             return None
-        p = weighted_share(xs, lambda r: r["sentiment"] == "positive", W, 1) or 0
-        n = weighted_share(xs, lambda r: r["sentiment"] == "negative", W, 1) or 0
+        p = weighted_share(reviews(xs), lambda r: r["sentiment"] == "positive", W, 1) or 0
+        n = weighted_share(reviews(xs), lambda r: r["sentiment"] == "negative", W, 1) or 0
         return round(p - n, 1)
 
     def raw_net(xs):
@@ -947,6 +1008,7 @@ def cards_drilldowns(inter, customers, pub, w, W, labels, ivol, prs, prs_all, ir
             "negative": sum(1 for r in xs if r["sentiment"] == "negative"),
             "net": raw_net(xs),
             "weight_pct": round(100 * W.get(src, 0), 1),
+            "indicative": src in SOCIAL_SOURCES,  # NW-D91: shown on its own, labelled indicative
         })
     weekly_net = []
     for s, e in w["series"]:
@@ -991,7 +1053,7 @@ def cards_drilldowns(inter, customers, pub, w, W, labels, ivol, prs, prs_all, ir
         themes_all.append({
             "id": th, "label": labels.get(th, th), "count": n,
             "negative": sum(1 for r in xs if r["sentiment"] == "negative"),
-            "negative_share": weighted_share(xs, lambda r: r["sentiment"] == "negative", W, 1),
+            "negative_share": weighted_share(reviews(xs), lambda r: r["sentiment"] == "negative", W, 1),
             "escalation": sum(1 for r in xs if r["escalation_intent"]),
             "share_change_pct": change(s_now, s_prev) if s_now is not None and s_prev else None,
             "weekly": [{"end": e.isoformat(), "count": sum(1 for r in prs_all if r["themes"][0] == th and s <= r["_c"] < e),
@@ -1079,8 +1141,9 @@ def v4_period(inter, customers, pub, cards_complaints, w, labels) -> dict:
     vol = [r for r in inter if in_win(r, a, b)]
     cvol = [r for r in vol if r["product"] == "cards"]
     pend = min(b, PUBLIC_END)
-    cprs = [r for r in pub if r["_product"] == "cards" and a <= r["_c"] < b]
-    bprs = [r for r in pub if a <= r["_c"] < b]
+    pa_, pb_, _p, _c = pub_span(w)
+    cprs = [r for r in pub if r["_product"] == "cards" and pa_ <= r["_c"] < pb_]
+    bprs = [r for r in pub if pa_ <= r["_c"] < pb_]
     for r in cprs + bprs:
         r["_reach"] = reach(r)
     biz_otl = []
@@ -1150,7 +1213,7 @@ def main():
         out["periods"][p["id"]] = {
             "id": p["id"], "label": p["label"], "short": p["short"],
             "start": w["start"].isoformat(), "end": w["end"].isoformat(),
-            "public_start": w["start"].isoformat(), "public_end": min(w["end"], PUBLIC_END).isoformat(),
+            "public_start": pub_span(w)[0].isoformat(), "public_end": min(pub_span(w)[1], PUBLIC_END).isoformat(),
             # NatWest (HL-15): false while data/raw/natwest/ holds nothing; the external blocks then read "Public data
             # not yet loaded" instead of zeros.
             "public_loaded": bool(pub),

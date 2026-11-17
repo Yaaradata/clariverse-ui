@@ -9,7 +9,13 @@ import { ChevronRight, Users } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { fmt, fmtDate, fmtPct, fmtSigned } from "@/lib/natwest-pulse/format";
+import {
+  fmt,
+  fmtDate,
+  fmtPct,
+  fmtSigned,
+  ringPct,
+} from "@/lib/natwest-pulse/format";
 import { MODULES, PRODUCT_ORDER } from "@/lib/natwest-pulse/products";
 import type {
   Bundle,
@@ -123,7 +129,7 @@ function Ring({
           fill={pending ? C.textMut : color}
           fontFamily="JetBrains Mono, monospace"
         >
-          {pending ? "—" : value === null ? "" : `${Math.round(v)}%`}
+          {pending ? "—" : value === null ? "" : ringPct(v)}
         </text>
       </svg>
       <div style={{ minWidth: 0 }}>

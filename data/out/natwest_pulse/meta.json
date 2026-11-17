@@ -135,8 +135,8 @@
    "trustpilot": 233
   },
   "window": 4980,
-  "bank_on_topic_window": 4307,
-  "group_on_topic_window": 239,
+  "bank_on_topic_window": 3377,
+  "group_on_topic_window": 236,
   "classified_by": {
    "rules": 4980
   }
@@ -144,8 +144,8 @@
  "bank_by_source": {
   "appstore": 1079,
   "playstore": 915,
-  "x": 1314,
-  "reddit": 772,
+  "x": 777,
+  "reddit": 379,
   "trustpilot": 227
  },
  "streams": [
@@ -343,7 +343,7 @@
   },
   {
    "stream": "reddit:jul_aug_collector",
-   "records": 779,
+   "records": 384,
    "earliest": "2026-08-01",
    "latest": "2026-11-12",
    "window_first": "2026-08-01",
@@ -367,7 +367,7 @@
   },
   {
    "stream": "x",
-   "records": 1315,
+   "records": 777,
    "earliest": "2026-08-01",
    "latest": "2026-11-13",
    "window_first": "2026-08-01",
@@ -390,5 +390,5 @@
   "Trends and mood are source-weighted; one store per rating comparison."
  ],
  "icici_available": false,
- "sentiment_checked": false
+ "sentiment_checked": true
 }

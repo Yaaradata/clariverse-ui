@@ -1628,7 +1628,7 @@
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 99.5,
-   "public_mentions": 7,
+   "public_mentions": 3,
    "public_negative": 2
   },
   {
@@ -1640,8 +1640,8 @@
    "open_too_long": 5,
    "deliverable": "dispute",
    "deliv_met_pct": 92.1,
-   "public_mentions": 17,
-   "public_negative": 11
+   "public_mentions": 10,
+   "public_negative": 6
   },
   {
    "theme": "card_limit",
@@ -1652,8 +1652,8 @@
    "open_too_long": 1,
    "deliverable": "service_request",
    "deliv_met_pct": 93.3,
-   "public_mentions": 8,
-   "public_negative": 4
+   "public_mentions": 6,
+   "public_negative": 3
   },
   {
    "theme": "unauthorised_txn",
@@ -1664,8 +1664,8 @@
    "open_too_long": 0,
    "deliverable": "unauthorised_reversal",
    "deliv_met_pct": 87.7,
-   "public_mentions": 9,
-   "public_negative": 8
+   "public_mentions": 0,
+   "public_negative": 0
   },
   {
    "theme": "card_application",
@@ -1676,8 +1676,8 @@
    "open_too_long": 1,
    "deliverable": "service_request",
    "deliv_met_pct": 91.7,
-   "public_mentions": 15,
-   "public_negative": 11
+   "public_mentions": 9,
+   "public_negative": 6
   },
   {
    "theme": "complaint_handling",
@@ -1688,8 +1688,8 @@
    "open_too_long": 2,
    "deliverable": "complaint_resolution",
    "deliv_met_pct": 98.6,
-   "public_mentions": 5,
-   "public_negative": 4
+   "public_mentions": 2,
+   "public_negative": 2
   },
   {
    "theme": "rewards_value",
@@ -1700,8 +1700,8 @@
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 99.5,
-   "public_mentions": 20,
-   "public_negative": 7
+   "public_mentions": 7,
+   "public_negative": 3
   },
   {
    "theme": "card_dispatch",
@@ -1724,8 +1724,8 @@
    "open_too_long": 0,
    "deliverable": "service_request",
    "deliv_met_pct": 91.7,
-   "public_mentions": 7,
-   "public_negative": 3
+   "public_mentions": 0,
+   "public_negative": 0
   },
   {
    "theme": "cora_unresolved",
@@ -1736,8 +1736,8 @@
    "open_too_long": 0,
    "deliverable": "service_request",
    "deliv_met_pct": 90.8,
-   "public_mentions": 0,
-   "public_negative": 0
+   "public_mentions": 1,
+   "public_negative": 1
   },
   {
    "theme": "cora_wrong_answer",
@@ -1784,8 +1784,8 @@
    "open_too_long": 0,
    "deliverable": "card_closure",
    "deliv_met_pct": 75.0,
-   "public_mentions": 24,
-   "public_negative": 12
+   "public_mentions": 5,
+   "public_negative": 2
   }
  ],
  "personas": [

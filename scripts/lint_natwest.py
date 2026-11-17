@@ -19,6 +19,8 @@ as an upper benchmark (NW-D10); that list, and the brand-lens route that renders
 
 from __future__ import annotations
 
+import html
+import os
 import json
 import re
 from pathlib import Path
@@ -239,6 +241,31 @@ def data_files() -> list[Path]:
 CRAWLED_ROUTES = 0
 
 
+def customer_quotes() -> list[str]:
+    """Customer quotes as the pages show them (evidence summary, title and text). They are the customer's own words and
+    exempt from every rule here (NW-D85); the rules apply to what is left of a page once they are taken out."""
+    ev = OUT / "evidence.json"
+    if not ev.exists():
+        return []
+    out = set()
+    for e in json.loads(ev.read_text(encoding="utf-8")).values():
+        for k in ("summary", "title", "redacted_text"):
+            v = (e.get(k) or "").strip()
+            if len(v) >= 15:
+                out.add(v)
+                out.add(v[:120])  # pages often show the opening of a long quote
+    return sorted(out, key=len, reverse=True)
+
+
+def without_quotes(text: str, quotes: list[str]) -> str:
+    if not quotes or not any(rx.search(text) for _t, rx in INDIA_RX + P2_RX + P3_RX) and not BANK_RX.search(text)             and not any(rx.search(text) for _t, rx in SCREEN_RX):
+        return text
+    for q in quotes:
+        if q in text:
+            text = text.replace(q, " ")
+    return text
+
+
 def run() -> tuple[list[str], int]:
     hits: list[str] = []
     scanned = 0
@@ -256,21 +283,24 @@ def run() -> tuple[list[str], int]:
             if PUBLIC not in f.parents:
                 hits += p3_rules(s, path)
         scanned += 1
+    quotes = customer_quotes()
     if BUILD.exists():
         for f in sorted(BUILD.rglob("*.html")):
             text = f.read_text(encoding="utf-8", errors="replace")
-            visible = re.sub(r"<script[\s\S]*?</script>|<style[\s\S]*?</style>|<[^>]+>", " ", text)
+            visible = html.unescape(re.sub(r"<script[\s\S]*?</script>|<style[\s\S]*?</style>|<[^>]+>", " ", text))
+            visible = without_quotes(visible, quotes)
             hits += text_rules(visible, str(f.relative_to(ROOT)))
             hits += p3_rules(visible, str(f.relative_to(ROOT)))
             hits += screen_rules(visible, str(f.relative_to(ROOT)))
             scanned += 1
     global CRAWLED_ROUTES
-    crawl = ROOT / "qa" / "_crawl" / "natwest_pages.json"
+    crawl = ROOT / "qa" / "_crawl" / os.environ.get("NW_CRAWL", "natwest_pages.json")  # NW_CRAWL=natwest_pages_fast.json in FAST mode
     if crawl.exists():
         pages = json.loads(crawl.read_text(encoding="utf-8"))
         CRAWLED_ROUTES = len(pages)
         for page in pages:
             for line in page["text"].splitlines():
+                line = without_quotes(line, quotes)
                 if line.strip():
                     hits += text_rules(line, f"route {page['route']}", allow_peer_names=page["route"].split("?")[0].endswith("/market"))
                     hits += p3_rules(line, f"route {page['route']}")

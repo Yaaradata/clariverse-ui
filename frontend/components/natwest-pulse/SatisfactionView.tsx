@@ -221,7 +221,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
 
       <Tile
         title="Sentiment trend (conversation-inferred)"
-        sub="Weekly net sentiment of public NatWest voice, full-window sources, source-weighted"
+        sub="Weekly net sentiment from app-store and Trustpilot reviews, full-window sources, source-weighted"
         prov="public"
         id="trend"
       >
@@ -239,9 +239,10 @@ export function SatisfactionView({ b }: { b: Bundle }) {
               domain={[-100, 100]}
             />
             <BaselineCaption>
-              Net sentiment = (positive − negative) ÷ items × 100, per source,
-              then weighted by each source&apos;s share of the window. Dashed
-              line: window average. No earlier baseline for social sources.
+              Net sentiment, from app-store and Trustpilot reviews = (positive −
+              negative) ÷ reviews × 100, per source, then weighted by each
+              source&apos;s share of the window. Dashed line: window average. X
+              and Reddit are not in it (their sentiment is indicative only).
             </BaselineCaption>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -295,9 +296,9 @@ export function SatisfactionView({ b }: { b: Bundle }) {
             <span key="e" style={{ color: C.red }}>
               {fmt(x.escalation)}
             </span>,
-            b.meta.sentiment_checked === false
+            b.meta.sentiment_checked === false || !x.reviews
               ? "—"
-              : fmtPct((100 * x.negative) / x.count),
+              : fmtPct((100 * (x.review_negative ?? 0)) / x.reviews),
           ])}
         />
       </Tile>

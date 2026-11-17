@@ -106,3 +106,9 @@ export function halfLabel(dates: string): string {
 export function weekLabel(week: string): string {
   return fmtDate(week);
 }
+
+/** A ring's centre percentage (NW-D92): one decimal below 1% so a small non-zero share never reads as 0%. */
+export function ringPct(v: number): string {
+  if (v > 0 && v < 1) return `${v.toFixed(1)}%`;
+  return `${Math.round(v)}%`;
+}

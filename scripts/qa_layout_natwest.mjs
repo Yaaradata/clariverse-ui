@@ -22,6 +22,11 @@ const SIZES = {
   "1536x730@1.25": { width: 1536, height: 730, dpr: 1.25 },
   "1920": { width: 1920, height: 1080, dpr: 1 },
 };
+// SIZES=1440,390 runs a subset (step 2 of round 3 uses 1440, 390 and 1536x730@1.25).
+if (process.env.SIZES) {
+  const keep = new Set(process.env.SIZES.split(","));
+  for (const k of Object.keys(SIZES)) if (!keep.has(k)) delete SIZES[k];
+}
 const ROUTES = JSON.parse(fs.readFileSync("scripts/routes_natwest.json", "utf8")).filter(
   (r) => !r.includes("/signal/") || r.endsWith("/signal/complaint_handling"),
 );

@@ -26,18 +26,38 @@ KEEP = {"Nat West", "Royal Bank", "Royal Bank Of", "Google Play", "App Store", "
 SOURCE = {"appstore": "App Store", "playstore": "Google Play", "x": "X", "reddit": "Reddit", "trustpilot": "Trustpilot"}
 
 
+import sys  # noqa: E402
+
+VERSION = 2 if "--v2" in sys.argv else 1
+SEED = 20261117 if VERSION == 2 else 20261116
+OUT_NAME = "natwest_l2_sample_check_v2.md" if VERSION == 2 else "natwest_l2_sample_check.md"
+
+
 def main():
     rows = [json.loads(x) for x in open(OUT_APP / "work" / "classified.jsonl", encoding="utf-8")]
     pool = [r for r in rows if r["relevant"] == "on_topic" and r["entity"] == "natwest_group" and (r.get("text") or r.get("title"))]
     pool.sort(key=lambda r: r["id"])
-    sample = random.Random(20261116).sample(pool, 100)
+    if VERSION == 1:
+        sample = random.Random(SEED).sample(pool, 100)
+    else:
+        # v2 (NW-D90): stratified by source in proportion to on-screen volume (largest remainder).
+        by: dict[str, list] = {}
+        for r in pool:
+            by.setdefault(r["source"], []).append(r)
+        exact = {k: 100 * len(v) / len(pool) for k, v in by.items()}
+        quota = {k: int(x) for k, x in exact.items()}
+        for k in sorted(exact, key=lambda k: exact[k] - quota[k], reverse=True)[: 100 - sum(quota.values())]:
+            quota[k] += 1
+        rng = random.Random(SEED)
+        sample = [r for k in sorted(by) for r in rng.sample(by[k], quota[k])]
+        rng.shuffle(sample)
     by_src: dict[str, int] = {}
     for r in sample:
         by_src[r["source"]] = by_src.get(r["source"], 0) + 1
     out = [
         "# NatWest public layer: sentiment and theme hand check",
         "",
-        f"100 items drawn at random (seed 20261116) from the {len(pool):,} on-topic NatWest items of the 16 Nov pull "
+        f"100 items drawn at random (seed {SEED}{', stratified by source in proportion to on-screen volume' if VERSION == 2 else ''}) from the {len(pool):,} on-topic NatWest items of the 16 Nov pull "
         "(1 Aug to 13 Nov 2026). Text is as redacted in the pipeline; no handles or links.",
         "",
         "Mark each row: theme right (Y/N) and sentiment right (Y/N). When done, record the accuracy in "
@@ -58,8 +78,8 @@ def main():
         out.append(f"| {i} | {SOURCE.get(r['source'], r['source'])} | {r['created_at'][:10]} | {text} | {theme} | "
                    f"{r['sentiment']} |  |  |")
     out += ["", "Accuracy: theme __ / 100 · sentiment __ / 100 · checked by ____ on ____", ""]
-    (ROOT / "qa" / "natwest_l2_sample_check.md").write_text("\n".join(out), encoding="utf-8", newline="\n")
-    print("l2_sample: 100 items ->", ROOT / "qa" / "natwest_l2_sample_check.md", by_src)
+    (ROOT / "qa" / OUT_NAME).write_text("\n".join(out), encoding="utf-8", newline="\n")
+    print("l2_sample: 100 items ->", ROOT / "qa" / OUT_NAME, by_src)
 
 
 if __name__ == "__main__":

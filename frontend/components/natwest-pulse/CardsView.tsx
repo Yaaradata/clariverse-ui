@@ -839,7 +839,7 @@ function QuestionCards({ p }: { p: Period }) {
         micro="Sentiment · Consumer Duty outcomes · Top pain"
         answer={
           m.items
-            ? `Net sentiment of credit card public voice is ${fmtSigned(m.net, "", 0)} (${fmtSigned(change, " pts", 0)} ${p.compare}), source-weighted. ${topPain ? `${topPain.label} draws the most negative posts.` : ""}`
+            ? `Net sentiment of credit card reviews (app stores and Trustpilot) is ${fmtSigned(m.net, "", 0)} (${fmtSigned(change, " pts", 0)} ${p.compare}), source-weighted. ${topPain ? `${topPain.label} draws the most negative posts.` : ""}`
             : `Public voice about credit cards is not yet loaded; inside the bank, ${fmt(pct(c.internal.resolved, c.internal.volume))}% of credit card contacts in the period are resolved.`
         }
         headlineLabel="Net sentiment"
@@ -1167,7 +1167,7 @@ export function Happy({ p }: { p: Period }) {
       <Tile
         id="happy-sources"
         title={titled("Sentiment by source", p)}
-        sub="Net sentiment = positive share minus negative share. Each source is weighted by its share of the whole window, so a burst in one source cannot move the total."
+        sub="Net sentiment = positive share minus negative share. The totals are from app-store and Trustpilot reviews, each weighted by its share of the whole window; X and Reddit rows are shown on their own and are indicative."
         prov="public"
       >
         <div
@@ -1223,7 +1223,7 @@ export function Happy({ p }: { p: Period }) {
             "left",
           ]}
           rows={h.by_source.map((s) => [
-            s.label,
+            s.indicative ? `${s.label} (indicative)` : s.label,
             fmt(s.items),
             fmt(s.positive),
             fmt(s.neutral),
@@ -1244,7 +1244,7 @@ export function Happy({ p }: { p: Period }) {
       <Tile
         id="happy-trend"
         title={titled("Sentiment trend", p)}
-        sub={`Net sentiment of credit card public voice per ${p.id === "all" ? "week" : "period of the same length"}, source-weighted. Dashed line: the average of the points shown.`}
+        sub={`Net sentiment of credit card reviews (app stores and Trustpilot) per ${p.id === "all" ? "week" : "period of the same length"}, source-weighted. Dashed line: the average of the points shown.`}
         prov="public"
       >
         <div style={SPLIT}>

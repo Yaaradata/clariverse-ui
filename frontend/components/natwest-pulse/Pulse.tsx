@@ -15,6 +15,7 @@ import {
   fmtDate,
   fmtPct,
   fmtSigned,
+  ringPct,
 } from "@/lib/natwest-pulse/format";
 import {
   CHANNEL_LABEL,
@@ -220,7 +221,7 @@ export function SmallRing({
         textAnchor="middle"
         style={{ fontSize: centreSize, fontWeight: 700, fill: C.text }}
       >
-        {centre ?? (value === null ? "—" : `${Math.round(v)}%`)}
+        {centre ?? (value === null ? "—" : ringPct(v))}
       </text>
     </svg>
   );
@@ -457,7 +458,14 @@ export function Delta({
   pct?: boolean;
 }) {
   if (n === null || n === undefined)
-    return <span style={{ color: C.textMut }}>{label}</span>;
+    return compact ? (
+      // Inside a gauge the full sentence overflows (round 3 layout run); it stays as the tooltip.
+      <span style={{ color: C.textMut }} title={label}>
+        no earlier period
+      </span>
+    ) : (
+      <span style={{ color: C.textMut }}>{label}</span>
+    );
   const color = n === 0 || !goodDown ? C.textSec : n > 0 ? C.red : C.green;
   return (
     <span data-testid="delta" title={label}>

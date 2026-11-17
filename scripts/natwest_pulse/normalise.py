@@ -153,6 +153,28 @@ def _iter(pattern: str):
                 yield json.loads(line)
 
 
+# NW-D92: on X and Reddit an item counts for NatWest only when NatWest is its subject: named in the title or first
+# sentence, addressed to the bank's handles, or a comment in a NatWest thread. When another bank is the subject (or the
+# thread is about another bank) it is mentions_peer; otherwise a passing mention. Reviews are always on topic.
+PEER_RX = re.compile(r"\b(lloyds|barclays|barclaycard|amex|american express|monzo|starling|nationwide|hsbc|santander|"
+                     r"chase|revolut)\b", re.I)
+NW_SUBJECT_RX = re.compile(r"nat\s*west|@natwest\w*", re.I)
+THREAD_TITLE: dict[str, str] = {}  # reddit thread id -> the post's title (filled in main before records are built)
+
+
+def subject_rule(r: dict, text: str, sub: str | None) -> str:
+    raw = f"{r.get('title') or ''} {r.get('text') or ''}"
+    first = re.split(r"(?<=[.!?])\s|\n", (r.get("text") or "").strip(), maxsplit=1)[0]
+    head = f"{r.get('title') or ''} {first}"
+    thread = THREAD_TITLE.get(r.get("thread_id") or "", "")
+    if NW_SUBJECT_RX.search(head) or re.search(r"@natwest\w*", raw, re.I) or (sub or "").lower() == "natwest" \
+            or (thread and NW_SUBJECT_RX.search(thread) and not PEER_RX.search(thread)):
+        return "on_topic"
+    if PEER_RX.search(head) or (thread and PEER_RX.search(thread)) or PEER_RX.search(text):
+        return "mentions_peer"
+    return "mention_only"
+
+
 def created_after_freeze(s: str) -> bool:
     return to_gmt(s) > FREEZE
 
@@ -196,6 +218,8 @@ def record(src: str, r: dict) -> dict:
         rel = "mention_only"
     else:
         rel = "on_topic"
+    if rel == "on_topic" and src in ("x", "reddit"):
+        rel = subject_rule(r, text, sub)
     rep = r.get("org_reply") or {}
     return base(
         id=r.get("id"), source=src, url=r.get("url"), created_at=to_gmt(r["created_at"]), text=redact(r.get("text")),
@@ -217,6 +241,9 @@ def main():
     out, seen, inventory = [], set(), []
     raw_counts: dict[str, int] = {}
     dropped: dict[str, int] = {}
+    for r in _iter("reddit/*/*.jsonl"):  # thread titles for the subject rule (NW-D92)
+        if r.get("record_type") == "post" and r.get("thread_id"):
+            THREAD_TITLE[r["thread_id"]] = r.get("title") or ""
     for s in SOURCES:
         files = sorted(glob.glob(str(RAW / s["glob"])))
         n = 0
@@ -234,6 +261,8 @@ def main():
                 rec["relevant"] = "off_topic"
             # A quote that named a person is never used as evidence when it alleges something against them.
             rec["names_person"] = bool(PERSON_TAG_RE.search(full))
+            # NW-D90: a post addressed to the bank's own handles (read before redaction hashes them away).
+            rec["addresses_bank"] = bool(re.search(r"@natwest\w*", f"{r.get('title') or ''} {r.get('text') or ''}", re.I))
             rec["alleges_named"] = rec["names_person"] and bool(ALLEGATION.search(full))
             out.append(rec)
             n += 1

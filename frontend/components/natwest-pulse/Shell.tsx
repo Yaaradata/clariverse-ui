@@ -333,16 +333,13 @@ function ShellInner({
               "@media (max-width: 640px) { .lisn-header { position: static !important; } }"
             }
           </style>
+          {/* NW-D95 (Usha, 17 Nov): the header is no longer a block; only the Ask LisN bar stays fixed on top, with
+              transparent space either side of it. */}
           <header
             className="lisn-header"
             style={{
-              position: "sticky",
-              top: 0,
-              zIndex: 10,
-              background: C.header,
-              backdropFilter: "blur(6px)",
-              borderBottom: `1px solid ${C.border}`,
-              padding: "10px 20px",
+              background: "transparent",
+              padding: "10px 20px 0",
               display: "flex",
               alignItems: "center",
               gap: 14,
@@ -380,7 +377,19 @@ function ShellInner({
             </div>
             {periods ? <HeaderPeriodFilter file={periods} /> : null}
             <ThemeToggle />
-            <div style={{ flexBasis: "100%" }}>
+          </header>
+          <div
+            className="lisn-askbar-sticky"
+            style={{
+              position: "sticky",
+              top: 0,
+              zIndex: 10,
+              background: "transparent",
+              padding: "8px 20px",
+              pointerEvents: "none",
+            }}
+          >
+            <div style={{ pointerEvents: "auto" }}>
               <AskBar
                 ask={ask}
                 periods={periods}
@@ -388,24 +397,6 @@ function ShellInner({
                 setOpen={setAskOpen}
               />
             </div>
-          </header>
-
-          {/* Watermark on every screen (docs/natwest/brief.md Step 1.2). */}
-          <div
-            data-testid="watermark"
-            role="note"
-            style={{
-              background: C.cardAlt,
-              borderBottom: `1px solid ${C.border}`,
-              color: C.textSec,
-              fontSize: 12.5,
-              fontWeight: 650,
-              textAlign: "center",
-              padding: "5px 16px",
-            }}
-          >
-            Demonstration · public data plus illustrative internal data · not
-            NatWest MIS
           </div>
           <main
             style={{

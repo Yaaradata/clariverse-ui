@@ -108,7 +108,7 @@ function ombudsmanMd(p: Period): AskQA[] {
           "Past 8 weeks, no final response",
           "Unhappy with reply",
         ],
-        rows: biz.map((x) => [
+        rows: o.by_business.map((x) => [
           x.label,
           fmt(x.at_risk),
           fmt(x.brink),

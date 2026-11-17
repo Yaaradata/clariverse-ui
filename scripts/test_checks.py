@@ -124,7 +124,10 @@ FIXTURES = [
     ("48-hour figure shown for the morning brief", "volume, open and 48-hour wait recomputed",
      lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["brief"]["customer_pulse"]["lists"][0].update(not_responded_48h=0))),
     ("unweighted share with a dominant source", "never leaves a share unweighted",
-     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["brief"]["cx_pulse"]["external"].update(share_method="raw"))),
+     # The check fires only when one source holds more than the limit; the fixture sets both (a dominant source and a raw
+     # share), so it tests the rule whatever the real source mix of the period is (NatWest pull loaded, NW-D91).
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["brief"]["cx_pulse"]["external"].update(
+         share_method="raw", source_mix={**d["periods"]["brief"]["cx_pulse"]["external"].get("source_mix", {}), "x": 95.0}))),
     ("overall volume split", "overall contact volume = internal + external",
      lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["7d"]["cx_pulse"]["overall"].update(total=d["periods"]["7d"]["cx_pulse"]["overall"]["total"] + 1))),
     ("cards card vs cards view", "Cards: business card = Cards view",
@@ -469,7 +472,7 @@ def natwest_reconcile_fixtures(fails: list[str]) -> int:
         cs, co = base / "seed", base / "out"
         shutil.copytree(seed, cs)
         co.mkdir()
-        for f in ("themes.json", "signals.json", "products.json", "app_pulse.json", "briefing.json", "store_series.json", "periods.json"):
+        for f in ("themes.json", "signals.json", "products.json", "app_pulse.json", "briefing.json", "store_series.json", "periods.json", "mood.json"):
             shutil.copy(out / f, co / f)
         with natwest_modules():
             sys.modules.update(NW_MODULES)
@@ -563,6 +566,11 @@ NW_FIXTURES = [
     ("tier table on another volume", "one volume",
      lambda s, o: _nw_agg(s, lambda a: a["satisfaction"]["tiers_bank"][0].update(interactions=a["satisfaction"]["tiers_bank"][0]["interactions"] + 438000))),
     ("cohort owner alerts (NatWest cohorts)", "RM alerts recomputed", lambda s, o: _flip_rm_nw(s)),
+    ("brief larger than the last 7 days", "windows nest",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["brief"]["cx_pulse"]["external"].update(
+         volume=d["periods"]["7d"]["cx_pulse"]["external"]["volume"] + 1))),
+    ("X in the mood dial", "mood: from app-store and Trustpilot reviews only",
+     lambda s, o: _rw_json(o / "mood.json", lambda m: m["by_source"].append({"source": "x", "weight_pct": 30.0}))),
 ]
 NW_SKIPPED: list[str] = []
 PUBLIC_ONLY_FIXTURES = {"unweighted share with a dominant source"}

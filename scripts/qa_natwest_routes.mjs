@@ -11,10 +11,15 @@ const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ?? "playwright")
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const base = process.argv[2] ?? "http://localhost:3100";
 const ROOT = "/natwest-pulse";
-const WATERMARK = "Demonstration · public data plus illustrative internal data · not NatWest MIS";
 const OTHER = /\b(HDFC|IndusInd|Sterling|Openbank)\b/;
 
-const seeds = JSON.parse(fs.readFileSync(path.join(REPO, "scripts/routes_natwest.json"), "utf8"));
+// FAST=1 (round 3): each NatWest route once, desktop only, 5 sampled signal pages, no link following.
+const FAST = process.env.FAST === "1";
+const all = JSON.parse(fs.readFileSync(path.join(REPO, "scripts/routes_natwest.json"), "utf8"));
+const signals = all.filter((r) => r.includes("/signal/"));
+const seeds = FAST
+  ? [...all.filter((r) => !r.includes("/signal/")), ...[0, 1, 2, 3, 4].map((i) => signals[Math.floor((i * signals.length) / 5)])]
+  : all;
 const b = await chromium.launch();
 const p = await (await b.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
 const seen = new Set(seeds);
@@ -38,9 +43,17 @@ while (queue.length && pages.length < 300) {
   const problems = [];
   if (res.status() !== 200) problems.push(`status ${res.status()}`);
   if (!robots.includes("noindex")) problems.push("no X-Robots-Tag noindex");
-  if (!text.includes(WATERMARK)) problems.push("no watermark");
+  // NW-D95: the watermark bar was removed at Usha's request; the footer still states the data is illustrative.
+  if (!/internal figures illustrative/.test(text)) problems.push("no illustrative-data note in the footer");
   if (!/Data frozen [^.]*\d{1,2} \w+ 2026/.test(text)) problems.push("no freeze date in the footer");
-  const other = text.match(OTHER);
+  // Customer quotes are the customer's own words ("pound sterling", another bank they left): the demo-bank check reads
+  // the page without them (NW-D85).
+  const ownText = await p.evaluate(() => {
+    const c = document.body.cloneNode(true);
+    for (const q of c.querySelectorAll('[data-testid="evidence"], [data-quote]')) q.remove();
+    return c.innerText ?? c.textContent ?? "";
+  });
+  const other = ownText.match(OTHER);
   if (other) problems.push(`other demo bank on screen: ${other[0]}`);
   for (const href of links) {
     if (!href) continue;
@@ -50,7 +63,7 @@ while (queue.length && pages.length < 300) {
       continue;
     }
     const key = l.pathname + l.search;
-    if (!seen.has(key)) {
+    if (!FAST && !seen.has(key)) {
       seen.add(key);
       queue.push(key);
     }
@@ -60,7 +73,7 @@ while (queue.length && pages.length < 300) {
 }
 await b.close();
 fs.mkdirSync(path.join(REPO, "qa/_crawl"), { recursive: true });
-fs.writeFileSync(path.join(REPO, "qa/_crawl/natwest_pages.json"), JSON.stringify(pages));
+fs.writeFileSync(path.join(REPO, FAST ? "qa/_crawl/natwest_pages_fast.json" : "qa/_crawl/natwest_pages.json"), JSON.stringify(pages));
 for (const f of fails) console.log("FAIL", f);
 console.log(`NatWest routes: ${pages.length - fails.length}/${pages.length} pass (${seeds.length} seeds)`);
 process.exit(fails.length ? 1 : 0);

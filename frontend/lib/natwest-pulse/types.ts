@@ -167,6 +167,9 @@ export type SignalsFile = {
     repeat: number;
     escalation: number;
     negative: number;
+    /** NW-D91: the negative share reads review sources only. */
+    reviews?: number;
+    review_negative?: number;
   }[];
 };
 
