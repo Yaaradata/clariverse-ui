@@ -1326,3 +1326,8 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
   Note: internal figures elsewhere carry no visible tag (the internal tag renders nothing), so a short "Internal" tag was
   added for internal figures inside the public block. The demonstration watermark was removed in NW-D96; provenance is
   carried by the footer ("internal figures illustrative").
+- **NW-D101 · CX pulse High-impact signals (Usha, 17 Nov).** The tile was empty in short windows: high-impact posts are
+  59 X, 3 Reddit and 4 Google Play, replies exist only on Google Play (none of those 4 in the last 30 days), and shares
+  come from review sources only (NW-D91). "Responded" there becomes "Handled n of m" from the social inbox with the
+  Internal tag (NW-D100); the positive / negative share reads the share of all high-impact posts, marked "indicative"
+  (sentiment on X and Reddit is not checked). Total signals keep the review-based shares and the public Responded figure.

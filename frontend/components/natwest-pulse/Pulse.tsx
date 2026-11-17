@@ -1893,6 +1893,7 @@ function ExternalSet({
   title,
   f,
   hi,
+  handled,
 }: {
   title: string;
   f: {
@@ -1904,8 +1905,14 @@ function ExternalSet({
     responded: PublicFigures["responded"];
   };
   hi?: boolean;
+  /** NW-D101: high-impact posts are mostly X; handling comes from the internal social inbox. */
+  handled?: Handled;
 }) {
   const r = f.responded;
+  // NW-D101: review-only shares leave the high-impact set (mostly X) empty in short windows, so it reads the share of
+  // all its posts, marked indicative (sentiment on X and Reddit is not checked).
+  const pos = hi ? share(f.positive, f.volume) : f.positive_share;
+  const neg = hi ? share(f.negative, f.volume) : f.negative_share;
   return (
     <div
       style={{
@@ -1929,19 +1936,33 @@ function ExternalSet({
           label={hi ? "High impact" : "Signals"}
         />
         <Dial
-          value={f.positive_share}
+          value={pos}
           color={C.green}
           big={`${fmt(f.positive)} / ${fmt(f.negative)}`}
           label="Positive / negative"
-          sub={`${fmtPct(f.positive_share)} positive · ${fmtPct(f.negative_share)} negative, source-weighted`}
+          sub={
+            hi
+              ? `${fmtPct(pos)} positive · ${fmtPct(neg)} negative, indicative`
+              : `${fmtPct(pos)} positive · ${fmtPct(neg)} negative, source-weighted`
+          }
         />
-        <Dial
-          value={share(r.responded, r.reviews)}
-          color={C.violet}
-          big={`${fmt(r.responded)} of ${fmt(r.reviews)}`}
-          label="Responded"
-          sub={`positive ${fmt(r.positive_responded)} of ${fmt(r.positive_reviews)} · negative ${fmt(r.negative_responded)} of ${fmt(r.negative_reviews)}`}
-        />
+        {handled ? (
+          <Dial
+            value={share(handled.handled, handled.total)}
+            color={C.violet}
+            big={`${fmt(handled.handled)} of ${fmt(handled.total)}`}
+            label="Handled"
+            sub={<ProvenanceTag kind="internal" short />}
+          />
+        ) : (
+          <Dial
+            value={share(r.responded, r.reviews)}
+            color={C.violet}
+            big={`${fmt(r.responded)} of ${fmt(r.reviews)}`}
+            label="Responded"
+            sub={`positive ${fmt(r.positive_responded)} of ${fmt(r.positive_reviews)} · negative ${fmt(r.negative_responded)} of ${fmt(r.negative_reviews)}`}
+          />
+        )}
       </div>
     </div>
   );
@@ -2173,7 +2194,12 @@ export function CxPulse({ p }: { p: Period }) {
         ) : (
           <>
             <ExternalSet title="Total signals" f={e} />
-            <ExternalSet title="High-impact signals" f={e.high_impact} hi />
+            <ExternalSet
+              title="High-impact signals"
+              f={e.high_impact}
+              hi
+              handled={p.social_pulse.high_impact_handled}
+            />
           </>
         )}
       </div>
