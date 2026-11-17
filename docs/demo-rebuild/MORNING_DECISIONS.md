@@ -1203,3 +1203,15 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
 - **Authorship note (round 3).** Fixes A to D (NW-D66 to NW-D70; commits abf335f and c2c64eb) were authored in the
   review-of-record session, not the building session. Before work continued here, the full fixture suite was run once on
   the C and D code: 0 failures (NatWest 53 reconcile and 106 lint fixtures; 5 skipped as before).
+
+### Round 3, remaining steps (17 Nov)
+
+- **NW-D80 · Research pack (step 0).** `docs/natwest/research_pack.md` (the full pack of 12 Nov 2026; it arrived as
+  NatWest_LisN_full_research_pack.md and was moved to the path the brief names) is in the repo. Register entries bound
+  to it: H1 2026 complaints 86,498, 2.74 per 1,000 accounts, about 55% upheld, 48% within 3 days (National Westminster
+  Bank plc, NatWest page and FCA firm-level table, 22 Oct 2026); Royal Bank of Scotland app vs overall 66% vs 48% (CMA,
+  August 2026; kept in the register, out of scope on screen); new entry REG-FOS-NEWCASES, 5,935 Financial Ombudsman
+  Service new cases in 9 months (the pace NW-D56 and NW-D62 use). The published rules the pack does not cover (DISP 8
+  weeks, 15 business days, 6 months, PSR 5 business days, Consumer Duty outcomes, Faster Payments) now say so instead of
+  "pending". Peers: Lloyds and Barclays complaints figures, Monzo 85% and Starling 83% online (CMA); HSBC UK and
+  Santander UK "not retrieved". The footer cites the research pack again (NW-D70 had removed it while it was absent).

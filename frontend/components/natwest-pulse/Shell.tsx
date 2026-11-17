@@ -480,9 +480,11 @@ function ShellInner({
               {meta.scope_note} Window{" "}
               {rangeLabel(meta.window.start, meta.window.end)}. Every action is
               a recommendation routed to its owner; LisN does not execute,
-              authorise or decide. Regulatory rules as published by the FCA, the
-              PSR and the Financial Ombudsman Service; internal figures
-              illustrative until discovery. Data frozen{" "}
+              authorise or decide. Public figures from NatWest and regulator
+              disclosures as dated in the research pack (12 Nov 2026);
+              regulatory rules as published by the FCA, the PSR and the
+              Financial Ombudsman Service; internal figures illustrative until
+              discovery. Data frozen{" "}
               <span data-testid="freeze">
                 {meta.brief_label}, {meta.brief_time}
               </span>
