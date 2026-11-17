@@ -133,11 +133,14 @@ const PROV_TONE: Record<Prov, Tone> = {
 export function ProvenanceTag({
   kind,
   style,
+  short,
 }: {
   kind: Prov;
   style?: CSSProperties;
+  /** NW-D100: "Internal" on an internal figure that sits inside a public block, so it does not read as public. */
+  short?: boolean;
 }) {
-  if (kind === "internal") return null;
+  if (kind === "internal" && !short) return null;
   const tone = TONE[PROV_TONE[kind]];
   return (
     <span
@@ -166,7 +169,7 @@ export function ProvenanceTag({
           background: tone,
         }}
       />
-      {PROV_LABEL[kind]}
+      {short && kind === "internal" ? "Internal" : PROV_LABEL[kind]}
     </span>
   );
 }

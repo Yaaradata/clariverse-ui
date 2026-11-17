@@ -610,6 +610,17 @@
       }
      ],
      "response_pct": 68.0,
+     "handled": {
+      "provenance": "internal",
+      "total": 160,
+      "handled": 109,
+      "within_24h": 109,
+      "within_24h_pct": 68.0,
+      "by_status": {
+       "replied_in_thread": 109,
+       "no_action": 51
+      }
+     },
      "by_list": {
       "priority_a": {
        "total": 80,
@@ -828,6 +839,14 @@
     "high_impact_change_pct": null,
     "high_impact_peak": null,
     "high_impact_response_pct": null,
+    "high_impact_handled": {
+     "provenance": "internal",
+     "total": 0,
+     "handled": 0,
+     "within_24h": 0,
+     "within_24h_pct": null,
+     "by_status": {}
+    },
     "posts": [
      {
       "text": "Daphne Water Solutions: Making Waves in Women-Led Innovation.",
@@ -6831,6 +6850,19 @@
       }
      ],
      "response_pct": 61.0,
+     "handled": {
+      "provenance": "internal",
+      "total": 601,
+      "handled": 495,
+      "within_24h": 387,
+      "within_24h_pct": 64.0,
+      "by_status": {
+       "replied_in_thread": 366,
+       "moved_to_secure_message": 8,
+       "acknowledged": 121,
+       "no_action": 106
+      }
+     },
      "by_list": {
       "priority_a": {
        "total": 402,
@@ -7068,6 +7100,16 @@
      ]
     },
     "high_impact_response_pct": 0.0,
+    "high_impact_handled": {
+     "provenance": "internal",
+     "total": 1,
+     "handled": 0,
+     "within_24h": 0,
+     "within_24h_pct": 0.0,
+     "by_status": {
+      "no_action": 1
+     }
+    },
     "posts": [
      {
       "text": "Quant is one of just 38 guarantors of Pay UK, which runs Faster Payments and Bacs, alongside Barclays, HSBC, Lloyds,…",
@@ -15439,6 +15481,19 @@
       }
      ],
      "response_pct": 61.0,
+     "handled": {
+      "provenance": "internal",
+      "total": 5368,
+      "handled": 4483,
+      "within_24h": 3388,
+      "within_24h_pct": 63.0,
+      "by_status": {
+       "moved_to_secure_message": 617,
+       "acknowledged": 577,
+       "replied_in_thread": 3289,
+       "no_action": 885
+      }
+     },
      "by_list": {
       "priority_a": {
        "total": 4695,
@@ -15609,6 +15664,19 @@
      ]
     },
     "high_impact_response_pct": 0.0,
+    "high_impact_handled": {
+     "provenance": "internal",
+     "total": 14,
+     "handled": 11,
+     "within_24h": 8,
+     "within_24h_pct": 57.0,
+     "by_status": {
+      "no_action": 3,
+      "replied_in_thread": 5,
+      "moved_to_secure_message": 4,
+      "acknowledged": 2
+     }
+    },
     "posts": [
      {
       "text": "NatWest announces 1,000 more jobs cut after AI efficiency drive",
@@ -24360,6 +24428,19 @@
       }
      ],
      "response_pct": 62.0,
+     "handled": {
+      "provenance": "internal",
+      "total": 15917,
+      "handled": 13313,
+      "within_24h": 10179,
+      "within_24h_pct": 64.0,
+      "by_status": {
+       "replied_in_thread": 9859,
+       "acknowledged": 1116,
+       "no_action": 2604,
+       "moved_to_secure_message": 2338
+      }
+     },
      "by_list": {
       "priority_a": {
        "total": 14398,
@@ -24747,6 +24828,19 @@
      ]
     },
     "high_impact_response_pct": 6.0,
+    "high_impact_handled": {
+     "provenance": "internal",
+     "total": 62,
+     "handled": 52,
+     "within_24h": 40,
+     "within_24h_pct": 65.0,
+     "by_status": {
+      "moved_to_secure_message": 21,
+      "acknowledged": 18,
+      "no_action": 10,
+      "replied_in_thread": 13
+     }
+    },
     "posts": [
      {
       "text": "🇬🇧 BIG: UK banks including Lloyds, NatWest, Barclays and HSBC have completed the world's first interbank transactions using tokenized deposits.",

@@ -1313,3 +1313,16 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
   and the theme toggle) stays fixed at the top with the Ask LisN bar under it. It takes the page colour, so it is still
   not a block and content does not scroll visibly behind it; the space either side of the Ask bar stays transparent
   (NW-D96). On a phone (≤ 640px) both scroll away as before (review finding #44).
+- **NW-D100 · Social-inbox handling layer seeded (Usha's "NW-D99", 17 Nov).** The internal seed now holds a social-inbox
+  record (`data/seed/natwest_pulse/social_inbox.json`, `seed_social_inbox.py`) for every on-topic X and Reddit post with
+  reach (62 in the window) and every high-priority mention: acknowledged · replied in thread · moved to secure message ·
+  no action, with handling time. About 65% are handled within 24 hours, balanced over each rolling week so any period
+  reads 63-68%; a mention the bank replied to in public is always "replied in thread", so the existing reply figure and
+  the handling agree. The reconcile checks the 60-70% band (windows with 20+ records), statuses summing to the total,
+  replied in thread = responded, mentions within the Social channel row, and handled within 24h ≤ Social contacts
+  answered within 24h; a fixture (handled too fast) proves the band trips. On screen: High-impact mentions and
+  High-priority mentions show "Handled n of m" with an "Internal" tag; Google Play and Trustpilot keep their real reply
+  figures under "Public · live"; Ask LisN "Did the bank respond to public posts?" gives both, each with its tag.
+  Note: internal figures elsewhere carry no visible tag (the internal tag renders nothing), so a short "Internal" tag was
+  added for internal figures inside the public block. The demonstration watermark was removed in NW-D96; provenance is
+  carried by the footer ("internal figures illustrative").

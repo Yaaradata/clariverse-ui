@@ -354,6 +354,26 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
         if pid == "all":
             ok(55 <= 100 * men["responded"] / max(men["total"], 1) <= 70, "High-priority mentions: full-window response rate within 55-70%")
         ok(men["responded"] + men["not_responded"] == men["total"], f"[{pid}] High-priority mentions: responded + not responded = total")
+        # NW-D100: the social-inbox handling layer reconciles with the mentions and with the internal Social channel row.
+        social = p["cx_pulse"]["internal"]["by_channel"]["social"]
+        soc_recs = [r for r in rs_all if r["channel"] == "social_inbox" and a <= dt.datetime.fromisoformat(r["created_at"]) < b]
+        fast_resp = sum(r["w"] for r in soc_recs if r.get("first_response_at") and (
+            dt.datetime.fromisoformat(r["first_response_at"]) - dt.datetime.fromisoformat(r["created_at"])).total_seconds() <= 86400)
+        for name, hb, n_rec in (("High-priority mentions", men["handled"], len(ment)),
+                                ("High-impact posts", sp["high_impact_handled"], sp["high_impact"])):
+            ok(hb["handled"] <= hb["total"] and hb["within_24h"] <= hb["handled"]
+               and sum(hb["by_status"].values()) == hb["total"] and hb["total"] - hb["handled"] == hb["by_status"].get("no_action", 0),
+               f"[{pid}] {name}: handled ≤ total, statuses sum to the total, not handled = no action")
+            if n_rec >= 20 and pid != "brief":
+                ok(60 <= 100 * hb["within_24h"] / max(hb["total"], 1) <= 70,
+                   f"[{pid}] {name}: handled within 24 hours within 60-70% ({hb['within_24h']} of {hb['total']})")
+        ok(men["handled"]["total"] == men["total"] and men["handled"]["by_status"].get("replied_in_thread", 0) == men["responded"],
+           f"[{pid}] High-priority mentions: handling covers every mention; replied in thread = responded")
+        ok(men["handled"]["total"] <= social["volume"] and men["handled"]["within_24h"] <= fast_resp,
+           f"[{pid}] Social inbox: mentions within the Social channel row ({men['handled']['total']} of {social['volume']}); "
+           f"handled within 24h ≤ Social contacts answered within 24h ({men['handled']['within_24h']} ≤ {fast_resp})")
+        ok(sp["high_impact_handled"]["total"] <= sp["high_impact"],
+           f"[{pid}] High-impact posts: handling covers only posts with reach")
         ok(len(sp["posts"]) <= 5 and all(x["score"] >= y["score"] for x, y in zip(sp["posts"], sp["posts"][1:])),
            f"[{pid}] Social pulse: at most five posts, ranked by engagement")
         ok("http" not in json.dumps(sp), f"[{pid}] Social pulse carries no links")

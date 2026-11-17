@@ -543,6 +543,10 @@ def _ladder_rung(rungs, name, value):
 
 NW_FIXTURES = [
     ("Cora open too long drifts", "Cora open too long within 25% of Cora open", lambda s, o: _cora_drift(o)),
+    # NW-D100: the social-inbox handling layer stays in its 60-70% band, consistent with the Social channel row.
+    ("social inbox handled too fast", "High-priority mentions: handled within 24 hours within 60-70%",
+     lambda s, o: _nw_period(o, lambda p: p["periods"]["30d"]["customer_pulse"]["mentions"]["handled"].update(
+         within_24h=p["periods"]["30d"]["customer_pulse"]["mentions"]["handled"]["handled"]))),
     # Review round 3 (NW-D66): one complaint register.
     ("unhappy counted as open", "open complaints are only those with no final response and not referred",
      lambda s, o: _nw_period(o, lambda p: p["periods"]["7d"]["ombudsman"]["now"].update(

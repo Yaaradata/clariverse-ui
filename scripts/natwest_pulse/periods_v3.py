@@ -350,6 +350,7 @@ def customer_pulse(inter, customers, notes, w) -> dict:
             "unanswered_series": [{"end": e.isoformat(), "count": sum(r["w"] for r in all_ment if in_win(r, s, e) and not replied(r))}
                                   for s, e in w["series"]],
             "response_pct": pct(responded, wn(ment), 0),
+            "handled": handled_block([inbox()[("mention", r["id"])] for r in ment if ("mention", r["id"]) in inbox()]),
             "by_list": by_list,
             "rule": "A post counts only when the bank's own verified handles or contact records link it to a customer on the bank's lists; LisN never matches people from public data.",
         },
@@ -518,6 +519,31 @@ def redact_reply(text: str) -> str:
     return t[:420]
 
 
+# NW-D100: the internal social-inbox handling layer (seed_social_inbox.py), internal · illustrative.
+_INBOX: dict = {}
+
+
+def inbox() -> dict:
+    if not _INBOX:
+        path = SEED_V3 / "social_inbox.json"
+        for r in (load(path)["records"] if path.exists() else []):
+            _INBOX[(r["kind"], r["ref"])] = r
+    return _INBOX
+
+
+def handled_block(recs) -> dict:
+    """Handled n of m: an action on the post (acknowledged, replied in thread, moved to secure message), and how many
+    within 24 hours. Weights carry bank scale for mentions; a public post counts once."""
+    tot = sum(r["w"] for r in recs)
+    hd = sum(r["w"] for r in recs if r["status"] != "no_action")
+    fast = sum(r["w"] for r in recs if r["handling_hours"] is not None and r["handling_hours"] <= 24)
+    by = collections.Counter()
+    for r in recs:
+        by[r["status"]] += r["w"]
+    return {"provenance": "internal", "total": tot, "handled": hd, "within_24h": fast,
+            "within_24h_pct": pct(fast, tot, 0), "by_status": dict(by)}
+
+
 def social_pulse(pub, w, W) -> dict:
     """External block of the Customer pulse (30 Sep review, K2 and follow-ups 1-2): public mentions, the ones with
     reach, how many got a bank reply (by source), and the five posts with the most engagement. Text is the anonymised
@@ -578,6 +604,9 @@ def social_pulse(pub, w, W) -> dict:
         "high_impact_change_pct": change(hi_cur, hi_prev),
         "high_impact_peak": peak,
         "high_impact_response_pct": pct(hi_resp, len(hi), 0),
+        # NW-D100: X and Reddit posts with reach, handled in the internal social inbox (internal · illustrative).
+        "high_impact_handled": handled_block([inbox()[("high_impact", r["id"])] for r in hi
+                                              if ("high_impact", r["id"]) in inbox()]),
         "posts": posts,
         "good_response": good,
         "rule": "High impact (virality rule): an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Trending posts are ranked by likes, replies and reposts (upvotes and helpful votes on Reddit and the stores).",

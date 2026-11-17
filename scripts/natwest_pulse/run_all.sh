@@ -13,6 +13,7 @@ export PYTHONIOENCODING=utf-8
 "$PY" public_v3.py
 "$PY" seed_internal_v3.py
 "$PY" seed_complaints_v3.py
+"$PY" seed_social_inbox.py  # NW-D100: social-inbox handling (internal)
 "$PY" periods_v3.py
 "$PY" ask.py
 "$PY" check_reconcile_v3.py

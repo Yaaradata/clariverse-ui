@@ -199,6 +199,8 @@ function mdBase(p: Period): AskQA[] {
   const cp = p.customer_pulse;
   const i = p.cx_pulse.internal;
   const sp = p.social_pulse;
+  const hh = sp.high_impact_handled;
+  const mh = p.customer_pulse.mentions.handled;
   const b = p.brief;
   const biz = p.businesses;
   const byNeg = [...biz]
@@ -352,15 +354,33 @@ function mdBase(p: Period): AskQA[] {
     {
       id: "md-response",
       q: "Did the bank respond to public posts?",
-      answer: `The bank responded to ${fmt(sp.responded)} of ${fmt(sp.mentions)} public mentions (${sp.response_pct ?? "—"}%), and to ${fmt(sp.high_impact_responded)} of ${fmt(sp.high_impact)} high-impact ones. Response means acknowledged and routed to an official channel. Informational, not a target.`,
+      // NW-D100: both answers, each with its usual tag: replies on review sources (public), handling on social (internal).
+      answer: `Review sources (Public · live): the bank replied to ${fmt(sp.by_source.reduce((n, x) => n + (x.responded ?? 0), 0))} of ${fmt(sp.by_source.filter((x) => x.responded !== null).reduce((n, x) => n + x.mentions, 0))} reviews where the source shows replies. Social (Internal): the social inbox handled ${fmt(hh.handled)} of ${fmt(hh.total)} X and Reddit posts with reach and ${fmt(mh.handled)} of ${fmt(mh.total)} high-priority mentions, ${mh.within_24h_pct ?? "—"}% of mentions within 24 hours. Informational, not a target.`,
       table: {
-        head: ["Source", "Mentions", "Responded", "Response"],
-        rows: sp.by_source.map((x) => [
-          `${x.label}${x.illustrative ? " (illustrative)" : ""}`,
-          fmt(x.mentions),
-          fmt(x.responded),
-          x.pct === null ? "—" : `${x.pct}%`,
-        ]),
+        head: ["Source", "Basis", "Posts", "Responded or handled", "Rate"],
+        rows: [
+          ...sp.by_source.map((x) => [
+            x.label,
+            "Public · live",
+            fmt(x.mentions),
+            x.responded === null ? "no reply data" : fmt(x.responded),
+            x.pct === null ? "—" : `${x.pct}%`,
+          ]),
+          [
+            "X and Reddit, posts with reach",
+            "Internal",
+            fmt(hh.total),
+            fmt(hh.handled),
+            hh.total ? `${Math.round((100 * hh.handled) / hh.total)}%` : "—",
+          ],
+          [
+            "High-priority mentions",
+            "Internal",
+            fmt(mh.total),
+            fmt(mh.handled),
+            mh.total ? `${Math.round((100 * mh.handled) / mh.total)}%` : "—",
+          ],
+        ],
       },
     },
   ];

@@ -20,6 +20,7 @@ import {
 import {
   CHANNEL_LABEL,
   CHANNEL_ORDER,
+  type Handled,
   PERIOD_IDS,
   type Period,
   type PeriodId,
@@ -489,7 +490,6 @@ export function Delta({
  * no earlier period. Volumes (contacts, mentions) and the informational response rate are always neutral.
  */
 const TREND_BAND = 10;
-const NEUTRAL = C.textSec;
 
 function trendColor(change: number | null): string {
   if (change === null) return C.amber;
@@ -1188,6 +1188,33 @@ function SocialPostRow({ post, rank }: { post: SocialPost; rank: number }) {
 }
 
 /** The frame of one external card: a title, then its parts stacked, the last one on the floor of the card. */
+/** NW-D100: "Handled n of m" from the internal social inbox, tagged Internal inside the public block. */
+function HandledLine({ h, tip }: { h: Handled; tip: string }) {
+  return (
+    <div
+      data-testid="handled"
+      title={tip}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 8,
+        flexWrap: "wrap",
+        fontSize: 13,
+        color: C.textSec,
+      }}
+    >
+      <span>
+        Handled{" "}
+        <strong style={{ color: C.text, fontFamily: MONO }}>
+          {fmt(h.handled)} of {fmt(h.total)}
+        </strong>
+      </span>
+      <ProvenanceTag kind="internal" short />
+    </div>
+  );
+}
+
 function ExternalCard({
   title,
   tip,
@@ -1283,66 +1310,6 @@ const SPLIT_ROW = {
   alignItems: "start",
 };
 
-/** The line under a card's gauges: a label, a figure and a bar. */
-function CardFoot({
-  label,
-  figure,
-  value,
-  color,
-}: {
-  label: string;
-  figure: string;
-  value: number | null;
-  color: string;
-}) {
-  return (
-    <div
-      style={{
-        borderTop: `1px solid ${C.border}`,
-        paddingTop: 8,
-        display: "flex",
-        flexDirection: "column",
-        gap: 5,
-      }}
-    >
-      <span
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "baseline",
-          gap: 6,
-        }}
-      >
-        <span style={STAT_LABEL}>{label}</span>
-        <strong style={{ fontFamily: MONO, fontSize: 12.5, color }}>
-          {figure}
-        </strong>
-      </span>
-      <span
-        aria-hidden
-        style={{
-          display: "block",
-          height: 6,
-          borderRadius: 999,
-          background: C.inner,
-          overflow: "hidden",
-        }}
-      >
-        <span
-          style={{
-            display: "block",
-            height: "100%",
-            width: `${Math.max(0, Math.min(100, value ?? 0))}%`,
-            minWidth: value ? 3 : 0,
-            background: color,
-            borderRadius: 999,
-          }}
-        />
-      </span>
-    </div>
-  );
-}
-
 const GAUGE_PAIR = {
   display: "grid",
   gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
@@ -1380,6 +1347,7 @@ function ExternalBlock({ p }: { p: Period }) {
   const shown = onDay ? onDay.posts : sp.posts;
   const ext = p.cx_pulse.external;
   const m = p.customer_pulse.mentions;
+  const hh = sp.high_impact_handled;
   const g = sp.good_response;
   const box = {
     background: C.card,
@@ -1556,10 +1524,10 @@ function ExternalBlock({ p }: { p: Period }) {
               />
               <div style={GAUGE_PAIR}>
                 <ArcGauge
-                  value={share(sp.high_impact_responded, sp.high_impact)}
+                  value={share(hh.handled, hh.total)}
                   color={C.green}
-                  centre={fmt(sp.high_impact_responded)}
-                  label="Responded"
+                  centre={fmt(hh.handled)}
+                  label="Handled"
                 />
                 <ArcGauge
                   value={share(ext.high_impact.negative, sp.high_impact)}
@@ -1569,6 +1537,10 @@ function ExternalBlock({ p }: { p: Period }) {
                 />
               </div>
             </div>
+            <HandledLine
+              h={hh}
+              tip="X and Reddit posts with reach, handled in the bank's social inbox: acknowledged, replied in thread or moved to secure message."
+            />
             {peak ? (
               <button
                 type="button"
@@ -1748,11 +1720,9 @@ function ExternalBlock({ p }: { p: Period }) {
                     label="Unanswered"
                   />
                 </div>
-                <CardFoot
-                  label="Response rate"
-                  figure={fmtPct(share(m.responded, m.total))}
-                  value={share(m.responded, m.total)}
-                  color={NEUTRAL}
+                <HandledLine
+                  h={m.handled}
+                  tip="Handled in the bank's social inbox: acknowledged, replied in thread or moved to secure message."
                 />
               </div>
             </div>

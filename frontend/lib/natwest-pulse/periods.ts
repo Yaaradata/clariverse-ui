@@ -117,6 +117,25 @@ export type SocialPost = {
 };
 
 /** Social pulse (30 Sep review, K2): public voice only; what LisN adds beyond the bank's own systems. */
+/** NW-D100: social-inbox handling of a post (internal · illustrative): an action on the post (acknowledged, replied
+ * in thread, moved to secure message) or no action, and how many within 24 hours. */
+export interface Handled {
+  provenance: "internal";
+  total: number;
+  handled: number;
+  within_24h: number;
+  within_24h_pct: number | null;
+  by_status: Partial<
+    Record<
+      | "acknowledged"
+      | "replied_in_thread"
+      | "moved_to_secure_message"
+      | "no_action",
+      number
+    >
+  >;
+}
+
 export type SocialPulse = {
   mentions: number;
   mentions_series: { end: string; count: number }[];
@@ -145,6 +164,8 @@ export type SocialPulse = {
   /** The busiest day for high-impact posts in the period, with that day's posts (up to five, by engagement). */
   high_impact_peak: { date: string; count: number; posts: SocialPost[] } | null;
   high_impact_response_pct: number | null;
+  /** NW-D100: X and Reddit posts with reach, handled in the bank's social inbox (internal · illustrative). */
+  high_impact_handled: Handled;
   posts: SocialPost[];
   good_response: {
     text: string;
@@ -490,6 +511,7 @@ export type Period = {
       series: { end: string; count: number }[];
       unanswered_series: { end: string; count: number }[];
       response_pct: number | null;
+      handled: Handled;
       by_list: Record<string, { total: number; responded: number }>;
       rule: string;
     };
