@@ -333,69 +333,71 @@ function ShellInner({
               "@media (max-width: 640px) { .lisn-header { position: static !important; } }"
             }
           </style>
-          {/* NW-D95 (Usha, 17 Nov): the header is no longer a block; only the Ask LisN bar stays fixed on top, with
-              transparent space either side of it. */}
-          <header
+          {/* NW-D99 (Usha, 17 Nov): the header line (brand, freeze time, periods, theme) and the Ask LisN bar stay fixed
+              on top. The header line takes the page colour, so it is not a block and content does not show through
+              it; the space either side of the Ask bar stays transparent (NW-D96). */}
+          <div
             className="lisn-header"
-            style={{
-              background: "transparent",
-              padding: "10px 20px 0",
-              display: "flex",
-              alignItems: "center",
-              gap: 14,
-              flexWrap: "wrap",
-            }}
+            style={{ position: "sticky", top: 0, zIndex: 10 }}
           >
-            <div
+            <header
               style={{
-                fontSize: 14,
-                color: C.textSec,
-                lineHeight: 1.4,
-                flex: "1 1 360px",
-                minWidth: 0,
+                background: C.bg,
+                padding: "10px 20px 6px",
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+                flexWrap: "wrap",
               }}
             >
-              {context ? (
-                <strong
-                  data-testid="context"
-                  style={{
-                    color: C.text,
-                    background: tint(C.brand, 0.14),
-                    border: `1px solid ${tint(C.brand, 0.4)}`,
-                    borderRadius: 8,
-                    padding: "3px 10px",
-                    marginRight: 10,
-                    fontSize: 14.5,
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {context}
-                </strong>
-              ) : null}
-              <strong style={{ color: C.text }}>NatWest</strong> · Customer
-              Pulse · {meta.brief_label}, {meta.brief_time}
-            </div>
-            {periods ? <HeaderPeriodFilter file={periods} /> : null}
-            <ThemeToggle />
-          </header>
-          <div
-            className="lisn-askbar-sticky"
-            style={{
-              position: "sticky",
-              top: 0,
-              zIndex: 10,
-              background: "transparent",
-              padding: "8px 20px",
-              pointerEvents: "none",
-            }}
-          >
-            <div style={{ pointerEvents: "auto" }}>
-              <AskBar
-                ask={ask}
-                periods={periods}
-                open={askOpen}
-                setOpen={setAskOpen}
-              />
+              <div
+                style={{
+                  fontSize: 14,
+                  color: C.textSec,
+                  lineHeight: 1.4,
+                  flex: "1 1 360px",
+                  minWidth: 0,
+                }}
+              >
+                {context ? (
+                  <strong
+                    data-testid="context"
+                    style={{
+                      color: C.text,
+                      background: tint(C.brand, 0.14),
+                      border: `1px solid ${tint(C.brand, 0.4)}`,
+                      borderRadius: 8,
+                      padding: "3px 10px",
+                      marginRight: 10,
+                      fontSize: 14.5,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {context}
+                  </strong>
+                ) : null}
+                <strong style={{ color: C.text }}>NatWest</strong> · Customer
+                Pulse · {meta.brief_label}, {meta.brief_time}
+              </div>
+              {periods ? <HeaderPeriodFilter file={periods} /> : null}
+              <ThemeToggle />
+            </header>
+            <div
+              className="lisn-askbar-sticky"
+              style={{
+                background: "transparent",
+                padding: "2px 20px 8px",
+                pointerEvents: "none",
+              }}
+            >
+              <div style={{ pointerEvents: "auto" }}>
+                <AskBar
+                  ask={ask}
+                  periods={periods}
+                  open={askOpen}
+                  setOpen={setAskOpen}
+                />
+              </div>
             </div>
           </div>
           <main

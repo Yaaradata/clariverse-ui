@@ -1309,3 +1309,7 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
   biometrics, device block, features, online banking, Cora) lead only Current accounts and app; Personal loans takes
   its top issue from loan themes only (applications and decisions, servicing and repayment, closure documents, arrears).
   Internal figures unchanged.
+- **NW-D99 · Header fixed (Usha, 17 Nov).** The header line (NatWest · Customer Pulse · freeze time, the period buttons
+  and the theme toggle) stays fixed at the top with the Ask LisN bar under it. It takes the page colour, so it is still
+  not a block and content does not scroll visibly behind it; the space either side of the Ask bar stays transparent
+  (NW-D96). On a phone (≤ 640px) both scroll away as before (review finding #44).

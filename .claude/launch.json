@@ -30,6 +30,15 @@
         "cd frontend && npx next start -p 3100"
       ],
       "port": 3100
+    },
+    {
+      "name": "dev3001",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": [
+        "/c",
+        "cd frontend && npx next dev -p 3001"
+      ],
+      "port": 3001
     }
   ]
 }

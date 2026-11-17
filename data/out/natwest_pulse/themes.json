@@ -257,11 +257,11 @@
    },
    "by_product": {
     "payments_fraud": 65,
-    "current_accounts": 743,
+    "current_accounts": 744,
     "cards": 19,
     "mortgages": 23,
     "savings": 23,
-    "personal_loans": 6
+    "personal_loans": 5
    },
    "sentiment": {
     "positive": 75,
@@ -683,8 +683,8 @@
     "payments": 1
    },
    "by_product": {
-    "cards": 8,
-    "current_accounts": 129,
+    "cards": 7,
+    "current_accounts": 130,
     "payments_fraud": 44,
     "mortgages": 5,
     "personal_loans": 1,
@@ -1323,11 +1323,11 @@
     "loans": 4
    },
    "by_product": {
-    "current_accounts": 81,
+    "current_accounts": 82,
     "payments_fraud": 11,
     "mortgages": 2,
     "cards": 5,
-    "personal_loans": 2
+    "personal_loans": 1
    },
    "sentiment": {
     "positive": 13,
@@ -1744,11 +1744,11 @@
     "loans": 1
    },
    "by_product": {
-    "current_accounts": 29,
+    "current_accounts": 28,
     "savings": 7,
     "payments_fraud": 7,
     "cards": 2,
-    "personal_loans": 1
+    "personal_loans": 2
    },
    "sentiment": {
     "positive": 10,
@@ -2165,9 +2165,10 @@
     "sme_merchant": 1
    },
    "by_product": {
-    "current_accounts": 25,
+    "current_accounts": 24,
     "payments_fraud": 5,
     "mortgages": 5,
+    "personal_loans": 1,
     "savings": 2,
     "cards": 3
    },
@@ -2587,8 +2588,9 @@
     "sme_merchant": 1
    },
    "by_product": {
-    "cards": 5,
-    "current_accounts": 19,
+    "cards": 4,
+    "personal_loans": 2,
+    "current_accounts": 18,
     "payments_fraud": 8,
     "savings": 3
    },
@@ -4270,9 +4272,10 @@
    },
    "by_product": {
     "cards": 2,
-    "current_accounts": 13,
+    "current_accounts": 12,
     "payments_fraud": 2,
-    "savings": 1
+    "savings": 1,
+    "personal_loans": 1
    },
    "sentiment": {
     "positive": 0,
@@ -5727,8 +5730,7 @@
     "wealth": 1
    },
    "by_product": {
-    "current_accounts": 5,
-    "personal_loans": 1,
+    "current_accounts": 6,
     "payments_fraud": 1
    },
    "sentiment": {
