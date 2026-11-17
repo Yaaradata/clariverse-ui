@@ -1630,7 +1630,11 @@ function ExternalBlock({ p }: { p: Period }) {
               {sp.by_source.map((x, i) => (
                 <div
                   key={x.source}
-                  title={`${fmt(x.responded)} of ${fmt(x.mentions)}`}
+                  title={
+                    x.pct === null
+                      ? `${x.label}: no reply data in this pull`
+                      : `${fmt(x.responded)} of ${fmt(x.mentions)}`
+                  }
                   style={{
                     display: "grid",
                     gridTemplateColumns: "66px minmax(0, 1fr) 36px",
@@ -1642,25 +1646,31 @@ function ExternalBlock({ p }: { p: Period }) {
                   }}
                 >
                   <span style={{ whiteSpace: "nowrap" }}>{x.label}</span>
-                  <span
-                    aria-hidden
-                    style={{
-                      height: 6,
-                      borderRadius: 999,
-                      background: C.inner,
-                      overflow: "hidden",
-                    }}
-                  >
+                  {x.pct === null ? (
+                    <span style={{ color: C.textMut, fontSize: 11.5 }}>
+                      no reply data
+                    </span>
+                  ) : (
                     <span
+                      aria-hidden
                       style={{
-                        display: "block",
-                        height: "100%",
-                        width: `${x.pct ?? 0}%`,
-                        background: SERIES[i % SERIES.length],
+                        height: 6,
                         borderRadius: 999,
+                        background: C.inner,
+                        overflow: "hidden",
                       }}
-                    />
-                  </span>
+                    >
+                      <span
+                        style={{
+                          display: "block",
+                          height: "100%",
+                          width: `${x.pct}%`,
+                          background: SERIES[i % SERIES.length],
+                          borderRadius: 999,
+                        }}
+                      />
+                    </span>
+                  )}
                   <strong
                     style={{
                       fontFamily: MONO,

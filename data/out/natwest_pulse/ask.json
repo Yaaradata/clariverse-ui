@@ -12,11 +12,10 @@
     "branch",
     "cross"
    ],
-   "answer": "Last 7 days: 417,466 contacts; 10,589 open more than 48 hours. The highest share open too long is Email (10%). Public data not yet loaded.",
+   "answer": "Last 7 days: 428,195 contacts; 19,647 open more than 48 hours. The highest share open too long is Branch (7%). Public voice is shown separately.",
    "evidence": [],
    "bound": [
-    "L3:cx_pulse.internal.by_channel",
-    "L2:sources"
+    "L3:cx_pulse.internal.by_channel"
    ],
    "links": [
     {
@@ -36,7 +35,7 @@
     "back",
     "resolved"
    ],
-   "answer": "Last 7 days: Cora took 113,428 contacts and resolved 107,131; 5,506 are still open. Calls: 188,143. Since 1 August, 159,016 of 1,618,436 Cora conversations resolved by 5 Nov (10%) came back as a call or a complaint within 7 days. Internal, illustrative.",
+   "answer": "Last 7 days: Cora took 131,060 contacts and resolved 119,586; 8,693 are still open. Calls: 191,337. Since 1 August, 158,002 of 1,599,037 Cora conversations resolved by 6 Nov (10%) came back as a call or a complaint within 7 days. Internal, illustrative.",
    "evidence": [],
    "bound": [
     "L3:cx_pulse.internal.by_channel.whatsapp",
@@ -61,7 +60,7 @@
     "risk",
     "refer"
    ],
-   "answer": "As of 12 Nov, 07:45: 280 complaints are within 10 days of the final-response deadline, 395 are past it with no final response, 2,521 are unhappy with the final response, and 1,159 have been referred. Rules: 8 weeks; payment services 15 business days (35 in exceptional cases). Eligibility and risk only; LisN does not predict who will refer.",
+   "answer": "As of 13 Nov, 07:45: 408 complaints are within 10 days of the final-response deadline, 713 are past it with no final response, 3,179 are unhappy with the final response, and 1,210 have been referred. Rules: 8 weeks; payment services 15 business days (35 in exceptional cases). Eligibility and risk only; LisN does not predict who will refer.",
    "evidence": [],
    "bound": [
     "L3:ombudsman.now",
@@ -89,7 +88,7 @@
     "customers",
     "week"
    ],
-   "answer": "Everyday banking: 26 of the 79 switching-intent contacts in the journey-stages table (sample of 32,000 contacts since 1 August) followed a contact at that stage. Next: Switch or close (22) and Service requests (16). One week of the sample is too thin to rank stages. Internal, illustrative.",
+   "answer": "Everyday banking: 31 of the 79 switching-intent contacts in the journey-stages table (sample of 32,000 contacts since 1 August) followed a contact at that stage. Next: Switch or close (21) and Service requests (10). One week of the sample is too thin to rank stages. Internal, illustrative.",
    "evidence": [],
    "bound": [
     "L3:satisfaction.journey_stages"
@@ -113,7 +112,7 @@
     "value",
     "evidence"
    ],
-   "answer": "Last 7 days: 101,276 contacts from customers flagged financially vulnerable; 5,615 open, 8 with no reply after 48 hours. Consumer Duty outcomes: Products and services · price and value · consumer understanding · consumer support.",
+   "answer": "Last 7 days: 97,712 contacts from customers flagged financially vulnerable; 9,812 open, 270 with no reply after 48 hours. Consumer Duty outcomes: Products and services · price and value · consumer understanding · consumer support.",
    "evidence": [],
    "bound": [
     "L3:customer_pulse.lists.priority_a",

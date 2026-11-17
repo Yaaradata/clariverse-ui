@@ -327,10 +327,14 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
            f"[{pid}] External block = CX pulse external (mentions, high impact)")
         ok(play["responded"] == ext_blk["responded"]["responded"] and play["mentions"] == ext_blk["responded"]["reviews"],
            f"[{pid}] External block: Play Store responses = CX pulse responded (the live figure)")
-        ok(sum(x["mentions"] for x in sp["by_source"]) == sp["mentions"] and sum(x["responded"] for x in sp["by_source"]) == sp["responded"],
+        ok(sum(x["mentions"] for x in sp["by_source"]) == sp["mentions"] and sum(x["responded"] or 0 for x in sp["by_source"]) == sp["responded"],
            f"[{pid}] External block: sources sum to the combined response figure")
-        ok(sp["high_impact_responded"] <= sp["high_impact"] and all(x["illustrative"] == (x["source"] != "playstore") for x in sp["by_source"]),
-           f"[{pid}] External block: every simulated source is marked illustrative")
+        # NatWest (NW-D24, NW-D82): nothing is simulated. Only Google Play carries replies; every other source reads
+        # "no reply data", never 0%.
+        ok(sp["high_impact_responded"] <= sp["high_impact"]
+           and all(not x["illustrative"] for x in sp["by_source"])
+           and all((x["responded"] is None) == (x["source"] != "playstore") for x in sp["by_source"]),
+           f"[{pid}] External block: replies only where the source carries them; no reply data elsewhere")
         pk = sp["high_impact_peak"]
         ok((pk is None) == (sp["high_impact"] == 0) and (pk is None or (0 < pk["count"] <= sp["high_impact"] and len(pk["posts"]) <= min(5, pk["count"])
                                                                 and all(x["date"] == pk["date"] for x in pk["posts"]))),

@@ -20,7 +20,7 @@ TOTAL_CONTACTS = 5_800_000  # ASSUMPTION (Pass 3, NW-D47): NatWest brand alone, 
 CHANNEL_MIX = {  # ASSUMPTION, on the views' channel groups ("whatsapp" carries Cora, "chat" carries app chat)
     "calls": 0.44, "whatsapp": 0.30, "chat": 0.09, "emails": 0.06, "branch": 0.10, "social": 0.01,
 }
-COMPLAINTS = 49_200  # DERIVED: 86,498 complaints in H1 2026 (181 days) x 103 days of the window
+COMPLAINTS = 49_700  # DERIVED: 86,498 complaints in H1 2026 (181 days) x 104 days of the window (to 13 Nov)
 COMPLAINT_MIX = {  # ASSUMPTION until the research pack gives the return's per-product shape
     "current_accounts": 0.40, "payments_fraud": 0.20, "cards": 0.17, "mortgages": 0.10, "savings": 0.07,
     "personal_loans": 0.06,

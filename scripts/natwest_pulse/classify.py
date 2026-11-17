@@ -103,7 +103,7 @@ ESC_TARGETS = [
     ("consumer_court", r"consumer (court|forum|commission)|ncdrc|edaakhil|e-daakhil|consumer helpline|\bnch\b", "RBI Ombudsman"),
     ("legal", r"legal (action|notice)|(take|drag|see) (you|them|hdfc|the bank) to court|file a (case|suit)|my lawyer|\bsue (you|them|hdfc)", "RBI Ombudsman"),
     ("ministers", r"@nsitharaman|@finminindia|@pmoindia|cpgrams|pg ?portal|finance minist", "Public"),
-    ("grievance", r"grievance (cell|redressal|officer|team)|nodal officer|principal nodal|escalation matrix|escalat(e|ed|ing) (this|it|to|the)", "Grievance"),
+    ("complaints_team", r"grievance (cell|redressal|officer|team)|nodal officer|principal nodal|escalation matrix|escalat(e|ed|ing) (this|it|to|the)", "Grievance"),
     ("repeat", r"(third|3rd|fourth|4th|fifth|5th) time|complaint (number|no\.?|id)", "Repeat"),
 ]
 STATUS = rx(r"where is my", r"no update", r"still waiting", r"\bstatus\b", r"kab tak", r"abhi tak", r"any update", r"not yet received", r"when will (i|my|it)", r"how long", r"still not")
@@ -280,7 +280,7 @@ def summarise(rec) -> str:
 
 LLM_DIR = WORK / "llm_batches"
 VALID_RT = {"card_delivery", "refund", "reversal", "dispute", "closure", "loan_disbursal", "credit_report", "kyc", "other"}
-VALID_TGT = {"rbi", "rbi_ombudsman", "consumer_court", "legal", "ministers", "grievance"}
+VALID_TGT = {"rbi", "rbi_ombudsman", "consumer_court", "legal", "ministers", "complaints_team"}
 
 
 def load_llm() -> dict[str, dict]:

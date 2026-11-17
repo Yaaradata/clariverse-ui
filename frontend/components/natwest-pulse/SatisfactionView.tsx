@@ -295,7 +295,9 @@ export function SatisfactionView({ b }: { b: Bundle }) {
             <span key="e" style={{ color: C.red }}>
               {fmt(x.escalation)}
             </span>,
-            fmtPct((100 * x.negative) / x.count),
+            b.meta.sentiment_checked === false
+              ? "—"
+              : fmtPct((100 * x.negative) / x.count),
           ])}
         />
       </Tile>

@@ -492,7 +492,7 @@ THEMES = [
         "owner": "loans",
         "owner_label": "Lending product owner",
         "business": "loans",
-        "definition": "Redemption figures, settlement, title deeds after repayment.",
+        "definition": "Redemption figures, settlement and removing the mortgage charge after repayment.",
         "rung": "Repeat",
         "action": "Notify proactively"
     },

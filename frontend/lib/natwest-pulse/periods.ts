@@ -127,8 +127,10 @@ export type SocialPulse = {
     source: string;
     label: string;
     mentions: number;
-    responded: number;
+    /** Null where the source carries no reply data (only Google Play does in this pull). */
+    responded: number | null;
     pct: number | null;
+    reply_data?: boolean;
     illustrative: boolean;
   }[];
   responded: number;

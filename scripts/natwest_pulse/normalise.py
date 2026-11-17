@@ -36,14 +36,16 @@ RAW = ROOT / "data" / "raw" / "natwest"
 OUT = ROOT / "data" / "out" / "natwest_pulse"
 WORK = OUT / "work"
 
+# Each source's first collected day (HL-13): no week-on-week trend crosses it. App Store reviews start on 12 Aug;
+# Trustpilot is effectively 1 Sep (a handful of August reviews only).
 SOURCES = [
-    {"id": "appstore", "label": "App Store", "glob": "appstore/*.jsonl"},
-    {"id": "playstore", "label": "Google Play", "glob": "playstore/*.jsonl"},
-    {"id": "x", "label": "X", "glob": "x/*.jsonl"},
-    {"id": "reddit", "label": "Reddit", "glob": "reddit/*.jsonl"},
-    {"id": "trustpilot", "label": "Trustpilot", "glob": "trustpilot/*.jsonl"},
-    {"id": "forum", "label": "Forums (MoneySavingExpert)", "glob": "forums/*.jsonl"},
+    {"id": "appstore", "label": "App Store", "glob": "appstore/*/*.jsonl", "start": "2026-08-12"},
+    {"id": "playstore", "label": "Google Play", "glob": "playstore/*/*.jsonl", "start": "2026-08-01"},
+    {"id": "x", "label": "X", "glob": "x/*/*.jsonl", "start": "2026-08-01"},
+    {"id": "reddit", "label": "Reddit", "glob": "reddit/*/*.jsonl", "start": "2026-08-01"},
+    {"id": "trustpilot", "label": "Trustpilot (forums: Trustpilot only)", "glob": "forums/*/*.jsonl", "start": "2026-09-01"},
 ]
+FREEZE = "2026-11-13T07:45:00+00:00"  # the data freeze (NW-D81): later items are kept out of every window
 
 # Store apps: name fragment -> (display name, brand, business). Group companies are kept and excluded from retail.
 APPS = [
@@ -52,7 +54,13 @@ APPS = [
     ("Ulster Bank", "Ulster Bank app", "ulster", "retail_banking"),
     ("Coutts", "Coutts app", "group_other", "group_company"),
     ("Mettle", "Mettle app", "group_other", "group_company"),
-    ("NatWest", "NatWest app", "natwest", "retail_banking"),
+    ("NatWest Mobile Banking", "NatWest app", "natwest", "retail_banking"),
+    ("Rooster Money", "NatWest Rooster Money", "group_other", "group_company"),
+    ("NatWest International", "NatWest International", "group_other", "group_company"),
+    ("Bankline", "NatWest Bankline", "group_other", "group_company"),
+    ("ClearSpend", "NatWest ClearSpend", "group_other", "group_company"),
+    ("Tap to Pay", "NatWest Tap to Pay", "group_other", "group_company"),
+    ("Premier Black", "NatWest Premier Black", "group_other", "group_company"),
 ]
 BRAND_RX = [
     ("ulster", re.compile(r"ulster\s*bank|\bulsterbank\b", re.I)),
@@ -61,12 +69,25 @@ BRAND_RX = [
     ("natwest", re.compile(r"nat\s*west|\bcora\b", re.I)),
 ]
 SUBREDDIT_BRAND = {"natwest": "natwest", "rbs": "rbs", "ulsterbank": "ulster"}
-FINANCE_SUBS = {"ukpersonalfinance", "natwest", "rbs", "ukbanking", "ukmortgages", "unitedkingdom"}
+FINANCE_SUBS = {"ukpersonalfinance", "natwest", "rbs", "ukbanking", "ukmortgages", "unitedkingdom", "housinguk",
+                "legaladviceuk", "beermoneyuk"}
+# "NatWest" is also a cricket name (the NatWest series, trophy and final): cricket posts are off topic (NW-D84).
+SPORT_RE = re.compile(r"cricket|\bODI\b|batsman|\bbatter\b|bowler|wicket|innings|\bT20\b|\bIPL\b|ganguly|kaif|dravid|"
+                      r"yuvraj|sehwag|nat\s*west\s*(?:series|tri-?series|trophy|final|t20|pro\s*40|challenge)|"
+                      r"national\s*westminster\s*bank\s*trophy", re.I)
+# X posts about the group as a company (profits, shares, bailout, windfall tax, branch-closure politics): investor or
+# corporate voice, tagged and kept off the home and product screens (NW-D82).
+INVESTOR_RE = re.compile(r"\bprofits?\b|\bshares?\b|share\s*price|\bbail-?out\b|windfall\s*tax|\bdividend|\bbuyback|"
+                         r"branch(?:es)?\s*clos\w*.*\b(?:mp|mps|government|govt|minister|parliament|tax|profit\w*)\b|"
+                         r"\b(?:mp|mps|government|govt|minister|parliament)\b.*branch(?:es)?\s*clos", re.I)
 BRAND_HANDLE_RE = re.compile(r"(natwest|rbs|ulster|coutts|mettle).*(help|care|support|official)|^(natwest|rbs|ulsterbank)(_?business)?$", re.I)
 CX_RE = re.compile(r"card|account|app|customer|service|branch|loan|mortgage|charge|complain|refund|payment|fraud|call|cora|transfer", re.I)
 STOCK_RE = re.compile(r"share\s*price|\bnwg\b|\bftse\b|dividend|buyback|results|analysts?|stake", re.I)
 
 REDACT = [
+    # Links inside post text (HL-02, NW-D84): a markdown link keeps its words; any bare link becomes "[link]".
+    (re.compile(r"\[([^\]]{1,80})\]\((?:https?://|www\.)[^)\s]*\)"), r"\1"),
+    (re.compile(r"(?:https?://|www\.)\S+", re.I), "[link]"),
     (re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+"), "[email]"),
     (re.compile(r"(?<![\d+])(?:\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}(?!\d)"), "[phone]"),
     (re.compile(r"\+44[\s\d()-]{9,14}\d"), "[phone]"),
@@ -132,6 +153,10 @@ def _iter(pattern: str):
                 yield json.loads(line)
 
 
+def created_after_freeze(s: str) -> bool:
+    return to_gmt(s) > FREEZE
+
+
 def record(src: str, r: dict) -> dict:
     app = r.get("app") or {}
     author = (r.get("author") or {}).get("username") or ""
@@ -145,8 +170,23 @@ def record(src: str, r: dict) -> dict:
         if app.get("name") and frag.lower() in app["name"].lower():
             app_name, business = name, biz
             break
-    brand = brand_of(app.get("name"), text, subreddit=sub)
-    if BRAND_HANDLE_RE.search(author):
+    # Brand (Pass 3, NW-D82): a store review takes its app's brand; otherwise a NatWest-pulled item that names NatWest is
+    # NatWest even when it also mentions another bank ("moved from RBS to NatWest").
+    app_brand = next((b for frag, _n, b, _biz in APPS if app.get("name") and frag.lower() in app["name"].lower()), None)
+    brand = app_brand or ("natwest" if BRAND_RX[-1][1].search(text) else brand_of(text, subreddit=sub)) or (
+        "natwest" if r.get("org") == "natwest" else None)
+    tag = None
+    if src == "x" and INVESTOR_RE.search(text):
+        tag = "investor_corporate"
+    elif src == "reddit" and (sub or "").lower() == "beermoneyuk":
+        tag = "switching_offers"  # switching incentives: kept, never a complaint theme
+    if created_after_freeze(r["created_at"]):
+        rel = "after_freeze"
+    elif tag == "investor_corporate":
+        rel = "investor_corporate"
+    elif SPORT_RE.search(text):
+        rel = "off_topic"  # cricket, not banking
+    elif BRAND_HANDLE_RE.search(author):
         rel = "off_topic"  # the bank's own care voice, not the customer's
     elif brand is None:
         rel = "off_topic"
@@ -160,9 +200,10 @@ def record(src: str, r: dict) -> dict:
     return base(
         id=r.get("id"), source=src, url=r.get("url"), created_at=to_gmt(r["created_at"]), text=redact(r.get("text")),
         title=redact(r.get("title")) or None, lang=r.get("lang"), brand=brand or "natwest",
-        entity="natwest_group" if (brand or "natwest") == "natwest" else "other_group",  # Pass 3: NatWest brand only author_hash=h(author or None),
+        entity="natwest_group" if (brand or "natwest") == "natwest" else "other_group",  # Pass 3: NatWest brand only
+        author_hash=h(author or None),
         rating=int(r["rating"]) if r.get("rating") else None, app_name=app_name, app_id=app.get("store_id"),
-        app_version=app.get("version"), business_hint=business, subreddit=sub,
+        app_version=app.get("version"), business_hint=business, subreddit=sub, source_sub=sub, tag=tag,
         record_type=r.get("record_type") or ("review" if src in ("appstore", "playstore", "trustpilot") else "post"),
         relevant=rel, collected_at=r.get("collected_at"), engagement=r.get("engagement") or {},
         parent_id=r.get("parent_id"), thread_id=r.get("thread_id"),
@@ -174,10 +215,16 @@ def record(src: str, r: dict) -> dict:
 def main():
     WORK.mkdir(parents=True, exist_ok=True)
     out, seen, inventory = [], set(), []
+    raw_counts: dict[str, int] = {}
+    dropped: dict[str, int] = {}
     for s in SOURCES:
         files = sorted(glob.glob(str(RAW / s["glob"])))
         n = 0
         for r in _iter(s["glob"]):
+            raw_counts[s["id"]] = raw_counts.get(s["id"], 0) + 1
+            if s["id"] == "x" and r.get("lang") != "en":
+                dropped["x_not_english"] = dropped.get("x_not_english", 0) + 1
+                continue
             rec = record(s["id"], r)
             if rec["id"] in seen:
                 continue
@@ -190,15 +237,22 @@ def main():
             rec["alleges_named"] = rec["names_person"] and bool(ALLEGATION.search(full))
             out.append(rec)
             n += 1
-        inventory.append({"id": s["id"], "label": s["label"], "loaded": bool(files), "files": len(files), "items": n})
+        inventory.append({"id": s["id"], "label": s["label"], "loaded": bool(files), "files": len(files), "items": n,
+                          "start": s["start"], "pulled": raw_counts.get(s["id"], 0)})
     with open(WORK / "normalised.jsonl", "w", encoding="utf-8", newline="\n") as f:
         for r in out:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
     with open(OUT / "sources.json", "w", encoding="utf-8", newline="\n") as f:
         json.dump({"provenance": "public", "raw_dir": "data/raw/natwest", "sources": inventory}, f, ensure_ascii=False, indent=1)
         f.write("\n")
+    # Manifest of the pull (kept with the raw files, which never enter the repo).
+    with open(RAW / "manifest.json", "w", encoding="utf-8", newline="\n") as f:
+        json.dump({"pulled": "2026-11-16", "window": ["2026-08-01", "2026-11-13"], "org": "natwest",
+                   "counts": raw_counts, "dropped": dropped}, f, ensure_ascii=False, indent=1)
+        f.write("\n")
     for s in inventory:
-        print(f"source {s['id']:<10} {'loaded' if s['loaded'] else 'NOT LOADED':<10} items={s['items']}")
+        print(f"source {s['id']:<10} {'loaded' if s['loaded'] else 'NOT LOADED':<10} pulled={s['pulled']} items={s['items']}")
+    print("dropped", dropped)
     c = collections.Counter((r["source"], r["brand"], r["relevant"]) for r in out)
     for k, v in sorted(c.items()):
         print(k, v)

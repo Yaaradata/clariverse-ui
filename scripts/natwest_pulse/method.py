@@ -16,7 +16,7 @@ from __future__ import annotations
 import collections
 import datetime as dt
 
-W_START, W_END = "2026-08-01", "2026-11-11"
+W_START, W_END = "2026-08-01", "2026-11-13"
 H1_END = "2026-09-21"
 CAPPED_X_RUN = "WhOLVGQsnVo9H7jHb"
 REDDIT_SWITCH = "2026-10-15"

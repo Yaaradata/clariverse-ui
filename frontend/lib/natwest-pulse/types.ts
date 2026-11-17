@@ -358,6 +358,8 @@ export type Meta = {
   window: { start: string; end: string };
   provenance: Record<Prov, string>;
   scope_note: string;
+  /** NW-D84: false until the sentiment-accuracy check passes; public negative shares are then hidden. */
+  sentiment_checked?: boolean;
   records: {
     total: number;
     by_source: Record<string, number>;

@@ -24,14 +24,14 @@ from normalise import OUT, WORK
 from taxonomy import OUTCOMES, THEMES
 
 T = {t["id"]: t for t in THEMES}
-W_START, W_END = "2026-08-01", "2026-11-11"
+W_START, W_END = "2026-08-01", "2026-11-13"
 H1_END = "2026-09-21"
-AS_OF = "2026-11-11"
-BRIEF = {"date": "2026-11-12", "label": "Thursday 12 November 2026", "time": "07:45 GMT"}
-SINCE_830 = "2026-11-11T07:45:00+00:00"
+AS_OF = "2026-11-13"
+BRIEF = {"date": "2026-11-13", "label": "Friday 13 November 2026", "time": "07:45 GMT"}
+SINCE_830 = "2026-11-12T07:45:00+00:00"
 IST = dt.timezone(dt.timedelta(0))
 NON_ISSUE = {"app_praise", "service_praise", "product_advice", "offers_deals", "market_news", "other", "general_dissatisfaction", "trading_securities", "insurance_group"}
-SOURCE_LABEL = {"appstore": "App Store", "playstore": "Google Play", "x": "X", "reddit": "Reddit", "trustpilot": "Trustpilot", "forum": "Forums (MoneySavingExpert)"}
+SOURCE_LABEL = {"appstore": "App Store", "playstore": "Google Play", "x": "X", "reddit": "Reddit", "trustpilot": "Trustpilot", "forum": "Forums"}
 # Plain place labels for evidence. Screens never link to the original post (the URL stays in evidence.json, server-side,
 # for audit only), so each quote says where it came from in words.
 FORUM_NAME = {"mse": "MoneySavingExpert"}
@@ -67,7 +67,7 @@ OWNER_LABEL = {
 RUNG_OF_TARGET = {
     "rbi": "Financial Ombudsman Service", "rbi_ombudsman": "Financial Ombudsman Service",
     "consumer_court": "Financial Ombudsman Service", "legal": "Financial Ombudsman Service",
-    "ministers": "Public", "grievance": "Complaint", "repeat": "Repeat",
+    "ministers": "Public", "complaints_team": "Complaint", "repeat": "Repeat",
 }
 REDIRECT_RE = re.compile(
     r"(e-?mail|write to|call|reach|connect|contact|dm|share|visit|chat|raise|mention the ref|reference id|ref id|register a complaint|nearest branch)",
@@ -178,9 +178,14 @@ def clip(text: str, n: int) -> str:
     return (cut[: cut.rfind(" ")] if " " in cut else cut).rstrip() + "…"
 
 
+NOT_QUOTED_RX = re.compile(r"\bRBS\b|royal\s*bank\s*of\s*scotland|\bulster\b|\bindia\b|\bindian\b", re.I)
+
+
 def quotable(r) -> bool:
     """A quote that alleges something against a named person, or complains about one, is never used as evidence.
     (Names are already redacted to role tags in normalise.py; the person may still be identifiable by role.)"""
+    if NOT_QUOTED_RX.search(f"{r.get('title') or ''} {r.get('summary') or ''} {r.get('text') or ''}"):
+        return False  # NW-D84: a quote naming another brand of the group or India is counted, never shown
     return not (r.get("alleges_named") or (r.get("names_person") and r["sentiment"] == "negative"))
 
 
@@ -535,7 +540,7 @@ def main():
             "collection cannot move it. Range −100 to +100."
         ),
         **M.mood(basis_bank, W),
-        "baseline_label": "vs window average (1 Jul–28 Sep); no earlier baseline",
+        "baseline_label": "vs window average (1 Aug–13 Nov); no earlier baseline",
     }
 
     # ------------------------------------------------------------ release pulse (HDFC Bank app)
@@ -648,8 +653,8 @@ def main():
         "window": {"start": W_START, "end": W_END},
         "provenance": {"public": "Public · live", "internal": "Internal · illustrative until discovery", "joined": "Joined · needs bank systems"},
         "scope_note": "Retail figures: NatWest (England and Wales), on-topic items in the window. Royal Bank of Scotland, Ulster Bank and group companies are excluded.",
-        "data_freeze": "2026-11-12T07:45:00+00:00",
-        "freeze_label": "Thursday 12 November 2026, 07:45 GMT",
+        "data_freeze": "2026-11-13T07:45:00+00:00",
+        "freeze_label": "Friday 13 November 2026, 07:45 GMT",
         "sources": json.loads((OUT / "sources.json").read_text(encoding="utf-8"))["sources"],
         "public_loaded": len(bank) > 0,
         # Theme names for the signal pages while no public theme exists yet (NW-D29).
@@ -684,7 +689,8 @@ def main():
         evidence[eid] = {
             "id": eid, "source": r["source"], "source_label": SOURCE_LABEL[r["source"]],
             "place": place_label(r), "created_at": r["created_at"],
-            "url": r["url"], "summary": r["summary"], "redacted_text": clip(r["text"] or "", 700), "title": r.get("title"),
+            # No source url in any page payload (HL-03); it stays in work/ (gitignored) for audit.
+            "summary": r["summary"], "redacted_text": clip(r["text"] or "", 700), "title": r.get("title"),
             "app_name": r.get("app_name"), "app_version": r.get("app_version"), "rating": r.get("rating"),
             "themes": r["themes"], "sentiment": r["sentiment"], "owner": r["owner"], "entity": r["entity"],
         }

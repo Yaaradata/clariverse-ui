@@ -23,7 +23,7 @@ def fmt(n) -> str:
 
 
 def as_of(iso: str) -> str:
-    """12 Nov, 07:45: the date form every other screen uses."""
+    """13 Nov, 07:45: the date form every other screen uses."""
     t = dt.datetime.fromisoformat(iso)
     return f"{t.day} {t.strftime('%b')}, {t.strftime('%H:%M')}"
 

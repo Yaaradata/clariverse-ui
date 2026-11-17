@@ -69,8 +69,11 @@ END = dt.datetime.fromisoformat(PERIOD_END)
 START = dt.datetime.fromisoformat(DATA_START)
 H48 = dt.timedelta(hours=48)
 PUBLIC_END = dt.datetime(2026, 11, 11, 23, 59, 59, tzinfo=END.tzinfo)
-SOURCE_LABEL = {"appstore": "App Store", "playstore": "Google Play", "x": "X", "reddit": "Reddit", "trustpilot": "Trustpilot", "forum": "Forums (MoneySavingExpert)"}
-TREND_SOURCES = {"playstore", "appstore", "trustpilot", "forum"}  # continuous collection across any two windows
+SOURCE_LABEL = {"appstore": "App Store", "playstore": "Google Play", "x": "X", "reddit": "Reddit", "trustpilot": "Trustpilot", "forum": "Forums"}
+TREND_SOURCES = {"playstore", "appstore", "trustpilot", "x", "reddit"}  # one continuous collector each (NW-D82)
+# HL-13: a source counts in a trend only when it was collecting before the comparison window began.
+SOURCE_START = {s["id"]: dt.datetime.fromisoformat(s["start"] + "T00:00:00+00:00")
+                for s in json.load(open(OUT_APP / "sources.json", encoding="utf-8"))["sources"] if s.get("start")}
 LIST_LABEL = {  # NatWest cohorts (brief Step 5.2); the ids are the oct13 list ids
     "priority_a": "Financially vulnerable (Consumer Duty)",
     "priority_b": "Recent complainants (90 days)",
@@ -405,6 +408,9 @@ def weighted_share(rs, pred, W, min_items: int = 3):
 
 # Bank replies on public posts (NatWest, HL-15): a reply counts only where the source itself carries it (store and
 # Trustpilot reply fields). Nothing is simulated: the oct13 simulated replies (an HDFC exception) are not carried over.
+REPLY_SOURCES = {"playstore"}  # sources whose export carries the bank's reply (NW-D82)
+
+
 def responded(r) -> bool:
     return bool(r.get("reply"))
 
@@ -414,9 +420,11 @@ def response_by_source(rs) -> list[dict]:
     for src in ("appstore", "playstore", "x", "reddit", "trustpilot", "forum"):
         xs = [r for r in rs if r["source"] == src]
         if xs:
-            n = sum(1 for r in xs if responded(r))
+            # Only Google Play carries the bank's replies in this pull; elsewhere there is no reply data (not 0%).
+            has = src in REPLY_SOURCES
+            n = sum(1 for r in xs if responded(r)) if has else None
             out.append({"source": src, "label": SOURCE_LABEL[src], "mentions": len(xs), "responded": n,
-                        "pct": pct(n, len(xs), 0), "illustrative": False})
+                        "pct": pct(n, len(xs), 0) if has else None, "reply_data": has, "illustrative": False})
     return out
 
 
@@ -440,7 +448,7 @@ def public_block(rs_all, w, W, keep=lambda r: True) -> dict:
     rs = [r for r in rs_all if keep(r) and a <= r["_c"] < b]
     pa, pb = w["prev"]
     ta, tb = w["trend_cur"]
-    basis = lambda r: r["source"] in TREND_SOURCES and not (w["prev"][0] == START and r.get("app_name") == "NatWest app" and r["source"] == "playstore")  # noqa: E731
+    basis = lambda r: r["source"] in TREND_SOURCES and SOURCE_START.get(r["source"], START) <= pa  # noqa: E731  (HL-13)
     cur_t = sum(1 for r in rs_all if keep(r) and basis(r) and ta <= r["_c"] < tb)
     prev_t = sum(1 for r in rs_all if keep(r) and basis(r) and pa <= r["_c"] < pb)
     hi = [r for r in rs if reach(r)]
@@ -453,7 +461,8 @@ def public_block(rs_all, w, W, keep=lambda r: True) -> dict:
         "negative_share": weighted_share(rs, lambda r: r["sentiment"] == "negative", W),
         "share_method": "source_weighted",
         "change_pct": change(cur_t, prev_t),
-        "trend_basis": {"current": cur_t, "previous": prev_t, "sources": sorted(TREND_SOURCES)},
+        "trend_basis": {"current": cur_t, "previous": prev_t,
+                        "sources": sorted(x for x in TREND_SOURCES if SOURCE_START.get(x, START) <= pa)},
         "escalation": sum(1 for r in rs if r["escalation_intent"]),
         "repeat_contact": sum(1 for r in rs if r["repeat_contact"]),
         "responded": replies(rs),
@@ -497,7 +506,7 @@ def social_pulse(pub, w, W) -> dict:
     rs = [r for r in pub if a <= r["_c"] < b]
     hi = [r for r in rs if reach(r)]
     by_source = response_by_source(rs)
-    n_resp = sum(x["responded"] for x in by_source)
+    n_resp = sum(x["responded"] or 0 for x in by_source)
     hi_resp = sum(1 for r in hi if responded(r))
     score = lambda r: sum(engagement_of(r).values())  # noqa: E731
     safe = lambda r: quotable(r) and r["summary"] and not ALLEGATION.search(f"{r['summary']} {r.get('text') or ''}")  # noqa: E731
@@ -505,7 +514,7 @@ def social_pulse(pub, w, W) -> dict:
     as_post = lambda r: {  # noqa: E731
         "text": r["summary"], "platform": SOURCE_LABEL[r["source"]], "date": r["created_at"][:10],
         "sentiment": r["sentiment"], "engagement": engagement_of(r), "score": score(r),
-        "responded": responded(r), "illustrative": r["source"] != "playstore",
+        "responded": responded(r) if r["source"] in REPLY_SOURCES else None, "illustrative": False,
     }
     posts = [as_post(r) for r in top]
     # High impact: the busiest day in the period, the posts of that day, and the change against the comparison window.

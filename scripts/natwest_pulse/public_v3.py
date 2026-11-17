@@ -27,7 +27,7 @@ import method as M  # noqa: E402  (scripts/hdfc_pipeline/method.py: source-weigh
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "data" / "out" / "natwest_pulse"
-W_START, W_END, H1_END = "2026-08-01", "2026-11-11", "2026-09-21"
+W_START, W_END, H1_END = "2026-08-01", "2026-11-13", "2026-09-21"
 NON_ISSUE = {"app_praise", "service_praise", "product_advice", "offers_deals", "market_news", "other", "general_dissatisfaction"}
 DIGITAL_GROUP = {"app_speed_crash", "app_usability", "app_login_biometrics", "device_security_block", "new_app_release", "online_banking", "app_praise"}
 HOME = re.compile(r"home ?loan|housing loan|mortgage|property", re.I)
@@ -124,7 +124,7 @@ def build_products(rows, basis) -> dict:
         "total_items": meta["records"]["bank_on_topic_window"],
         "reconciles": total_rows + sum(excluded.values()) == meta["records"]["bank_on_topic_window"],
         "trend_rule": (
-            "Source-weighted share of trend-basis items, second half (22 Sep–11 Nov) vs first half (1 Aug–21 Sep): each "
+            "Source-weighted share of trend-basis items, second half (22 Sep–13 Nov) vs first half (1 Aug–21 Sep): each "
             "source's share counts in proportion to its share of the window. Shown only when both halves have at "
             "least 15 items."
         ),

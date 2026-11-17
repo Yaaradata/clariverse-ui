@@ -17,4 +17,5 @@ export PYTHONIOENCODING=utf-8
 "$PY" ask.py
 "$PY" check_reconcile_v3.py
 "$PY" volume_validation.py
+"$PY" public_gate.py  # NW-D84: public negative share hidden until the sentiment check passes
 "$PY" ../natwest_routes.py

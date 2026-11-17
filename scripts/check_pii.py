@@ -69,6 +69,8 @@ UK_PATTERNS = {
 # Hashed author handles: a key that names an author or handle, or a hex digest standing in for one.
 HANDLE_KEYS = {"author", "author_hash", "author_id", "handle", "user", "username", "user_id", "screen_name"}
 HASH_RX = re.compile(r"\b[0-9a-f]{16,64}\b")
+# A public record id ("trustpilot:6af3…", the source's own review id) is not a hashed handle (NW-D84).
+RECORD_ID_RX = re.compile(r"^(?:appstore|playstore|x|reddit|trustpilot|forum):[0-9a-zA-Z_-]+$")
 
 # Record ids and source links identify public posts; they are not personal data.
 ID_RE = re.compile(r'"(?:appstore|playstore|x|reddit|technofino|trustpilot|mouthshut|consumercomplaints|complaintsboard)[:_][^"]*"')
@@ -198,6 +200,8 @@ def scan_uk(paths) -> list[str]:
             for k in _handles(d):
                 hits.append(f"{rel}: author_handle_field: {k}")
             for s in _strings(d):
+                if RECORD_ID_RX.match(s):
+                    continue
                 for m in HASH_RX.finditer(s):
                     if re.search(r"[a-f]", m.group(0)) and re.search(r"\d", m.group(0)):
                         hits.append(f"{rel}: hashed_handle: {m.group(0)}")

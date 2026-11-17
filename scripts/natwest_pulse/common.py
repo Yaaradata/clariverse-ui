@@ -13,8 +13,8 @@ SEED_V3 = DATA / "seed" / "natwest_pulse"
 
 SEED = 20260928
 # The brief is written for the 29 September morning review: every age is measured from this moment.
-NOW = "2026-11-12T07:45:00+00:00"
-WINDOW = ("2026-08-01", "2026-11-11")
+NOW = "2026-11-13T07:45:00+00:00"
+WINDOW = ("2026-08-01", "2026-11-13")
 # England and Wales bank holidays that fall in or just after the window: business days skip them and weekends.
 BANK_HOLIDAYS = {"2026-08-31", "2026-12-25", "2026-12-28"}
 
@@ -219,7 +219,7 @@ def dump(obj, path: Path, indent: int | None = 1):
 # ------------------------------------------------------------------ periods (30 Sep review, changes_30sep.md A1)
 # Every period ends at the last moment in the data (29 Sep 08:30), never at the real clock. The morning brief is
 # yesterday 08:30 to today 08:30 in data time.
-PERIOD_END = "2026-11-12T07:45:00+00:00"  # the data freeze (review round 1: 07:45 everywhere)
+PERIOD_END = "2026-11-13T07:45:00+00:00"  # the data freeze: 13 Nov 07:45 GMT (NW-D81)
 DATA_START = "2026-08-01T00:00:00+00:00"
 PERIODS = [
     {"id": "brief", "label": "Morning brief", "days": 1, "short": True},

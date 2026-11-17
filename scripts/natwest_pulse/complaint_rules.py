@@ -93,8 +93,8 @@ def deadline(received: dt.datetime, product: str) -> dt.datetime:
 
 # Referral rates (review round 3, NW-D67; were 52% / 25% in NW-D62): with Premier complaints in proportion, these keep the
 # "Referred" tile at about 150 a week, the brief's 5,935 in 9 months.
-UNHAPPY_REFER = 0.62
-LATE_REFER = 0.30
+UNHAPPY_REFER = 0.47  # NW-D84: re-tuned after the re-freeze to 13 Nov (was 0.62)
+LATE_REFER = 0.23  # NW-D84 (was 0.30)
 
 
 def filed_with_ombudsman(r: dict, d: dict) -> bool:
@@ -104,8 +104,8 @@ def filed_with_ombudsman(r: dict, d: dict) -> bool:
 
 
 def referred_at(r: dict, d: dict):
-    """When the customer referred the complaint to the Financial Ombudsman Service, or None. ASSUMPTION (Pass 2 section 4, about 150 referrals a week; NW-D56, NW-D62): 52% of those
-    unhappy with the final response, 25% of those past the deadline with no final response; referral 3-30 days later.
+    """When the customer referred the complaint to the Financial Ombudsman Service, or None. ASSUMPTION (Pass 2 section 4, about 150 referrals a week; NW-D56, NW-D62, NW-D84): 39% of those
+    unhappy with the final response, 19% of those past the deadline with no final response; referral 3-30 days later.
     Rates now UNHAPPY_REFER and LATE_REFER (NW-D67)."""
     t = referral_due(r, d)
     return t if t and t <= END else None
@@ -168,8 +168,15 @@ def steady_register(raw: list[dict]) -> list[dict]:
         weighted = []
         for grp, gtotal in groups:
             copies = [(c, k) for c in grp for k in range(len(CLONE_OFFSETS))]
-            base, rem = divmod(gtotal, len(copies))
-            weighted += [(c, k, base + (1 if i < rem else 0)) for i, (c, k) in enumerate(copies)]
+            # Weights vary per copy, 0.5 to 1.5 of the mean, deterministic (NW-D84): equal weights made every small
+            # count a multiple of one weight. Largest remainder keeps the group total exact.
+            raw_w = [0.5 + int(hashlib.sha1(f"w:{c['id']}:{k}".encode()).hexdigest(), 16) % 1000 / 1000 for c, k in copies]
+            scale = gtotal / sum(raw_w)
+            exact = [x * scale for x in raw_w]
+            ws = [int(x) for x in exact]
+            for i in sorted(range(len(ws)), key=lambda i: exact[i] - ws[i], reverse=True)[: gtotal - sum(ws)]:
+                ws[i] += 1
+            weighted += [(c, k, w) for (c, k), w in zip(copies, ws)]
         for c, k, w in weighted:
             for prior in (0, 1, 2):
                 src = c

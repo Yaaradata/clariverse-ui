@@ -285,7 +285,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
                         {
                           rbi: "Regulator named or tagged (FCA)",
                           rbi_ombudsman: "Financial Ombudsman Service",
-                          grievance: "Complaints team",
+                          complaints_team: "Complaints team",
                           legal: "Legal action",
                           consumer_court:
                             "Small claims court or Citizens Advice",

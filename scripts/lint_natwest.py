@@ -210,10 +210,15 @@ def _ui_hits(text: str, rel: str) -> list[str]:
     return hits
 
 
+PUBLIC_SOURCES = {"appstore", "playstore", "x", "reddit", "trustpilot", "forum"}
+
+
 def walk(o, path: str, out: list[tuple[str, str, bool]], peer: bool = False):
     if isinstance(o, dict):
+        # A public item's summary and title are the customer's own words, like its text (NW-D84).
+        customer = o.get("source") in PUBLIC_SOURCES or o.get("platform") in {"App Store", "Google Play", "X", "Reddit", "Trustpilot"}
         for k, v in o.items():
-            if k in SKIP_KEYS:
+            if k in SKIP_KEYS or (customer and k in ("summary", "title")):
                 continue
             walk(v, f"{path}.{k}", out, peer or k == PEER_KEY)
     elif isinstance(o, list):

@@ -75,8 +75,8 @@ def main() -> int:
     cmp = [r for r in rs if is_complaint(r)]
     n_cmp = W(cmp)
 
-    # ---- complaints: the H1 2026 return (brief Step 3.8), scaled to the 103 days of the window
-    add("Complaints, full window", n_cmp, IN(n_cmp), "about 49,200 (86,498 in H1 x 103/181)", "ANCHOR, derived", 49_200, 49_200)
+    # ---- complaints: the H1 2026 return (brief Step 3.8), scaled to the 104 days of the window
+    add("Complaints, full window", n_cmp, IN(n_cmp), "about 49,700 (86,498 in H1 x 104/181)", "ANCHOR, derived", 49_700, 49_700)
     add("Complaints per week", n_cmp / WEEKS, IN(n_cmp / WEEKS), "about 3,345", "ANCHOR, derived", 3345, 3345)
     accounts = 86_498 / 2.74 * 1000
     per1000 = n_cmp * 181 / DAYS / accounts * 1000
@@ -117,7 +117,7 @@ def main() -> int:
 
     out = ["# NatWest · volume validation (HL-18)", "",
            "Written by `scripts/natwest_pulse/volume_validation.py` from `data/out/natwest_pulse/periods.json` and the seed.",
-           "Anchors: `docs/natwest/public_anchors.md`. Full window = 1 Aug to 12 Nov 08:30 (103 days).", "",
+           "Anchors: `docs/natwest/public_anchors.md`. Full window = 1 Aug to 13 Nov 07:45 (104 days).", "",
            f"Sample kept: {IN(scale['sample']['rows'])} rows and {IN(scale['sample']['customers'])} customers; every figure below is a weighted sum of those rows.", "",
            "Verdict: **OK** = inside the anchor's range, or within 2x of a point anchor. Anything else is fixed or justified in the row.", "",
            "| Metric | Our figure | Anchor | Source | Ratio | Verdict |", "|---|---|---|---|---|---|"]

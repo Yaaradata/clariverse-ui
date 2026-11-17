@@ -1,698 +1,1194 @@
 {
  "scope": "natwest_group · on_topic · window",
- "total_items": 0,
+ "total_items": 4307,
  "flags": {
   "escalation_intent": {
-   "count": 0,
-   "share": null,
+   "count": 23,
+   "share": 0.5,
    "weekly": [
     {
      "week": "2026-07-27",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-03",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 1.28
     },
     {
      "week": "2026-08-10",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-17",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-24",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-31",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-09-07",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 1.93
     },
     {
      "week": "2026-09-14",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 1.2
     },
     {
      "week": "2026-09-21",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-09-28",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-10-05",
-     "count": 0,
-     "share": null
+     "count": 3,
+     "share": 1.57
     },
     {
      "week": "2026-10-12",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-10-19",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 0.55
     },
     {
      "week": "2026-10-26",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-11-02",
      "count": 0,
-     "share": null
+     "share": 0.0
     }
    ],
    "trend": {
     "mode": "trend_within_window",
     "method": "source_weighted",
-    "first_half": 0,
-    "second_half": 0,
-    "first_share": null,
-    "second_share": null,
-    "change_pct": null,
+    "first_half": 4,
+    "second_half": 4,
+    "first_share": 0.55,
+    "second_share": 0.27,
+    "change_pct": -51.4,
     "first_half_dates": "2026-08-01 to 2026-09-21",
-    "second_half_dates": "2026-09-22 to 2026-11-11"
+    "second_half_dates": "2026-09-22 to 2026-11-13"
    },
-   "top_themes": [],
-   "exemplars": []
+   "top_themes": [
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure",
+     "count": 4
+    },
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 4
+    },
+    {
+     "id": "other",
+     "label": "Other",
+     "count": 3
+    },
+    {
+     "id": "app_login_biometrics",
+     "label": "App login and biometrics",
+     "count": 2
+    },
+    {
+     "id": "offers_deals",
+     "label": "Card offers and deals",
+     "count": 2
+    }
+   ],
+   "exemplars": [
+    "x:2107438504250679739",
+    "reddit:comment:p2el4xj",
+    "x:2112616521348387287",
+    "reddit:comment:p2f10us"
+   ]
   },
   "promise_break": {
-   "count": 0,
-   "share": null,
+   "count": 166,
+   "share": 3.9,
    "weekly": [
     {
      "week": "2026-07-27",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 2.41
     },
     {
      "week": "2026-08-03",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 1.28
     },
     {
      "week": "2026-08-10",
-     "count": 0,
-     "share": null
+     "count": 4,
+     "share": 2.8
     },
     {
      "week": "2026-08-17",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 2.27
     },
     {
      "week": "2026-08-24",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 1.89
     },
     {
      "week": "2026-08-31",
-     "count": 0,
-     "share": null
+     "count": 9,
+     "share": 6.78
     },
     {
      "week": "2026-09-07",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 1.46
     },
     {
      "week": "2026-09-14",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 1.2
     },
     {
      "week": "2026-09-21",
-     "count": 0,
-     "share": null
+     "count": 9,
+     "share": 4.28
     },
     {
      "week": "2026-09-28",
-     "count": 0,
-     "share": null
+     "count": 3,
+     "share": 1.72
     },
     {
      "week": "2026-10-05",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 0.52
     },
     {
      "week": "2026-10-12",
-     "count": 0,
-     "share": null
+     "count": 4,
+     "share": 3.32
     },
     {
      "week": "2026-10-19",
-     "count": 0,
-     "share": null
+     "count": 7,
+     "share": 3.82
     },
     {
      "week": "2026-10-26",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 0.56
     },
     {
      "week": "2026-11-02",
-     "count": 0,
-     "share": null
+     "count": 9,
+     "share": 4.75
     }
    ],
    "trend": {
     "mode": "trend_within_window",
     "method": "source_weighted",
-    "first_half": 0,
-    "second_half": 0,
-    "first_share": null,
-    "second_share": null,
-    "change_pct": null,
+    "first_half": 22,
+    "second_half": 41,
+    "first_share": 2.68,
+    "second_share": 2.81,
+    "change_pct": 4.8,
     "first_half_dates": "2026-08-01 to 2026-09-21",
-    "second_half_dates": "2026-09-22 to 2026-11-11"
+    "second_half_dates": "2026-09-22 to 2026-11-13"
    },
-   "top_themes": [],
-   "exemplars": []
+   "top_themes": [
+    {
+     "id": "other",
+     "label": "Other",
+     "count": 26
+    },
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 23
+    },
+    {
+     "id": "app_login_biometrics",
+     "label": "App login and biometrics",
+     "count": 16
+    },
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure",
+     "count": 13
+    },
+    {
+     "id": "product_advice",
+     "label": "Product questions and advice-seeking",
+     "count": 11
+    }
+   ],
+   "exemplars": [
+    "playstore:37f8e503-ffca-46eb-9f6b-d0fdd38e2072",
+    "x:2112860905855996178",
+    "x:2111127598067540218",
+    "reddit:1xr9rkt"
+   ]
   },
   "status_seeking": {
-   "count": 0,
-   "share": null,
+   "count": 48,
+   "share": 1.1,
    "weekly": [
     {
      "week": "2026-07-27",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-03",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 1.28
     },
     {
      "week": "2026-08-10",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 1.4
     },
     {
      "week": "2026-08-17",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-24",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 1.89
     },
     {
      "week": "2026-08-31",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-09-07",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 1.46
     },
     {
      "week": "2026-09-14",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-09-21",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 0.48
     },
     {
      "week": "2026-09-28",
-     "count": 0,
-     "share": null
+     "count": 3,
+     "share": 1.72
     },
     {
      "week": "2026-10-05",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-10-12",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-10-19",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-10-26",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-11-02",
-     "count": 0,
-     "share": null
+     "count": 5,
+     "share": 2.82
     }
    ],
    "trend": {
     "mode": "trend_within_window",
     "method": "source_weighted",
-    "first_half": 0,
-    "second_half": 0,
-    "first_share": null,
-    "second_share": null,
-    "change_pct": null,
+    "first_half": 7,
+    "second_half": 9,
+    "first_share": 0.81,
+    "second_share": 0.67,
+    "change_pct": -17.5,
     "first_half_dates": "2026-08-01 to 2026-09-21",
-    "second_half_dates": "2026-09-22 to 2026-11-11"
+    "second_half_dates": "2026-09-22 to 2026-11-13"
    },
-   "top_themes": [],
-   "exemplars": []
+   "top_themes": [
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 9
+    },
+    {
+     "id": "branch_service",
+     "label": "Branch service",
+     "count": 4
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App outages, speed and crashes",
+     "count": 4
+    },
+    {
+     "id": "app_login_biometrics",
+     "label": "App login and biometrics",
+     "count": 4
+    },
+    {
+     "id": "rewards_value",
+     "label": "Rewards value and caps",
+     "count": 3
+    }
+   ],
+   "exemplars": [
+    "playstore:760e1b36-b1a6-4ee0-bcd3-be0377479a41",
+    "x:2087551929387712566",
+    "reddit:comment:p720c1x",
+    "reddit:1wdmi02"
+   ]
   },
   "cure_watch": {
-   "count": 0,
-   "share": null,
+   "count": 78,
+   "share": 1.8,
    "weekly": [
     {
      "week": "2026-07-27",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-03",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 2.12
     },
     {
      "week": "2026-08-10",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 1.4
     },
     {
      "week": "2026-08-17",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 1.13
     },
     {
      "week": "2026-08-24",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 0.86
     },
     {
      "week": "2026-08-31",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 1.57
     },
     {
      "week": "2026-09-07",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 1.93
     },
     {
      "week": "2026-09-14",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 1.83
     },
     {
      "week": "2026-09-21",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 0.48
     },
     {
      "week": "2026-09-28",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 0.57
     },
     {
      "week": "2026-10-05",
-     "count": 0,
-     "share": null
+     "count": 3,
+     "share": 1.57
     },
     {
      "week": "2026-10-12",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 0.83
     },
     {
      "week": "2026-10-19",
-     "count": 0,
-     "share": null
+     "count": 4,
+     "share": 2.18
     },
     {
      "week": "2026-10-26",
-     "count": 0,
-     "share": null
+     "count": 4,
+     "share": 2.36
     },
     {
      "week": "2026-11-02",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 1.17
     }
    ],
    "trend": {
     "mode": "trend_within_window",
     "method": "source_weighted",
-    "first_half": 0,
-    "second_half": 0,
-    "first_share": null,
-    "second_share": null,
-    "change_pct": null,
+    "first_half": 12,
+    "second_half": 18,
+    "first_share": 1.45,
+    "second_share": 1.25,
+    "change_pct": -14.0,
     "first_half_dates": "2026-08-01 to 2026-09-21",
-    "second_half_dates": "2026-09-22 to 2026-11-11"
+    "second_half_dates": "2026-09-22 to 2026-11-13"
    },
-   "top_themes": [],
-   "exemplars": []
+   "top_themes": [
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 31
+    },
+    {
+     "id": "app_login_biometrics",
+     "label": "App login and biometrics",
+     "count": 9
+    },
+    {
+     "id": "card_application",
+     "label": "Card applications and identity checks",
+     "count": 7
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Could not get through",
+     "count": 7
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App outages, speed and crashes",
+     "count": 4
+    }
+   ],
+   "exemplars": [
+    "reddit:comment:p4i3zqx",
+    "x:2114701156127559722",
+    "x:2112860905855996178",
+    "reddit:1vlt0ei"
+   ]
   },
   "closure_intent": {
-   "count": 0,
-   "share": null,
+   "count": 30,
+   "share": 0.7,
    "weekly": [
     {
      "week": "2026-07-27",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-03",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-10",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-17",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-24",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-31",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 1.57
     },
     {
      "week": "2026-09-07",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 0.49
     },
     {
      "week": "2026-09-14",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-09-21",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-09-28",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-10-05",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 0.52
     },
     {
      "week": "2026-10-12",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-10-19",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-10-26",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-11-02",
      "count": 0,
-     "share": null
+     "share": 0.0
     }
    ],
    "trend": {
     "mode": "trend_within_window",
     "method": "source_weighted",
-    "first_half": 0,
-    "second_half": 0,
-    "first_share": null,
-    "second_share": null,
-    "change_pct": null,
+    "first_half": 3,
+    "second_half": 2,
+    "first_share": 0.36,
+    "second_share": 0.13,
+    "change_pct": -63.3,
     "first_half_dates": "2026-08-01 to 2026-09-21",
-    "second_half_dates": "2026-09-22 to 2026-11-11"
+    "second_half_dates": "2026-09-22 to 2026-11-13"
    },
-   "top_themes": [],
-   "exemplars": []
+   "top_themes": [
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure",
+     "count": 15
+    },
+    {
+     "id": "other",
+     "label": "Other",
+     "count": 3
+    },
+    {
+     "id": "app_login_biometrics",
+     "label": "App login and biometrics",
+     "count": 2
+    },
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 2
+    },
+    {
+     "id": "dispute_chargeback",
+     "label": "Disputes and chargebacks",
+     "count": 1
+    }
+   ],
+   "exemplars": [
+    "reddit:comment:p2f10us",
+    "playstore:65aa8652-b39b-47e4-a9d3-9618d4917734",
+    "trustpilot:6aedb848826dfee11532997f",
+    "trustpilot:6ada4ac2a12c38b2637834ac"
+   ]
   },
   "repeat_contact": {
-   "count": 0,
-   "share": null,
+   "count": 89,
+   "share": 2.1,
    "weekly": [
     {
      "week": "2026-07-27",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-03",
-     "count": 0,
-     "share": null
+     "count": 3,
+     "share": 2.96
     },
     {
      "week": "2026-08-10",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 1.4
     },
     {
      "week": "2026-08-17",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 0.73
     },
     {
      "week": "2026-08-24",
-     "count": 0,
-     "share": null
+     "count": 3,
+     "share": 2.92
     },
     {
      "week": "2026-08-31",
-     "count": 0,
-     "share": null
+     "count": 3,
+     "share": 2.07
     },
     {
      "week": "2026-09-07",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 0.97
     },
     {
      "week": "2026-09-14",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 1.24
     },
     {
      "week": "2026-09-21",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-09-28",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 0.59
     },
     {
      "week": "2026-10-05",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-10-12",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 0.64
     },
     {
      "week": "2026-10-19",
-     "count": 0,
-     "share": null
+     "count": 4,
+     "share": 2.44
     },
     {
      "week": "2026-10-26",
-     "count": 0,
-     "share": null
+     "count": 2,
+     "share": 1.39
     },
     {
      "week": "2026-11-02",
-     "count": 0,
-     "share": null
+     "count": 4,
+     "share": 2.13
     }
    ],
    "trend": {
     "mode": "trend_within_window",
     "method": "source_weighted",
-    "first_half": 0,
-    "second_half": 0,
-    "first_share": null,
-    "second_share": null,
-    "change_pct": null,
+    "first_half": 15,
+    "second_half": 12,
+    "first_share": 1.62,
+    "second_share": 0.97,
+    "change_pct": -40.3,
     "first_half_dates": "2026-08-01 to 2026-09-21",
-    "second_half_dates": "2026-09-22 to 2026-11-11"
+    "second_half_dates": "2026-09-22 to 2026-11-13"
    },
-   "top_themes": [],
-   "exemplars": []
+   "top_themes": [
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 26
+    },
+    {
+     "id": "app_login_biometrics",
+     "label": "App login and biometrics",
+     "count": 16
+    },
+    {
+     "id": "app_praise",
+     "label": "Where customers praise us: quick, easy app journeys",
+     "count": 13
+    },
+    {
+     "id": "branch_service",
+     "label": "Branch service",
+     "count": 5
+    },
+    {
+     "id": "dispute_chargeback",
+     "label": "Disputes and chargebacks",
+     "count": 5
+    }
+   ],
+   "exemplars": [
+    "playstore:976db6dd-40f6-4277-bad9-a6dcd5b3423b",
+    "playstore:d4419c48-099f-4277-bd0f-fb33e811cf60",
+    "reddit:1wi6fg4",
+    "x:2086877988063248804"
+   ]
   },
   "feature_request": {
-   "count": 0,
-   "share": null,
+   "count": 2,
+   "share": 0.0,
    "weekly": [
     {
      "week": "2026-07-27",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-03",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-10",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-17",
-     "count": 0,
-     "share": null
+     "count": 1,
+     "share": 0.73
     },
     {
      "week": "2026-08-24",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-08-31",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-09-07",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-09-14",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-09-21",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-09-28",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-10-05",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-10-12",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-10-19",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-10-26",
      "count": 0,
-     "share": null
+     "share": 0.0
     },
     {
      "week": "2026-11-02",
      "count": 0,
-     "share": null
+     "share": 0.0
     }
    ],
    "trend": {
     "mode": "trend_within_window",
     "method": "source_weighted",
-    "first_half": 0,
-    "second_half": 0,
-    "first_share": null,
-    "second_share": null,
-    "change_pct": null,
+    "first_half": 1,
+    "second_half": 1,
+    "first_share": 0.09,
+    "second_share": 0.07,
+    "change_pct": -24.9,
     "first_half_dates": "2026-08-01 to 2026-09-21",
-    "second_half_dates": "2026-09-22 to 2026-11-11"
+    "second_half_dates": "2026-09-22 to 2026-11-13"
    },
-   "top_themes": [],
-   "exemplars": []
+   "top_themes": [
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 1
+    },
+    {
+     "id": "other",
+     "label": "Other",
+     "count": 1
+    }
+   ],
+   "exemplars": [
+    "playstore:c3ef4732-d096-446a-83d3-3a7347426f5e",
+    "x:2119844985583317268"
+   ]
   },
   "switching": {
-   "count": 0,
-   "to_other_bank": 0,
+   "count": 1,
+   "to_other_bank": 1,
    "from_other_bank": 0,
    "note": "Posts naming a move between NatWest and another bank. Counted as mentions, never as confirmed moves."
   }
  },
- "promise_by_request_type": [],
+ "promise_by_request_type": [
+  {
+   "request_type": "other",
+   "count": 116,
+   "status_seeking": 16,
+   "repeat_share": 1.7,
+   "median_days_elapsed": 42,
+   "owner": "cx",
+   "top_theme": "other",
+   "exemplars": [
+    "playstore:37f8e503-ffca-46eb-9f6b-d0fdd38e2072",
+    "x:2112860905855996178",
+    "x:2111127598067540218"
+   ]
+  },
+  {
+   "request_type": "closure",
+   "count": 26,
+   "status_seeking": 1,
+   "repeat_share": 3.8,
+   "median_days_elapsed": 30,
+   "owner": "cards",
+   "top_theme": "closure_requests",
+   "exemplars": [
+    "x:2119425075720192253",
+    "playstore:647d123c-4476-41d7-9e20-644269b383c7",
+    "trustpilot:6aa2a50b283572b00907b750"
+   ]
+  },
+  {
+   "request_type": "refund",
+   "count": 11,
+   "status_seeking": 1,
+   "repeat_share": 27.3,
+   "median_days_elapsed": 30,
+   "owner": "operations",
+   "top_theme": "refund_delay",
+   "exemplars": [
+    "x:2112404810959818758",
+    "x:2089356030882808141",
+    "reddit:1xbx8zx"
+   ]
+  },
+  {
+   "request_type": "card_delivery",
+   "count": 4,
+   "status_seeking": 4,
+   "repeat_share": 0.0,
+   "median_days_elapsed": 5,
+   "owner": "operations",
+   "top_theme": "card_dispatch",
+   "exemplars": [
+    "trustpilot:6ab4f6e81f6fc05895347536",
+    "appstore:14721244540",
+    "trustpilot:6a79ce0ff29c198f1aa5870b"
+   ]
+  },
+  {
+   "request_type": "credit_report",
+   "count": 4,
+   "status_seeking": 1,
+   "repeat_share": 0.0,
+   "median_days_elapsed": 90,
+   "owner": "compliance",
+   "top_theme": "other",
+   "exemplars": [
+    "x:2113692901511164312",
+    "x:2096194532777873743"
+   ]
+  },
+  {
+   "request_type": "dispute",
+   "count": 3,
+   "status_seeking": 1,
+   "repeat_share": 0.0,
+   "median_days_elapsed": 19,
+   "owner": "operations",
+   "top_theme": "app_login_biometrics",
+   "exemplars": [
+    "trustpilot:6ad62ebb65a282e343857600",
+    "reddit:1waw01d",
+    "reddit:1wy5plk"
+   ]
+  },
+  {
+   "request_type": "kyc",
+   "count": 1,
+   "status_seeking": 0,
+   "repeat_share": 0.0,
+   "median_days_elapsed": 2,
+   "owner": "operations",
+   "top_theme": "app_login_biometrics",
+   "exemplars": [
+    "appstore:14451750345"
+   ]
+  },
+  {
+   "request_type": "reversal",
+   "count": 1,
+   "status_seeking": 0,
+   "repeat_share": 100.0,
+   "median_days_elapsed": 30,
+   "owner": "payments",
+   "top_theme": "failed_txn_reversal",
+   "exemplars": [
+    "reddit:1x21ykr"
+   ]
+  }
+ ],
  "transparency_gap": {
-  "count": 0,
-  "share": null,
-  "by_request_type": [],
-  "exemplars": []
+  "count": 48,
+  "share": 1.1,
+  "by_request_type": [
+   {
+    "request_type": "other",
+    "count": 40
+   },
+   {
+    "request_type": "card_delivery",
+    "count": 4
+   },
+   {
+    "request_type": "closure",
+    "count": 1
+   },
+   {
+    "request_type": "dispute",
+    "count": 1
+   },
+   {
+    "request_type": "credit_report",
+    "count": 1
+   },
+   {
+    "request_type": "refund",
+    "count": 1
+   }
+  ],
+  "exemplars": [
+   "playstore:760e1b36-b1a6-4ee0-bcd3-be0377479a41",
+   "x:2087551929387712566",
+   "reddit:comment:p720c1x"
+  ]
  },
- "escalation_by_target": [],
+ "escalation_by_target": [
+  {
+   "target": "rbi_ombudsman",
+   "rung": "Financial Ombudsman Service",
+   "count": 19
+  },
+  {
+   "target": "complaints_team",
+   "rung": "Complaint",
+   "count": 3
+  },
+  {
+   "target": "legal",
+   "rung": "Financial Ombudsman Service",
+   "count": 1
+  }
+ ],
  "ladder_public": {
-  "voice_negative": 0,
-  "repeat": 0,
-  "escalation_language": 0,
-  "public_posts_with_escalation": 0,
-  "rbi_or_ombudsman_mentions": 0,
-  "climb_themes": []
+  "voice_negative": 1303,
+  "repeat": 89,
+  "escalation_language": 23,
+  "public_posts_with_escalation": 18,
+  "rbi_or_ombudsman_mentions": 19,
+  "climb_themes": [
+   {
+    "id": "closure_requests",
+    "label": "Account and card closure",
+    "count": 4
+   },
+   {
+    "id": "app_login_biometrics",
+    "label": "App login and biometrics",
+    "count": 2
+   },
+   {
+    "id": "refund_delay",
+    "label": "Refunds not credited",
+    "count": 2
+   },
+   {
+    "id": "recovery_conduct",
+    "label": "Collections and arrears conduct",
+    "count": 1
+   },
+   {
+    "id": "card_limit",
+    "label": "Credit limit",
+    "count": 1
+   },
+   {
+    "id": "card_application",
+    "label": "Card applications and identity checks",
+    "count": 1
+   }
+  ]
  },
  "voices_with_reach": [],
  "closure_intent": {
-  "count": 0,
-  "drivers": [],
-  "exemplars": []
+  "count": 30,
+  "drivers": [
+   {
+    "id": "closure_requests",
+    "label": "Account and card closure",
+    "count": 15
+   },
+   {
+    "id": "other",
+    "label": "Other",
+    "count": 3
+   },
+   {
+    "id": "app_login_biometrics",
+    "label": "App login and biometrics",
+    "count": 2
+   },
+   {
+    "id": "general_dissatisfaction",
+    "label": "General dissatisfaction",
+    "count": 2
+   },
+   {
+    "id": "dispute_chargeback",
+    "label": "Disputes and chargebacks",
+    "count": 1
+   }
+  ],
+  "exemplars": [
+   "reddit:comment:p2f10us",
+   "playstore:65aa8652-b39b-47e4-a9d3-9618d4917734",
+   "trustpilot:6aedb848826dfee11532997f",
+   "trustpilot:6ada4ac2a12c38b2637834ac"
+  ]
  },
  "cure_watch": {
-  "count": 0,
-  "by_theme": [],
-  "exemplars": []
+  "count": 78,
+  "by_theme": [
+   {
+    "id": "general_dissatisfaction",
+    "label": "General dissatisfaction",
+    "count": 31
+   },
+   {
+    "id": "app_login_biometrics",
+    "label": "App login and biometrics",
+    "count": 9
+   },
+   {
+    "id": "card_application",
+    "label": "Card applications and identity checks",
+    "count": 7
+   },
+   {
+    "id": "care_unreachable",
+    "label": "Could not get through",
+    "count": 7
+   },
+   {
+    "id": "app_speed_crash",
+    "label": "App outages, speed and crashes",
+    "count": 4
+   }
+  ],
+  "exemplars": [
+   "reddit:comment:p4i3zqx",
+   "x:2114701156127559722",
+   "x:2112860905855996178",
+   "reddit:1vlt0ei"
+  ]
  },
- "by_business": []
+ "by_business": [
+  {
+   "business": "retail_banking",
+   "count": 3596,
+   "repeat": 63,
+   "escalation": 13,
+   "negative": 960
+  },
+  {
+   "business": "cards",
+   "count": 411,
+   "repeat": 21,
+   "escalation": 6,
+   "negative": 217
+  },
+  {
+   "business": "loans",
+   "count": 195,
+   "repeat": 4,
+   "escalation": 2,
+   "negative": 80
+  },
+  {
+   "business": "sme_merchant",
+   "count": 64,
+   "repeat": 0,
+   "escalation": 0,
+   "negative": 26
+  },
+  {
+   "business": "payments",
+   "count": 15,
+   "repeat": 1,
+   "escalation": 1,
+   "negative": 9
+  },
+  {
+   "business": "corporate",
+   "count": 13,
+   "repeat": 0,
+   "escalation": 0,
+   "negative": 3
+  },
+  {
+   "business": "wealth",
+   "count": 13,
+   "repeat": 0,
+   "escalation": 1,
+   "negative": 8
+  }
+ ]
 }

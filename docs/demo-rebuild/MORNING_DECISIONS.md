@@ -1215,3 +1215,38 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
   weeks, 15 business days, 6 months, PSR 5 business days, Consumer Duty outcomes, Faster Payments) now say so instead of
   "pending". Peers: Lloyds and Barclays complaints figures, Monzo 85% and Starling 83% online (CMA); HSBC UK and
   Santander UK "not retrieved". The footer cites the research pack again (NW-D70 had removed it while it was absent).
+- **NW-D81 · Re-freeze (step 1e).** The dashboard is frozen at Friday 13 November 2026, 07:45 GMT. Window 1 Aug to
+  13 Nov (104 days); complaints anchor 49,700 (86,498 x 104/181). Every window is recomputed; the hand-written cases
+  move one day with the freeze, so "today" in a draft reply is still today.
+- **NW-D82 · Public pull loaded (step 1).** data/raw/natwest/<source>/2026-11-16/ (gitignored; manifest.json beside it):
+  App Store 1,200 · Google Play 1,034 · X 1,881 · Reddit 807 · Trustpilot 233, all NatWest, 1 Aug to 13 Nov.
+  - X: 175 non-English posts dropped; 131 posts about profits, shares, bailout, windfall tax or branch-closure politics
+    tagged investor_corporate and kept off the home and product screens.
+  - Reddit: subreddit parsed from the URL into source_sub; r/beermoneyuk tagged switching_offers (kept, never a
+    complaint theme); r/HousingUK and r/LegalAdviceUK count as finance subreddits.
+  - The "forums" file is Trustpilot only and is labelled Trustpilot.
+  - Source start dates: App Store 12 Aug, Trustpilot 1 Sep. A source counts in a trend only when it was collecting
+    before the comparison window began (HL-13).
+  - Store apps: only NatWest Mobile Banking is the retail app; Rooster Money, International, Bankline, ClearSpend, Tap to
+    Pay and Premier Black are kept and excluded like group companies.
+  - Brand: a NatWest-pulled item that names NatWest stays NatWest even when it mentions another bank.
+  - Items after the freeze (34) are kept out of every window.
+  - Replies: Google Play carries the bank's replies (67% of reviews); App Store, X, Reddit and Trustpilot show "no reply
+    data", never 0%.
+  - Fixed on the way: a Pass 3 edit had commented out the author hash in normalise.py; authors are hashed again.
+- **NW-D83 · Internal layer unchanged by the pull.** The synthetic internal contacts keep the hand-set theme mix and read
+  the taxonomy only, so loading public voice does not move an internal figure.
+- **NW-D84 · Public data safety and gates.**
+  - Redaction (HL-02): links inside post text become "[link]" (a markdown link keeps its words); evidence.json no
+    longer carries the source URL (it stays in the gitignored work files); the loader strips links as before (HL-03).
+  - "NatWest" is also a cricket name: 205 cricket posts on X are off topic.
+  - A quote that names another brand of the group or India is counted, never shown as an example. Lint treats a public
+    item's summary and title as the customer's own words.
+  - Public negative share is hidden ("—") until data/public/natwest_config.json records the sentiment-accuracy check as
+    passed (public_gate.py; 423 figures hidden today). qa/natwest_l2_sample_check.md holds 100 random items with the
+    proposed theme and sentiment for the hand check (likely names masked).
+  - Referral rate re-tuned after the re-freeze (47% / 23%): the "Referred" tile runs at about 151 a week, the ladder
+    at about 141. Steady-register weights vary per copy (0.5 to 1.5 of the mean, totals exact) so small counts do not
+    step in one weight. check_pii skips a public record id ("trustpilot:<hex>"), which is not a hashed handle.
+  - The public escalation target "grievance" is renamed complaints_team; a theme definition no longer says "title
+    deeds".

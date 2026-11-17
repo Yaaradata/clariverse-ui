@@ -1,0 +1,4 @@
+{
+ "about": "NatWest pulse switches. sentiment_accuracy_check: public negative share stays hidden until the hand check of qa/natwest_l2_sample_check.md is recorded here as passed (NW-D84).",
+ "sentiment_accuracy_check": {"passed": false, "checked_by": null, "checked_on": null, "sample": "qa/natwest_l2_sample_check.md", "accuracy_pct": null}
+}

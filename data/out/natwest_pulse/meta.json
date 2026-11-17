@@ -1,12 +1,12 @@
 {
  "generated_by": "scripts/natwest_pulse/aggregate.py",
- "as_of": "2026-11-11",
- "brief_date": "2026-11-12",
- "brief_label": "Thursday 12 November 2026",
+ "as_of": "2026-11-13",
+ "brief_date": "2026-11-13",
+ "brief_label": "Friday 13 November 2026",
  "brief_time": "07:45 GMT",
  "window": {
   "start": "2026-08-01",
-  "end": "2026-11-11"
+  "end": "2026-11-13"
  },
  "provenance": {
   "public": "Public · live",
@@ -14,53 +14,56 @@
   "joined": "Joined · needs bank systems"
  },
  "scope_note": "Retail figures: NatWest (England and Wales), on-topic items in the window. Royal Bank of Scotland, Ulster Bank and group companies are excluded.",
- "data_freeze": "2026-11-12T07:45:00+00:00",
- "freeze_label": "Thursday 12 November 2026, 07:45 GMT",
+ "data_freeze": "2026-11-13T07:45:00+00:00",
+ "freeze_label": "Friday 13 November 2026, 07:45 GMT",
  "sources": [
   {
    "id": "appstore",
    "label": "App Store",
-   "loaded": false,
-   "files": 0,
-   "items": 0
+   "loaded": true,
+   "files": 1,
+   "items": 1200,
+   "start": "2026-08-12",
+   "pulled": 1200
   },
   {
    "id": "playstore",
    "label": "Google Play",
-   "loaded": false,
-   "files": 0,
-   "items": 0
+   "loaded": true,
+   "files": 1,
+   "items": 1034,
+   "start": "2026-08-01",
+   "pulled": 1034
   },
   {
    "id": "x",
    "label": "X",
-   "loaded": false,
-   "files": 0,
-   "items": 0
+   "loaded": true,
+   "files": 1,
+   "items": 1706,
+   "start": "2026-08-01",
+   "pulled": 1881
   },
   {
    "id": "reddit",
    "label": "Reddit",
-   "loaded": false,
-   "files": 0,
-   "items": 0
+   "loaded": true,
+   "files": 1,
+   "items": 807,
+   "start": "2026-08-01",
+   "pulled": 807
   },
   {
    "id": "trustpilot",
-   "label": "Trustpilot",
-   "loaded": false,
-   "files": 0,
-   "items": 0
-  },
-  {
-   "id": "forum",
-   "label": "Forums (MoneySavingExpert)",
-   "loaded": false,
-   "files": 0,
-   "items": 0
+   "label": "Trustpilot (forums: Trustpilot only)",
+   "loaded": true,
+   "files": 1,
+   "items": 233,
+   "start": "2026-09-01",
+   "pulled": 233
   }
  ],
- "public_loaded": false,
+ "public_loaded": true,
  "theme_labels": {
   "app_praise": "Where customers praise us: quick, easy app journeys",
   "app_speed_crash": "App outages, speed and crashes",
@@ -123,24 +126,269 @@
   "consumer_duty_value": "Value and fair treatment"
  },
  "records": {
-  "total": 0,
-  "by_source": {},
-  "window": 0,
-  "bank_on_topic_window": 0,
-  "group_on_topic_window": 0,
-  "classified_by": {}
+  "total": 4980,
+  "by_source": {
+   "appstore": 1200,
+   "playstore": 1034,
+   "x": 1706,
+   "reddit": 807,
+   "trustpilot": 233
+  },
+  "window": 4980,
+  "bank_on_topic_window": 4307,
+  "group_on_topic_window": 239,
+  "classified_by": {
+   "rules": 4980
+  }
  },
- "bank_by_source": {},
- "streams": [],
- "trend_basis_streams": [],
+ "bank_by_source": {
+  "appstore": 1079,
+  "playstore": 915,
+  "x": 1314,
+  "reddit": 772,
+  "trustpilot": 227
+ },
+ "streams": [
+  {
+   "stream": "appstore:Mettle app",
+   "records": 7,
+   "earliest": "2026-08-21",
+   "latest": "2026-11-07",
+   "window_first": "2026-08-21",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:NatWest Bankline",
+   "records": 5,
+   "earliest": "2026-09-06",
+   "latest": "2026-11-03",
+   "window_first": "2026-09-06",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:NatWest ClearSpend",
+   "records": 3,
+   "earliest": "2026-09-08",
+   "latest": "2026-10-22",
+   "window_first": "2026-09-08",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:NatWest International",
+   "records": 11,
+   "earliest": "2026-08-18",
+   "latest": "2026-10-10",
+   "window_first": "2026-08-18",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:NatWest Premier Black",
+   "records": 3,
+   "earliest": "2026-08-31",
+   "latest": "2026-09-19",
+   "window_first": "2026-08-31",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:NatWest Rooster Money",
+   "records": 90,
+   "earliest": "2026-08-16",
+   "latest": "2026-11-11",
+   "window_first": "2026-08-16",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:NatWest Tap to Pay",
+   "records": 2,
+   "earliest": "2026-08-21",
+   "latest": "2026-10-30",
+   "window_first": "2026-08-21",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:NatWest app",
+   "records": 1079,
+   "earliest": "2026-08-12",
+   "latest": "2026-11-13",
+   "window_first": "2026-08-12",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:Mettle app",
+   "records": 22,
+   "earliest": "2026-08-03",
+   "latest": "2026-11-08",
+   "window_first": "2026-08-03",
+   "full_window": true,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:NatWest Bankline",
+   "records": 7,
+   "earliest": "2026-08-05",
+   "latest": "2026-11-08",
+   "window_first": "2026-08-05",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:NatWest ClearSpend",
+   "records": 13,
+   "earliest": "2026-08-03",
+   "latest": "2026-11-11",
+   "window_first": "2026-08-03",
+   "full_window": true,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:NatWest International",
+   "records": 5,
+   "earliest": "2026-08-05",
+   "latest": "2026-11-02",
+   "window_first": "2026-08-05",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:NatWest Premier Black",
+   "records": 3,
+   "earliest": "2026-09-01",
+   "latest": "2026-11-11",
+   "window_first": "2026-09-01",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:NatWest Rooster Money",
+   "records": 58,
+   "earliest": "2026-08-01",
+   "latest": "2026-11-09",
+   "window_first": "2026-08-01",
+   "full_window": true,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:NatWest Tap to Pay",
+   "records": 1,
+   "earliest": "2026-08-16",
+   "latest": "2026-08-16",
+   "window_first": "2026-08-16",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:NatWest app",
+   "records": 915,
+   "earliest": "2026-08-01",
+   "latest": "2026-11-12",
+   "window_first": "2026-08-01",
+   "full_window": true,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "reddit:jul_aug_collector",
+   "records": 779,
+   "earliest": "2026-08-01",
+   "latest": "2026-11-12",
+   "window_first": "2026-08-01",
+   "full_window": false,
+   "partial_reason": "Reddit collector replaced on 1 Sep (a few late items trickle in)",
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "trustpilot",
+   "records": 228,
+   "earliest": "2026-08-05",
+   "latest": "2026-11-13",
+   "window_first": "2026-08-05",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "x",
+   "records": 1315,
+   "earliest": "2026-08-01",
+   "latest": "2026-11-13",
+   "window_first": "2026-08-01",
+   "full_window": true,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  }
+ ],
+ "trend_basis_streams": [
+  "playstore:Mettle app",
+  "playstore:NatWest ClearSpend",
+  "playstore:NatWest Rooster Money",
+  "playstore:NatWest app",
+  "x"
+ ],
  "baseline_streams": [],
  "coverage_notes": [
-  "App Store: not loaded",
-  "Google Play: not loaded",
-  "X: not loaded",
-  "Reddit: not loaded",
-  "Trustpilot: not loaded",
-  "Forums (MoneySavingExpert): not loaded"
+  "Trends and mood are source-weighted; one store per rating comparison."
  ],
- "icici_available": false
+ "icici_available": false,
+ "sentiment_checked": false
 }
