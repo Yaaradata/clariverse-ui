@@ -1200,3 +1200,6 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
   list at 390px. Footer: the research pack is still not in the repo and the register has no dates, so the footer no
   longer says "as dated in the research pack"; it reads "Regulatory rules as published by the FCA, the PSR and the
   Financial Ombudsman Service". Restore the research-pack sentence once the pack is committed and the register dated.
+- **Authorship note (round 3).** Fixes A to D (NW-D66 to NW-D70; commits abf335f and c2c64eb) were authored in the
+  review-of-record session, not the building session. Before work continued here, the full fixture suite was run once on
+  the C and D code: 0 failures (NatWest 53 reconcile and 106 lint fixtures; 5 skipped as before).
