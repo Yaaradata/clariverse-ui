@@ -7,7 +7,6 @@ import {
   Headphones,
   Inbox,
   LayoutDashboard,
-  MessageSquareText,
   Moon,
   Sun,
 } from "lucide-react";
@@ -294,10 +293,12 @@ function ShellInner({
           </div>
           <Nav view={current} collapsed={!navHover} />
           <div style={{ marginTop: "auto" }}>
-            <button
-              type="button"
-              onClick={() => setAskOpen(true)}
-              title="Ask LisN"
+            {/* NW-D102 (Usha, 17 Nov): back to the role list, as on IndusInd; Ask LisN stays as the bar on top. */}
+            <Link
+              href="/role-based/natwest_bank"
+              data-testid="back-to-roles"
+              title="Back to roles"
+              aria-label="Back to roles"
               style={{
                 width: "100%",
                 display: "flex",
@@ -309,13 +310,15 @@ function ShellInner({
                 color: C.text,
                 borderRadius: 8,
                 padding: "10px",
-                cursor: "pointer",
                 fontSize: 14,
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+                boxSizing: "border-box",
               }}
             >
-              <MessageSquareText size={16} color={C.brandInk} />
-              {navHover ? "Ask LisN" : null}
-            </button>
+              <ArrowLeft size={16} color={C.brandInk} />
+              {navHover ? "Back to roles" : null}
+            </Link>
           </div>
         </aside>
 

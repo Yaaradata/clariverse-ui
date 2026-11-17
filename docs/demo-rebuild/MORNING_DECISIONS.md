@@ -1331,3 +1331,5 @@ Numbered from NW-D45: NW-D40 to NW-D44 were already used by Pass 2 (§8–11 and
   come from review sources only (NW-D91). "Responded" there becomes "Handled n of m" from the social inbox with the
   Internal tag (NW-D100); the positive / negative share reads the share of all high-impact posts, marked "indicative"
   (sentiment on X and Reddit is not checked). Total signals keep the review-based shares and the public Responded figure.
+- **NW-D102 · Back to roles (Usha, 17 Nov).** The sidebar's foot button is now "Back to roles" (to the NatWest role
+  list, as on IndusInd) instead of "Ask LisN"; Ask LisN stays as the fixed bar on top (NW-D99).
