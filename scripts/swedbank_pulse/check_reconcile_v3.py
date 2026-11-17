@@ -1,0 +1,754 @@
+"""Reconcile checks for the V3 layer (B4 §8 check_reconcile, B7 §2). Exit code 1 on any failure.
+
+Public: product rows + excluded businesses = on-topic total (themes.json), and = signals.json by_business.
+Internal: every dial, cohort, deliverable and persona figure recomputed from the record-level files. No check reads a
+stored pass/fail flag: breach, theme mix, triage buckets and RM alerts are recomputed from records (review step 6).
+Each check has a failing fixture in scripts/hdfc_v3/test_checks.py that proves it can fail.
+
+`run(seed_dir, out_dir)` is importable; it returns the list of failed checks.
+"""
+
+from __future__ import annotations
+
+import collections
+import datetime as dt
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+from common import BANK_TAT_LABEL, NOW, OUT_APP, SEED_V3, is_business_day, load
+
+NOW_DT = dt.datetime.fromisoformat(NOW)
+# Person-level flags are never allowed on a customer: impact belongs to a complaint (B7 §E2).
+PERSON_FLAG_KEYS = {"high_impact", "sensitive", "sensitivity", "vip", "official", "regulator", "celebrity", "flag", "flags"}
+# Theme-mix rule (B7 §2): internal share within ±20% (relative) of the target share, for themes with ≥ 5% target share.
+# Targets are the public mix per product, except where public voice is too thin and the generator uses a disclosed
+# substitute (auto loans: the combined loans mix; insurance: a hand-set mix). Those are reported, not hidden.
+THIN_PUBLIC = {"savings"}
+# One store per comparison (B7 §4.1, follow-up fix 2): a store rating or share may only sit inside a per-store scope.
+RATING_KEYS = {"avg_rating", "ratings", "share_positive", "new_app_avg", "old_app_avg", "new_app_share_positive", "old_app_share_positive"}
+STORE_SCOPES = {"by_store", "versions_by_store"}
+
+
+def pooled_ratings(obj, path=(), in_store=False) -> list[str]:
+    """Paths of rating or share fields that are not inside a single store's scope."""
+    out = []
+    if isinstance(obj, dict):
+        scoped = in_store or "store" in obj
+        for k, v in obj.items():
+            if k in RATING_KEYS and not scoped:
+                out.append("/".join(map(str, path + (k,))))
+            out += pooled_ratings(v, path + (k,), scoped or k in STORE_SCOPES)
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            out += pooled_ratings(v, path + (i,), in_store)
+    return out
+
+
+def _theme_targets(products: dict) -> tuple[dict, dict]:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from seed_internal_v3 import HAND_MIX  # the generator's disclosed substitute mixes
+
+    public = {r["id"]: {i["id"]: i["count"] for i in r["issues"]} for r in products["rows"]}
+    target = dict(public)
+    target.update(HAND_MIX)
+    return public, target
+
+
+def _mix_rows(inter, mix: dict, product: str):
+    rows = [r for r in inter if r["product"] == product and not r.get("scripted")]
+    cnt = collections.Counter(r["theme"] for r in rows)
+    ptot, itot = sum(mix.values()), sum(cnt.values())
+    out = []
+    for th, n in mix.items():
+        ps = n / ptot if ptot else 0
+        if ps < 0.05:
+            continue
+        is_ = cnt.get(th, 0) / itot if itot else 0
+        out.append((th, ps, is_, abs(is_ - ps) <= 0.2 * ps))
+    return out
+
+
+def run(seed_dir: Path = SEED_V3, out_dir: Path = OUT_APP, quiet: bool = False) -> list[str]:
+    fails: list[str] = []
+
+    def ok(cond: bool, msg: str):
+        if not quiet:
+            print(("PASS " if cond else "FAIL ") + msg)
+        if not cond:
+            fails.append(msg)
+
+    themes = load(out_dir / "themes.json")
+    signals = load(out_dir / "signals.json")
+    products = load(out_dir / "products.json")
+    rows_total = sum(r["count"] for r in products["rows"]) + sum(products["excluded"].values())
+    ok(rows_total == themes["total_items"], f"public product rows + excluded = on-topic total ({rows_total} = {themes['total_items']})")
+    for f in ("count", "negative", "escalation"):
+        a = sum(r[f] for r in products["rows"]) + (sum(products["excluded"].values()) if f == "count" else sum(b[f] for b in signals["by_business"] if b["business"] in products["excluded"]))
+        e = sum(b[f] for b in signals["by_business"])
+        ok(a == e, f"public product {f} reconciles to signals.by_business ({a} = {e})")
+
+    # Pass 3 (NW-D45): one brand. Every retail (on-screen) public row is the NatWest brand; Royal Bank of Scotland,
+    # Ulster Bank and group-company rows, if loaded, stay in the data and are excluded. The brand sum is that one brand.
+    work = out_dir / "work" / "classified.jsonl"
+    rows = [json.loads(x) for x in open(work, encoding="utf-8")] if work.exists() else []
+    retail = [r for r in rows if r.get("entity") == "natwest_group"]
+    by_brand = collections.Counter(r.get("brand") for r in retail)
+    ok(set(by_brand) <= {"natwest"} and sum(by_brand.values()) == len(retail),
+       f"retail brands sum to one brand, NatWest ({dict(by_brand) or 'no public rows loaded'})")
+    if (out_dir / "meta.json").exists():  # the tampered-data fixtures copy only the files they need
+        meta = load(out_dir / "meta.json")
+        ok(meta["scope_note"].startswith("Retail figures: NatWest (England and Wales)"), "scope note names NatWest alone")
+
+    # NW-D91: the mood dial and its per-source rows come from review sources only; X and Reddit never enter a mood figure.
+    if (out_dir / "mood.json").exists():
+        mood = load(out_dir / "mood.json")
+        social = sorted({x["source"] for x in mood.get("by_source", [])} & {"x", "reddit"})
+        ok(not social, f"mood: from app-store and Trustpilot reviews only, no social source ({social or 'none'})")
+
+    # Store ratings: never pooled across the Play Store and the App Store (follow-up fix 2).
+    pulse = load(out_dir / "app_pulse.json")
+    release = load(out_dir / "briefing.json").get("release_pulse") or {}
+    series = load(out_dir / "store_series.json")
+    pooled = pooled_ratings(pulse["apps"], ("app_pulse",)) + pooled_ratings(release, ("release_pulse",)) + pooled_ratings(series["apps"], ("store_series",))
+    ok(not pooled, f"store ratings and shares sit within one store ({len(pooled)} pooled: {pooled[:3]})")
+    mism = [a["app"] for a in pulse["apps"] if a["window"] and a["window"]["n"] != sum(x["n"] for x in (a.get("by_store") or {}).values())]
+    ok(not mism, f"per-store review counts add to each app's total ({mism[:3]})")
+
+    agg = load(seed_dir / "aggregates.json")
+    inter = [json.loads(line) for line in open(seed_dir / "interactions.jsonl", encoding="utf-8")]
+    customers = {c["masked_id"]: c for c in load(seed_dir / "customers.json")}
+    ok(len(inter) == agg["dials"]["total"] == agg["sample"]["interactions"], f"interactions total {len(inter)}")
+
+    # Record integrity: status, closing time and breach agree (breach recomputed, never trusted).
+    bad_status = [r["id"] for r in inter if (r["status"] != "closed") != (r["closed_at"] is None)]
+    bad_wait = [r["id"] for r in inter if (r["status"] == "waiting_on_customer") != bool(r.get("resolution_sent_at"))]
+    ok(not bad_wait, f"waiting on customer = a resolution was sent and the thread is not closed ({len(bad_wait)} bad)")
+    ok({r["status"] for r in inter} <= {"open", "closed", "waiting_on_customer"}, "every contact is open, waiting on customer or closed")
+    ok(not bad_status, f"open items have no closing time and closed items have one ({len(bad_status)} bad)")
+    bad_breach = []
+    for r in inter:
+        # "First response to a query" is met or missed on the first response; every other deliverable on closure.
+        at = r["first_response_at"] if r["deliverable"] == "query_response" else r["closed_at"]
+        end = dt.datetime.fromisoformat(at) if at else NOW_DT
+        if r["breached"] != (end > dt.datetime.fromisoformat(r["deliverable_due"])):
+            bad_breach.append(r["id"])
+    ok(not bad_breach, f"breach recomputed from the deliverable due time ({len(bad_breach)} disagree{': ' + ', '.join(bad_breach[:5]) if bad_breach else ''})")
+
+    n_open = sum(1 for r in inter if r["status"] == "open")
+    n_otl = sum(1 for r in inter if r["status"] == "open" and r["breached"])
+    ok(n_open == agg["dials"]["open"], f"open recomputed {n_open}")
+    n_wait = sum(1 for r in inter if r["status"] == "waiting_on_customer")
+    ok(n_wait == agg["dials"]["waiting_on_customer"], f"waiting on customer recomputed {n_wait}")
+    ok(agg["dials"]["open"] + n_wait + agg["dials"]["closed"] == agg["dials"]["total"], "open + waiting on customer + closed = total")
+    ok(n_otl == agg["dials"]["open_too_long"], f"open too long recomputed {n_otl}")
+    for f in ("total", "open", "waiting_on_customer", "open_too_long", "closed", "closed_or_responded"):
+        ok(sum(p[f] for p in agg["products"]) == agg["dials"][f], f"product dials sum to overall: {f}")
+        ok(sum(c[f] for c in agg["channels"]) == agg["dials"][f], f"channel dials sum to overall: {f}")
+    ok(sum(d["total"] for d in agg["deliverables"]) == len(inter), "deliverable rows cover every interaction once")
+    for d in agg["deliverables"]:
+        if d["met"] + d["outside"] != d["measured"]:
+            ok(False, f"deliverable {d['id']} met + outside = measured")
+
+    # Cohorts and RM alerts, recomputed from customers and rm_notifications.json.
+    notes = {n["masked_id"]: n for n in load(seed_dir / "rm_notifications.json")}
+    for c in agg["cohorts"]:
+        members = {m for m, x in customers.items() if c["id"] in x["cohorts"]}
+        rows = [r for r in inter if r["masked_id"] in members and r["status"] == "open"]
+        o24 = sum(1 for r in rows if (NOW_DT - dt.datetime.fromisoformat(r["created_at"])).total_seconds() > 24 * 3600)
+        ok(len(members) == c["customers"] and len(rows) == c["open"] and o24 == c["open_over_24h"], f"cohort {c['id']} recomputed (customers, open, over 24 h)")
+        ok(c["open_over_24h"] <= c["open_over_5h"] <= c["open"], f"cohort {c['id']} over 24 h <= over 5 h <= open")
+        should = {m for m in members if m in notes}
+        told = {m for m in should if notes[m]["notified_today"]}
+        ok(len(should) == c["rm_should_know"] and len(told) == c["rm_notified_today"],
+           f"cohort {c['id']} RM alerts recomputed from rm_notifications ({len(told)} of {len(should)})")
+    for p in agg["personas"]:
+        n = notes.get(p["masked_id"])
+        ok(bool(n and n["notified_today"]) == bool(p["rm_notified"]),
+           f"persona {p['masked_id']} RM notified matches rm_notifications")
+
+    hi = sum(1 for r in inter if r["high_impact"])
+    ok(hi == agg["high_impact"]["total"], f"high-impact complaints recomputed {hi}")
+    contacts = {m: {x["contact_id"] for x in c.get("contacts", [])} for m, c in customers.items()}
+    unlinked = [r["id"] for r in inter if r["sender"] == "proxy" and r.get("contact_id") not in contacts[r["masked_id"]]]
+    ok(not unlinked, f"every proxy message is linked to a contact record the bank holds ({len(unlinked)} unlinked)")
+    flagged = [m for m, c in customers.items() if PERSON_FLAG_KEYS & set(c)]
+    ok(not flagged, f"no person-level flag on any customer ({len(flagged)} flagged)")
+
+    emails = load(seed_dir / "escalation_emails.json")
+    by_bucket = collections.Counter(e["bucket"] for e in emails)
+    ok(len(emails) == agg["triage"]["total"] == 20 and all(by_bucket.get(b["id"], 0) == b["count"] for b in agg["triage"]["buckets"])
+       and sum(b["count"] for b in agg["triage"]["buckets"]) == len(emails),
+       "20 escalation emails; bucket counts recomputed from the emails")
+
+    public, target = _theme_targets(products)
+    mix_fails = []
+    for pid in target:
+        for th, ps, is_, within in _mix_rows(inter, target[pid], pid):
+            if not within:
+                mix_fails.append(f"{pid}/{th} {100 * is_:.1f}% vs {100 * ps:.1f}%")
+    ok(not mix_fails, f"internal theme shares within ±20% of target mix, recomputed ({len(mix_fails)} outside{': ' + '; '.join(mix_fails[:4]) if mix_fails else ''})")
+    if not quiet:
+        for pid in sorted(THIN_PUBLIC):
+            n = sum(public.get(pid, {}).values())
+            off = [th for th, _, _, w in _mix_rows(inter, public.get(pid, {}), pid) if not w]
+            print(f"INFO {pid}: public voice is thin (n = {n} theme tags); target mix is the generator's disclosed substitute. "
+                  f"Against the raw public mix, {len(off)} theme(s) sit outside ±20%.")
+
+    # One internal dataset (review step 4): the MD mail, satisfaction and deliverables-detail blocks reconcile to the
+    # same records and to each other.
+    rung = {"grievance": 2, "md_office": 3, "io": 4, "rbi_ombudsman": 5}
+    at_least = lambda r, x: bool(r["escalation"]) and rung[r["escalation"]] >= rung[x]  # noqa: E731
+    ladder = {x["rung"]: x["count"] for x in agg["deliverables_detail"]["ladder"]}
+    md = agg["md_mail"]
+    ok(md["total"] == sum(1 for r in inter if at_least(r, "md_office")) == ladder["Complaints team"],
+       f"MD-marked mail = records at the MD's office rung = ladder rung ({md['total']})")
+    ok(sum(r["mails"] for r in md["rows"]) == md["shown"] <= md["total"], "MD mail rows sum to the shown count")
+    ok(ladder["Voice"] == len(inter) and ladder["Repeat"] == sum(1 for r in inter if r["repeat"]), "ladder Voice and Repeat recomputed")
+    counts = [x["count"] for x in agg["deliverables_detail"]["ladder"][1:]]
+    ok(all(a >= b for a, b in zip(counts, counts[1:])), "ladder rungs from Repeat down never increase")
+    sat = agg["satisfaction"]
+    ok(sat["interactions_total"] == len(inter) == sum(t["interactions"] for t in sat["tiers"]) == sat["journey_stages"]["total"],
+       "satisfaction: tiers and journey stages sum to the interaction sample")
+    ok(sum(t["negative"] for t in sat["tiers"]) == sum(1 for r in inter if r["sentiment"] == "negative"), "tier negatives recomputed")
+    ageing = agg["deliverables_detail"]["ageing"]
+    ok(sum(a["open_cases"] for a in ageing) == agg["dials"]["open"], "deliverables ageing: open cases = open dial")
+    ok(sum(a["beyond_tat"] for a in ageing) == agg["dials"]["open_too_long"], "deliverables ageing: beyond TAT = open-too-long dial")
+    # A bank TAT is shown as a number only once the bank has confirmed it, with the document cited (qa/tat_check.md).
+    bad_tat = [
+        d["id"]
+        for d in agg["deliverables"]
+        if d["source"] not in ("fca", "psr", "psrs", "scheme", "industry", "bank_confirmed", "bank_indicative")
+        and d["tat_label"] != BANK_TAT_LABEL
+        or d["source"] == "bank_indicative" and "confirm" not in d["tat_label"]
+        or d["source"] == "bank_confirmed" and (not d.get("source_note") or d["tat_label"] == BANK_TAT_LABEL)
+    ]
+    ok(not bad_tat, f"bank TATs: unconfirmed read '{BANK_TAT_LABEL}'; confirmed cite a source ({bad_tat[:3]})")
+    cl = agg["deliverables_detail"]["closure"]
+    ok(cl["closure_requests"] == sum(1 for r in inter if r["theme"] == "closure_requests") and cl["saved"] <= cl["closed"],
+       "closure requests recomputed; saved within closed")
+    dp = agg["deliverables_detail"]["disputes"]
+    disputes = [r for r in inter if r["deliverable"] == "dispute"]
+    ledger_row = next(d for d in agg["deliverables"] if d["id"] == "dispute")
+    ok(dp["raised"] == len(disputes) == ledger_row["total"], "disputes raised = records = ledger row")
+    ok(dp["beyond_sla_total"] == sum(d["cases"] for d in dp["drivers"]) == sum(a["cases"] for a in dp["aged_cases"]),
+       "disputes beyond SLA = drivers = age bands")
+    f = [x["count"] for x in dp["funnel"]]
+    ok(all(a >= b for a, b in zip(f, f[1:])), "dispute funnel: each stage within the one before")
+    ok(all(x["status"] == (f"Acknowledged {x['acknowledged_at']}" if x["acknowledged_at"] else "Awaiting owner") for x in agg["routing"]),
+       "routing: one acknowledgement status per theme")
+    # No value reused across unrelated headline metrics on the exec page.
+    head = [agg["dials"]["open"], agg["dials"]["open_too_long"], agg["high_impact"]["total"], agg["customer_memory"]["with_open_issue"], agg["rm"]["should_know"]]
+    ok(len(set(head)) == len(head), f"exec headline values are distinct {head}")
+    periods_checks(seed_dir, out_dir, inter, customers, ok)
+    return fails
+
+
+CH = {"email": "emails", "inbound_voice": "calls", "outbound_voice": "calls", "chat": "chat", "whatsapp": "whatsapp",
+      "social_inbox": "social", "branch": "branch"}
+
+
+def periods_checks(seed_dir, out_dir, inter, customers, ok):
+    """30 Sep views (periods.json): recomputed from dated records for every period; channels sum to their strips;
+    short periods never show a public share unweighted when one source dominates."""
+    path = out_dir / "periods.json"
+    if not path.exists():
+        ok(False, "periods.json exists")
+        return
+    per = load(path)
+    end = dt.datetime.fromisoformat(per["end"])
+    h48 = dt.timedelta(hours=48)
+    rs_all = [r for r in inter if r["channel"] in CH]  # IVR bot is not counted on these views
+    # Bank scale (scale_v3.py): every internal figure is a weighted sum of the kept sample rows.
+    W = lambda rs: sum(r["w"] for r in rs)  # noqa: E731
+    CW = lambda ids: sum(customers[m]["cw"] for m in ids)  # noqa: E731
+    scale = load(seed_dir / "scale.json")
+    ok(all(isinstance(r.get("w"), int) and r["w"] >= 1 for r in inter) and all(isinstance(c.get("cw"), int) and c["cw"] >= 1 for c in customers.values()),
+       "bank scale: every kept row and customer carries a whole-number weight")
+    notes = {x["masked_id"]: x for x in load(seed_dir / "rm_notifications.json")}
+    for pid, p in per["periods"].items():
+        a, b = dt.datetime.fromisoformat(p["start"]), dt.datetime.fromisoformat(p["end"])
+        measurable = b - a > h48
+
+        def figs(rs):
+            vol = [r for r in rs if a <= dt.datetime.fromisoformat(r["created_at"]) < b]
+            still = [r for r in vol if r["status"] != "closed" or (r["closed_at"] and dt.datetime.fromisoformat(r["closed_at"]) > b)]
+            wait = [r for r in still if r.get("resolution_sent_at") and dt.datetime.fromisoformat(r["resolution_sent_at"]) <= b]
+            op = [r for r in still if r not in wait]  # waiting on the customer is not open with the bank
+            figs.waiting = W(wait)
+            wait_ids = {r["id"] for r in wait}
+
+            def waited(r):
+                if r["id"] in wait_ids:
+                    return False
+                c = dt.datetime.fromisoformat(r["created_at"])
+                fr = dt.datetime.fromisoformat(r["first_response_at"]) if r["first_response_at"] else None
+                return (fr - c > h48) if fr and fr <= b else (b - c > h48)
+            seen = collections.Counter()
+            for r in vol:
+                seen[r["masked_id"]] += r["w"]
+            figs.customers = sum(min(customers[m]["cw"], v) for m, v in seen.items())
+            return W(vol), W(op), (sum(r["w"] for r in vol if waited(r)) if measurable else None)
+
+        for lst in p["customer_pulse"]["lists"]:
+            members = {m for m, c in customers.items() if lst["id"] in c["cohorts"]}
+            v, o, n = figs([r for r in rs_all if r["masked_id"] in members])
+            ok((v, o, n) == (lst["volume"], lst["open"], lst["not_responded_48h"]),
+               f"[{pid}] {lst['label']}: volume, open and 48-hour wait recomputed ({v}, {o}, {n})")
+            ok(figs.waiting == lst["waiting_on_customer"], f"[{pid}] {lst['label']}: waiting on customer recomputed ({figs.waiting})")
+            ok(0 <= lst["rm"]["alerted"] <= lst["rm"]["of"] <= lst["members"], f"[{pid}] {lst['label']}: RMs alerted within customers due an alert")
+            ok(lst["members"] == scale["list_sizes"][lst["id"]] and figs.customers == lst["in_contact"] <= min(lst["members"], lst["volume"]),
+               f"[{pid}] {lst['label']}: list size from scale.json; customers in contact recomputed ({figs.customers}) and within the list")
+            due = collections.Counter()
+            for r in rs_all:
+                c = dt.datetime.fromisoformat(r["created_at"])
+                if (r["masked_id"] in members and a <= c < b and r["status"] == "open" and customers[r["masked_id"]]["rm_id"]
+                        and (r["sentiment"] == "negative" or r["high_impact"] or b - c > dt.timedelta(hours=5))):
+                    due[r["masked_id"]] += r["w"]
+            each = {m: min(customers[m]["cw"], n) for m, n in due.items()}
+            def told(m, pid=pid):  # today's alerts, plus earlier alerts in a longer period (NW-D67), own code
+                if m in notes and notes[m]["notified_today"]:
+                    return True
+                return pid != "brief" and int(hashlib.sha1(f"alert:{m}".encode()).hexdigest(), 16) % 100 < 10
+            got = (sum(v for m, v in each.items() if told(m)), sum(each.values()))
+            ok(got == (lst["rm"]["alerted"], lst["rm"]["of"]), f"[{pid}] {lst['label']}: RMs alerted recomputed {got}")
+            ok(lst["rm"]["of"] <= lst["open"], f"[{pid}] {lst['label']}: customers due an RM alert never exceed the open contacts ({lst['rm']['of']} <= {lst['open']})")
+            for k in ("volume", "open", "waiting_on_customer", "not_responded_48h"):
+                chans = [c[k] for c in lst["by_channel"].values()]
+                total = None if any(c is None for c in chans) else sum(chans)
+                ok(total == lst[k], f"[{pid}] {lst['label']}: channels sum to the strip ({k})")
+        internal = p["cx_pulse"]["internal"]
+        v, o, _ = figs(rs_all)
+        ok(v == internal["volume"] and o == internal["open"], f"[{pid}] CX pulse internal volume and open recomputed ({v}, {o})")
+        ok(figs.waiting == internal["waiting_on_customer"], f"[{pid}] CX pulse waiting on customer recomputed ({figs.waiting})")
+        for k in ("volume", "open", "waiting_on_customer", "resolved"):
+            ok(sum(c[k] for c in internal["by_channel"].values()) == internal[k], f"[{pid}] CX pulse internal channels sum ({k})")
+        ok(internal["resolved"] + internal["open"] + internal["waiting_on_customer"] == internal["volume"],
+           f"[{pid}] resolved + open + waiting on customer = volume")
+        sp = p["social_pulse"]
+        ext_blk = p["cx_pulse"]["external"]
+        play = next((x for x in sp["by_source"] if x["source"] == "playstore"), {"mentions": 0, "responded": 0})
+        ok(sp["mentions"] == ext_blk["volume"] and sp["high_impact"] == ext_blk["high_impact"]["volume"],
+           f"[{pid}] External block = CX pulse external (mentions, high impact)")
+        ok(play["responded"] == ext_blk["responded"]["responded"] and play["mentions"] == ext_blk["responded"]["reviews"],
+           f"[{pid}] External block: Play Store responses = CX pulse responded (the live figure)")
+        ok(sum(x["mentions"] for x in sp["by_source"]) == sp["mentions"] and sum(x["responded"] or 0 for x in sp["by_source"]) == sp["responded"],
+           f"[{pid}] External block: sources sum to the combined response figure")
+        # NatWest (NW-D24, NW-D82): nothing is simulated. Only Google Play carries replies; every other source reads
+        # "no reply data", never 0%.
+        ok(sp["high_impact_responded"] <= sp["high_impact"]
+           and all(not x["illustrative"] for x in sp["by_source"])
+           and all((x["responded"] is None) == (x["source"] != "playstore") for x in sp["by_source"]),
+           f"[{pid}] External block: replies only where the source carries them; no reply data elsewhere")
+        pk = sp["high_impact_peak"]
+        ok((pk is None) == (sp["high_impact"] == 0) and (pk is None or (0 < pk["count"] <= sp["high_impact"] and len(pk["posts"]) <= min(5, pk["count"])
+                                                                and all(x["date"] == pk["date"] for x in pk["posts"]))),
+           f"[{pid}] High-impact peak day: within the period's high-impact posts, and its posts are from that day")
+        men = p["customer_pulse"]["mentions"]
+        listed = {m for m, c in customers.items() if any(lst["id"] in c["cohorts"] for lst in p["customer_pulse"]["lists"])}
+        ment = [r for r in rs_all if r["channel"] == "social_inbox" and r["masked_id"] in listed
+                and a <= dt.datetime.fromisoformat(r["created_at"]) < b]
+        ok(men["total"] == W(ment) and men["responded"] == sum(r["w"] for r in ment if r.get("mention_replied")),
+           f"[{pid}] High-priority mentions recomputed from the seed ({W(ment)}, replied {men['responded']})")
+        if pid == "all":
+            ok(55 <= 100 * men["responded"] / max(men["total"], 1) <= 70, "High-priority mentions: full-window response rate within 55-70%")
+        ok(men["responded"] + men["not_responded"] == men["total"], f"[{pid}] High-priority mentions: responded + not responded = total")
+        # NW-D100: the social-inbox handling layer reconciles with the mentions and with the internal Social channel row.
+        social = p["cx_pulse"]["internal"]["by_channel"]["social"]
+        soc_recs = [r for r in rs_all if r["channel"] == "social_inbox" and a <= dt.datetime.fromisoformat(r["created_at"]) < b]
+        fast_resp = sum(r["w"] for r in soc_recs if r.get("first_response_at") and (
+            dt.datetime.fromisoformat(r["first_response_at"]) - dt.datetime.fromisoformat(r["created_at"])).total_seconds() <= 86400)
+        for name, hb, n_rec in (("High-priority mentions", men["handled"], len(ment)),
+                                ("High-impact posts", sp["high_impact_handled"], sp["high_impact"])):
+            ok(hb["handled"] <= hb["total"] and hb["within_24h"] <= hb["handled"]
+               and sum(hb["by_status"].values()) == hb["total"] and hb["total"] - hb["handled"] == hb["by_status"].get("no_action", 0),
+               f"[{pid}] {name}: handled ≤ total, statuses sum to the total, not handled = no action")
+            if n_rec >= 20 and pid != "brief":
+                ok(60 <= 100 * hb["within_24h"] / max(hb["total"], 1) <= 70,
+                   f"[{pid}] {name}: handled within 24 hours within 60-70% ({hb['within_24h']} of {hb['total']})")
+        ok(men["handled"]["total"] == men["total"] and men["handled"]["by_status"].get("replied_in_thread", 0) == men["responded"],
+           f"[{pid}] High-priority mentions: handling covers every mention; replied in thread = responded")
+        ok(men["handled"]["total"] <= social["volume"] and men["handled"]["within_24h"] <= fast_resp,
+           f"[{pid}] Social inbox: mentions within the Social channel row ({men['handled']['total']} of {social['volume']}); "
+           f"handled within 24h ≤ Social contacts answered within 24h ({men['handled']['within_24h']} ≤ {fast_resp})")
+        ok(sp["high_impact_handled"]["total"] <= sp["high_impact"],
+           f"[{pid}] High-impact posts: handling covers only posts with reach")
+        ok(len(sp["posts"]) <= 5 and all(x["score"] >= y["score"] for x, y in zip(sp["posts"], sp["posts"][1:])),
+           f"[{pid}] Social pulse: at most five posts, ranked by engagement")
+        ok("http" not in json.dumps(sp), f"[{pid}] Social pulse carries no links")
+        ov = p["cx_pulse"]["overall"]
+        ok(ov["total"] == ov["internal"] + ov["external"] == internal["volume"] + p["cx_pulse"]["external"]["volume"],
+           f"[{pid}] overall contact volume = internal + external")
+        biz = p["businesses"]
+        ok(sum(x["internal"]["volume"] for x in biz) == internal["volume"], f"[{pid}] business rows sum to internal volume")
+        cards_row = next(x for x in biz if x["id"] == "cards")
+        cv = p["cards"]
+        ok(cards_row["internal"]["volume"] == cv["internal"]["volume"] and cards_row["external"]["volume"] == cv["external"]["volume"],
+           f"[{pid}] Cards: business card = Cards view")
+        for side, keys in (("internal", ("volume", "open", "waiting_on_customer", "resolved")), ("external", ("volume", "negative", "positive"))):
+            for k in keys:
+                ok(sum(c[side][k] for c in cv["categories"]) == cv[side][k], f"[{pid}] Cards categories sum to the Cards {side} {k}")
+        for c in cv["categories"]:
+            if c["subcategories"]:
+                for side, k in (("internal", "volume"), ("internal", "open"), ("internal", "waiting_on_customer"), ("external", "volume"), ("external", "negative")):
+                    ok(sum(x[side][k] for x in c["subcategories"]) == c[side][k], f"[{pid}] Cards {c['label']}: subcategories sum ({side} {k})")
+        ext = p["cx_pulse"]["external"]
+        ok(sum(x["external"]["volume"] for x in biz) <= ext["volume"], f"[{pid}] product rows never exceed public voice (the rest is wealth, SME, corporate)")
+        ids = {x["id"] for x in biz}
+        items = p["brief"]["needs_you"] + p["brief"]["building"] + p["brief"]["improving"]
+        # The one exception is the bank-wide Ombudsman watch item, which names no single business.
+        ok(all(it["business"] in ids or (it["business"] == "bank" and it.get("kind") == "ombudsman") for it in items),
+           f"[{pid}] every brief item names a business on the cards")
+        ok(sum(r["mails"] for r in p["md_mail"]["rows"]) <= p["md_mail"]["total"], f"[{pid}] MD-marked mail rows within the total")
+        # Short periods: when one source is more than the limit of public items, every public share must be weighted.
+        if p["short"]:
+            blocks = [p["cx_pulse"]["external"], p["cx_pulse"]["external"]["high_impact"], cv["external"]]
+            blocks += [x["external"] for x in biz]
+            dominant = max(p["cx_pulse"]["external"]["source_mix"].values(), default=0) > 100 * per["dominance_limit"]
+            unweighted = [blk for blk in blocks if blk.get("share_method") != "source_weighted"]
+            ok(not (dominant and unweighted), f"[{pid}] a dominant source (> {int(100 * per['dominance_limit'])}%) never leaves a share unweighted ({len(unweighted)} unweighted)")
+    # Across views (follow-up 5): the same status on every V2 screen. The older screens' dials count every channel; the
+    # 30 Sep views leave the IVR bot out, so compare on the contacts both count.
+    allp = per["periods"]["all"]["cx_pulse"]["internal"]
+    ok(allp["open"] == sum(r["w"] for r in rs_all if r["status"] == "open")
+       and allp["waiting_on_customer"] == sum(r["w"] for r in rs_all if r["status"] == "waiting_on_customer"),
+       "across views: full-window open and waiting on customer = the weighted seed status")
+    # The drill-down and customer pages (aggregates.json) count the kept sample rows themselves, and say "sample rows".
+    # Same rows, same status: their dials equal the unweighted count of the rows the bank-scale views weight.
+    agg = load(seed_dir / "aggregates.json") if (seed_dir / "aggregates.json").exists() else None
+    if agg:
+        ok(agg["dials"]["open"] == sum(1 for r in inter if r["status"] == "open")
+           and agg["dials"]["waiting_on_customer"] == sum(1 for r in inter if r["status"] == "waiting_on_customer"),
+           "across views: sample pages count the same rows, by the same status, that the bank-scale views weight")
+    ok(per["scale"]["sample_rows"] == len(inter) and per["scale"]["list_sizes"] == scale["list_sizes"],
+       "bank scale: periods.json names the sample it is weighted from")
+    # Granularity (1 Oct): small figures must not move in steps of one row weight. Of the internal figures under 500
+    # shown on the MD and Cards views, across all four periods, no more than 30% may share a common factor above 5.
+    small = []
+    for pid, p in per["periods"].items():
+        for lst in p["customer_pulse"]["lists"]:
+            small += [lst[k] for k in ("volume", "open", "waiting_on_customer", "not_responded_48h", "in_contact")]
+            small += [lst["rm"]["alerted"], lst["rm"]["of"]]
+            small += [x["count"] for x in lst["not_responded_series"]]
+        men = p["customer_pulse"]["mentions"]
+        small += [men["total"], men["responded"], men["not_responded"]]
+        for blk in (p["ombudsman"], p["cards"]["ombudsman"]):
+            small += [blk["now"][k] for k in ("brink", "eligible", "unhappy", "awaiting_io")] + list(blk["now"]["buckets"].values())
+            small += [blk["delta"][k] for k in ("brink", "eligible", "unhappy", "awaiting_io")] + [blk["became_eligible"]]
+        ci = p["cards"]["internal"]
+        small += [ci[k] for k in ("open", "waiting_on_customer", "open_too_long", "not_responded_48h", "escalations")]
+        for c in p["cards"]["categories"]:
+            small += [c["internal"][k] for k in ("open", "waiting_on_customer", "not_responded_48h", "escalations")]
+    small = [abs(v) for v in small if isinstance(v, int) and 5 < abs(v) < 500]
+    worst = max(((sum(1 for v in small if v % f == 0) / max(len(small), 1), f) for f in range(6, 251)), default=(0, 0))
+    ok(len(small) >= 30 and worst[0] <= 0.30,
+       f"granularity: of {len(small)} small figures (under 500) on the MD and Cards views, at most 30% share a factor above 5 "
+       f"(worst: {100 * worst[0]:.0f}% divisible by {worst[1]})")
+    ordered = [per["periods"][k]["cx_pulse"]["internal"]["volume"] for k in ("brief", "7d", "14d", "all")]
+    ok(ordered == sorted(ordered), f"periods nest: Morning brief <= 7 days <= 14 days <= full window {ordered}")
+    # Cora open too long (review round 2, NW-D61): it drifted from 23% to 49% of Cora open between runs while nothing
+    # held it. A Cora conversation is closed or handed on within 40 hours, so open too long stays at most 25% of
+    # Cora open and below Calls in every period.
+    for pid, p in per["periods"].items():
+        ch = p["cx_pulse"]["internal"]["by_channel"]
+        cora, calls = ch.get("whatsapp", {}), ch.get("calls", {})
+        otl = cora.get("open_too_long")
+        if otl is None:
+            continue
+        ok(otl <= 0.25 * cora.get("open", 0) and otl < (calls.get("open_too_long") or 0),
+           f"[{pid}] Cora open too long within 25% of Cora open and below Calls ({otl} of {cora.get('open')}; Calls {calls.get('open_too_long')})")
+    # NW-D95: windows nest. Morning brief <= last 7 days <= last 30 days <= full window for every count, for the bank
+    # and each product: contacts, open and waiting inside the bank; items and replies in public.
+    order = ("brief", "7d", "14d", "all")
+    def chain(get):  # noqa: E306
+        vals = [get(per["periods"][k]) for k in order]
+        return all(a <= b for a, b in zip(vals, vals[1:])), vals
+    bad_nest = []
+    probes = [
+        ("bank contacts", lambda p: p["cx_pulse"]["internal"]["volume"]),
+        ("bank open", lambda p: p["cx_pulse"]["internal"]["open"]),
+        ("bank public items", lambda p: p["cx_pulse"]["external"]["volume"]),
+        ("bank public replies", lambda p: p["social_pulse"]["responded"]),
+    ]
+    for pid_ in [x["id"] for x in per["periods"]["all"]["businesses"]]:
+        probes += [
+            (f"{pid_} contacts", lambda p, i=pid_: next(x for x in p["businesses"] if x["id"] == i)["internal"]["volume"]),
+            (f"{pid_} open", lambda p, i=pid_: next(x for x in p["businesses"] if x["id"] == i)["internal"]["open"]),
+            (f"{pid_} public items", lambda p, i=pid_: next(x for x in p["businesses"] if x["id"] == i)["external"]["volume"]),
+        ]
+    for name, get in probes:
+        good, vals = chain(get)
+        if not good:
+            bad_nest.append(f"{name} {vals}")
+    ok(not bad_nest, f"windows nest: brief <= 7 days <= 14 days <= full window for every count ({bad_nest[:3] or 'all nest'})")
+
+    # One referral series (NW-D62): the ladder's Financial Ombudsman Service rung (referrals made in the window) and the
+    # Ombudsman watch's "Referred" tile (referrals in the last 8 weeks) run at the same weekly pace, within 15%.
+    lb = {r["rung"]: r["count"] for r in agg["deliverables_detail"].get("ladder_bank", [])}
+    full = per["periods"]["all"]
+    weeks = (dt.datetime.fromisoformat(full["end"]) - dt.datetime(2026, 8, 1, tzinfo=dt.timezone.utc)) / dt.timedelta(weeks=1)
+    ladder_pace = lb.get("Financial Ombudsman Service", 0) / weeks
+    tile_pace = full["ombudsman"]["now"]["awaiting_io"] / 8
+    ok(ladder_pace > 0 and abs(tile_pace - ladder_pace) <= 0.15 * ladder_pace,
+       f"one referral series: Referred tile {tile_pace:.0f} a week = ladder {ladder_pace:.0f} a week, within 15%")
+    # Owners alerted grows with the period (NW-D67): a longer period never shows fewer alerts, and the full window
+    # shows more than the morning brief whenever more customers are due.
+    for lid in [x["id"] for x in per["periods"]["7d"]["customer_pulse"]["lists"]]:
+        rm = {pid: next(x for x in p["customer_pulse"]["lists"] if x["id"] == lid)["rm"] for pid, p in per["periods"].items()}
+        order = [k for k in ("brief", "7d", "14d", "all") if k in rm]
+        ok(all(rm[x]["alerted"] <= rm[y]["alerted"] for x, y in zip(order, order[1:]))
+           and (rm["all"]["alerted"] > rm["brief"]["alerted"] or rm["all"]["of"] == rm["brief"]["of"]),
+           f"owners alerted grows with the period for {lid} ({[rm[k]['alerted'] for k in order]})")
+    # Open backlog (NW-D67): the weekly change in the average open backlog stays within ±15%, and the full window shows no
+    # change against a previous period (there is no data before 1 August).
+    wk = per["periods"]["7d"]["cx_pulse"]["internal"].get("open_change_pct")
+    ok(wk is not None and abs(wk) <= 15, f"open backlog: weekly change within ±15% ({wk}%)")
+    fw = per["periods"]["all"]
+    ok(fw["cx_pulse"]["internal"].get("change_pct") is None and fw["cx_pulse"]["internal"].get("open_change_pct") is None
+       and all(x.get("open_change_pct") is None and x.get("change_pct") is None for x in fw["customer_pulse"]["lists"]),
+       "full window: no change against a previous period (no data before 22 October)")
+    # Product negative share (NW-D67): no product card shows more than 45% of its internal contacts negative.
+    hi = [(pid, x["id"], x["internal"].get("negative_share")) for pid, p in per["periods"].items() for x in p["businesses"]
+          if (x["internal"].get("negative_share") or 0) > 45]
+    ok(not hi, f"product cards: internal negative share at most 45% ({hi[:3]})")
+    # One volume (NW-D66): the full-window contact volume on home, the /satisfaction tier table and the /deliverables
+    # ladder's first rung are the same figure.
+    tiers = sum(x["interactions"] for x in agg["satisfaction"].get("tiers_bank", []))
+    vol = full["cx_pulse"]["internal"]["volume"]
+    ok(lb.get("Voice") == vol == tiers,
+       f"one volume: full-window contacts {vol} = ladder first rung {lb.get('Voice')} = account tiers {tiers}")
+    ombudsman_checks(seed_dir, per, inter, ok)
+    # One register (NW-D66): the bank ladder's complaint rungs are flows in the window from the steady register.
+    from complaint_rules import steady_register  # noqa: PLC0415
+    reg = [json.loads(line) for line in open(seed_dir / "complaints.jsonl", encoding="utf-8")]
+    want = _ladder_flows(steady_register(reg), dt.datetime(2026, 8, 1, tzinfo=dt.timezone.utc), dt.datetime.fromisoformat(full["end"]))
+    ok(all(lb.get(k) == v for k, v in want.items()), f"One register: the bank ladder's complaint rungs = the register's flows in the window {want}")
+    v4_checks(per, ok)
+
+
+def v4_checks(per, ok):
+    """B11 additions: the hierarchy reconciles with the MD, Head of CX and Cards figures; each level sums to the one
+    above; open too long sits inside open; the scripted Ask lists exist."""
+    for pid, p in per["periods"].items():
+        v = p["v4"]
+        for scope, h, ivol, pvol in (("cards", v["cards"]["hierarchy"], p["cards"]["internal"]["volume"], p["cards"]["external"]["volume"]),
+                                     ("bank", v["bank"]["hierarchy"], p["cx_pulse"]["internal"]["volume"], p["cx_pulse"]["external"]["volume"])):
+            i, pu = h["inside"], h["public"]
+            ok(i["volume"] == ivol and pu["volume"] == pvol and h["total"] == ivol + pvol,
+               f"V4 hierarchy [{pid} {scope}]: inside and public equal the view's internal and public volumes")
+            ok(sum(k["volume"] for k in i["kinds"].values()) == i["volume"]
+               and all(k["resolved"] + k["open"] + k["waiting_on_customer"] == k["volume"] and k["open_too_long"] <= k["open"]
+                       for k in i["kinds"].values()),
+               f"V4 hierarchy [{pid} {scope}]: types sum to inside; resolved + open + waiting = received; too long within open")
+            ok(sum(s["volume"] for s in pu["sentiments"].values()) == pu["volume"]
+               and all(s["responded"] + s["not_responded"] == s["volume"] for s in pu["sentiments"].values()),
+               f"V4 hierarchy [{pid} {scope}]: sentiments sum to public; responded + not responded = each")
+        for scope in ("cards", "bank"):
+            sv, hi = v[scope]["service"], v[scope]["hierarchy"]["inside"]
+            ok(sv["volume"] == hi["volume"] and sv["resolved"] == hi["resolved"] and sv["ftr"] + sv["ftnr"] == sv["resolved"]
+               and sv["sdr"] <= sv["resolved"],
+               f"V4 service metrics [{pid} {scope}]: volume and resolved = hierarchy; FTR + FTNR = resolved; SDR within resolved")
+        c = v["cards"]
+        ok(c["open_too_long"]["count"] == c["hierarchy"]["inside"]["open_too_long"]
+           and c["open_too_long"]["open"] == c["hierarchy"]["inside"]["open"] == p["cards"]["internal"]["open"]
+           and sum(x["count"] for x in c["open_too_long"]["by_limit"]) == c["open_too_long"]["count"],
+           f"V4 open too long [{pid}]: dial = hierarchy = Cards open; limits sum to the dial")
+        ok(v["bank"]["open_too_long"]["count"] >= sum(b["count"] for b in v["bank"]["open_too_long"]["by_business"])
+           and next(b["count"] for b in v["bank"]["open_too_long"]["by_business"] if b["id"] == "cards") == c["open_too_long"]["count"],
+           f"V4 open too long [{pid}]: Cards on the bank view = Cards view; businesses within the bank")
+        ok(all(b["open_too_long"] <= b["open"] <= b["volume"] for b in c["priority_slice"]) and len(c["to_close"]) <= 15
+           and len(c["top_complaints"]) <= 15, f"V4 slice and lists [{pid}]: too long <= open <= volume; at most 15 rows")
+    # NatWest: the public query may be empty only while no public data is loaded (its count is then 0 too).
+    ok(len(per.get("v4", {}).get("queries", {})) == 3
+       and all(q["list"] or (k == "unanswered_negatives_48h" and q["count"] == 0) for k, q in per["v4"]["queries"].items()),
+       "V4 Ask: the three scripted queries each return a list (the public one empty only with no public data)")
+
+
+# ---------------------------------------------------------------- Ombudsman watch (ombudsman_watch_design.md)
+# Recomputed here from the complaint register with its own code (not ombudsman_v3), so the two must agree.
+
+def _omb_state(c, T):
+    """Independent recomputation of the Financial Ombudsman Service states (8 weeks; 15 business days for payment
+    services; 6 months after the final response; referred = out of the at-risk states)."""
+    t = lambda k: dt.datetime.fromisoformat(c[k]) if c.get(k) else None  # noqa: E731
+    rec, reply = t("received_at"), t("final_reply_at")
+    if rec > T:
+        return None
+    if c["product"] == "payments_fraud":
+        due, n = rec, 0
+        while n < 15:
+            due += dt.timedelta(days=1)
+            n += is_business_day(due)
+    else:
+        due = rec + dt.timedelta(days=56)
+    if reply is None or reply > T:
+        left = None if T >= due else int((due - T) / dt.timedelta(days=1))
+        st = {"open": True, "eligible": T >= due, "brink": left is not None and left <= 10, "unhappy": False,
+              "awaiting_io": False, "left": left}
+    else:
+        back = t("unhappy_at")
+        unhappy = bool(back and reply < back <= T and T < reply + dt.timedelta(days=183))
+        # A final response has been issued: never an open complaint, unhappy or not (NW-D66).
+        st = {"open": False, "eligible": False, "brink": False, "unhappy": unhappy, "awaiting_io": False, "left": None}
+    ref = t("referred_at")
+    if ref and ref <= T:  # on the referred tile for 8 weeks after the referral (NW-D56); referred is not open (NW-D66)
+        st.update(awaiting_io=T < ref + dt.timedelta(weeks=8), brink=False, eligible=False, unhappy=False, left=None,
+                  open=False)
+    st["at_risk"] = st["brink"] or st["eligible"] or st["unhappy"]
+    return st
+
+
+def _ladder_flows(steady, a, b):
+    """Independent recomputation of the ladder's complaint rungs (NW-D66): received in [a, b); passed to the complaints
+    team (not settled by the close of the third business day) in [a, b); final responses issued in [a, b) after summary
+    resolution; referrals made in [a, b). Nothing after the freeze."""
+    end = dt.datetime.fromisoformat(NOW)
+    t = lambda c, k: dt.datetime.fromisoformat(c[k]) if c.get(k) else None  # noqa: E731
+    out = dict.fromkeys(("Complaint", "Complaints team", "Final response", "Financial Ombudsman Service"), 0)
+    for c in steady:
+        rec, reply, ref = t(c, "received_at"), t(c, "final_reply_at"), t(c, "referred_at")
+        d, n = rec, 0
+        while n < 3:
+            d += dt.timedelta(days=1)
+            n += is_business_day(d)
+        sc = d.replace(hour=23, minute=59)
+        handed = reply is None or reply > sc
+        out["Complaint"] += c["w"] if a <= rec < b and not c.get("prior") else 0
+        out["Complaints team"] += c["w"] if handed and a <= sc < b and sc <= end else 0
+        out["Final response"] += c["w"] if handed and reply and a <= reply < b and reply <= end else 0
+        out["Financial Ombudsman Service"] += c["w"] if ref and a <= ref < b and ref <= end else 0
+    return out
+
+
+def ombudsman_checks(seed_dir, per, inter, ok):
+    path = seed_dir / "complaints.jsonl"
+    if not path.exists():
+        ok(False, "complaints.jsonl exists")
+        return
+    cs = [json.loads(line) for line in open(path, encoding="utf-8")]
+    src = {r["id"]: r for r in inter if r["deliverable"] == "complaint_resolution" and r["channel"] != "ivr_bot"}
+    ok(len(cs) == len(src) and {c["source_id"] for c in cs} == set(src),
+       f"Ombudsman: one complaint per formal complaint contact (IVR bot excluded) ({len(cs)} = {len(src)})")
+    ok(all(c.get("w") == src[c["source_id"]]["w"] for c in cs if c["source_id"] in src), "Ombudsman: each complaint carries its contact's bank-scale weight")
+    bad = []
+    for c in cs:
+        r = src.get(c["source_id"])
+        if not r:
+            continue
+        want = r["closed_at"] if r["status"] == "closed" else r["resolution_sent_at"] if r["status"] == "waiting_on_customer" else None
+        if c["received_at"] != r["created_at"] or (c["final_reply_at"] or None) != (want and dt.datetime.fromisoformat(want).isoformat(timespec="minutes")):
+            bad.append(c["id"])
+        # IO before a rejecting reply: decision < IO review <= final reply; a resolved complaint has no decision.
+        if c["final_reply_at"] and c["outcome"] in ("partly_rejected", "rejected"):
+            if not (c["decision_at"] and c["io_reviewed_at"] and c["decision_at"] < c["io_reviewed_at"] <= c["final_reply_at"]):
+                bad.append(c["id"])
+        if c["outcome"] == "resolved" and c["decision_at"]:
+            bad.append(c["id"])
+    ok(not bad, f"Ombudsman: register matches the contacts and the IO order holds ({bad[:3]})")
+    # Internal Ombudsman: one register. A contact is at the IO rung exactly when it is a complaint with a decision to
+    # reject (the RBI Ombudsman rung sits above it); the reject rate is about 10%, as at peer banks.
+    W = lambda xs: sum(c["w"] for c in xs)  # noqa: E731
+    decided = [c for c in cs if c["decision_at"]]
+    at_io = {r["id"] for r in inter if r.get("escalation") == "io"}
+    want_io = {c["source_id"] for c in decided if src.get(c["source_id"], {}).get("escalation") != "rbi_ombudsman"}
+    ok(at_io == want_io, f"Internal Ombudsman: the ladder's IO rung is exactly the complaints with a decision to reject ({len(at_io)} contacts)")
+    rbi = [c for c in cs if src.get(c["source_id"], {}).get("escalation") == "rbi_ombudsman"]
+    end = dt.datetime.fromisoformat(per["end"])
+    ok(len(rbi) == sum(1 for r in inter if r.get("escalation") == "rbi_ombudsman")
+       and all(c.get("referred_at") for c in rbi),
+       f"Financial Ombudsman Service: every contact at that rung is a complaint the customer referred ({len(rbi)} in the sample)")
+    # NatWest anchor (brief Step 3.8): about 55% upheld, so about 45% not upheld; a 35-55% band.
+    ok(0.35 <= W(decided) / max(W(cs), 1) <= 0.55,
+       f"Final response: not upheld {100 * W(decided) / max(W(cs), 1):.1f}% of complaints ({W(decided)} of {W(cs)}), within 35-55%")
+    ok(all(c["outcome"] in ("partly_rejected", "rejected") for c in decided) and not any(c["decision_at"] for c in cs if c["outcome"] == "resolved"),
+       "Internal Ombudsman: only rejected or partly rejected complaints carry a decision")
+    ok(all((c["unhappy_at"] is None) or c["final_reply_at"] for c in cs), "Unhappy with the reply: only replied complaints")
+    keys = ("brink", "eligible", "unhappy", "awaiting_io", "at_risk", "open")
+    # The watch reads the register as a steady state (NW-D56): the same complaints, equal weights within a product,
+    # spread over a few days, with two earlier windows standing for the complaints received before 1 August.
+    from complaint_rules import steady_register  # noqa: PLC0415
+    raw_cs, cs = cs, steady_register(cs)
+    for p_ in sorted({c["product"] for c in raw_cs}):
+        # Prior-0 copies are the window itself: their weights add back to the product's complaints.
+        got_w = sum(c["w"] for c in cs if c["product"] == p_ and ("~" not in c["id"] or c["id"].endswith("0")))
+        want_w = sum(c["w"] for c in raw_cs if c["product"] == p_)
+        ok(got_w == want_w, f"Ombudsman steady register keeps {p_}'s complaint total ({got_w} = {want_w})")
+    for pid, p in per["periods"].items():
+        o = p.get("ombudsman")
+        co = (p.get("cards") or {}).get("ombudsman")
+        if not o or not co:
+            ok(False, f"[{pid}] Ombudsman blocks present")
+            continue
+        for label, blk, scope in (("bank", o, cs), ("Cards", co, [c for c in cs if c["product"] == "cards"])):
+            for when, at in (("now", blk["as_of"]), ("prev", blk["prev_as_of"])):
+                T = dt.datetime.fromisoformat(at)
+                pairs = [(c, s) for c in scope if (s := _omb_state(c, T))]
+                sts = [s for _, s in pairs]
+                got = {k: sum(c["w"] for c, s in pairs if s[k]) for k in keys}
+                ok(all(got[k] == blk[when][k] for k in keys), f"[{pid}] Ombudsman {label} {when} recomputed {got}")
+                unsettled = sum(c["w"] for c in scope if dt.datetime.fromisoformat(c["received_at"]) <= T
+                                and not (c["final_reply_at"] and dt.datetime.fromisoformat(c["final_reply_at"]) <= T)
+                                and not (c.get("referred_at") and dt.datetime.fromisoformat(c["referred_at"]) <= T))
+                ok(blk[when]["open"] == unsettled and all(s["open"] for s in sts if s["brink"] or s["eligible"])
+                   and not any(s["open"] for s in sts if s["unhappy"] or s["awaiting_io"]),
+                   f"[{pid}] Ombudsman {label} {when}: open complaints are only those with no final response and not referred")
+                base = sum(c["w"] for c in scope if not c.get("prior") and dt.datetime.fromisoformat(c["received_at"]) <= T)
+                ok(blk[when]["received"] == base,
+                   f"[{pid}] Ombudsman {label} {when}: tile shares are of complaints received in the window ({blk[when]['received']} = {base})")
+                ok(not any(s["at_risk"] for s in sts if s["awaiting_io"]), f"[{pid}] Ombudsman {label} {when}: referred complaints are never counted at risk")
+            ok(sum(blk["now"]["buckets"].values()) == blk["now"]["brink"], f"[{pid}] Ombudsman {label}: countdown buckets = on the brink")
+            T = dt.datetime.fromisoformat(blk["as_of"])
+            pending = sum(c["w"] for c in scope if dt.datetime.fromisoformat(c["received_at"]) <= T
+                          and not (c["final_reply_at"] and dt.datetime.fromisoformat(c["final_reply_at"]) <= T)
+                          and not (c.get("referred_at") and dt.datetime.fromisoformat(c["referred_at"]) <= T))
+            near = blk["now"]["brink"] + blk["now"]["eligible"]
+            ok(pending == blk["pending"] and near <= pending,
+               f"[{pid}] Ombudsman {label}: on the brink + already eligible ({near}) is within pending complaints ({pending})")
+            io = blk["io"]
+            got_io = (sum(c["w"] for c in scope if c["decision_at"] and dt.datetime.fromisoformat(c["decision_at"]) <= T),
+                      sum(c["w"] for c in scope if c["io_reviewed_at"] and dt.datetime.fromisoformat(c["io_reviewed_at"]) <= T))
+            referred = sum(c["w"] for c in scope if c.get("referred_at")
+                           and dt.datetime.fromisoformat(c["referred_at"]) <= T < dt.datetime.fromisoformat(c["referred_at"]) + dt.timedelta(weeks=8)
+                           and dt.datetime.fromisoformat(c["received_at"]) <= T)
+            ok(got_io == (io["decided"], io["reviewed"]) and referred == blk["now"]["awaiting_io"],
+               f"[{pid}] Ombudsman {label}: referred to the Financial Ombudsman Service {blk['now']['awaiting_io']} = the register's referrals {referred}")
+            if label == "Cards":
+                # One register (NW-D66): the credit-card ladder's complaint rungs are flows in the period from the same
+                # credit-card slice the credit-card Financial Ombudsman tile reads, recomputed here with its own code.
+                rungs = {x["rung"]: x["count"] for x in p["cards"]["service_full"]["ladder"]}
+                want = _ladder_flows(scope, dt.datetime.fromisoformat(p["start"]), dt.datetime.fromisoformat(p["end"]))
+                ok(all(rungs.get(k) == v for k, v in want.items()),
+                   f"[{pid}] One register: the credit-card ladder's complaint rungs = the credit-card register's flows {want}")
+            if label == "bank":
+                # 8-week limit (NatWest): the last 10 days are a smaller slice of pending than under a 30-day rule.
+                ok(0.05 <= near / max(pending, 1) <= 0.75, f"[{pid}] Ombudsman: brink + eligible is a plausible share of pending ({100 * near / max(pending, 1):.0f}%)")
+            ok(all(blk["delta"][k] == blk["now"][k] - blk["prev"][k] for k in keys), f"[{pid}] Ombudsman {label}: changes = now - previous")
+        ok(all(sum(x[k] for x in o["by_business"]) == o["now"][k] for k in keys), f"[{pid}] Ombudsman: businesses sum to the bank total")
+        cards_row = next(x for x in o["by_business"] if x["id"] == "cards")
+        ok(all(cards_row[k] == co["now"][k] for k in keys), f"[{pid}] Ombudsman: Cards view = the Cards row of the bank split")
+        ok(all(sum(x[k] for x in co["categories"]) == co["now"][k] for k in ("at_risk", "brink", "eligible", "unhappy", "awaiting_io"))
+           and all(sum(y["at_risk"] for y in x["subcategories"]) == x["at_risk"] for x in co["categories"]),
+           f"[{pid}] Ombudsman: Cards categories and subcategories sum to the Cards totals")
+        T = dt.datetime.fromisoformat(co["as_of"])
+        risky = {c["id"] for c in cs if c["product"] == "cards" and (s := _omb_state(c, T)) and s["at_risk"]}
+        sl = co["save_list"]
+        ok(len(sl) <= 10 and {x["id"] for x in sl} <= risky and [x["score"] for x in sl] == sorted((x["score"] for x in sl), reverse=True),
+           f"[{pid}] Ombudsman: save list is at most 10 at-risk Cards complaints, highest score first")
+        material = o["now"]["buckets"]["0-3"] > 0 or o["delta"]["eligible"] > 0
+        first = p["brief"]["needs_you"][0] if p["brief"]["needs_you"] else {}
+        ok(material == (first.get("kind") == "ombudsman") and len(p["brief"]["needs_you"]) <= 3,
+           f"[{pid}] Ombudsman: the brief item leads What needs you exactly when the risk is material")
+
+
+def main() -> int:
+    # Windows consoles default to a legacy code page; the report uses "±" and "≤".
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    fails = run()
+    print(f"check_reconcile_v3: {len(fails)} failure(s)")
+    return 1 if fails else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

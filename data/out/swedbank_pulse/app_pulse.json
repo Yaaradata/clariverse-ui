@@ -1,0 +1,1057 @@
+{
+ "apps": [
+  {
+   "app": "Mettle app",
+   "entity": "other_group",
+   "group_company": true,
+   "business": "group_company",
+   "streams": [
+    {
+     "stream": "appstore:Mettle app",
+     "records": 7,
+     "earliest": "2026-08-21",
+     "latest": "2026-11-07",
+     "window_first": "2026-08-21",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:Mettle app",
+     "records": 22,
+     "earliest": "2026-08-03",
+     "latest": "2026-11-08",
+     "window_first": "2026-08-03",
+     "full_window": true,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 29
+   },
+   "by_store": {
+    "playstore": {
+     "n": 22,
+     "ratings": {
+      "1": 6,
+      "2": 1,
+      "3": 1,
+      "4": 2,
+      "5": 12
+     },
+     "avg_rating": 3.59,
+     "share_positive": 63.6,
+     "share_negative": 31.8
+    },
+    "appstore": {
+     "n": 7,
+     "ratings": {
+      "1": 1,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 6
+     },
+     "avg_rating": 4.43,
+     "share_positive": 85.7,
+     "share_negative": 14.3
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 6,
+    "second_half": 16,
+    "first_share": 2.16,
+    "second_share": 2.16,
+    "change_pct": 0.0,
+    "first_half_dates": "2026-08-01 to 2026-09-21",
+    "second_half_dates": "2026-09-22 to 2026-11-13"
+   },
+   "top_issues": [],
+   "versions_by_store": {
+    "playstore": [],
+    "appstore": []
+   },
+   "praise_exemplars": [
+    "playstore:25202e5f-0764-4544-8765-ce2ef9c3572a",
+    "playstore:f85587e5-1d4c-4c79-9e99-1e9df89a6626",
+    "appstore:14762984017"
+   ],
+   "fix_list": []
+  },
+  {
+   "app": "NatWest Bankline",
+   "entity": "other_group",
+   "group_company": true,
+   "business": "group_company",
+   "streams": [
+    {
+     "stream": "appstore:NatWest Bankline",
+     "records": 5,
+     "earliest": "2026-09-06",
+     "latest": "2026-11-03",
+     "window_first": "2026-09-06",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:NatWest Bankline",
+     "records": 7,
+     "earliest": "2026-08-05",
+     "latest": "2026-11-08",
+     "window_first": "2026-08-05",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 12
+   },
+   "by_store": {
+    "playstore": {
+     "n": 7,
+     "ratings": {
+      "1": 3,
+      "2": 2,
+      "3": 1,
+      "4": 0,
+      "5": 1
+     },
+     "avg_rating": 2.14,
+     "share_positive": 14.3,
+     "share_negative": 71.4
+    },
+    "appstore": {
+     "n": 5,
+     "ratings": {
+      "1": 3,
+      "2": 1,
+      "3": 0,
+      "4": 1,
+      "5": 0
+     },
+     "avg_rating": 1.8,
+     "share_positive": 20.0,
+     "share_negative": 80.0
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 0,
+    "second_half": 0,
+    "first_share": 0.0,
+    "second_share": 0.0,
+    "change_pct": null,
+    "first_half_dates": "2026-08-01 to 2026-09-21",
+    "second_half_dates": "2026-09-22 to 2026-11-13"
+   },
+   "top_issues": [],
+   "versions_by_store": {
+    "playstore": [],
+    "appstore": []
+   },
+   "praise_exemplars": [
+    "appstore:14567735214"
+   ],
+   "fix_list": []
+  },
+  {
+   "app": "NatWest ClearSpend",
+   "entity": "other_group",
+   "group_company": true,
+   "business": "group_company",
+   "streams": [
+    {
+     "stream": "appstore:NatWest ClearSpend",
+     "records": 3,
+     "earliest": "2026-09-08",
+     "latest": "2026-10-22",
+     "window_first": "2026-09-08",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:NatWest ClearSpend",
+     "records": 13,
+     "earliest": "2026-08-03",
+     "latest": "2026-11-11",
+     "window_first": "2026-08-03",
+     "full_window": true,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 16
+   },
+   "by_store": {
+    "playstore": {
+     "n": 13,
+     "ratings": {
+      "1": 12,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1
+     },
+     "avg_rating": 1.31,
+     "share_positive": 7.7,
+     "share_negative": 92.3
+    },
+    "appstore": {
+     "n": 3,
+     "ratings": {
+      "1": 3,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0
+     },
+     "avg_rating": 1.0,
+     "share_positive": 0.0,
+     "share_negative": 100.0
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 6,
+    "second_half": 7,
+    "first_share": 1.28,
+    "second_share": 1.28,
+    "change_pct": -0.0,
+    "first_half_dates": "2026-08-01 to 2026-09-21",
+    "second_half_dates": "2026-09-22 to 2026-11-13"
+   },
+   "top_issues": [],
+   "versions_by_store": {
+    "playstore": [],
+    "appstore": []
+   },
+   "praise_exemplars": [],
+   "fix_list": []
+  },
+  {
+   "app": "NatWest International",
+   "entity": "other_group",
+   "group_company": true,
+   "business": "group_company",
+   "streams": [
+    {
+     "stream": "appstore:NatWest International",
+     "records": 11,
+     "earliest": "2026-08-18",
+     "latest": "2026-10-10",
+     "window_first": "2026-08-18",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:NatWest International",
+     "records": 5,
+     "earliest": "2026-08-05",
+     "latest": "2026-11-02",
+     "window_first": "2026-08-05",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 16
+   },
+   "by_store": {
+    "playstore": {
+     "n": 5,
+     "ratings": {
+      "1": 1,
+      "2": 0,
+      "3": 0,
+      "4": 1,
+      "5": 3
+     },
+     "avg_rating": 4.0,
+     "share_positive": 80.0,
+     "share_negative": 20.0
+    },
+    "appstore": {
+     "n": 11,
+     "ratings": {
+      "1": 3,
+      "2": 1,
+      "3": 0,
+      "4": 0,
+      "5": 7
+     },
+     "avg_rating": 3.64,
+     "share_positive": 63.6,
+     "share_negative": 36.4
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 0,
+    "second_half": 0,
+    "first_share": 0.0,
+    "second_share": 0.0,
+    "change_pct": null,
+    "first_half_dates": "2026-08-01 to 2026-09-21",
+    "second_half_dates": "2026-09-22 to 2026-11-13"
+   },
+   "top_issues": [],
+   "versions_by_store": {
+    "playstore": [],
+    "appstore": []
+   },
+   "praise_exemplars": [
+    "appstore:14648941144",
+    "playstore:ecc8cb23-044f-4661-bc2f-7c22af45c652",
+    "appstore:14548114802"
+   ],
+   "fix_list": []
+  },
+  {
+   "app": "NatWest Premier Black",
+   "entity": "other_group",
+   "group_company": true,
+   "business": "group_company",
+   "streams": [
+    {
+     "stream": "appstore:NatWest Premier Black",
+     "records": 3,
+     "earliest": "2026-08-31",
+     "latest": "2026-09-19",
+     "window_first": "2026-08-31",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:NatWest Premier Black",
+     "records": 3,
+     "earliest": "2026-09-01",
+     "latest": "2026-11-11",
+     "window_first": "2026-09-01",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 6
+   },
+   "by_store": {
+    "playstore": {
+     "n": 3,
+     "ratings": {
+      "1": 2,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1
+     },
+     "avg_rating": 2.33,
+     "share_positive": 33.3,
+     "share_negative": 66.7
+    },
+    "appstore": {
+     "n": 3,
+     "ratings": {
+      "1": 1,
+      "2": 0,
+      "3": 1,
+      "4": 0,
+      "5": 1
+     },
+     "avg_rating": 3.0,
+     "share_positive": 33.3,
+     "share_negative": 33.3
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 0,
+    "second_half": 0,
+    "first_share": 0.0,
+    "second_share": 0.0,
+    "change_pct": null,
+    "first_half_dates": "2026-08-01 to 2026-09-21",
+    "second_half_dates": "2026-09-22 to 2026-11-13"
+   },
+   "top_issues": [],
+   "versions_by_store": {
+    "playstore": [],
+    "appstore": []
+   },
+   "praise_exemplars": [
+    "playstore:4c2f4d9e-c705-4044-8076-a8019738bc5e"
+   ],
+   "fix_list": []
+  },
+  {
+   "app": "NatWest Rooster Money",
+   "entity": "other_group",
+   "group_company": true,
+   "business": "group_company",
+   "streams": [
+    {
+     "stream": "appstore:NatWest Rooster Money",
+     "records": 90,
+     "earliest": "2026-08-16",
+     "latest": "2026-11-11",
+     "window_first": "2026-08-16",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:NatWest Rooster Money",
+     "records": 58,
+     "earliest": "2026-08-01",
+     "latest": "2026-11-09",
+     "window_first": "2026-08-01",
+     "full_window": true,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 148
+   },
+   "by_store": {
+    "playstore": {
+     "n": 58,
+     "ratings": {
+      "1": 9,
+      "2": 3,
+      "3": 4,
+      "4": 3,
+      "5": 39
+     },
+     "avg_rating": 4.03,
+     "share_positive": 72.4,
+     "share_negative": 20.7
+    },
+    "appstore": {
+     "n": 90,
+     "ratings": {
+      "1": 11,
+      "2": 1,
+      "3": 2,
+      "4": 3,
+      "5": 73
+     },
+     "avg_rating": 4.4,
+     "share_positive": 84.4,
+     "share_negative": 13.3
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 25,
+    "second_half": 33,
+    "first_share": 5.7,
+    "second_share": 5.7,
+    "change_pct": 0.0,
+    "first_half_dates": "2026-08-01 to 2026-09-21",
+    "second_half_dates": "2026-09-22 to 2026-11-13"
+   },
+   "top_issues": [],
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "12.3.0",
+      "n": 28,
+      "ratings": {
+       "1": 5,
+       "2": 3,
+       "3": 1,
+       "4": 1,
+       "5": 18
+      },
+      "avg_rating": 3.86,
+      "share_positive": 67.9,
+      "share_negative": 28.6
+     },
+     {
+      "version": "12.2.0",
+      "n": 30,
+      "ratings": {
+       "1": 4,
+       "2": 0,
+       "3": 3,
+       "4": 2,
+       "5": 21
+      },
+      "avg_rating": 4.2,
+      "share_positive": 76.7,
+      "share_negative": 13.3
+     }
+    ],
+    "appstore": [
+     {
+      "version": "12.3.0",
+      "n": 36,
+      "ratings": {
+       "1": 7,
+       "2": 0,
+       "3": 2,
+       "4": 1,
+       "5": 26
+      },
+      "avg_rating": 4.08,
+      "share_positive": 75.0,
+      "share_negative": 19.4
+     },
+     {
+      "version": "12.2.0",
+      "n": 54,
+      "ratings": {
+       "1": 4,
+       "2": 1,
+       "3": 0,
+       "4": 2,
+       "5": 47
+      },
+      "avg_rating": 4.61,
+      "share_positive": 90.7,
+      "share_negative": 9.3
+     }
+    ]
+   },
+   "praise_exemplars": [
+    "playstore:7a3a89f6-361c-4220-9353-fabfe84da58e",
+    "playstore:36a48d17-d4f3-4368-af48-a150543ce95c",
+    "appstore:14774810489"
+   ],
+   "fix_list": []
+  },
+  {
+   "app": "NatWest Tap to Pay",
+   "entity": "other_group",
+   "group_company": true,
+   "business": "group_company",
+   "streams": [
+    {
+     "stream": "appstore:NatWest Tap to Pay",
+     "records": 2,
+     "earliest": "2026-08-21",
+     "latest": "2026-10-30",
+     "window_first": "2026-08-21",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:NatWest Tap to Pay",
+     "records": 1,
+     "earliest": "2026-08-16",
+     "latest": "2026-08-16",
+     "window_first": "2026-08-16",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 3
+   },
+   "by_store": {
+    "playstore": {
+     "n": 1,
+     "ratings": {
+      "1": 1,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0
+     },
+     "avg_rating": 1.0,
+     "share_positive": 0.0,
+     "share_negative": 100.0
+    },
+    "appstore": {
+     "n": 2,
+     "ratings": {
+      "1": 1,
+      "2": 0,
+      "3": 0,
+      "4": 1,
+      "5": 0
+     },
+     "avg_rating": 2.5,
+     "share_positive": 50.0,
+     "share_negative": 50.0
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 0,
+    "second_half": 0,
+    "first_share": 0.0,
+    "second_share": 0.0,
+    "change_pct": null,
+    "first_half_dates": "2026-08-01 to 2026-09-21",
+    "second_half_dates": "2026-09-22 to 2026-11-13"
+   },
+   "top_issues": [],
+   "versions_by_store": {
+    "playstore": [],
+    "appstore": []
+   },
+   "praise_exemplars": [
+    "appstore:14456425473"
+   ],
+   "fix_list": []
+  },
+  {
+   "app": "NatWest app",
+   "entity": "natwest_group",
+   "group_company": false,
+   "business": "retail_banking",
+   "streams": [
+    {
+     "stream": "appstore:NatWest app",
+     "records": 1079,
+     "earliest": "2026-08-12",
+     "latest": "2026-11-13",
+     "window_first": "2026-08-12",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:NatWest app",
+     "records": 915,
+     "earliest": "2026-08-01",
+     "latest": "2026-11-12",
+     "window_first": "2026-08-01",
+     "full_window": true,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 2004
+   },
+   "by_store": {
+    "playstore": {
+     "n": 925,
+     "ratings": {
+      "1": 258,
+      "2": 50,
+      "3": 43,
+      "4": 70,
+      "5": 504
+     },
+     "avg_rating": 3.55,
+     "share_positive": 62.1,
+     "share_negative": 33.3
+    },
+    "appstore": {
+     "n": 1079,
+     "ratings": {
+      "1": 206,
+      "2": 30,
+      "3": 36,
+      "4": 61,
+      "5": 746
+     },
+     "avg_rating": 4.03,
+     "share_positive": 74.8,
+     "share_negative": 21.9
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 462,
+    "second_half": 463,
+    "first_share": 90.86,
+    "second_share": 90.86,
+    "change_pct": 0.0,
+    "first_half_dates": "2026-08-01 to 2026-09-21",
+    "second_half_dates": "2026-09-22 to 2026-11-13"
+   },
+   "top_issues": [
+    {
+     "id": "app_usability",
+     "label": "App features and usability",
+     "count": 306,
+     "exemplars": [
+      "playstore:37f8e503-ffca-46eb-9f6b-d0fdd38e2072",
+      "playstore:976db6dd-40f6-4277-bad9-a6dcd5b3423b",
+      "appstore:14780488522"
+     ]
+    },
+    {
+     "id": "app_login_biometrics",
+     "label": "App login and biometrics",
+     "count": 73,
+     "exemplars": [
+      "playstore:881626b7-f8d7-4cf0-8834-2a327aec096d",
+      "playstore:d4419c48-099f-4277-bd0f-fb33e811cf60",
+      "appstore:14784317445"
+     ]
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App outages, speed and crashes",
+     "count": 54,
+     "exemplars": [
+      "playstore:6b319e20-7ce4-4e56-8392-25b7f8ea3efb",
+      "playstore:0ead8770-18f3-472a-b527-35531059294e",
+      "appstore:14784646634"
+     ]
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 36,
+     "exemplars": [
+      "playstore:3aec0a1b-1ee3-43dd-becd-c19f7b732650",
+      "appstore:14779732075",
+      "appstore:14780597820"
+     ]
+    },
+    {
+     "id": "statements_documents",
+     "label": "Statements and documents",
+     "count": 15,
+     "exemplars": [
+      "playstore:1dbe6f6a-676b-47b9-a2c8-d4504d61a1ea",
+      "playstore:d3e47221-2bdc-4e4b-8bed-c647777e441e",
+      "appstore:14624093007"
+     ]
+    }
+   ],
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "07.72.0000.46402.0",
+      "n": 109,
+      "ratings": {
+       "1": 32,
+       "2": 4,
+       "3": 9,
+       "4": 11,
+       "5": 53
+      },
+      "avg_rating": 3.45,
+      "share_positive": 58.7,
+      "share_negative": 33.0
+     },
+     {
+      "version": "07.71.0000.42882.0",
+      "n": 224,
+      "ratings": {
+       "1": 61,
+       "2": 15,
+       "3": 6,
+       "4": 12,
+       "5": 130
+      },
+      "avg_rating": 3.6,
+      "share_positive": 63.4,
+      "share_negative": 33.9
+     },
+     {
+      "version": "07.70.0000.39862.0",
+      "n": 244,
+      "ratings": {
+       "1": 84,
+       "2": 7,
+       "3": 8,
+       "4": 16,
+       "5": 129
+      },
+      "avg_rating": 3.41,
+      "share_positive": 59.4,
+      "share_negative": 37.3
+     },
+     {
+      "version": "07.69.0000.36742.0",
+      "n": 228,
+      "ratings": {
+       "1": 52,
+       "2": 17,
+       "3": 11,
+       "4": 18,
+       "5": 130
+      },
+      "avg_rating": 3.69,
+      "share_positive": 64.9,
+      "share_negative": 30.3
+     },
+     {
+      "version": "07.68.0000.33733.0",
+      "n": 104,
+      "ratings": {
+       "1": 25,
+       "2": 6,
+       "3": 6,
+       "4": 13,
+       "5": 54
+      },
+      "avg_rating": 3.62,
+      "share_positive": 64.4,
+      "share_negative": 29.8
+     }
+    ],
+    "appstore": [
+     {
+      "version": "7.72.0",
+      "n": 142,
+      "ratings": {
+       "1": 28,
+       "2": 5,
+       "3": 2,
+       "4": 11,
+       "5": 96
+      },
+      "avg_rating": 4.0,
+      "share_positive": 75.4,
+      "share_negative": 23.2
+     },
+     {
+      "version": "7.71.0",
+      "n": 328,
+      "ratings": {
+       "1": 62,
+       "2": 9,
+       "3": 11,
+       "4": 13,
+       "5": 233
+      },
+      "avg_rating": 4.05,
+      "share_positive": 75.0,
+      "share_negative": 21.6
+     },
+     {
+      "version": "7.70.0",
+      "n": 275,
+      "ratings": {
+       "1": 48,
+       "2": 7,
+       "3": 15,
+       "4": 19,
+       "5": 186
+      },
+      "avg_rating": 4.05,
+      "share_positive": 74.5,
+      "share_negative": 20.0
+     },
+     {
+      "version": "7.69.0",
+      "n": 310,
+      "ratings": {
+       "1": 46,
+       "2": 8,
+       "3": 8,
+       "4": 18,
+       "5": 230
+      },
+      "avg_rating": 4.22,
+      "share_positive": 80.0,
+      "share_negative": 17.4
+     },
+     {
+      "version": "7.56.0",
+      "n": 23,
+      "ratings": {
+       "1": 21,
+       "2": 1,
+       "3": 0,
+       "4": 0,
+       "5": 1
+      },
+      "avg_rating": 1.22,
+      "share_positive": 4.3,
+      "share_negative": 95.7
+     }
+    ]
+   },
+   "praise_exemplars": [
+    "playstore:6cf7e61b-1d2a-4110-8bc6-c7fd8f9cfa90",
+    "playstore:c3a019b7-d56a-4823-ad96-31a0d52ddd21",
+    "appstore:14626683194"
+   ],
+   "fix_list": [
+    {
+     "issue": "App features and usability",
+     "theme": "app_usability",
+     "count": 306,
+     "owner": "digital",
+     "first_seen_version": "7.54.0",
+     "latest_version_seen": "07.72.0000.46402.0",
+     "example_ids": [
+      "playstore:37f8e503-ffca-46eb-9f6b-d0fdd38e2072",
+      "playstore:976db6dd-40f6-4277-bad9-a6dcd5b3423b",
+      "appstore:14780488522"
+     ],
+     "feature_asks": [
+      "view running balances after each transac"
+     ]
+    },
+    {
+     "issue": "App login and biometrics",
+     "theme": "app_login_biometrics",
+     "count": 73,
+     "owner": "digital",
+     "first_seen_version": "7.56.0",
+     "latest_version_seen": "07.72.0000.46402.0",
+     "example_ids": [
+      "playstore:881626b7-f8d7-4cf0-8834-2a327aec096d",
+      "playstore:d4419c48-099f-4277-bd0f-fb33e811cf60",
+      "appstore:14784317445"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "App outages, speed and crashes",
+     "theme": "app_speed_crash",
+     "count": 54,
+     "owner": "digital",
+     "first_seen_version": "7.56.0",
+     "latest_version_seen": "07.72.0000.46402.0",
+     "example_ids": [
+      "playstore:6b319e20-7ce4-4e56-8392-25b7f8ea3efb",
+      "playstore:0ead8770-18f3-472a-b527-35531059294e",
+      "appstore:14784646634"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "New app and update experience",
+     "theme": "new_app_release",
+     "count": 36,
+     "owner": "digital",
+     "first_seen_version": "7.56.0",
+     "latest_version_seen": "07.72.0000.46402.0",
+     "example_ids": [
+      "playstore:3aec0a1b-1ee3-43dd-becd-c19f7b732650",
+      "appstore:14779732075",
+      "appstore:14780597820"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Statements and documents",
+     "theme": "statements_documents",
+     "count": 15,
+     "owner": "operations",
+     "first_seen_version": "07.65.0000.26994.0",
+     "latest_version_seen": "07.72.0000.46402.0",
+     "example_ids": [
+      "playstore:1dbe6f6a-676b-47b9-a2c8-d4504d61a1ea",
+      "playstore:d3e47221-2bdc-4e4b-8bed-c647777e441e",
+      "appstore:14624093007"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Branch service",
+     "theme": "branch_service",
+     "count": 12,
+     "owner": "retail",
+     "first_seen_version": "7.56.0",
+     "latest_version_seen": "07.72.0000.46402.0",
+     "example_ids": [
+      "playstore:bd42d26e-3f7e-4160-8c4f-993d8164e076",
+      "appstore:14763775353",
+      "appstore:14721252842"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Cora unresolved, had to call",
+     "theme": "cora_unresolved",
+     "count": 11,
+     "owner": "digital",
+     "first_seen_version": "07.69.0000.36742.0",
+     "latest_version_seen": "07.72.0000.46402.0",
+     "example_ids": [
+      "playstore:760e1b36-b1a6-4ee0-bcd3-be0377479a41",
+      "playstore:21d63d47-74d1-4b75-8678-680f9c36f14c",
+      "appstore:14650757583"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Could not get through",
+     "theme": "care_unreachable",
+     "count": 10,
+     "owner": "cx",
+     "first_seen_version": "7.69.0",
+     "latest_version_seen": "07.72.0000.46402.0",
+     "example_ids": [
+      "playstore:dcb92825-90ee-49a1-88a9-7861ecdffb90",
+      "playstore:5a94711d-b5f9-429d-ac67-5e99c9e8ee30",
+      "appstore:14637209800"
+     ],
+     "feature_asks": []
+    }
+   ]
+  }
+ ],
+ "note": "Ratings are counted in the window (1 August to 11 November)."
+}

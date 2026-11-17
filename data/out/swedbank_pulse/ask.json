@@ -1,0 +1,130 @@
+{
+ "prompts": [
+  {
+   "id": "cross_channel",
+   "prompt": "Where is the customer experience leaking across channels?",
+   "keywords": [
+    "channel",
+    "leak",
+    "leaking",
+    "calls",
+    "cora",
+    "branch",
+    "cross"
+   ],
+   "answer": "Last 7 days: 428,195 contacts; 19,647 open more than 48 hours. The highest share open too long is Branch (7%). Public voice is shown separately.",
+   "evidence": [],
+   "bound": [
+    "L3:cx_pulse.internal.by_channel"
+   ],
+   "links": [
+    {
+     "label": "Open the CX pulse",
+     "href": "/natwest-pulse/v1/mds-office?period=7d#cx-pulse"
+    }
+   ]
+  },
+  {
+   "id": "cora_leakage",
+   "prompt": "How much comes back after Cora, as a call or a complaint?",
+   "keywords": [
+    "cora",
+    "chatbot",
+    "assistant",
+    "leakage",
+    "back",
+    "resolved"
+   ],
+   "answer": "Last 7 days: Cora took 131,060 contacts and resolved 119,586; 8,693 are still open. Calls: 191,337. Since 1 August, 158,002 of 1,599,037 Cora conversations resolved by 6 Nov (10%) came back as a call or a complaint within 7 days. Internal, illustrative.",
+   "evidence": [],
+   "bound": [
+    "L3:cx_pulse.internal.by_channel.whatsapp",
+    "L3:cx_pulse.internal.by_channel.calls"
+   ],
+   "links": [
+    {
+     "label": "Open the Cora module",
+     "href": "/natwest-pulse/v1/module/cora_digital"
+    }
+   ]
+  },
+  {
+   "id": "ombudsman_risk",
+   "prompt": "How many complaints could go to the Financial Ombudsman Service?",
+   "keywords": [
+    "ombudsman",
+    "fos",
+    "final",
+    "response",
+    "eligible",
+    "risk",
+    "refer"
+   ],
+   "answer": "As of 13 Nov, 07:45: 408 complaints are within 10 days of the final-response deadline, 713 are past it with no final response, 3,179 are unhappy with the final response, and 1,210 have been referred. Rules: 8 weeks; payment services 15 business days (35 in exceptional cases). Eligibility and risk only; LisN does not predict who will refer.",
+   "evidence": [],
+   "bound": [
+    "L3:ombudsman.now",
+    "REG-DISP-8W",
+    "REG-PSD-15",
+    "REG-FOS-6M"
+   ],
+   "links": [
+    {
+     "label": "Open the Financial Ombudsman watch",
+     "href": "/natwest-pulse/v1/mds-office#ombudsman-watch"
+    }
+   ]
+  },
+  {
+   "id": "journey_leak",
+   "prompt": "Which journey is leaking most customers this week?",
+   "keywords": [
+    "journey",
+    "leak",
+    "leaking",
+    "switch",
+    "close",
+    "stage",
+    "customers",
+    "week"
+   ],
+   "answer": "Everyday banking: 31 of the 79 switching-intent contacts in the journey-stages table (sample of 32,000 contacts since 1 August) followed a contact at that stage. Next: Switch or close (21) and Service requests (10). One week of the sample is too thin to rank stages. Internal, illustrative.",
+   "evidence": [],
+   "bound": [
+    "L3:satisfaction.journey_stages"
+   ],
+   "links": [
+    {
+     "label": "Open the journey stages",
+     "href": "/natwest-pulse/v1/satisfaction#journey"
+    }
+   ]
+  },
+  {
+   "id": "consumer_duty",
+   "prompt": "What is the Consumer Duty evidence for financially vulnerable customers?",
+   "keywords": [
+    "consumer",
+    "duty",
+    "vulnerable",
+    "outcomes",
+    "fair",
+    "value",
+    "evidence"
+   ],
+   "answer": "Last 7 days: 97,712 contacts from customers flagged financially vulnerable; 9,812 open, 270 with no reply after 48 hours. Consumer Duty outcomes: Products and services · price and value · consumer understanding · consumer support.",
+   "evidence": [],
+   "bound": [
+    "L3:customer_pulse.lists.priority_a",
+    "REG-CD-OUTCOMES"
+   ],
+   "links": [
+    {
+     "label": "Open priority customers",
+     "href": "/natwest-pulse/v1/priority"
+    }
+   ]
+  }
+ ],
+ "fallback": "I'd need your data for that. Here is what I'd look at: the CX pulse, the Cora module and the Financial Ombudsman watch."
+}

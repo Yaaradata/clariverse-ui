@@ -19,3 +19,6 @@ data/out/indusind_v2/work/
 # NatWest pulse working files and raw public pull: never committed (handles, URLs).
 data/out/natwest_pulse/work/
 data/raw/natwest/
+# Swedbank pulse working files and raw public pull (SW-D01): never committed (handles, URLs).
+data/out/swedbank_pulse/work/
+data/raw/swedbank/

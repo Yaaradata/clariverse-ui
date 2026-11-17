@@ -1,0 +1,184 @@
+{
+ "about": "NatWest register (L1). Rules and public figures only; read by scripts/natwest_pulse/ask.py and the screens. Sources bound to docs/natwest/research_pack.md (12 Nov 2026), NW-D80.",
+ "entries": [
+  {
+   "id": "REG-DISP-8W",
+   "label": "Final response within 8 weeks",
+   "value": "8 weeks",
+   "basis": "FCA complaint-handling rules (DISP): final response, or a holding reply, within 8 weeks of receipt",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Published rule; the research pack does not cover it (no figure depends on the pack)"
+  },
+  {
+   "id": "REG-PSD-15",
+   "label": "Payment-services final response",
+   "value": "15 business days (35 in exceptional cases)",
+   "basis": "FCA DISP for payment-services complaints",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Published rule; the research pack does not cover it (no figure depends on the pack)"
+  },
+  {
+   "id": "REG-FOS-6M",
+   "label": "Time to refer after a final response",
+   "value": "6 months",
+   "basis": "Customer may refer to the Financial Ombudsman Service within 6 months of the final response",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Published rule; the research pack does not cover it (no figure depends on the pack)"
+  },
+  {
+   "id": "REG-PSR-APP",
+   "label": "Push payment scam reimbursement",
+   "value": "5 business days",
+   "basis": "PSR reimbursement requirement for authorised push payment scams",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Published rule; the research pack does not cover it (no figure depends on the pack)"
+  },
+  {
+   "id": "REG-CD-OUTCOMES",
+   "label": "Consumer Duty outcomes",
+   "value": "Products and services · price and value · consumer understanding · consumer support",
+   "basis": "FCA Consumer Duty: the four outcomes",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Published rule; the research pack does not cover it (no figure depends on the pack)"
+  },
+  {
+   "id": "REG-H1-COMPLAINTS",
+   "label": "Complaints, H1 2026",
+   "value": "86,498",
+   "basis": "National Westminster Bank plc complaints return, H1 2026 (down about 5.1%)",
+   "source_title": "NatWest: National Westminster Bank plc complaints data",
+   "url": "https://www.natwestgroup.com/who-we-are/contact-us/feedback-and-complaints/national-westminster-bank-plc.html",
+   "date": "2026-10-22",
+   "status": "Bound: research pack §8 (NatWest page; FCA firm-level table, 22 Oct 2026)"
+  },
+  {
+   "id": "REG-H1-PER1000",
+   "label": "Complaints per 1,000 accounts, H1 2026",
+   "value": "2.74",
+   "basis": "National Westminster Bank plc complaints return, H1 2026 (31.6 million accounts)",
+   "source_title": "NatWest: National Westminster Bank plc complaints data",
+   "url": "https://www.natwestgroup.com/who-we-are/contact-us/feedback-and-complaints/national-westminster-bank-plc.html",
+   "date": "2026-10-22",
+   "status": "Bound: research pack §8"
+  },
+  {
+   "id": "REG-H1-UPHELD",
+   "label": "Complaints upheld, H1 2026",
+   "value": "About 55%",
+   "basis": "National Westminster Bank plc complaints return, H1 2026",
+   "source_title": "NatWest: National Westminster Bank plc complaints data",
+   "url": "https://www.natwestgroup.com/who-we-are/contact-us/feedback-and-complaints/national-westminster-bank-plc.html",
+   "date": "2026-10-22",
+   "status": "Bound: research pack §8"
+  },
+  {
+   "id": "REG-H1-3D",
+   "label": "Complaints closed within 3 days, H1 2026",
+   "value": "48%",
+   "basis": "National Westminster Bank plc complaints return, H1 2026",
+   "source_title": "NatWest: National Westminster Bank plc complaints data",
+   "url": "https://www.natwestgroup.com/who-we-are/contact-us/feedback-and-complaints/national-westminster-bank-plc.html",
+   "date": "2026-10-22",
+   "status": "Bound: research pack §8"
+  },
+  {
+   "id": "REG-CMA-RBS-APP",
+   "label": "Royal Bank of Scotland: app vs overall service",
+   "value": "66% vs 48%",
+   "basis": "CMA / Ipsos service-quality survey, personal current accounts, August 2026: Royal Bank of Scotland online and mobile 66% against overall 48% (17th of 17). Out of scope on screen (Pass 3)",
+   "source_title": "ClearScore: best and worst banks",
+   "url": "https://www.clearscore.com/learn/managing-money/best-bank-worst-bank-uk",
+   "date": "2026-09-25",
+   "status": "Bound: research pack §8 (ClearScore 25 Sep 2026; Alty 2 Sep 2026)"
+  },
+  {
+   "id": "REG-FPS-SAMEDAY",
+   "label": "Faster Payments",
+   "value": "Same day",
+   "basis": "Faster Payments settle the same day; a failed payment is returned the same day",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Published rule; the research pack does not cover it (no figure depends on the pack)"
+  },
+  {
+   "id": "REG-FOS-NEWCASES",
+   "label": "Financial Ombudsman Service new cases, National Westminster Bank",
+   "value": "5,935 (July 2025 to March 2026, 9 months); 3,051 in H1 2025",
+   "basis": "Financial Ombudsman Service complaints data; about 150 a week, the pace the Ombudsman watch is set to",
+   "source_title": "Research pack §8 (Financial Ombudsman Service new cases table)",
+   "url": null,
+   "date": "2026-11-12",
+   "status": "Bound: research pack §8"
+  }
+ ],
+ "peers": [
+  {
+   "id": "lloyds",
+   "label": "Lloyds",
+   "benchmark": false,
+   "figures": {
+    "complaints_h1_2026": "115,687",
+    "per_1000": "3.16",
+    "upheld": "66%",
+    "closed_3_days": "56%"
+   },
+   "status": "Bound: research pack §8 (FCA via BankCreditRatings)"
+  },
+  {
+   "id": "barclays",
+   "label": "Barclays",
+   "benchmark": false,
+   "figures": {
+    "complaints_h1_2026": "85,021",
+    "per_1000": "2.14",
+    "upheld": "57%",
+    "closed_3_days": "57%",
+    "fos_new_cases_9m": "6,826"
+   },
+   "status": "Bound: research pack §8 (Barclays UK complaints data, Jan-Jun 2026; Financial Ombudsman Service)"
+  },
+  {
+   "id": "hsbc_uk",
+   "label": "HSBC UK",
+   "benchmark": false,
+   "figures": null,
+   "status": "Research pack: complaints and CMA figures not retrieved"
+  },
+  {
+   "id": "santander_uk",
+   "label": "Santander UK",
+   "benchmark": false,
+   "figures": null,
+   "status": "Research pack: complaints and CMA figures not retrieved"
+  },
+  {
+   "id": "monzo",
+   "label": "Monzo",
+   "benchmark": true,
+   "figures": {
+    "cma_online_mobile_aug_2026": "85%"
+   },
+   "status": "Bound: research pack §8 (Bank of Scotland CMA results page)"
+  },
+  {
+   "id": "starling",
+   "label": "Starling",
+   "benchmark": true,
+   "figures": {
+    "cma_online_mobile_aug_2026": "83%"
+   },
+   "status": "Bound: research pack §8 (Bank of Scotland CMA results page)"
+  }
+ ]
+}

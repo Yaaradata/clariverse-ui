@@ -1,0 +1,1037 @@
+{
+ "needs_you": [
+  "release-pulse",
+  "app_usability",
+  "app_speed_crash"
+ ],
+ "this_week": [
+  "fraud_scam"
+ ],
+ "improving": [
+  "app_praise",
+  "service_praise"
+ ],
+ "since_830": [
+  {
+   "theme": "app_usability",
+   "label": "App features and usability",
+   "count": 6,
+   "owner": "digital",
+   "owner_label": "Digital and Cora",
+   "exemplars": [
+    "appstore:14783509521",
+    "appstore:14783631666"
+   ]
+  },
+  {
+   "theme": "branch_service",
+   "label": "Branch service",
+   "count": 6,
+   "owner": "retail",
+   "owner_label": "Current accounts product owner",
+   "exemplars": [
+    "appstore:14784864396",
+    "x:2120902632105754900"
+   ]
+  },
+  {
+   "theme": "app_speed_crash",
+   "label": "App outages, speed and crashes",
+   "count": 3,
+   "owner": "digital",
+   "owner_label": "Digital and Cora",
+   "exemplars": [
+    "appstore:14784646634",
+    "playstore:bf203efa-d47b-4eed-8382-e944dc279d3f"
+   ]
+  }
+ ],
+ "since_830_total": 57,
+ "since_830_from": "2026-11-12T07:45:00+00:00",
+ "top_riser": "app_usability",
+ "routing": [
+  {
+   "owner": "digital",
+   "owner_label": "Digital",
+   "themes": [
+    {
+     "id": "app_usability",
+     "label": "App features and usability",
+     "count": 317,
+     "status": "needs_you"
+    },
+    {
+     "id": "app_login_biometrics",
+     "label": "App login and biometrics",
+     "count": 148,
+     "status": "watching"
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App outages, speed and crashes",
+     "count": 101,
+     "status": "needs_you"
+    }
+   ],
+   "total": 634
+  },
+  {
+   "owner": "cards",
+   "owner_label": "Credit cards",
+   "themes": [
+    {
+     "id": "card_eligibility_upgrade",
+     "label": "Credit card eligibility and card changes",
+     "count": 28,
+     "status": "watching"
+    },
+    {
+     "id": "card_application",
+     "label": "Card applications and identity checks",
+     "count": 9,
+     "status": "watching"
+    },
+    {
+     "id": "rewards_value",
+     "label": "Rewards value and caps",
+     "count": 7,
+     "status": "watching"
+    }
+   ],
+   "total": 53
+  },
+  {
+   "owner": "cx",
+   "owner_label": "CX",
+   "themes": [
+    {
+     "id": "care_unreachable",
+     "label": "Could not get through",
+     "count": 136,
+     "status": "watching"
+    },
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 18,
+     "status": "watching"
+    }
+   ],
+   "total": 154
+  },
+  {
+   "owner": "operations",
+   "owner_label": "Operations",
+   "themes": [
+    {
+     "id": "statements_documents",
+     "label": "Statements and documents",
+     "count": 40,
+     "status": "watching"
+    },
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure",
+     "count": 35,
+     "status": "watching"
+    },
+    {
+     "id": "account_freeze",
+     "label": "Fraud block or account freeze",
+     "count": 32,
+     "status": "watching"
+    }
+   ],
+   "total": 155
+  },
+  {
+   "owner": "payments",
+   "owner_label": "Payments",
+   "themes": [
+    {
+     "id": "merchant_pos",
+     "label": "Card machines and merchant services",
+     "count": 16,
+     "status": "watching"
+    },
+    {
+     "id": "failed_txn_reversal",
+     "label": "Failed payment returns",
+     "count": 1,
+     "status": "watching"
+    }
+   ],
+   "total": 17
+  },
+  {
+   "owner": "loans",
+   "owner_label": "Loans",
+   "themes": [
+    {
+     "id": "loan_servicing",
+     "label": "Loan repayments and servicing",
+     "count": 4,
+     "status": "watching"
+    },
+    {
+     "id": "loan_processing",
+     "label": "Loan and mortgage applications",
+     "count": 1,
+     "status": "watching"
+    },
+    {
+     "id": "loan_closure_documents",
+     "label": "Loan and mortgage redemption",
+     "count": 1,
+     "status": "watching"
+    }
+   ],
+   "total": 6
+  },
+  {
+   "owner": "retail",
+   "owner_label": "Retail",
+   "themes": [
+    {
+     "id": "branch_service",
+     "label": "Branch service",
+     "count": 190,
+     "status": "watching"
+    },
+    {
+     "id": "account_opening",
+     "label": "Account opening and switching",
+     "count": 21,
+     "status": "watching"
+    },
+    {
+     "id": "international_payments",
+     "label": "International payments",
+     "count": 8,
+     "status": "watching"
+    }
+   ],
+   "total": 222
+  },
+  {
+   "owner": "compliance",
+   "owner_label": "Compliance",
+   "themes": [
+    {
+     "id": "recovery_conduct",
+     "label": "Collections and arrears conduct",
+     "count": 6,
+     "status": "watching"
+    },
+    {
+     "id": "mis_selling",
+     "label": "Mis-selling and add-on products",
+     "count": 4,
+     "status": "watching"
+    },
+    {
+     "id": "credit_report",
+     "label": "Credit file corrections",
+     "count": 2,
+     "status": "watching"
+    }
+   ],
+   "total": 13
+  },
+  {
+   "owner": "fraud_cyber",
+   "owner_label": "Fraud operations",
+   "themes": [
+    {
+     "id": "fraud_scam",
+     "label": "Fraud and scam contact",
+     "count": 23,
+     "status": "this_week"
+    },
+    {
+     "id": "unauthorised_txn",
+     "label": "Unauthorised transactions",
+     "count": 9,
+     "status": "watching"
+    },
+    {
+     "id": "phishing",
+     "label": "Phishing messages and fake links",
+     "count": 1,
+     "status": "watching"
+    }
+   ],
+   "total": 33
+  },
+  {
+   "owner": "rm",
+   "owner_label": "Relationship managers (Premier)",
+   "themes": [
+    {
+     "id": "premier_service",
+     "label": "Relationship manager service (Premier)",
+     "count": 1,
+     "status": "watching"
+    }
+   ],
+   "total": 1
+  },
+  {
+   "owner": "product",
+   "owner_label": "Product",
+   "themes": [
+    {
+     "id": "investments_wealth",
+     "label": "Investments",
+     "count": 6,
+     "status": "watching"
+    }
+   ],
+   "total": 6
+  }
+ ],
+ "release_pulse": {
+  "id": "release-pulse",
+  "label": "Release pulse: the fix list customers have written",
+  "app": "NatWest app",
+  "owner": "digital",
+  "owner_label": "Digital",
+  "pillar": "products_services",
+  "rung": "Voice",
+  "action": "Route with evidence",
+  "status": "needs_you",
+  "count": 544,
+  "n_reviews": 2004,
+  "ranks_top": true,
+  "largest_other_theme": 317,
+  "new_app_n": 0,
+  "new_app_negative": 0,
+  "by_store": {
+   "playstore": {
+    "store": "playstore",
+    "store_label": "Google Play",
+    "n_reviews": 925,
+    "share_positive": 62.1,
+    "avg_rating": 3.55,
+    "new_app_n": 0,
+    "new_app_avg": null,
+    "new_app_share_positive": null,
+    "new_app_negative": 0,
+    "old_app_n": 925,
+    "old_app_avg": 3.55,
+    "old_app_share_positive": 62.1
+   },
+   "appstore": {
+    "store": "appstore",
+    "store_label": "App Store",
+    "n_reviews": 1079,
+    "share_positive": 74.8,
+    "avg_rating": 4.03,
+    "new_app_n": 0,
+    "new_app_avg": null,
+    "new_app_share_positive": null,
+    "new_app_negative": 0,
+    "old_app_n": 1079,
+    "old_app_avg": 4.03,
+    "old_app_share_positive": 74.8
+   }
+  },
+  "fix_list": [
+   {
+    "issue": "App features and usability",
+    "theme": "app_usability",
+    "count": 306,
+    "owner": "digital",
+    "first_seen_version": "7.54.0",
+    "latest_version_seen": "07.72.0000.46402.0",
+    "example_ids": [
+     "playstore:37f8e503-ffca-46eb-9f6b-d0fdd38e2072",
+     "playstore:976db6dd-40f6-4277-bad9-a6dcd5b3423b",
+     "appstore:14780488522"
+    ],
+    "feature_asks": [
+     "view running balances after each transac"
+    ]
+   },
+   {
+    "issue": "App login and biometrics",
+    "theme": "app_login_biometrics",
+    "count": 73,
+    "owner": "digital",
+    "first_seen_version": "7.56.0",
+    "latest_version_seen": "07.72.0000.46402.0",
+    "example_ids": [
+     "playstore:881626b7-f8d7-4cf0-8834-2a327aec096d",
+     "playstore:d4419c48-099f-4277-bd0f-fb33e811cf60",
+     "appstore:14784317445"
+    ],
+    "feature_asks": []
+   },
+   {
+    "issue": "App outages, speed and crashes",
+    "theme": "app_speed_crash",
+    "count": 54,
+    "owner": "digital",
+    "first_seen_version": "7.56.0",
+    "latest_version_seen": "07.72.0000.46402.0",
+    "example_ids": [
+     "playstore:6b319e20-7ce4-4e56-8392-25b7f8ea3efb",
+     "playstore:0ead8770-18f3-472a-b527-35531059294e",
+     "appstore:14784646634"
+    ],
+    "feature_asks": []
+   },
+   {
+    "issue": "New app and update experience",
+    "theme": "new_app_release",
+    "count": 36,
+    "owner": "digital",
+    "first_seen_version": "7.56.0",
+    "latest_version_seen": "07.72.0000.46402.0",
+    "example_ids": [
+     "playstore:3aec0a1b-1ee3-43dd-becd-c19f7b732650",
+     "appstore:14779732075",
+     "appstore:14780597820"
+    ],
+    "feature_asks": []
+   },
+   {
+    "issue": "Statements and documents",
+    "theme": "statements_documents",
+    "count": 15,
+    "owner": "operations",
+    "first_seen_version": "07.65.0000.26994.0",
+    "latest_version_seen": "07.72.0000.46402.0",
+    "example_ids": [
+     "playstore:1dbe6f6a-676b-47b9-a2c8-d4504d61a1ea",
+     "playstore:d3e47221-2bdc-4e4b-8bed-c647777e441e",
+     "appstore:14624093007"
+    ],
+    "feature_asks": []
+   },
+   {
+    "issue": "Branch service",
+    "theme": "branch_service",
+    "count": 12,
+    "owner": "retail",
+    "first_seen_version": "7.56.0",
+    "latest_version_seen": "07.72.0000.46402.0",
+    "example_ids": [
+     "playstore:bd42d26e-3f7e-4160-8c4f-993d8164e076",
+     "appstore:14763775353",
+     "appstore:14721252842"
+    ],
+    "feature_asks": []
+   },
+   {
+    "issue": "Cora unresolved, had to call",
+    "theme": "cora_unresolved",
+    "count": 11,
+    "owner": "digital",
+    "first_seen_version": "07.69.0000.36742.0",
+    "latest_version_seen": "07.72.0000.46402.0",
+    "example_ids": [
+     "playstore:760e1b36-b1a6-4ee0-bcd3-be0377479a41",
+     "playstore:21d63d47-74d1-4b75-8678-680f9c36f14c",
+     "appstore:14650757583"
+    ],
+    "feature_asks": []
+   },
+   {
+    "issue": "Could not get through",
+    "theme": "care_unreachable",
+    "count": 10,
+    "owner": "cx",
+    "first_seen_version": "7.69.0",
+    "latest_version_seen": "07.72.0000.46402.0",
+    "example_ids": [
+     "playstore:dcb92825-90ee-49a1-88a9-7861ecdffb90",
+     "playstore:5a94711d-b5f9-429d-ac67-5e99c9e8ee30",
+     "appstore:14637209800"
+    ],
+    "feature_asks": []
+   }
+  ],
+  "versions_by_store": {
+   "playstore": [
+    {
+     "version": "07.72.0000.46402.0",
+     "n": 109,
+     "ratings": {
+      "1": 32,
+      "2": 4,
+      "3": 9,
+      "4": 11,
+      "5": 53
+     },
+     "avg_rating": 3.45,
+     "share_positive": 58.7,
+     "share_negative": 33.0
+    },
+    {
+     "version": "07.71.0000.42882.0",
+     "n": 224,
+     "ratings": {
+      "1": 61,
+      "2": 15,
+      "3": 6,
+      "4": 12,
+      "5": 130
+     },
+     "avg_rating": 3.6,
+     "share_positive": 63.4,
+     "share_negative": 33.9
+    },
+    {
+     "version": "07.70.0000.39862.0",
+     "n": 244,
+     "ratings": {
+      "1": 84,
+      "2": 7,
+      "3": 8,
+      "4": 16,
+      "5": 129
+     },
+     "avg_rating": 3.41,
+     "share_positive": 59.4,
+     "share_negative": 37.3
+    },
+    {
+     "version": "07.69.0000.36742.0",
+     "n": 228,
+     "ratings": {
+      "1": 52,
+      "2": 17,
+      "3": 11,
+      "4": 18,
+      "5": 130
+     },
+     "avg_rating": 3.69,
+     "share_positive": 64.9,
+     "share_negative": 30.3
+    },
+    {
+     "version": "07.68.0000.33733.0",
+     "n": 104,
+     "ratings": {
+      "1": 25,
+      "2": 6,
+      "3": 6,
+      "4": 13,
+      "5": 54
+     },
+     "avg_rating": 3.62,
+     "share_positive": 64.4,
+     "share_negative": 29.8
+    }
+   ],
+   "appstore": [
+    {
+     "version": "7.72.0",
+     "n": 142,
+     "ratings": {
+      "1": 28,
+      "2": 5,
+      "3": 2,
+      "4": 11,
+      "5": 96
+     },
+     "avg_rating": 4.0,
+     "share_positive": 75.4,
+     "share_negative": 23.2
+    },
+    {
+     "version": "7.71.0",
+     "n": 328,
+     "ratings": {
+      "1": 62,
+      "2": 9,
+      "3": 11,
+      "4": 13,
+      "5": 233
+     },
+     "avg_rating": 4.05,
+     "share_positive": 75.0,
+     "share_negative": 21.6
+    },
+    {
+     "version": "7.70.0",
+     "n": 275,
+     "ratings": {
+      "1": 48,
+      "2": 7,
+      "3": 15,
+      "4": 19,
+      "5": 186
+     },
+     "avg_rating": 4.05,
+     "share_positive": 74.5,
+     "share_negative": 20.0
+    },
+    {
+     "version": "7.69.0",
+     "n": 310,
+     "ratings": {
+      "1": 46,
+      "2": 8,
+      "3": 8,
+      "4": 18,
+      "5": 230
+     },
+     "avg_rating": 4.22,
+     "share_positive": 80.0,
+     "share_negative": 17.4
+    },
+    {
+     "version": "7.56.0",
+     "n": 23,
+     "ratings": {
+      "1": 21,
+      "2": 1,
+      "3": 0,
+      "4": 0,
+      "5": 1
+     },
+     "avg_rating": 1.22,
+     "share_positive": 4.3,
+     "share_negative": 95.7
+    }
+   ]
+  },
+  "exemplars": [
+   "playstore:6b319e20-7ce4-4e56-8392-25b7f8ea3efb",
+   "playstore:37f8e503-ffca-46eb-9f6b-d0fdd38e2072",
+   "appstore:14779732075",
+   "appstore:14780488522"
+  ],
+  "praise_exemplars": [
+   "playstore:6cf7e61b-1d2a-4110-8bc6-c7fd8f9cfa90",
+   "playstore:c3a019b7-d56a-4823-ad96-31a0d52ddd21",
+   "appstore:14626683194"
+  ],
+  "daily_negative": [
+   {
+    "date": "2026-08-01",
+    "count": 3
+   },
+   {
+    "date": "2026-08-02",
+    "count": 1
+   },
+   {
+    "date": "2026-08-03",
+    "count": 1
+   },
+   {
+    "date": "2026-08-04",
+    "count": 3
+   },
+   {
+    "date": "2026-08-05",
+    "count": 1
+   },
+   {
+    "date": "2026-08-06",
+    "count": 3
+   },
+   {
+    "date": "2026-08-07",
+    "count": 1
+   },
+   {
+    "date": "2026-08-08",
+    "count": 2
+   },
+   {
+    "date": "2026-08-10",
+    "count": 4
+   },
+   {
+    "date": "2026-08-11",
+    "count": 3
+   },
+   {
+    "date": "2026-08-12",
+    "count": 2
+   },
+   {
+    "date": "2026-08-13",
+    "count": 9
+   },
+   {
+    "date": "2026-08-14",
+    "count": 9
+   },
+   {
+    "date": "2026-08-15",
+    "count": 4
+   },
+   {
+    "date": "2026-08-16",
+    "count": 4
+   },
+   {
+    "date": "2026-08-17",
+    "count": 7
+   },
+   {
+    "date": "2026-08-18",
+    "count": 1
+   },
+   {
+    "date": "2026-08-19",
+    "count": 4
+   },
+   {
+    "date": "2026-08-20",
+    "count": 5
+   },
+   {
+    "date": "2026-08-21",
+    "count": 1
+   },
+   {
+    "date": "2026-08-22",
+    "count": 3
+   },
+   {
+    "date": "2026-08-23",
+    "count": 1
+   },
+   {
+    "date": "2026-08-24",
+    "count": 4
+   },
+   {
+    "date": "2026-08-25",
+    "count": 5
+   },
+   {
+    "date": "2026-08-26",
+    "count": 4
+   },
+   {
+    "date": "2026-08-27",
+    "count": 4
+   },
+   {
+    "date": "2026-08-28",
+    "count": 9
+   },
+   {
+    "date": "2026-08-29",
+    "count": 5
+   },
+   {
+    "date": "2026-08-30",
+    "count": 2
+   },
+   {
+    "date": "2026-08-31",
+    "count": 5
+   },
+   {
+    "date": "2026-09-01",
+    "count": 2
+   },
+   {
+    "date": "2026-09-02",
+    "count": 8
+   },
+   {
+    "date": "2026-09-03",
+    "count": 6
+   },
+   {
+    "date": "2026-09-04",
+    "count": 3
+   },
+   {
+    "date": "2026-09-05",
+    "count": 3
+   },
+   {
+    "date": "2026-09-06",
+    "count": 2
+   },
+   {
+    "date": "2026-09-07",
+    "count": 6
+   },
+   {
+    "date": "2026-09-08",
+    "count": 10
+   },
+   {
+    "date": "2026-09-09",
+    "count": 2
+   },
+   {
+    "date": "2026-09-10",
+    "count": 5
+   },
+   {
+    "date": "2026-09-11",
+    "count": 10
+   },
+   {
+    "date": "2026-09-12",
+    "count": 4
+   },
+   {
+    "date": "2026-09-13",
+    "count": 4
+   },
+   {
+    "date": "2026-09-14",
+    "count": 7
+   },
+   {
+    "date": "2026-09-15",
+    "count": 7
+   },
+   {
+    "date": "2026-09-16",
+    "count": 8
+   },
+   {
+    "date": "2026-09-17",
+    "count": 10
+   },
+   {
+    "date": "2026-09-18",
+    "count": 6
+   },
+   {
+    "date": "2026-09-19",
+    "count": 5
+   },
+   {
+    "date": "2026-09-20",
+    "count": 3
+   },
+   {
+    "date": "2026-09-21",
+    "count": 7
+   },
+   {
+    "date": "2026-09-22",
+    "count": 7
+   },
+   {
+    "date": "2026-09-23",
+    "count": 7
+   },
+   {
+    "date": "2026-09-24",
+    "count": 3
+   },
+   {
+    "date": "2026-09-25",
+    "count": 4
+   },
+   {
+    "date": "2026-09-26",
+    "count": 5
+   },
+   {
+    "date": "2026-09-27",
+    "count": 4
+   },
+   {
+    "date": "2026-09-28",
+    "count": 6
+   },
+   {
+    "date": "2026-09-29",
+    "count": 2
+   },
+   {
+    "date": "2026-09-30",
+    "count": 11
+   },
+   {
+    "date": "2026-10-01",
+    "count": 9
+   },
+   {
+    "date": "2026-10-02",
+    "count": 7
+   },
+   {
+    "date": "2026-10-03",
+    "count": 6
+   },
+   {
+    "date": "2026-10-04",
+    "count": 2
+   },
+   {
+    "date": "2026-10-05",
+    "count": 9
+   },
+   {
+    "date": "2026-10-06",
+    "count": 4
+   },
+   {
+    "date": "2026-10-07",
+    "count": 4
+   },
+   {
+    "date": "2026-10-08",
+    "count": 7
+   },
+   {
+    "date": "2026-10-09",
+    "count": 3
+   },
+   {
+    "date": "2026-10-10",
+    "count": 4
+   },
+   {
+    "date": "2026-10-11",
+    "count": 5
+   },
+   {
+    "date": "2026-10-12",
+    "count": 3
+   },
+   {
+    "date": "2026-10-13",
+    "count": 9
+   },
+   {
+    "date": "2026-10-14",
+    "count": 5
+   },
+   {
+    "date": "2026-10-15",
+    "count": 8
+   },
+   {
+    "date": "2026-10-16",
+    "count": 4
+   },
+   {
+    "date": "2026-10-17",
+    "count": 3
+   },
+   {
+    "date": "2026-10-18",
+    "count": 5
+   },
+   {
+    "date": "2026-10-19",
+    "count": 6
+   },
+   {
+    "date": "2026-10-20",
+    "count": 5
+   },
+   {
+    "date": "2026-10-21",
+    "count": 6
+   },
+   {
+    "date": "2026-10-22",
+    "count": 4
+   },
+   {
+    "date": "2026-10-23",
+    "count": 4
+   },
+   {
+    "date": "2026-10-24",
+    "count": 5
+   },
+   {
+    "date": "2026-10-25",
+    "count": 4
+   },
+   {
+    "date": "2026-10-26",
+    "count": 7
+   },
+   {
+    "date": "2026-10-27",
+    "count": 7
+   },
+   {
+    "date": "2026-10-28",
+    "count": 8
+   },
+   {
+    "date": "2026-10-29",
+    "count": 9
+   },
+   {
+    "date": "2026-10-30",
+    "count": 9
+   },
+   {
+    "date": "2026-10-31",
+    "count": 4
+   },
+   {
+    "date": "2026-11-01",
+    "count": 2
+   },
+   {
+    "date": "2026-11-02",
+    "count": 3
+   },
+   {
+    "date": "2026-11-03",
+    "count": 5
+   },
+   {
+    "date": "2026-11-04",
+    "count": 6
+   },
+   {
+    "date": "2026-11-05",
+    "count": 10
+   },
+   {
+    "date": "2026-11-06",
+    "count": 4
+   },
+   {
+    "date": "2026-11-07",
+    "count": 6
+   },
+   {
+    "date": "2026-11-08",
+    "count": 4
+   },
+   {
+    "date": "2026-11-09",
+    "count": 5
+   },
+   {
+    "date": "2026-11-10",
+    "count": 8
+   },
+   {
+    "date": "2026-11-11",
+    "count": 7
+   },
+   {
+    "date": "2026-11-12",
+    "count": 20
+   },
+   {
+    "date": "2026-11-13",
+    "count": 12
+   }
+  ],
+  "coverage": [
+   "App Store 2026-08-12 to 2026-11-13",
+   "Google Play 2026-08-01 to 2026-11-12"
+  ],
+  "trend_label": "trend within window"
+ },
+ "ranking_rule": "score = rise in share (second half vs first half) × volume × (1 + escalation share); issue themes with at least 8 items and at least 40% negative."
+}

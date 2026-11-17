@@ -1,0 +1,70 @@
+{
+ "note": "Internal · illustrative. Each kept row stands for w bank-scale contacts; each customer for cw contacting customers.",
+ "sample": {
+  "rows": 32000,
+  "customers": 5000
+ },
+ "targets": {
+  "total_contacts": 5800000,
+  "channel_mix": {
+   "calls": 0.44,
+   "whatsapp": 0.3,
+   "chat": 0.09,
+   "emails": 0.06,
+   "branch": 0.1,
+   "social": 0.01
+  },
+  "complaints": 49700,
+  "product_mix": {
+   "current_accounts": 0.4,
+   "cards": 0.2,
+   "payments_fraud": 0.16,
+   "mortgages": 0.11,
+   "savings": 0.07,
+   "personal_loans": 0.06
+  },
+  "negative_share": {
+   "cards": 0.15,
+   "personal_loans": 0.16,
+   "mortgages": 0.15,
+   "payments_fraud": 0.11,
+   "savings": 0.11,
+   "current_accounts": 0.1
+  },
+  "negative_of_complaints": 0.85,
+  "complaint_mix": {
+   "current_accounts": 0.4,
+   "payments_fraud": 0.2,
+   "cards": 0.17,
+   "mortgages": 0.1,
+   "savings": 0.07,
+   "personal_loans": 0.06
+  },
+  "escalation": {
+   "rbi_ombudsman": 2200,
+   "md_office": 3000
+  },
+  "lists": {
+   "priority_a": {
+    "size": 1780000,
+    "in_contact": 0.3
+   },
+   "priority_b": {
+    "size": 43000,
+    "in_contact": 0.6
+   },
+   "uhni": {
+    "size": 750000,
+    "in_contact": 0.25
+   }
+  },
+  "contacts_per_contacting_customer": 2.5,
+  "contacting_customers": 2320000
+ },
+ "list_sizes": {
+  "priority_a": 1780000,
+  "priority_b": 43000,
+  "uhni": 750000,
+  "multi": 757900
+ }
+}

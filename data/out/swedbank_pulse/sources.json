@@ -1,0 +1,51 @@
+{
+ "provenance": "public",
+ "raw_dir": "data/raw/natwest",
+ "sources": [
+  {
+   "id": "appstore",
+   "label": "App Store",
+   "loaded": true,
+   "files": 1,
+   "items": 1200,
+   "start": "2026-08-12",
+   "pulled": 1200
+  },
+  {
+   "id": "playstore",
+   "label": "Google Play",
+   "loaded": true,
+   "files": 1,
+   "items": 1034,
+   "start": "2026-08-01",
+   "pulled": 1034
+  },
+  {
+   "id": "x",
+   "label": "X",
+   "loaded": true,
+   "files": 1,
+   "items": 1706,
+   "start": "2026-08-01",
+   "pulled": 1881
+  },
+  {
+   "id": "reddit",
+   "label": "Reddit",
+   "loaded": true,
+   "files": 1,
+   "items": 807,
+   "start": "2026-08-01",
+   "pulled": 807
+  },
+  {
+   "id": "trustpilot",
+   "label": "Trustpilot (forums: Trustpilot only)",
+   "loaded": true,
+   "files": 1,
+   "items": 233,
+   "start": "2026-09-01",
+   "pulled": 233
+  }
+ ]
+}

@@ -38,6 +38,11 @@ import {
   NATWEST_ROLE_COPY,
 } from "./natwestBankIndustry";
 import {
+  SWEDBANK_BANK_INDUSTRY_ID,
+  SWEDBANK_BANK_NAME,
+  SWEDBANK_ROLE_COPY,
+} from "./swedbankBankIndustry";
+import {
   KIDDE_GLOBAL_INDUSTRY_ID,
   KIDDE_GLOBAL_PRESIDENT_ROLE_ID,
   KIDDE_GLOBAL_REGIONAL_GM_ROLE_ID,
@@ -516,6 +521,15 @@ export const INDUSTRIES = [
     color: "#0f766e",
     desc: "United Kingdom retail bank · NatWest Retail",
     roles: [{ ...NATWEST_ROLE_COPY[0], icon: Headphones, defaultLens: "ops", primaryTile: 0 }],
+  },
+  {
+    // Swedbank (SW-D13): Banking, one role, opening /swedbank-pulse/v1/head-of-cx (swedbankBankIndustry.ts).
+    id: SWEDBANK_BANK_INDUSTRY_ID,
+    name: SWEDBANK_BANK_NAME,
+    icon: Landmark,
+    color: "#0f766e",
+    desc: "Banking · Swedbank Swedish Banking, private customers",
+    roles: [{ ...SWEDBANK_ROLE_COPY[0], icon: Headphones, defaultLens: "ops", primaryTile: 0 }],
   },
 ];
 
