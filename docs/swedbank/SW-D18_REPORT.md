@@ -17,8 +17,9 @@ Scope: `/swedbank-pulse/v1/head-of-cx` and `/swedbank-pulse/v1/business/everyday
 | Fixtures (`test_swedbank_checks.py`) | 83, 0 failures (lint 64 · PII 13 · gate 5 · provenance 1) |
 | Screenshots | 40 captures: both routes × four windows (1536 at 1.25, dark), plus 1440 and 390 in both themes |
 
-The last fix (no share ring from fewer than 3 high-impact posts on the Everyday accounts and app page, seen in the
-7-day screenshot as "100% · 1 of 1") is in a rebuild; the crawl and screenshots are re-run on it.
+Final build: the high-impact rings on the Everyday accounts and app page (seen in an earlier 7-day screenshot as
+"100% · 1 of 1") now read "—" with "1 of 1" beneath; crawl 8/8, lint 0, PII 0 and the 40 screenshots are from that
+build.
 
 ## What changed (SW-D18)
 
